@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script">
+  <sys_script action="INSERT_OR_UPDATE" apply_defaults="true">
+    <sys_id>070af6032f4b46eeaad06987784adcf5</sys_id>
+    <sys_scope display_value="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+    <sys_update_name>sys_script_070af6032f4b46eeaad06987784adcf5</sys_update_name>
+    <abort_action>false</abort_action>
+    <access>package_private</access>
+    <action_delete>false</action_delete>
+    <action_insert>true</action_insert>
+    <action_query>false</action_query>
+    <action_update>true</action_update>
+    <active>true</active>
+    <add_message>false</add_message>
+    <advanced>true</advanced>
+    <change_fields>false</change_fields>
+    <client_callable>false</client_callable>
+    <collection>x_2056099_indust_0_inv_stock</collection>
+    <condition/>
+    <description/>
+    <execute_function>false</execute_function>
+    <filter_condition/>
+    <is_rest>false</is_rest>
+    <message/>
+    <name>Calculate Available Qty and Validate Stock</name>
+    <order>100</order>
+    <priority>100</priority>
+    <rest_method/>
+    <rest_method_text/>
+    <rest_service/>
+    <rest_service_text/>
+    <rest_variables/>
+    <role_conditions/>
+    <script><![CDATA[/**
+ * Before-save logic for Inventory Stock records.
+ *
+ * 1. Validates that Reserved Quantity never exceeds Total Quantity.
+ * 2. Calculates Available Quantity = Total Quantity - Reserved Quantity.
+ * 3. Sets Last Updated to the current date/time.
+ */
+(function executeRule(current, previous) {
+    var totalQty = parseFloat(current.getValue('total_quantity')) || 0;
+    var reservedQty = parseFloat(current.getValue('reserved_quantity')) || 0;
+
+    // Validate: Reserved Quantity must never exceed Total Quantity
+    if (reservedQty > totalQty) {
+        gs.addErrorMessage(
+            'Reserved Quantity (' + reservedQty +
+            ') cannot be greater than Total Quantity (' + totalQty + ').'
+        );
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Calculate Available Quantity
+    var availableQty = totalQty - reservedQty;
+    current.setValue('available_quantity', availableQty.toString());
+
+    // Set Last Updated to current date/time
+    var now = new GlideDateTime();
+    current.setValue('last_updated', now.getValue());
+})(current, previous);
+]]></script>
+    <sys_name>Calculate Available Qty and Validate Stock</sys_name>
+    <sys_policy/>
+    <template/>
+    <when>before</when>
+  </sys_script>
+</record_update>
