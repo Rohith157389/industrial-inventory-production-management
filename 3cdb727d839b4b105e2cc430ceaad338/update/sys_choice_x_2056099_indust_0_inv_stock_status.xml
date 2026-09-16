@@ -1,68 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-  <sys_choice_set action="INSERT_OR_UPDATE" apply_defaults="true" field="status" table="x_2056099_indust_0_inv_stock" version="3">
-    <sys_choice_set action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>30550d6db7ea41b8b8a598931520a3cd</sys_id>
-      <element>status</element>
-      <sys_update_name>sys_choice_x_2056099_indust_0_inv_stock_status</sys_update_name>
-      <name>x_2056099_indust_0_inv_stock</name>
-      <sys_class_name>sys_choice_set</sys_class_name>
-      <sys_scope display_value="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-      <sys_package display_value="x_2056099_indust_0" source="3cdb727d839b4b105e2cc430ceaad338">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-      <sys_name>status</sys_name>
-    </sys_choice_set>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>1c0ba040c4c24ad4998160c5e56da307</sys_id>
-      <name>x_2056099_indust_0_inv_stock</name>
-      <element>status</element>
-      <label>Available</label>
-      <value>available</value>
-      <sequence>1</sequence>
-      <language>en</language>
+    <sys_choice action="INSERT_OR_UPDATE" field="status" table="x_2056099_indust_0_inv_stock" version="3">
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>status</element>
+            <name>x_2056099_indust_0_inv_stock</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 03:10:43</sys_created_on>
+            <sys_id>30550d6db7ea41b8b8a598931520a3cd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>status</sys_name>
+            <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+            <sys_update_name>sys_choice_x_2056099_indust_0_inv_stock_status</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 03:10:43</sys_updated_on>
+        </sys_choice_set>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Available</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_stock</name>
+            <sequence>1</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:35</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>1c0ba040c4c24ad4998160c5e56da307</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:35</sys_updated_on>
+            <value>available</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Reserved</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_stock</name>
+            <sequence>2</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:35</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>c019b0d8d1784e77b5067b561521648f</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:35</sys_updated_on>
+            <value>reserved</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Inspection</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_stock</name>
+            <sequence>3</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:35</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>408b57783c214f91b1011bb82e4e4d2c</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:35</sys_updated_on>
+            <value>inspection</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Blocked</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_stock</name>
+            <sequence>4</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:35</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>1b9199475aeb4ce7b6b3813290eb5adc</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:35</sys_updated_on>
+            <value>blocked</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Quarantined</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_stock</name>
+            <sequence>5</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:35</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>be2c4abed28d45e2949ed9c44ae7c026</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:35</sys_updated_on>
+            <value>quarantined</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Expired</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_stock</name>
+            <sequence>6</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:35</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>9f2ffdece98b420fb4ed8c6745830929</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:35</sys_updated_on>
+            <value>expired</value>
+        </sys_choice>
     </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>c019b0d8d1784e77b5067b561521648f</sys_id>
-      <name>x_2056099_indust_0_inv_stock</name>
-      <element>status</element>
-      <label>Reserved</label>
-      <value>reserved</value>
-      <sequence>2</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>408b57783c214f91b1011bb82e4e4d2c</sys_id>
-      <name>x_2056099_indust_0_inv_stock</name>
-      <element>status</element>
-      <label>Inspection</label>
-      <value>inspection</value>
-      <sequence>3</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>1b9199475aeb4ce7b6b3813290eb5adc</sys_id>
-      <name>x_2056099_indust_0_inv_stock</name>
-      <element>status</element>
-      <label>Blocked</label>
-      <value>blocked</value>
-      <sequence>4</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>be2c4abed28d45e2949ed9c44ae7c026</sys_id>
-      <name>x_2056099_indust_0_inv_stock</name>
-      <element>status</element>
-      <label>Quarantined</label>
-      <value>quarantined</value>
-      <sequence>5</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>9f2ffdece98b420fb4ed8c6745830929</sys_id>
-      <name>x_2056099_indust_0_inv_stock</name>
-      <element>status</element>
-      <label>Expired</label>
-      <value>expired</value>
-      <sequence>6</sequence>
-      <language>en</language>
-    </sys_choice>
-  </sys_choice_set>
 </record_update>

@@ -1,50 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-  <sys_choice_set action="INSERT_OR_UPDATE" apply_defaults="true" field="result" table="x_2056099_indust_0_qc_insp" version="3">
-    <sys_choice_set action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>949175a9e2ed48768e980c9423b58b14</sys_id>
-      <element>result</element>
-      <sys_update_name>sys_choice_x_2056099_indust_0_qc_insp_result</sys_update_name>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <sys_class_name>sys_choice_set</sys_class_name>
-      <sys_scope display_value="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-      <sys_package display_value="x_2056099_indust_0" source="3cdb727d839b4b105e2cc430ceaad338">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-      <sys_name>result</sys_name>
-    </sys_choice_set>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>7c254718e1dc4e02b4fe67fb3245e816</sys_id>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <element>result</element>
-      <label>Pending</label>
-      <value>pending</value>
-      <sequence>1</sequence>
-      <language>en</language>
+    <sys_choice action="INSERT_OR_UPDATE" field="result" table="x_2056099_indust_0_qc_insp" version="3">
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>result</element>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 06:42:53</sys_created_on>
+            <sys_id>949175a9e2ed48768e980c9423b58b14</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>result</sys_name>
+            <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+            <sys_update_name>sys_choice_x_2056099_indust_0_qc_insp_result</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 06:42:53</sys_updated_on>
+        </sys_choice_set>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>result</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Pending</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sequence>1</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>7c254718e1dc4e02b4fe67fb3245e816</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
+            <value>pending</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>result</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Passed</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sequence>2</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>e2811bf8a39742a38c1a7c08e54744af</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
+            <value>passed</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>result</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Failed</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sequence>3</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>b8a1055499db405ba7c5b029990a082d</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
+            <value>failed</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>result</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Conditional Approval</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sequence>4</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>38778858a42f4f35827c70d303939928</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
+            <value>conditional_approval</value>
+        </sys_choice>
     </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>e2811bf8a39742a38c1a7c08e54744af</sys_id>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <element>result</element>
-      <label>Passed</label>
-      <value>passed</value>
-      <sequence>2</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>b8a1055499db405ba7c5b029990a082d</sys_id>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <element>result</element>
-      <label>Failed</label>
-      <value>failed</value>
-      <sequence>3</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>38778858a42f4f35827c70d303939928</sys_id>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <element>result</element>
-      <label>Conditional Approval</label>
-      <value>conditional_approval</value>
-      <sequence>4</sequence>
-      <language>en</language>
-    </sys_choice>
-  </sys_choice_set>
 </record_update>

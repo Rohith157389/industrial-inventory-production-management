@@ -1,59 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-  <sys_choice_set action="INSERT_OR_UPDATE" apply_defaults="true" field="inspection_type" table="x_2056099_indust_0_qc_insp" version="3">
-    <sys_choice_set action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>d8a866915e974af5948e17a8ac03b1cd</sys_id>
-      <element>inspection_type</element>
-      <sys_update_name>sys_choice_x_2056099_indust_0_qc_insp_inspection_type</sys_update_name>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <sys_class_name>sys_choice_set</sys_class_name>
-      <sys_scope display_value="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-      <sys_package display_value="x_2056099_indust_0" source="3cdb727d839b4b105e2cc430ceaad338">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-      <sys_name>inspection_type</sys_name>
-    </sys_choice_set>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>0c06485a770d4b1582778ad7a33007f6</sys_id>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <element>inspection_type</element>
-      <label>Incoming Material</label>
-      <value>incoming_material</value>
-      <sequence>1</sequence>
-      <language>en</language>
+    <sys_choice action="INSERT_OR_UPDATE" field="inspection_type" table="x_2056099_indust_0_qc_insp" version="3">
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>inspection_type</element>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 06:42:53</sys_created_on>
+            <sys_id>d8a866915e974af5948e17a8ac03b1cd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>inspection_type</sys_name>
+            <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+            <sys_update_name>sys_choice_x_2056099_indust_0_qc_insp_inspection_type</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 06:42:53</sys_updated_on>
+        </sys_choice_set>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>inspection_type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Incoming Material</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sequence>1</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>0c06485a770d4b1582778ad7a33007f6</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
+            <value>incoming_material</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>inspection_type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>In-Process</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sequence>2</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>6db6afff3d304e958cb906ef4232c708</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
+            <value>in_process</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>inspection_type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Final Product</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sequence>3</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>fcd6229927cb46cfa994e4ccf6bb605f</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
+            <value>final_product</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>inspection_type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Weekly Quality Inspection</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sequence>4</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>6132a14715624ba69552ce1b04ed8381</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
+            <value>weekly_quality_inspection</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>inspection_type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Return Inspection</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_qc_insp</name>
+            <sequence>5</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>e60a5fec4607483c8777f0d7a7cb17e8</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
+            <value>return_inspection</value>
+        </sys_choice>
     </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>6db6afff3d304e958cb906ef4232c708</sys_id>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <element>inspection_type</element>
-      <label>In-Process</label>
-      <value>in_process</value>
-      <sequence>2</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>fcd6229927cb46cfa994e4ccf6bb605f</sys_id>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <element>inspection_type</element>
-      <label>Final Product</label>
-      <value>final_product</value>
-      <sequence>3</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>6132a14715624ba69552ce1b04ed8381</sys_id>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <element>inspection_type</element>
-      <label>Weekly Quality Inspection</label>
-      <value>weekly_quality_inspection</value>
-      <sequence>4</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>e60a5fec4607483c8777f0d7a7cb17e8</sys_id>
-      <name>x_2056099_indust_0_qc_insp</name>
-      <element>inspection_type</element>
-      <label>Return Inspection</label>
-      <value>return_inspection</value>
-      <sequence>5</sequence>
-      <language>en</language>
-    </sys_choice>
-  </sys_choice_set>
 </record_update>

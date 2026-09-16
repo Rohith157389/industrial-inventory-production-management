@@ -1,50 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-  <sys_choice_set action="INSERT_OR_UPDATE" apply_defaults="true" field="status" table="x_2056099_indust_0_inv_batch" version="3">
-    <sys_choice_set action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>7d1b4083fca34c109316ef56b73e77e2</sys_id>
-      <element>status</element>
-      <sys_update_name>sys_choice_x_2056099_indust_0_inv_batch_status</sys_update_name>
-      <name>x_2056099_indust_0_inv_batch</name>
-      <sys_class_name>sys_choice_set</sys_class_name>
-      <sys_scope display_value="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-      <sys_package display_value="x_2056099_indust_0" source="3cdb727d839b4b105e2cc430ceaad338">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-      <sys_name>status</sys_name>
-    </sys_choice_set>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>47ea5dc1d0c14f7a885f704f565a19f3</sys_id>
-      <name>x_2056099_indust_0_inv_batch</name>
-      <element>status</element>
-      <label>Active</label>
-      <value>active</value>
-      <sequence>1</sequence>
-      <language>en</language>
+    <sys_choice action="INSERT_OR_UPDATE" field="status" table="x_2056099_indust_0_inv_batch" version="3">
+        <sys_choice_set action="INSERT_OR_UPDATE">
+            <element>status</element>
+            <name>x_2056099_indust_0_inv_batch</name>
+            <sys_class_name>sys_choice_set</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 03:01:37</sys_created_on>
+            <sys_id>7d1b4083fca34c109316ef56b73e77e2</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>status</sys_name>
+            <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+            <sys_update_name>sys_choice_x_2056099_indust_0_inv_batch_status</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 03:01:37</sys_updated_on>
+        </sys_choice_set>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Active</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_batch</name>
+            <sequence>1</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>47ea5dc1d0c14f7a885f704f565a19f3</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>active</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Blocked</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_batch</name>
+            <sequence>2</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>e981dfb633a247dead16d761e6b31273</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>blocked</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Expired</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_batch</name>
+            <sequence>3</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>365c1acde56248c8a408a13d48654efd</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>expired</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Closed</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_batch</name>
+            <sequence>4</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>94f8fc2be77a428287d1c7d1f3934656</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>closed</value>
+        </sys_choice>
     </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>e981dfb633a247dead16d761e6b31273</sys_id>
-      <name>x_2056099_indust_0_inv_batch</name>
-      <element>status</element>
-      <label>Blocked</label>
-      <value>blocked</value>
-      <sequence>2</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>365c1acde56248c8a408a13d48654efd</sys_id>
-      <name>x_2056099_indust_0_inv_batch</name>
-      <element>status</element>
-      <label>Expired</label>
-      <value>expired</value>
-      <sequence>3</sequence>
-      <language>en</language>
-    </sys_choice>
-    <sys_choice action="INSERT_OR_UPDATE" apply_defaults="true">
-      <sys_id>94f8fc2be77a428287d1c7d1f3934656</sys_id>
-      <name>x_2056099_indust_0_inv_batch</name>
-      <element>status</element>
-      <label>Closed</label>
-      <value>closed</value>
-      <sequence>4</sequence>
-      <language>en</language>
-    </sys_choice>
-  </sys_choice_set>
 </record_update>
