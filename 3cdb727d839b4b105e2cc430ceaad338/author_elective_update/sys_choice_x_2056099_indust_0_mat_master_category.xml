@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-    <sys_choice action="INSERT_OR_UPDATE" field="unit_of_measure" table="x_2056099_indust_0_mat_master" version="3">
+    <sys_choice action="INSERT_OR_UPDATE" field="category" table="x_2056099_indust_0_mat_master" version="3">
         <sys_choice_set action="INSERT_OR_UPDATE">
-            <element>unit_of_measure</element>
+            <element>category</element>
             <name>x_2056099_indust_0_mat_master</name>
             <sys_class_name>sys_choice_set</sys_class_name>
             <sys_created_by>admin</sys_created_by>
             <sys_created_on>2026-09-14 02:55:12</sys_created_on>
-            <sys_id>65e8d602719a47cfa6654680b6831bcd</sys_id>
             <sys_mod_count>0</sys_mod_count>
-            <sys_name>unit_of_measure</sys_name>
+            <sys_name>category</sys_name>
             <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
             <sys_policy/>
             <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-            <sys_update_name>sys_choice_x_2056099_indust_0_mat_master_unit_of_measure</sys_update_name>
+            <sys_update_name>sys_choice_x_2056099_indust_0_mat_master_category</sys_update_name>
             <sys_updated_by>admin</sys_updated_by>
             <sys_updated_on>2026-09-14 02:55:12</sys_updated_on>
         </sys_choice_set>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>unit_of_measure</element>
+            <element>category</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Nos</label>
+            <label>Component</label>
             <language>en</language>
             <name>x_2056099_indust_0_mat_master</name>
             <sequence>1</sequence>
@@ -30,18 +29,17 @@
             <sys_created_on>2026-09-14 07:27:37</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>e71406142a2a4c23b2d3f5240c5ca8cd</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
             <sys_updated_on>2026-09-14 07:27:37</sys_updated_on>
-            <value>nos</value>
+            <value>component</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>unit_of_measure</element>
+            <element>category</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Kg</label>
+            <label>Consumable</label>
             <language>en</language>
             <name>x_2056099_indust_0_mat_master</name>
             <sequence>2</sequence>
@@ -50,18 +48,17 @@
             <sys_created_on>2026-09-14 07:27:37</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>d783b260d42b46218762f78c6e50768a</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
             <sys_updated_on>2026-09-14 07:27:37</sys_updated_on>
-            <value>kg</value>
+            <value>consumable</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>unit_of_measure</element>
+            <element>category</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Litres</label>
+            <label>Maintenance Spare</label>
             <language>en</language>
             <name>x_2056099_indust_0_mat_master</name>
             <sequence>3</sequence>
@@ -70,18 +67,17 @@
             <sys_created_on>2026-09-14 07:27:37</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>fce52c7bd654412dae4104ddb7608cf1</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
             <sys_updated_on>2026-09-14 07:27:37</sys_updated_on>
-            <value>litres</value>
+            <value>maintenance_spare</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>unit_of_measure</element>
+            <element>category</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Metres</label>
+            <label>Finished Product</label>
             <language>en</language>
             <name>x_2056099_indust_0_mat_master</name>
             <sequence>4</sequence>
@@ -90,11 +86,10 @@
             <sys_created_on>2026-09-14 07:27:37</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>1e0a7cc7fb2e4013b1b0b57f6bb0c21c</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
             <sys_updated_on>2026-09-14 07:27:37</sys_updated_on>
-            <value>metres</value>
+            <value>finished_product</value>
         </sys_choice>
     </sys_choice>
 </record_update>

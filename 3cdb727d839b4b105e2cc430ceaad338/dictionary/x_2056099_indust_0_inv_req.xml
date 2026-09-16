@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="44c43c7dae0346848816f13228410a4a" label="Inventory Request" name="x_2056099_indust_0_inv_req" type="collection">
+        <element choice="1" label="Status" mandatory="true" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Approved" sequence="4" value="approved"/>
+                <element inactive_on_update="false" label="Pending Approval" sequence="3" value="pending_approval"/>
+                <element inactive_on_update="false" label="Completed" sequence="7" value="completed"/>
+                <element inactive_on_update="false" label="In Progress" sequence="6" value="in_progress"/>
+                <element inactive_on_update="false" label="Submitted" sequence="2" value="submitted"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="8" value="cancelled"/>
+                <element inactive_on_update="false" label="Rejected" sequence="5" value="rejected"/>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+            </choice>
+        </element>
+        <element label="Reason" max_length="1000" name="reason" type="string"/>
+        <element label="Source Location" name="source_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Material/Product" mandatory="true" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="Requested By" mandatory="true" name="requested_by" reference="sys_user" type="reference"/>
+        <element label="Related Inventory Stock" name="related_inventory_stock" reference="x_2056099_indust_0_inv_stock" type="reference"/>
+        <element label="Related Production Order" max_length="100" name="related_production_order" type="string"/>
+        <element label="Approved By" name="approved_by" reference="sys_user" type="reference"/>
+        <element default="javascript:gs.nowDateTime()" label="Requested Date" mandatory="true" name="requested_date" type="glide_date_time"/>
+        <element label="Completed Date" name="completed_date" type="glide_date_time"/>
+        <element label="Related Batch/Lot" name="related_batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
+        <element choice="3" default="medium" label="Priority" mandatory="true" name="priority" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
+                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
+                <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
+                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
+            </choice>
+        </element>
+        <element default="0" label="Quantity Requested" mandatory="true" name="quantity_requested" type="decimal"/>
+        <element choice="1" label="Request Type" mandatory="true" name="request_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Return" sequence="7" value="return"/>
+                <element inactive_on_update="false" label="MRO Issue" sequence="4" value="mro_issue"/>
+                <element inactive_on_update="false" label="Inventory Transfer" sequence="3" value="inventory_transfer"/>
+                <element inactive_on_update="false" label="Stock Adjustment" sequence="5" value="stock_adjustment"/>
+                <element inactive_on_update="false" label="Quarantine Movement" sequence="6" value="quarantine_movement"/>
+                <element inactive_on_update="false" label="Material Reservation" sequence="2" value="material_reservation"/>
+                <element inactive_on_update="false" label="Material Issue" sequence="1" value="material_issue"/>
+            </choice>
+        </element>
+        <element choice="1" label="Inventory Type" mandatory="true" name="inventory_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Safety / Buffer" sequence="4" value="safety_buffer"/>
+                <element inactive_on_update="false" label="MRO" sequence="2" value="mro"/>
+                <element inactive_on_update="false" label="Finished Goods" sequence="3" value="finished_goods"/>
+                <element inactive_on_update="false" label="Raw Materials" sequence="1" value="raw_materials"/>
+                <element inactive_on_update="false" label="Temporary / Expired" sequence="5" value="temporary_expired"/>
+                <element inactive_on_update="false" label="Quarantine / Disposal" sequence="6" value="quarantine_disposal"/>
+            </choice>
+        </element>
+        <element display="true" label="Request Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
+        <element label="Destination Location" name="destination_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <index name="index">
+            <element name="approved_by"/>
+        </index>
+        <index name="index2">
+            <element name="destination_location"/>
+        </index>
+        <index name="index3">
+            <element name="material_product"/>
+        </index>
+        <index name="index4">
+            <element name="related_batch_lot"/>
+        </index>
+        <index name="index5">
+            <element name="related_inventory_stock"/>
+        </index>
+        <index name="index6">
+            <element name="requested_by"/>
+        </index>
+        <index name="index7">
+            <element name="source_location"/>
+        </index>
+    </element>
+</database>

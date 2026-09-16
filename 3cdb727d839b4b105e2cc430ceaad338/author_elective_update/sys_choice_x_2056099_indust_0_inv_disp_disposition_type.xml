@@ -1,160 +1,152 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-    <sys_choice action="INSERT_OR_UPDATE" field="request_type" table="x_2056099_indust_0_inv_req" version="3">
+    <sys_choice action="INSERT_OR_UPDATE" field="disposition_type" table="x_2056099_indust_0_inv_disp" version="3">
         <sys_choice_set action="INSERT_OR_UPDATE">
-            <element>request_type</element>
-            <name>x_2056099_indust_0_inv_req</name>
+            <element>disposition_type</element>
+            <name>x_2056099_indust_0_inv_disp</name>
             <sys_class_name>sys_choice_set</sys_class_name>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 04:09:16</sys_created_on>
-            <sys_id>90657fdf24644e3686c53e75dfd6b2ad</sys_id>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_mod_count>0</sys_mod_count>
-            <sys_name>request_type</sys_name>
+            <sys_name>disposition_type</sys_name>
             <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
             <sys_policy/>
             <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-            <sys_update_name>sys_choice_x_2056099_indust_0_inv_req_request_type</sys_update_name>
+            <sys_update_name>sys_choice_x_2056099_indust_0_inv_disp_disposition_type</sys_update_name>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 04:09:16</sys_updated_on>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
         </sys_choice_set>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>request_type</element>
+            <element>disposition_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Material Issue</label>
+            <label>Quarantine</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_req</name>
+            <name>x_2056099_indust_0_inv_disp</name>
             <sequence>1</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:34</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>c3561f7006134cdf86e23cab34995820</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>material_issue</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>quarantine</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>request_type</element>
+            <element>disposition_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Material Reservation</label>
+            <label>Release from Quarantine</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_req</name>
+            <name>x_2056099_indust_0_inv_disp</name>
             <sequence>2</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:34</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>9b0dbece5b1e4c6e9776160f867637b2</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>material_reservation</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>release_from_quarantine</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>request_type</element>
+            <element>disposition_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Inventory Transfer</label>
+            <label>Return to Supplier</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_req</name>
+            <name>x_2056099_indust_0_inv_disp</name>
             <sequence>3</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:34</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>42a35ba2d43e4542b88a691def862989</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>inventory_transfer</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>return_to_supplier</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>request_type</element>
+            <element>disposition_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>MRO Issue</label>
+            <label>Rework</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_req</name>
+            <name>x_2056099_indust_0_inv_disp</name>
             <sequence>4</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:34</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>2a15debc4f324f48ab69abf9a69b4fb0</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>mro_issue</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>rework</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>request_type</element>
+            <element>disposition_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Stock Adjustment</label>
+            <label>Disposal</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_req</name>
+            <name>x_2056099_indust_0_inv_disp</name>
             <sequence>5</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:34</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>6a6a020340d44c128e934784cbb4a007</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>stock_adjustment</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>disposal</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>request_type</element>
+            <element>disposition_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Quarantine Movement</label>
+            <label>Scrap</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_req</name>
+            <name>x_2056099_indust_0_inv_disp</name>
             <sequence>6</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:35</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>8576dbabf5a241e4a995d30a4b7dc8ab</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:35</sys_updated_on>
-            <value>quarantine_movement</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>scrap</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>request_type</element>
+            <element>disposition_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Return</label>
+            <label>Return to Available Stock</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_req</name>
+            <name>x_2056099_indust_0_inv_disp</name>
             <sequence>7</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:35</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>2790591739a74075b9798842a0de60f2</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:35</sys_updated_on>
-            <value>return</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>return_to_available_stock</value>
         </sys_choice>
     </sys_choice>
 </record_update>

@@ -1,160 +1,152 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-    <sys_choice action="INSERT_OR_UPDATE" field="location_type" table="x_2056099_indust_0_inv_loc" version="3">
+    <sys_choice action="INSERT_OR_UPDATE" field="request_type" table="x_2056099_indust_0_inv_req" version="3">
         <sys_choice_set action="INSERT_OR_UPDATE">
-            <element>location_type</element>
-            <name>x_2056099_indust_0_inv_loc</name>
+            <element>request_type</element>
+            <name>x_2056099_indust_0_inv_req</name>
             <sys_class_name>sys_choice_set</sys_class_name>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 02:59:04</sys_created_on>
-            <sys_id>743146df36ff4b6ab6fe15d9225aae1d</sys_id>
+            <sys_created_on>2026-09-14 04:09:16</sys_created_on>
             <sys_mod_count>0</sys_mod_count>
-            <sys_name>location_type</sys_name>
+            <sys_name>request_type</sys_name>
             <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
             <sys_policy/>
             <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-            <sys_update_name>sys_choice_x_2056099_indust_0_inv_loc_location_type</sys_update_name>
+            <sys_update_name>sys_choice_x_2056099_indust_0_inv_req_request_type</sys_update_name>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 02:59:04</sys_updated_on>
+            <sys_updated_on>2026-09-14 04:09:16</sys_updated_on>
         </sys_choice_set>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>location_type</element>
+            <element>request_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Raw Material Warehouse</label>
+            <label>Material Issue</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_loc</name>
+            <name>x_2056099_indust_0_inv_req</name>
             <sequence>1</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
             <sys_created_on>2026-09-14 07:27:34</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>a79914169c21408db15eec33e02835b4</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
             <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>raw_material_warehouse</value>
+            <value>material_issue</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>location_type</element>
+            <element>request_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>MRO Store</label>
+            <label>Material Reservation</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_loc</name>
+            <name>x_2056099_indust_0_inv_req</name>
             <sequence>2</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
             <sys_created_on>2026-09-14 07:27:34</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>8350c882cb8148eab2528a22ea835c6f</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
             <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>mro_store</value>
+            <value>material_reservation</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>location_type</element>
+            <element>request_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Finished Goods Warehouse</label>
+            <label>Inventory Transfer</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_loc</name>
+            <name>x_2056099_indust_0_inv_req</name>
             <sequence>3</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
             <sys_created_on>2026-09-14 07:27:34</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>1d40c776febd4557855b6c1af29133ed</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
             <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>finished_goods_warehouse</value>
+            <value>inventory_transfer</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>location_type</element>
+            <element>request_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Temporary Storage</label>
+            <label>MRO Issue</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_loc</name>
+            <name>x_2056099_indust_0_inv_req</name>
             <sequence>4</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
             <sys_created_on>2026-09-14 07:27:34</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>73f06d21287444ed8b91895155cf2095</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
             <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>temporary_storage</value>
+            <value>mro_issue</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>location_type</element>
+            <element>request_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Quarantine Area</label>
+            <label>Stock Adjustment</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_loc</name>
+            <name>x_2056099_indust_0_inv_req</name>
             <sequence>5</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
             <sys_created_on>2026-09-14 07:27:34</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>1e1ce645554248ed876a12c0445cc258</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
             <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>quarantine_area</value>
+            <value>stock_adjustment</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>location_type</element>
+            <element>request_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Production Area</label>
+            <label>Quarantine Movement</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_loc</name>
+            <name>x_2056099_indust_0_inv_req</name>
             <sequence>6</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:34</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:35</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>ac9f97f7038d4fee81f2c8212101d7a9</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>production_area</value>
+            <sys_updated_on>2026-09-14 07:27:35</sys_updated_on>
+            <value>quarantine_movement</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>location_type</element>
+            <element>request_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Disposal Area</label>
+            <label>Return</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_loc</name>
+            <name>x_2056099_indust_0_inv_req</name>
             <sequence>7</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:34</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:35</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>3ab48f50831d4a7989a37809e694f0b0</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:34</sys_updated_on>
-            <value>disposal_area</value>
+            <sys_updated_on>2026-09-14 07:27:35</sys_updated_on>
+            <value>return</value>
         </sys_choice>
     </sys_choice>
 </record_update>

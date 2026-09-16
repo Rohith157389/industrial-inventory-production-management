@@ -1,100 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-    <sys_choice action="INSERT_OR_UPDATE" field="quality_status" table="x_2056099_indust_0_inv_batch" version="3">
+    <sys_choice action="INSERT_OR_UPDATE" field="criticality" table="x_2056099_indust_0_mat_master" version="3">
         <sys_choice_set action="INSERT_OR_UPDATE">
-            <element>quality_status</element>
-            <name>x_2056099_indust_0_inv_batch</name>
+            <element>criticality</element>
+            <name>x_2056099_indust_0_mat_master</name>
             <sys_class_name>sys_choice_set</sys_class_name>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 03:01:37</sys_created_on>
-            <sys_id>cf5405aa37e94a0a922d5f28b26d75d9</sys_id>
+            <sys_created_on>2026-09-14 02:55:12</sys_created_on>
             <sys_mod_count>0</sys_mod_count>
-            <sys_name>quality_status</sys_name>
+            <sys_name>criticality</sys_name>
             <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
             <sys_policy/>
             <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-            <sys_update_name>sys_choice_x_2056099_indust_0_inv_batch_quality_status</sys_update_name>
+            <sys_update_name>sys_choice_x_2056099_indust_0_mat_master_criticality</sys_update_name>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 03:01:37</sys_updated_on>
+            <sys_updated_on>2026-09-14 02:55:12</sys_updated_on>
         </sys_choice_set>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>quality_status</element>
+            <element>criticality</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Pending</label>
+            <label>Critical</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_batch</name>
+            <name>x_2056099_indust_0_mat_master</name>
             <sequence>1</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:37</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>9fe5ebded84c43668af9ef44bea0fdb4</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
-            <value>pending</value>
+            <sys_updated_on>2026-09-14 07:27:37</sys_updated_on>
+            <value>critical</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>quality_status</element>
+            <element>criticality</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Passed</label>
+            <label>High</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_batch</name>
+            <name>x_2056099_indust_0_mat_master</name>
             <sequence>2</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:37</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>dc327f80a7604a7d9da0af0a5cd52496</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
-            <value>passed</value>
+            <sys_updated_on>2026-09-14 07:27:37</sys_updated_on>
+            <value>high</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>quality_status</element>
+            <element>criticality</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Failed</label>
+            <label>Medium</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_batch</name>
+            <name>x_2056099_indust_0_mat_master</name>
             <sequence>3</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:37</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>8cd2b239c0c94f9a962a68c089cf2f2a</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
-            <value>failed</value>
+            <sys_updated_on>2026-09-14 07:27:37</sys_updated_on>
+            <value>medium</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>quality_status</element>
+            <element>criticality</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Conditional Approval</label>
+            <label>Low</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_batch</name>
+            <name>x_2056099_indust_0_mat_master</name>
             <sequence>4</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:37</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>666124dd77af4ff1863440473e4c4e99</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
-            <value>conditional_approval</value>
+            <sys_updated_on>2026-09-14 07:27:37</sys_updated_on>
+            <value>low</value>
         </sys_choice>
     </sys_choice>
 </record_update>

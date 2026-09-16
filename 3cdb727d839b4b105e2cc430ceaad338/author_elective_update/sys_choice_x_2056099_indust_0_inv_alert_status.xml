@@ -1,100 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-    <sys_choice action="INSERT_OR_UPDATE" field="result" table="x_2056099_indust_0_qc_insp" version="3">
+    <sys_choice action="INSERT_OR_UPDATE" field="status" table="x_2056099_indust_0_inv_alert" version="3">
         <sys_choice_set action="INSERT_OR_UPDATE">
-            <element>result</element>
-            <name>x_2056099_indust_0_qc_insp</name>
+            <element>status</element>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sys_class_name>sys_choice_set</sys_class_name>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 06:42:53</sys_created_on>
-            <sys_id>949175a9e2ed48768e980c9423b58b14</sys_id>
+            <sys_created_on>2026-09-14 07:01:26</sys_created_on>
             <sys_mod_count>0</sys_mod_count>
-            <sys_name>result</sys_name>
+            <sys_name>status</sys_name>
             <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
             <sys_policy/>
             <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-            <sys_update_name>sys_choice_x_2056099_indust_0_qc_insp_result</sys_update_name>
+            <sys_update_name>sys_choice_x_2056099_indust_0_inv_alert_status</sys_update_name>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 06:42:53</sys_updated_on>
+            <sys_updated_on>2026-09-14 07:01:26</sys_updated_on>
         </sys_choice_set>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>result</element>
+            <element>status</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Pending</label>
+            <label>Open</label>
             <language>en</language>
-            <name>x_2056099_indust_0_qc_insp</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>1</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>7c254718e1dc4e02b4fe67fb3245e816</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
-            <value>pending</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>open</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>result</element>
+            <element>status</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Passed</label>
+            <label>Acknowledged</label>
             <language>en</language>
-            <name>x_2056099_indust_0_qc_insp</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>2</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>e2811bf8a39742a38c1a7c08e54744af</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
-            <value>passed</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>acknowledged</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>result</element>
+            <element>status</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Failed</label>
+            <label>In Progress</label>
             <language>en</language>
-            <name>x_2056099_indust_0_qc_insp</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>3</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>b8a1055499db405ba7c5b029990a082d</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
-            <value>failed</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>in_progress</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>result</element>
+            <element>status</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Conditional Approval</label>
+            <label>Resolved</label>
             <language>en</language>
-            <name>x_2056099_indust_0_qc_insp</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>4</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:38</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>38778858a42f4f35827c70d303939928</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:38</sys_updated_on>
-            <value>conditional_approval</value>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>resolved</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>status</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Dismissed</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_alert</name>
+            <sequence>5</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:33</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:33</sys_updated_on>
+            <value>dismissed</value>
         </sys_choice>
     </sys_choice>
 </record_update>

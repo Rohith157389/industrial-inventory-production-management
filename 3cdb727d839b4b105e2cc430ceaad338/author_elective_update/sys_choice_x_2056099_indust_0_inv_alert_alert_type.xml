@@ -1,260 +1,228 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-    <sys_choice action="INSERT_OR_UPDATE" field="transaction_type" table="x_2056099_indust_0_inv_txn" version="3">
+    <sys_choice action="INSERT_OR_UPDATE" field="alert_type" table="x_2056099_indust_0_inv_alert" version="3">
         <sys_choice_set action="INSERT_OR_UPDATE">
-            <element>transaction_type</element>
-            <name>x_2056099_indust_0_inv_txn</name>
+            <element>alert_type</element>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sys_class_name>sys_choice_set</sys_class_name>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 03:14:41</sys_created_on>
-            <sys_id>191507b5d0ec45a6a93cd8cc6a89ed06</sys_id>
+            <sys_created_on>2026-09-14 07:01:13</sys_created_on>
             <sys_mod_count>0</sys_mod_count>
-            <sys_name>transaction_type</sys_name>
+            <sys_name>alert_type</sys_name>
             <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
             <sys_policy/>
             <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-            <sys_update_name>sys_choice_x_2056099_indust_0_inv_txn_transaction_type</sys_update_name>
+            <sys_update_name>sys_choice_x_2056099_indust_0_inv_alert_alert_type</sys_update_name>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 03:14:41</sys_updated_on>
+            <sys_updated_on>2026-09-14 07:01:13</sys_updated_on>
         </sys_choice_set>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>transaction_type</element>
+            <element>alert_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Receipt</label>
+            <label>Low Stock</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>1</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>dafece4be23642f1b43a82837ec97b16</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>receipt</value>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
+            <value>low_stock</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>transaction_type</element>
+            <element>alert_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Reservation</label>
+            <label>Below Safety Stock</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>2</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>25ce6846d56f43b094007f2a03e7212f</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>reservation</value>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
+            <value>below_safety_stock</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>transaction_type</element>
+            <element>alert_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Release Reservation</label>
+            <label>Reorder Required</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>3</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>dca1b4c8158744cc8510cc836e101cdf</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>release_reservation</value>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
+            <value>reorder_required</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>transaction_type</element>
+            <element>alert_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Issue</label>
+            <label>Material Shortage</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>4</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>886667e0b7fc40a09eb8c9dd35c91636</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>issue</value>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
+            <value>material_shortage</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>transaction_type</element>
+            <element>alert_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Transfer</label>
+            <label>Expiry Warning</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>5</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>365bf1258abb4de78ff6ce51d31f503e</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>transfer</value>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
+            <value>expiry_warning</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>transaction_type</element>
+            <element>alert_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Adjustment</label>
+            <label>Expired Material</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>6</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>a9e9c935f47043c2bdd7f20c4737aed5</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>adjustment</value>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
+            <value>expired_material</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>transaction_type</element>
+            <element>alert_type</element>
+            <hint/>
+            <inactive>false</inactive>
+            <label>Quality Failure</label>
+            <language>en</language>
+            <name>x_2056099_indust_0_inv_alert</name>
+            <sequence>7</sequence>
+            <synonyms/>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
+            <value>quality_failure</value>
+        </sys_choice>
+        <sys_choice action="INSERT_OR_UPDATE">
+            <dependent_value/>
+            <element>alert_type</element>
             <hint/>
             <inactive>false</inactive>
             <label>Quarantine</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
-            <sequence>7</sequence>
+            <name>x_2056099_indust_0_inv_alert</name>
+            <sequence>8</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>7d543aa068f84ce2bb13de258c3ed1ef</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
             <value>quarantine</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>transaction_type</element>
+            <element>alert_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Release from Quarantine</label>
+            <label>Supplier Delay</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
-            <sequence>8</sequence>
-            <synonyms/>
-            <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
-            <sys_domain>global</sys_domain>
-            <sys_domain_path>/</sys_domain_path>
-            <sys_id>0e876f2bcbc24483b71a05de3fa696d5</sys_id>
-            <sys_mod_count>0</sys_mod_count>
-            <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>release_from_quarantine</value>
-        </sys_choice>
-        <sys_choice action="INSERT_OR_UPDATE">
-            <dependent_value/>
-            <element>transaction_type</element>
-            <hint/>
-            <inactive>false</inactive>
-            <label>Return to Supplier</label>
-            <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>9</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>4f46f553066c44438d262efee6ada197</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>return_to_supplier</value>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
+            <value>supplier_delay</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>transaction_type</element>
+            <element>alert_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Rework</label>
+            <label>Overstock</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>10</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>f5fc2a836cf7422fa71fd804170cd9a6</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>rework</value>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
+            <value>overstock</value>
         </sys_choice>
         <sys_choice action="INSERT_OR_UPDATE">
             <dependent_value/>
-            <element>transaction_type</element>
+            <element>alert_type</element>
             <hint/>
             <inactive>false</inactive>
-            <label>Disposal</label>
+            <label>Stock Mismatch</label>
             <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
+            <name>x_2056099_indust_0_inv_alert</name>
             <sequence>11</sequence>
             <synonyms/>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
+            <sys_created_on>2026-09-14 07:27:32</sys_created_on>
             <sys_domain>global</sys_domain>
             <sys_domain_path>/</sys_domain_path>
-            <sys_id>07b302a6b6a94fdf8d5dddfe4820eb58</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>disposal</value>
-        </sys_choice>
-        <sys_choice action="INSERT_OR_UPDATE">
-            <dependent_value/>
-            <element>transaction_type</element>
-            <hint/>
-            <inactive>false</inactive>
-            <label>Shipment</label>
-            <language>en</language>
-            <name>x_2056099_indust_0_inv_txn</name>
-            <sequence>12</sequence>
-            <synonyms/>
-            <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-09-14 07:27:36</sys_created_on>
-            <sys_domain>global</sys_domain>
-            <sys_domain_path>/</sys_domain_path>
-            <sys_id>faa28ca23e864a2b8f5c81570e1962d8</sys_id>
-            <sys_mod_count>0</sys_mod_count>
-            <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-09-14 07:27:36</sys_updated_on>
-            <value>shipment</value>
+            <sys_updated_on>2026-09-14 07:27:32</sys_updated_on>
+            <value>stock_mismatch</value>
         </sys_choice>
     </sys_choice>
 </record_update>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="7f007360755c44f7b847c13b0eb462d9" label="Inventory Stock" name="x_2056099_indust_0_inv_stock" type="collection">
+        <element default="0" label="Available Quantity" mandatory="true" name="available_quantity" read_only="true" read_only_option="instance_configured" type="decimal"/>
+        <element choice="1" label="Inventory Type" mandatory="true" name="inventory_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Temporary / Expired" sequence="5" value="temporary_expired"/>
+                <element inactive_on_update="false" label="Finished Goods" sequence="3" value="finished_goods"/>
+                <element inactive_on_update="false" label="Raw Materials" sequence="1" value="raw_materials"/>
+                <element inactive_on_update="false" label="MRO" sequence="2" value="mro"/>
+                <element inactive_on_update="false" label="Quarantine / Disposal" sequence="6" value="quarantine_disposal"/>
+                <element inactive_on_update="false" label="Safety / Buffer" sequence="4" value="safety_buffer"/>
+            </choice>
+        </element>
+        <element label="Batch/Lot" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
+        <element display="true" label="Inventory ID" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
+        <element label="Location" mandatory="true" name="location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Expiry Date" name="expiry_date" type="glide_date"/>
+        <element default="0" label="Reserved Quantity" mandatory="true" name="reserved_quantity" type="decimal"/>
+        <element default="0" label="Reorder Level" mandatory="true" name="reorder_level" type="decimal"/>
+        <element default="0" label="Safety Stock" mandatory="true" name="safety_stock" type="decimal"/>
+        <element default="true" label="Active" mandatory="true" name="active" type="boolean"/>
+        <element label="Last Updated" mandatory="true" name="last_updated" type="glide_date_time"/>
+        <element default="0" label="Total Quantity" mandatory="true" name="total_quantity" type="decimal"/>
+        <element label="Material/Product" mandatory="true" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element choice="1" label="Status" mandatory="true" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Blocked" sequence="4" value="blocked"/>
+                <element inactive_on_update="false" label="Available" sequence="1" value="available"/>
+                <element inactive_on_update="false" label="Inspection" sequence="3" value="inspection"/>
+                <element inactive_on_update="false" label="Expired" sequence="6" value="expired"/>
+                <element inactive_on_update="false" label="Quarantined" sequence="5" value="quarantined"/>
+                <element inactive_on_update="false" label="Reserved" sequence="2" value="reserved"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="batch_lot"/>
+        </index>
+        <index name="index2">
+            <element name="location"/>
+        </index>
+        <index name="index3">
+            <element name="material_product"/>
+        </index>
+    </element>
+</database>
