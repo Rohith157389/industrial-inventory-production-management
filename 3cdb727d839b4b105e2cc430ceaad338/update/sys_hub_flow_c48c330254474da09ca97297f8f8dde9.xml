@@ -1,0 +1,1361 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=2081000</attributes>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name>fd__inventory_request__stock_shortage_detection</internal_name>
+        <label_cache>[{"name":"Created or Updated_1.current.related_inventory_stock","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_req Record➛Related Inventory Stock","type":"string","base_type":"string","usedInstances":{"1c44e9a9-eeec-45ee-9e33-26ba42c80add":["condition"],"6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8":["conditions"],"c4b0f5f0-df74-45ef-b39d-e41f9727c971":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.material_product","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_req Record➛Material Product","type":"reference","base_type":"reference","usedInstances":{"442d2764-20fb-4c1f-ad95-de4ed7f3a298":["values"],"2f6bb2ed-6a47-4100-bfce-e0bf518428e3":["values"],"c4b0f5f0-df74-45ef-b39d-e41f9727c971":["values"]},"attributes":{}},{"name":"Created or Updated_1.current","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_req Record","type":"reference","base_type":"reference","usedInstances":{"442d2764-20fb-4c1f-ad95-de4ed7f3a298":["values"],"2f6bb2ed-6a47-4100-bfce-e0bf518428e3":["values"],"c4b0f5f0-df74-45ef-b39d-e41f9727c971":["values"]},"attributes":{}},{"name":"6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8.status","label":"6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8➛status","type":"string","base_type":"string","usedInstances":{"a4dcc808-1123-44b1-97ea-d6d39ad4f617":["condition"]},"attributes":{}},{"name":"6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8.Record.available_quantity","label":"6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8➛Record➛available_quantity","type":"decimal","base_type":"decimal","usedInstances":{"75fcd6f9-0129-4f2c-befb-9cc078780af1":["condition"],"c4b0f5f0-df74-45ef-b39d-e41f9727c971":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.quantity_requested","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_req Record➛Quantity Requested","type":"decimal","base_type":"decimal","usedInstances":{"75fcd6f9-0129-4f2c-befb-9cc078780af1":["condition"],"c4b0f5f0-df74-45ef-b39d-e41f9727c971":["values"]},"attributes":{}}]</label_cache>
+        <master_snapshot>36f78c03835383505e2cc430ceaad37e</master_snapshot>
+        <master_snapshot_digest/>
+        <name>FD - Inventory Request - Stock Shortage Detection</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id>29ef4447839383505e2cc430ceaad352</remote_trigger_id>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>published</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:48</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>c48c330254474da09ca97297f8f8dde9</sys_id>
+        <sys_mod_count>13</sys_mod_count>
+        <sys_name>FD - Inventory Request - Stock Shortage Detection</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_c48c330254474da09ca97297f8f8dde9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:36</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=c48c330254474da09ca97297f8f8dde9"/>
+    <sys_variable_value action="delete_multiple" query="document_key=c48c330254474da09ca97297f8f8dde9"/>
+    <sys_flow_record_trigger action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition table="x_2056099_indust_0_inv_req">status=submitted^request_type=material_reservation<item display_value="Submitted" endquery="false" field="status" goto="false" newquery="false" operator="=" or="false" value="submitted"/>
+            <item display_value="Material Reservation" endquery="false" field="request_type" goto="false" newquery="false" operator="=" or="false" value="material_reservation"/>
+        </condition>
+        <name/>
+        <on_delete>false</on_delete>
+        <on_insert>true</on_insert>
+        <on_update>true</on_update>
+        <published_version/>
+        <run_flow_in>background</run_flow_in>
+        <run_on_extended>false</run_on_extended>
+        <run_when_setting>both</run_when_setting>
+        <run_when_user_list/>
+        <run_when_user_setting>any</run_when_user_setting>
+        <sys_class_name>sys_flow_record_trigger</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 11:27:35</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>29ef4447839383505e2cc430ceaad352</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:35</sys_updated_on>
+        <table>x_2056099_indust_0_inv_req</table>
+        <trigger_definition/>
+    </sys_flow_record_trigger>
+    <sys_trigger_runner_mapping action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <data>{"run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any","run_on_extended":"false"}</data>
+        <identifier>c48c330254474da09ca97297f8f8dde9</identifier>
+        <identifier_type>flow</identifier_type>
+        <runner>FDTriggerRunner</runner>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 11:27:35</sys_created_on>
+        <sys_id>25ef4447839383505e2cc430ceaad353</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:35</sys_updated_on>
+        <trigger display_value="">29ef4447839383505e2cc430ceaad352</trigger>
+    </sys_trigger_runner_mapping>
+    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=c48c330254474da09ca97297f8f8dde9^sys_idNOT IN25ef4447839383505e2cc430ceaad353"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=c48c330254474da09ca97297f8f8dde9"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=c48c330254474da09ca97297f8f8dde9"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=c48c330254474da09ca97297f8f8dde9^sys_idNOT IN2df74c03835383505e2cc430ceaad37e,69f74c03835383505e2cc430ceaad373,9df74c03835383505e2cc430ceaad32c"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</model>
+        <model_id>c48c330254474da09ca97297f8f8dde9</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_c48c330254474da09ca97297f8f8dde9</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:55</sys_created_on>
+        <sys_id>2df74c03835383505e2cc430ceaad37e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:52:55</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=2df74c03835383505e2cc430ceaad37e"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=10000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</model>
+        <model_id>c48c330254474da09ca97297f8f8dde9</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_c48c330254474da09ca97297f8f8dde9</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:55</sys_created_on>
+        <sys_id>69f74c03835383505e2cc430ceaad373</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:46</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=69f74c03835383505e2cc430ceaad373"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</model>
+        <model_id>c48c330254474da09ca97297f8f8dde9</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_c48c330254474da09ca97297f8f8dde9</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:54</sys_created_on>
+        <sys_id>9df74c03835383505e2cc430ceaad32c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:52:54</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=9df74c03835383505e2cc430ceaad32c"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=c48c330254474da09ca97297f8f8dde9"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=c48c330254474da09ca97297f8f8dde9"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=c48c330254474da09ca97297f8f8dde9^sys_idNOT IN822fbe792e4d4efbb7db3958a98b8c5c"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</flow>
+        <generation_source/>
+        <name>Created or Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:49</sys_created_on>
+        <sys_id>822fbe792e4d4efbb7db3958a98b8c5c</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:28</sys_updated_on>
+        <trigger_definition display_value="Created or Updated">a45d9180c32222002841b63b12d3aea7</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1Y247bNhD9FUJPLeACTosWyL61SRdYIGmA7LZ9SLcCTY5sIjTpkCN71cX+e4e62LQuqba2cgH2yRY55pyZOWeG8rv7BJ1aLsFdGY/cCLgu/JVMLpJklmi+AE1fb/hCAz0rg+AM1zfFBmgZw3Jq+DrsSdiAkWCw+qlYWSXglfL0/O52lqy5kRytK5ILdDnMkszZ9Q2sN5ojnZVx7WnROgkuuXg2n8+S8tzaCR245ToPz3fp9/Mff5o/f54qI3OP6Zy+bFMHHwII5enA4o8xtmKltHRgKnwb7sgfBu/3nbhbULAn/Bo54YY7DImQ+6Ci0OsVB1y+MbqITO68+gfK3+ce0iiZtUV2vbK7t5ABIRZwSfEEd/WmtoLr/RNHqugiR/AUy8PDPiuXCnRdWC+c2uDPAtW2Sf7DbAwT3uaGvTHs1zpGVmbId6lRlf8/aHFPUcGHPARURp41dQsMIePsVeTVGiZyR9Ejo3yyJssMGwTZ1ZovoXJD52oQGBUh+93HT6+V98oso9gHoJT7XSy6iAE1xDgFwm0fUcaKxOUmtSbdU+8glwZ/SxnN8ggRDJZ80De2OPClaiPhcht4LhvKTSCWTNsduzLnVgg3RZuUpSdlSB0FE5ac3eFkqlhw8X7pbG7kEIqDBftGQsZzjd9OJ1Lr4ONwji0+p0wDIppCkUSPktnS6dHeSLEeKNfr9kmdVapeWCMVKtunzWbLP+pi80g2iAhAwwVCi7n/K5/Pf5A+X6wVEjX/doH1dH0Jpav21nS2U1zTXcaD2/L6mBZ7TjxtBN/iJPaEhT35nIxv9b3y/9Jtxw36FG3KpUwjxPvryNpK0C8jNtQcI1ltcvTJQ8QVmoj7C+P5h8qfKzDsGqgx2fCJGBrUmSdMeRiv8EVNNRSDlV3GOkad0lGn2Rs2mCZr9IYuGmOA/WbNd58S18LiqjN6CMcvtH6UoHB1HQB36h325Mm0I1alfs+m7XFs7cFUrY4cSQOEHXb+NKRaySulVmq2o/OlVhJSXe2df1qVPIigtYtGCXWN94YzXb48kitxuB9ziD0peOJKSN5EY6HvxYMaXXjpCHWZrMNaA6nNehu+ylidHHo7XRQMV0CYNF146eQS1XR/DxgbRn0b2kvLaIO5TwLuPH2/FFW3+Vflbmm5Wny0nIf7fsv5U/M/pO+msjq3jK0RrduTOPUPrGGRcL3jhe9ol6QRVFL/iUYLxAdTMWAaHLAFd9S9LqlzlYss38iglKk850bRcipW3CzBdyBwsWKVCatMPmdLaN5qPDqyXBZRN+iE0WoMnf2RPeJA8mEMX0tTGN8Dbv8F2UbRwXwZAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create_or_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=c48c330254474da09ca97297f8f8dde9^sys_idNOT IN2f6bb2ed6a474100bfcee0bf518428e3,442d276420fb4c1fad95de4ed7f3a298,6c197ba82ba04b9fb27eac6f5b2b97d8,c4b0f5f0df7445efb39de41f9727c971"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</flow>
+        <generation_source/>
+        <order>6</order>
+        <parent_ui_id>a4dcc808-1123-44b1-97ea-d6d39ad4f617</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:49</sys_created_on>
+        <sys_id>2f6bb2ed6a474100bfcee0bf518428e3</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:28</sys_updated_on>
+        <ui_id>2f6bb2ed-6a47-4100-bfce-e0bf518428e3</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K5GfqyhpoaJ9m8oqTdpAGxsvjFqOfdNYc+Lgj0JX9b/vOk5DxUBj0l6Q1qf4fhyfe3JzerMjDauBzIljhQLaHUZkw5QPwQc6zk6n2WxGZSO8dTTDhw1lCozDMiFtq9j2+nXVLTOI7sCQ+Y7wSiphoCHzm9sRkQLbpzlkp7N8yif5ZDLOsvHZSV5MJ0U+FhMGcIIQihWgsPRrIIvn57i7bfts7ONxb3IRE9qIwCcbEXhw0AhAIiVTFkakZo1gTpstmTvjMWCAictGbYeKSjYOAUmofbDyJ157loW6EnAyDjE3HGkvVwyX58yxK0Tmzpu+lFdacrBREwEl88otjmOx4LJ1UjexpRuz79bK181FlIQMAIe3gxFvkQS0Yc7AvB+jvKr0/ZcDyyW+uyBJn1SaMzWcmHNGFt4FPjsCCmoEojVrW9msaWv0RnbNyKVO1woPaan0PV5q5bpJGQ/EU5SVpUuMn3fha2ZkmOITwmDzfkTs1i4Us/ZxFhSR3vnAJE7Wz0CjDKGFG9m6d3jBBnq6+9Gw3N0+26PF7naShrX47rNsImqGeymZorbSxrE1rCxsMOK2MV/JdbUainBQge8tpna7BW6GA5Fok3xrRXikecq9QT1d+rRpv18ZUF0RfhxYgRtGDdwhv1cBYn8kX4O1SDT2fDhAJdZp/iMxwHG1E669EkmjXVJAIoNispQIXCKyq6RNDuySnkG6so45byOqRplX7z///qX/l+/v5Puj9QlA23zJ+vLiyPqWEpSwj943rPbB96Bugz40rvoT7+uTyXWf7P0v/1f+l0+z7veGXDAO9+ZN8Oj/7gU7vP0Fhtkm9e0HAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=2f6bb2ed6a474100bfcee0bf518428e3"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id>1c44e9a9-eeec-45ee-9e33-26ba42c80add</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:49</sys_created_on>
+        <sys_id>442d276420fb4c1fad95de4ed7f3a298</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:28</sys_updated_on>
+        <ui_id>442d2764-20fb-4c1f-ad95-de4ed7f3a298</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K5GfqyhpoaJ9m8oqTdpAGxsvjFqOfdNYc+Lgj0JX9b/vOk5DxUBj0l6Q1qf4fhyfe3JzerMjDauBzIljhQLaHUZkw5QPwQc6zk6n2WxGZSO8dTTDhw1lCozDMiFtq9j2+nXVLTOI7sCQ+Y7wSiphoCHzm9sRkQLbpzlkp7N8yif5ZDLOsvHZSV5MJ0U+FhMGcIIQihWgsPRrIIvn57i7bfts7ONxb3IRE9qIwCcbEXhw0AhAIiVTFkakZo1gTpstmTvjMWCAictGbYeKSjYOAUmofbDyJ157loW6EnAyDjE3HGkvVwyX58yxK0Tmzpu+lFdacrBREwEl88otjmOx4LJ1UjexpRuz79bK181FlIQMAIe3gxFvkQS0Yc7AvB+jvKr0/ZcDyyW+uyBJn1SaMzWcmHNGFt4FPjsCCmoEojVrW9msaWv0RnbNyKVO1woPaan0PV5q5bpJGQ/EU5SVpUuMn3fha2ZkmOITwmDzfkTs1i4Us/ZxFhSR3vnAJE7Wz0CjDKGFG9m6d3jBBnq6+9Gw3N0+26PF7naShrX47rNsImqGeymZorbSxrE1rCxsMOK2MV/JdbUainBQge8tpna7BW6GA5Fok3xrRXikecq9QT1d+rRpv18ZUF0RfhxYgRtGDdwhv1cBYn8kX4O1SDT2fDhAJdZp/iMxwHG1E669EkmjXVJAIoNispQIXCKyq6RNDuySnkG6so45byOqRplX7z///qX/l+/v5Puj9QlA23zJ+vLiyPqWEpSwj943rPbB96Bugz40rvoT7+uTyXWf7P0v/1f+l0+z7veGXDAO9+ZN8Oj/7gU7vP0Fhtkm9e0HAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=442d276420fb4c1fad95de4ed7f3a298"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:49</sys_created_on>
+        <sys_id>6c197ba82ba04b9fb27eac6f5b2b97d8</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:28</sys_updated_on>
+        <ui_id>6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VYXW/aPBT+K1GuKW/CV6B3ExXSpG2V1q4322Q5sVOsGTuzHVqK+O/vceKECDIoK0ibdtX6+Njn+DnPcxzzde0LvKD+ta+lMsisMup3/CXmeW3DOgETYTrjePXgZrBnpPcC9gwrWG+o8q/XfjJnnCgq/Ouv3zs+I+A4JMEknUyG4ygI+v0gGI36CQ7juD9K4iCOQ9iC45hycL2DaN59mUFLUsWfa4ghWVKNP7il08ooFbGp9Ds+fTZUEAo5pJhr2vEXWBBspFrVFkUxuRV8a5gzYWA33zo/a/YC8fo965dSOFVCy7l6iBwopTm9wQbfGZUnJlfOtUxWAx7r+pg1dC0ou/SDTWfr/2L98a4/oc0F4QbwJjTFOTfT34sZnhqzZ2OWB7zNDJNQdb9v64JjXh1f8nwhPpW19OsMH1roVc7c/IJluQawaWYLaivkypXezeXT56oaMyaKvNwklwnm9Qgbo1icG4vL2k8JShnlBDHBmbCRoGyWPpTTBURAC5xlTDyiTMklK3aFsyy6jxwG3ZTLJ4sFexRdnNiTd4FYuDsD+01hfsCKWRQ+wjawuGMDzmGpi4d0olhm0BMjj9Rso1deRJonzH+0zTvGoapQxfH8TcfXKz3lWOst2EBT9DO3GJTQO/RQUahiSZHFOzjBkjqgLAec9BIpCLOH000arDRi5FsOWibr9RQEZCjxpPK+ZMT+i8Jukisoh+kqygsLE0sYguyQNjL5sdnsN5Mz7XqsFZHhoVaEJ41WNG0evg2Qqhnt2j60bVAp7GxNaRAEwXnaUlvb2Jf1Sarel6ul7xvUehlRnq6ZEoKjwkFIiwQ0DMtSzDisRVQpqRoyCvY1UAr5OIkTiuNBD4+ifhgGQRiQKBhHUTgexekIR4O0QeIbKaymepHxbCKeFF6VyPFUHcFjKTnFYofd91DQ/2YuY8fu4RnZ/Rdx+61XUc7ud5EuTa1YX+p+ytkXwX7m9L2l2JgGvXFIkqtxFEZXg5SMriYED6/wJB5GfUKTQXqZK6esw1Ymz6gXDEfBZALtnuTaoMD2/bLj7yvoiPfR22Fy8HYYNIR17/LcSdtJphiiYm5HNXbC+1ROVF96Z1PN+F9SzcW+0xgHhqCyhFrmqoByiRIOhLITCgtd7nURBbAULQA4lkF4RRMgiUZYUZTKXBDkAm8FYlFNmQKul877ovhMocYCWj9feWZOvcLbq72PiSI8KIq4+cn0PvWq1N3+2oPUvSJ1r079tIOe8uYb/HEX0PY9NbP3r8UfWJQ1Cljdtm3vviOlO8CBVz4KX5lUeNak3v5qbCN96+vxSK5/RUu6RJMpnt0lyPsN4zVN4eBPOpg0msKtLboXr3Z+0amDO32Xj/GWK3NmJ3auzN6/eWX+kY+ozq9+Sjnz6+r7/4RMDSGoFAAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=6c197ba82ba04b9fb27eac6f5b2b97d8"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</flow>
+        <generation_source/>
+        <order>9</order>
+        <parent_ui_id>75fcd6f9-0129-4f2c-befb-9cc078780af1</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:49</sys_created_on>
+        <sys_id>c4b0f5f0df7445efb39de41f9727c971</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:28</sys_updated_on>
+        <ui_id>c4b0f5f0-df74-45ef-b39d-e41f9727c971</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1WyW7bMBD9FUJnW5DsxLF9K5Lm1CRo0uaSxsKIHFlEqSUk5aWG/71DbTGytDkUKALEJ3GWx/eGQ47vdl4OGXpzz0KsMKoXA28FqnLGTTQKjifBbBbJXFTGRgF9rCJQqC2FCWlKBdvbt0WXoAndovbmO4+nUgmNuTe/ux94UlD6JMTgeBZO+Dgcj0dBMJoehfFkHIcjMQbEI4JQEKOi0G+OLK1f4m635Yu2L4e57LJxFFo4PsHAw43FXCARSUAZHHgZ5AJsobfe3OqKDBpBXOVq20ekMrcE6LnYjZG/aNtp4OISJGUcG1+/jNpyNebkDCzcEDK3lW5DeVpIjqapicAEKmVPD21NwFVpZZE3KbXMNrtQVZZfNiXxeoDudMhSGSKBpdPpmLcykpu0WF93LM/p7FxJWqcqOKh+BdZqGVfW8dl5qDAjoCiDspT5Mip1sZJ1MnHJ/KWihZ+oYk2bGrnMfeCOuE9lBf+c7Ge1+Ra0dCouCIaS9wPPbM2pAmMetVARo4fKMWmUtRqipgwuhWtZ2k+0wQpbuvtB39x1P5uDxq57MnJt8aMKgrHIgPpSgopMWmgLS1wYXJHFbht/Kpfpog8ioYLOrXHtdqfUGRYFKzT7Xgr3GYU+rzTV0/pPk/b7BV0K8lBnRcYW/OebYDSq2vIkl9CeezQ+kNo30aP89suVN7e94N1uwsPZSQzT4SiGYHgUz5JhPDrBIfBJchyP4tmJmPrXyOkK+bACqeoL16EQsE01UjmVeAb9R6VdcCcDBWE155WhMXQ2DcxFW1jWHRkT9LhwivfZtxRZn05fBvUKXO+xDp3hhiMKwyyF9vRZX0SfXeNK4pq1tFhdbqaoK5Rh9DQwXpBymRML2qBUmEuTuuvA1tKmjE6bMuv74S+MBVuZhnZBrbv4/PX56/nRkh8t+b9b8q8jWiCN99dGdBgfjOhziUqYxxndP8HdfMasdF0SNU/ykxndOtlt62zndPiv5nQ4CerfO5rWjbh3P6wP/pe9MrbvfwMI0LcWlQoAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=c4b0f5f0df7445efb39de41f9727c971"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=c48c330254474da09ca97297f8f8dde9"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=c48c330254474da09ca97297f8f8dde9^sys_idNOT IN1c44e9a9eeec45ee9e3326ba42c80add,25e37caf37104518a3eda01c28e1605d,281bc32fedf34230a8414efd659d3063,75fcd6f901294f2cbefb9cc078780af1,a4dcc808112344b197ead6d39ad4f617"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">cef78c03835383505e2cc430ceaad30a</block>
+        <comment>Check if Related Inventory Stock reference is empty</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>1</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:49</sys_created_on>
+        <sys_id>1c44e9a9eeec45ee9e3326ba42c80add</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:28</sys_updated_on>
+        <ui_id>1c44e9a9-eeec-45ee-9e33-26ba42c80add</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Vy27bMBD8lYBnQ5D8CGLfAqcBDCRNUacBiiAQVuTKJkKRKkk5UQX/e5eSbAeNi6SPY2/kcHc5s9yRGmYqX1be3Zpz5+RKs9n9w4BJHTBaN0wKNmNswDQUSCtutJBeGk3QBlQVsKaZWwSP4sTYky+lCMs0iXhlLWofWVQtIvWGtsbWqfOGP263i+WH60+3X6mSkK5UUN/9s4J8LZWg4E5OCZbYe7Rs1vx01MqbwiSfJPGEj4ano2EcD8/GSXY6ypKhGAGOT6mgggwVhc5f6D/SEl+XAXLeSr3q91d96nIHGisClWE8YPjsUQskEjkohwNWgCa5pInNvK0IoEaIG63qfcRaat89SQHPTn7HUCmOQ2SOpItjd7rfpn13Ozi/AA9EpeK+sn0oXxvJ0XUdEZhDpfz8JdYF3JStyjbFQ6Z22UZVhf7YNYPtC+wek5DKEQksg9LAvReSL9fm6fOO5aXUbVf6Q2U4qP0OPPUuq3zg0zBUWFChtICypI6mpTUb2SYTlyJaKdpEuTJPdGmY6Qh4IB5RYyG6JPyihe/AyqDimspQMs2CSx23stxpay9n2wFztZsrcO6gkZqbfqsCw05xry3t2hNS2kLndPEGexnbQcMCqyuzknyhnQeSvazdIoxgwsdjnMIUEfl4gjjFEQ1jBuMhP4tBCNaPah5Dnkx5cnxUYXRkLNMWONj1td/Y2xZ5x72vLHLSTf6vGf2OW5I33NIj77LLZPLfLX/tlkAzAyd52v4tqFz4YP2hXfqmX0pU4ugIHfPTQ5jpjtX+Nbh0lHYbsMXuJxYOahq54LoD9GTsY5B9wLY/ALL/LaMOBwAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">42f78c03835383505e2cc430ceaad311</block>
+        <comment>End flow — no Related Inventory Stock on request</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>3</order>
+        <outputs_assigned/>
+        <parent_ui_id>1c44e9a9-eeec-45ee-9e33-26ba42c80add</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:49</sys_created_on>
+        <sys_id>25e37caf37104518a3eda01c28e1605d</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:28</sys_updated_on>
+        <ui_id>25e37caf-3710-4518-a3ed-a01c28e1605d</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">9af78c03835383505e2cc430ceaad317</block>
+        <comment>End flow — Inventory Stock record not found</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>7</order>
+        <outputs_assigned/>
+        <parent_ui_id>a4dcc808-1123-44b1-97ea-d6d39ad4f617</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:49</sys_created_on>
+        <sys_id>281bc32fedf34230a8414efd659d3063</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:28</sys_updated_on>
+        <ui_id>281bc32f-edf3-4230-a841-4efd659d3063</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">9ef78c03835383505e2cc430ceaad319</block>
+        <comment>If Available Quantity &lt; Quantity Requested → shortage detected</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>8</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:49</sys_created_on>
+        <sys_id>75fcd6f901294f2cbefb9cc078780af1</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:28</sys_updated_on>
+        <ui_id>75fcd6f9-0129-4f2c-befb-9cc078780af1</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Vy27bMBD8lYBnW5Dkp3wLHAQIkDZAkvbSBsKKIm2iNKmQlBNV0L93qYcdNC6StpceeiOHu8uZ4a5UE126onT2Xp9bKzaKrL48jIhQHsN1TUROVoSMiIIdwxXVKhdOaIXQHmTpsbqe0yhZZLAcxxmE42mW8HEWL9gY6JzPsjhLFvkyuGVUmzyAPQgJmWTpYwnKCVc1zdcyDCe0rteGgWP5mTZnn4rcL9MooKUxTLlgCE8NeyyZxcOmQRa5sIWE6vM/QYZuhcwxoLOxAIOuOWbIqv7pqLU1gRmfReGMTuL5JA7DeDmNsvkki+J8Amw6x4JIjkkMXb/w/cRTuKrwkHVGqE2/v+5T7wYQBXsqcTgi7NkxlTMkwUFaNiI7UChRm4qsnCkRQPH5jZLVIWIrlOtaYQfPVnxnvlIY+kjOUBdl3elhm/Yv08H8AhwglZK60vShdKsFZbZzJGccSunWL7Eu4KZoVbYpzj9Wn61luVMfOzPIocDQCIiUFkmwwiv13Hsh/G6rn24HlpdCta70h1JTkIcdOPQuK53nUxMm2Q4LpTsoCnQ0LYzeizYZueyCjcRNwKV+wkv9LAVAPfEAjYXgEvGLFv4MRngVH7AMJmMv2NRSI4pBW3s5aUbEVnYtwdqjRjTXd6ocFPfa0s4en9IWOseL96yX0Yxq4lld642gV8o6QNl3lb3yLbiYcZrPeRJGcTLlMc0YzxJKw8VysQyBR6RvVe43CY1OtypMTrRl2gLHz8TrWSVvj8g77n01Imdd5/+a0e9MS/TGtPTIu8ZlNvs/LX89LZ5mBlbQtP1LYTn/wfrDcelNvxRM5idb6NQ8Pfie7lgdXoMKi2n3Hrsafp7+oMKW81N3hJ60+eZlH7HmB6FaoTCGBwAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">def78c03835383505e2cc430ceaad314</block>
+        <comment>Check if Inventory Stock lookup failed</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>5</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:49</sys_created_on>
+        <sys_id>a4dcc808112344b197ead6d39ad4f617</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:28</sys_updated_on>
+        <ui_id>a4dcc808-1123-44b1-97ea-d6d39ad4f617</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Vy27bMBD8lZZn29DL8uMWODBgIG2AJsilDYTlQzZRSlRJKokq+N+7lGQ7aFwkba69mUPucmY5Y7VE166qnb3VF9bKbUmWX+9HRJYew98tkZwsCRmREgqBv5guuXRSlwg9gKo91rYpCxczCvNxRCEYJ3SRj2k0E2NgaT6lEV3M+HxiHbja7vcfv9VBEPMAO3BpKwXN3bsbsZ1U3IiBfgUG2TphyLL9bauTs4BpPg2DKYujNI6CIJonIU1jGkY8BpGk2FABFQqPrp7pPTMC11Qess7Icjusr4bSmwOoDfdUomBExJMTJRdIIgdlxYgUUHJw2jRk6UyNgBHAr0vVHE/sZOn6JyjgycqfwncKAn8yF6iLiX73uMyGqfZwfgkOkErNXG2Go2ynJRO2nwgXOdTKrZ5j/YHrqlPZlTig6lCtVV2Un/thkGODwyMiUlskISqv1HMfhOQ3O/345cByLctuKsOm0gzUcQUOZ0dr5/m0RChRYKOsgKrCiWaV0Q+yK0YuxWSrcDHJlX7ES72HJ8A88QkOFiZrxC87+A6M9Co+YRssRi/YzDIjq4O27nKyHxHb2JUCa08acbjZj9oz7BUP2rJ+PL6ka3SBFz+IQcZ+1BLP6kpvJduU6FqUfdPYjbcgJJyxeTAPwyhOEoqux3dPebwAnuRpOCODVfMA8nDBwvNWhfiMLbMOOMXzZc7I6xF5w70vIvKhd/6fGf1NWsJX0jIgb4rLdPo/Le9Oi6dJwUqWdV8HbOf/sP4xLsPQ11IoftZC5/J07z3dszq+BpMWy249tjl8tPxGg5bzqTtBj9p897JP2P4Xxo1EoP4GAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=c48c330254474da09ca97297f8f8dde9"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=c48c330254474da09ca97297f8f8dde9"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_c48c330254474da09ca97297f8f8dde9</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:55</sys_created_on>
+        <sys_id>a5f74c03835383505e2cc430ceaad386</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:52:55</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_c48c330254474da09ca97297f8f8dde9</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:55</sys_created_on>
+        <sys_id>e1f74c03835383505e2cc430ceaad36e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:52:55</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_c48c330254474da09ca97297f8f8dde9</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:52:55</sys_created_on>
+        <sys_id>e1f74c03835383505e2cc430ceaad37a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:52:55</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_c48c330254474da09ca97297f8f8dde9"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_c48c330254474da09ca97297f8f8dde9"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>false</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <authored_on_release_version>-1</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>fd__inventory_request__stock_shortage_detection</internal_name>
+        <label_cache>[{"name":"Created or Updated_1.current.related_inventory_stock","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_req Record➛Related Inventory Stock","type":"string","base_type":"string","usedInstances":{"1c44e9a9-eeec-45ee-9e33-26ba42c80add":["condition"],"6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8":["conditions"],"c4b0f5f0-df74-45ef-b39d-e41f9727c971":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.material_product","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_req Record➛Material Product","type":"reference","base_type":"reference","usedInstances":{"442d2764-20fb-4c1f-ad95-de4ed7f3a298":["values"],"2f6bb2ed-6a47-4100-bfce-e0bf518428e3":["values"],"c4b0f5f0-df74-45ef-b39d-e41f9727c971":["values"]},"attributes":{}},{"name":"Created or Updated_1.current","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_req Record","type":"reference","base_type":"reference","usedInstances":{"442d2764-20fb-4c1f-ad95-de4ed7f3a298":["values"],"2f6bb2ed-6a47-4100-bfce-e0bf518428e3":["values"],"c4b0f5f0-df74-45ef-b39d-e41f9727c971":["values"]},"attributes":{}},{"name":"6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8.status","label":"6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8➛status","type":"string","base_type":"string","usedInstances":{"a4dcc808-1123-44b1-97ea-d6d39ad4f617":["condition"]},"attributes":{}},{"name":"6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8.Record.available_quantity","label":"6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8➛Record➛available_quantity","type":"decimal","base_type":"decimal","usedInstances":{"75fcd6f9-0129-4f2c-befb-9cc078780af1":["condition"],"c4b0f5f0-df74-45ef-b39d-e41f9727c971":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.quantity_requested","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_req Record➛Quantity Requested","type":"decimal","base_type":"decimal","usedInstances":{"75fcd6f9-0129-4f2c-befb-9cc078780af1":["condition"],"c4b0f5f0-df74-45ef-b39d-e41f9727c971":["values"]},"attributes":{}}]</label_cache>
+        <master>true</master>
+        <name>FD - Inventory Request - Stock Shortage Detection</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="FD - Inventory Request - Stock Shortage Detection">c48c330254474da09ca97297f8f8dde9</parent_flow>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>draft</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:00</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>36f78c03835383505e2cc430ceaad37e</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:34</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=36f78c03835383505e2cc430ceaad37e"/>
+    <sys_variable_value action="delete_multiple" query="document_key=36f78c03835383505e2cc430ceaad37e"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=36f78c03835383505e2cc430ceaad37e"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=36f78c03835383505e2cc430ceaad37e^sys_idNOT IN7af78c03835383505e2cc430ceaad380"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>36f78c03835383505e2cc430ceaad37e</id>
+        <name>FD - Inventory Request - Stock Shortage Detection</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:00</sys_created_on>
+        <sys_id>7af78c03835383505e2cc430ceaad380</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:53:00</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=7af78c03835383505e2cc430ceaad380"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=36f78c03835383505e2cc430ceaad37e^sys_idNOT IN07f7cc03835383505e2cc430ceaad30f,4bf7cc03835383505e2cc430ceaad327,72f78c03835383505e2cc430ceaad3a8"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</model>
+        <model_id>36f78c03835383505e2cc430ceaad37e</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_36f78c03835383505e2cc430ceaad37e</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:01</sys_created_on>
+        <sys_id>07f7cc03835383505e2cc430ceaad30f</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:50</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=07f7cc03835383505e2cc430ceaad30f"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</model>
+        <model_id>36f78c03835383505e2cc430ceaad37e</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_36f78c03835383505e2cc430ceaad37e</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:01</sys_created_on>
+        <sys_id>4bf7cc03835383505e2cc430ceaad327</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:53:01</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=4bf7cc03835383505e2cc430ceaad327"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=10000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</model>
+        <model_id>36f78c03835383505e2cc430ceaad37e</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_36f78c03835383505e2cc430ceaad37e</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:00</sys_created_on>
+        <sys_id>72f78c03835383505e2cc430ceaad3a8</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:49</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=72f78c03835383505e2cc430ceaad3a8"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=36f78c03835383505e2cc430ceaad37e"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=36f78c03835383505e2cc430ceaad37e"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=36f78c03835383505e2cc430ceaad37e^sys_idNOT IN27f7cc03835383505e2cc430ceaad3d2"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</flow>
+        <generation_source/>
+        <name>Created or Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:03</sys_created_on>
+        <sys_id>27f7cc03835383505e2cc430ceaad3d2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:53:03</sys_updated_on>
+        <trigger_definition display_value="Created or Updated">a45d9180c32222002841b63b12d3aea7</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1Y247bNhD9FUJPLeACTosWyL61SRdYIGmA7LZ9SLcCTY5sIjTpkCN71cX+e4e62LQuqba2cgH2yRY55pyZOWeG8rv7BJ1aLsFdGY/cCLgu/JVMLpJklmi+AE1fb/hCAz0rg+AM1zfFBmgZw3Jq+DrsSdiAkWCw+qlYWSXglfL0/O52lqy5kRytK5ILdDnMkszZ9Q2sN5ojnZVx7WnROgkuuXg2n8+S8tzaCR245ToPz3fp9/Mff5o/f54qI3OP6Zy+bFMHHwII5enA4o8xtmKltHRgKnwb7sgfBu/3nbhbULAn/Bo54YY7DImQ+6Ci0OsVB1y+MbqITO68+gfK3+ce0iiZtUV2vbK7t5ABIRZwSfEEd/WmtoLr/RNHqugiR/AUy8PDPiuXCnRdWC+c2uDPAtW2Sf7DbAwT3uaGvTHs1zpGVmbId6lRlf8/aHFPUcGHPARURp41dQsMIePsVeTVGiZyR9Ejo3yyJssMGwTZ1ZovoXJD52oQGBUh+93HT6+V98oso9gHoJT7XSy6iAE1xDgFwm0fUcaKxOUmtSbdU+8glwZ/SxnN8ggRDJZ80De2OPClaiPhcht4LhvKTSCWTNsduzLnVgg3RZuUpSdlSB0FE5ac3eFkqlhw8X7pbG7kEIqDBftGQsZzjd9OJ1Lr4ONwji0+p0wDIppCkUSPktnS6dHeSLEeKNfr9kmdVapeWCMVKtunzWbLP+pi80g2iAhAwwVCi7n/K5/Pf5A+X6wVEjX/doH1dH0Jpav21nS2U1zTXcaD2/L6mBZ7TjxtBN/iJPaEhT35nIxv9b3y/9Jtxw36FG3KpUwjxPvryNpK0C8jNtQcI1ltcvTJQ8QVmoj7C+P5h8qfKzDsGqgx2fCJGBrUmSdMeRiv8EVNNRSDlV3GOkad0lGn2Rs2mCZr9IYuGmOA/WbNd58S18LiqjN6CMcvtH6UoHB1HQB36h325Mm0I1alfs+m7XFs7cFUrY4cSQOEHXb+NKRaySulVmq2o/OlVhJSXe2df1qVPIigtYtGCXWN94YzXb48kitxuB9ziD0peOJKSN5EY6HvxYMaXXjpCHWZrMNaA6nNehu+ylidHHo7XRQMV0CYNF146eQS1XR/DxgbRn0b2kvLaIO5TwLuPH2/FFW3+Vflbmm5Wny0nIf7fsv5U/M/pO+msjq3jK0RrduTOPUPrGGRcL3jhe9ol6QRVFL/iUYLxAdTMWAaHLAFd9S9LqlzlYss38iglKk850bRcipW3CzBdyBwsWKVCatMPmdLaN5qPDqyXBZRN+iE0WoMnf2RPeJA8mEMX0tTGN8Dbv8F2UbRwXwZAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create_or_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=36f78c03835383505e2cc430ceaad37e^sys_idNOT IN6bf7cc03835383505e2cc430ceaad384,9ff7cc03835383505e2cc430ceaad381,dff7cc03835383505e2cc430ceaad383,e3f7cc03835383505e2cc430ceaad385"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</flow>
+        <generation_source/>
+        <order>6</order>
+        <parent_ui_id>a4dcc808-1123-44b1-97ea-d6d39ad4f617</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:03</sys_created_on>
+        <sys_id>6bf7cc03835383505e2cc430ceaad384</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:51</sys_updated_on>
+        <ui_id>2f6bb2ed-6a47-4100-bfce-e0bf518428e3</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K5GfqyhpoaJ9m8oqTdpAGxsvjFqOfdNYc+Lgj0JX9b/vOk5DxUBj0l6Q1qf4fhyfe3JzerMjDauBzIljhQLaHUZkw5QPwQc6zk6n2WxGZSO8dTTDhw1lCozDMiFtq9j2+nXVLTOI7sCQ+Y7wSiphoCHzm9sRkQLbpzlkp7N8yif5ZDLOsvHZSV5MJ0U+FhMGcIIQihWgsPRrIIvn57i7bfts7ONxb3IRE9qIwCcbEXhw0AhAIiVTFkakZo1gTpstmTvjMWCAictGbYeKSjYOAUmofbDyJ157loW6EnAyDjE3HGkvVwyX58yxK0Tmzpu+lFdacrBREwEl88otjmOx4LJ1UjexpRuz79bK181FlIQMAIe3gxFvkQS0Yc7AvB+jvKr0/ZcDyyW+uyBJn1SaMzWcmHNGFt4FPjsCCmoEojVrW9msaWv0RnbNyKVO1woPaan0PV5q5bpJGQ/EU5SVpUuMn3fha2ZkmOITwmDzfkTs1i4Us/ZxFhSR3vnAJE7Wz0CjDKGFG9m6d3jBBnq6+9Gw3N0+26PF7naShrX47rNsImqGeymZorbSxrE1rCxsMOK2MV/JdbUainBQge8tpna7BW6GA5Fok3xrRXikecq9QT1d+rRpv18ZUF0RfhxYgRtGDdwhv1cBYn8kX4O1SDT2fDhAJdZp/iMxwHG1E669EkmjXVJAIoNispQIXCKyq6RNDuySnkG6so45byOqRplX7z///qX/l+/v5Puj9QlA23zJ+vLiyPqWEpSwj943rPbB96Bugz40rvoT7+uTyXWf7P0v/1f+l0+z7veGXDAO9+ZN8Oj/7gU7vP0Fhtkm9e0HAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=6bf7cc03835383505e2cc430ceaad384"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id>1c44e9a9-eeec-45ee-9e33-26ba42c80add</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:03</sys_created_on>
+        <sys_id>9ff7cc03835383505e2cc430ceaad381</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:51</sys_updated_on>
+        <ui_id>442d2764-20fb-4c1f-ad95-de4ed7f3a298</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K5GfqyhpoaJ9m8oqTdpAGxsvjFqOfdNYc+Lgj0JX9b/vOk5DxUBj0l6Q1qf4fhyfe3JzerMjDauBzIljhQLaHUZkw5QPwQc6zk6n2WxGZSO8dTTDhw1lCozDMiFtq9j2+nXVLTOI7sCQ+Y7wSiphoCHzm9sRkQLbpzlkp7N8yif5ZDLOsvHZSV5MJ0U+FhMGcIIQihWgsPRrIIvn57i7bfts7ONxb3IRE9qIwCcbEXhw0AhAIiVTFkakZo1gTpstmTvjMWCAictGbYeKSjYOAUmofbDyJ157loW6EnAyDjE3HGkvVwyX58yxK0Tmzpu+lFdacrBREwEl88otjmOx4LJ1UjexpRuz79bK181FlIQMAIe3gxFvkQS0Yc7AvB+jvKr0/ZcDyyW+uyBJn1SaMzWcmHNGFt4FPjsCCmoEojVrW9msaWv0RnbNyKVO1woPaan0PV5q5bpJGQ/EU5SVpUuMn3fha2ZkmOITwmDzfkTs1i4Us/ZxFhSR3vnAJE7Wz0CjDKGFG9m6d3jBBnq6+9Gw3N0+26PF7naShrX47rNsImqGeymZorbSxrE1rCxsMOK2MV/JdbUainBQge8tpna7BW6GA5Fok3xrRXikecq9QT1d+rRpv18ZUF0RfhxYgRtGDdwhv1cBYn8kX4O1SDT2fDhAJdZp/iMxwHG1E669EkmjXVJAIoNispQIXCKyq6RNDuySnkG6so45byOqRplX7z///qX/l+/v5Puj9QlA23zJ+vLiyPqWEpSwj943rPbB96Bugz40rvoT7+uTyXWf7P0v/1f+l0+z7veGXDAO9+ZN8Oj/7gU7vP0Fhtkm9e0HAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=9ff7cc03835383505e2cc430ceaad381"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="Look Up Record">b93f42810b30030085c083eb37673a63</action_type_parent>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <comment/>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:03</sys_created_on>
+        <sys_id>dff7cc03835383505e2cc430ceaad383</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:51</sys_updated_on>
+        <ui_id>6c197ba8-2ba0-4b9f-b27e-ac6f5b2b97d8</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VYXW/aPBT+K1GuKW/CV6B3ExXSpG2V1q4322Q5sVOsGTuzHVqK+O/vceKECDIoK0ibdtX6+Njn+DnPcxzzde0LvKD+ta+lMsisMup3/CXmeW3DOgETYTrjePXgZrBnpPcC9gwrWG+o8q/XfjJnnCgq/Ouv3zs+I+A4JMEknUyG4ygI+v0gGI36CQ7juD9K4iCOQ9iC45hycL2DaN59mUFLUsWfa4ghWVKNP7il08ooFbGp9Ds+fTZUEAo5pJhr2vEXWBBspFrVFkUxuRV8a5gzYWA33zo/a/YC8fo965dSOFVCy7l6iBwopTm9wQbfGZUnJlfOtUxWAx7r+pg1dC0ou/SDTWfr/2L98a4/oc0F4QbwJjTFOTfT34sZnhqzZ2OWB7zNDJNQdb9v64JjXh1f8nwhPpW19OsMH1roVc7c/IJluQawaWYLaivkypXezeXT56oaMyaKvNwklwnm9Qgbo1icG4vL2k8JShnlBDHBmbCRoGyWPpTTBURAC5xlTDyiTMklK3aFsyy6jxwG3ZTLJ4sFexRdnNiTd4FYuDsD+01hfsCKWRQ+wjawuGMDzmGpi4d0olhm0BMjj9Rso1deRJonzH+0zTvGoapQxfH8TcfXKz3lWOst2EBT9DO3GJTQO/RQUahiSZHFOzjBkjqgLAec9BIpCLOH000arDRi5FsOWibr9RQEZCjxpPK+ZMT+i8Jukisoh+kqygsLE0sYguyQNjL5sdnsN5Mz7XqsFZHhoVaEJ41WNG0evg2Qqhnt2j60bVAp7GxNaRAEwXnaUlvb2Jf1Sarel6ul7xvUehlRnq6ZEoKjwkFIiwQ0DMtSzDisRVQpqRoyCvY1UAr5OIkTiuNBD4+ifhgGQRiQKBhHUTgexekIR4O0QeIbKaymepHxbCKeFF6VyPFUHcFjKTnFYofd91DQ/2YuY8fu4RnZ/Rdx+61XUc7ud5EuTa1YX+p+ytkXwX7m9L2l2JgGvXFIkqtxFEZXg5SMriYED6/wJB5GfUKTQXqZK6esw1Ymz6gXDEfBZALtnuTaoMD2/bLj7yvoiPfR22Fy8HYYNIR17/LcSdtJphiiYm5HNXbC+1ROVF96Z1PN+F9SzcW+0xgHhqCyhFrmqoByiRIOhLITCgtd7nURBbAULQA4lkF4RRMgiUZYUZTKXBDkAm8FYlFNmQKul877ovhMocYCWj9feWZOvcLbq72PiSI8KIq4+cn0PvWq1N3+2oPUvSJ1r079tIOe8uYb/HEX0PY9NbP3r8UfWJQ1Cljdtm3vviOlO8CBVz4KX5lUeNak3v5qbCN96+vxSK5/RUu6RJMpnt0lyPsN4zVN4eBPOpg0msKtLboXr3Z+0amDO32Xj/GWK3NmJ3auzN6/eWX+kY+ozq9+Sjnz6+r7/4RMDSGoFAAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=dff7cc03835383505e2cc430ceaad383"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</flow>
+        <generation_source/>
+        <order>9</order>
+        <parent_ui_id>75fcd6f9-0129-4f2c-befb-9cc078780af1</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:03</sys_created_on>
+        <sys_id>e3f7cc03835383505e2cc430ceaad385</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:51</sys_updated_on>
+        <ui_id>c4b0f5f0-df74-45ef-b39d-e41f9727c971</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1WyW7bMBD9FUJnW5DsxLF9K5Lm1CRo0uaSxsKIHFlEqSUk5aWG/71DbTGytDkUKALEJ3GWx/eGQ47vdl4OGXpzz0KsMKoXA28FqnLGTTQKjifBbBbJXFTGRgF9rCJQqC2FCWlKBdvbt0WXoAndovbmO4+nUgmNuTe/ux94UlD6JMTgeBZO+Dgcj0dBMJoehfFkHIcjMQbEI4JQEKOi0G+OLK1f4m635Yu2L4e57LJxFFo4PsHAw43FXCARSUAZHHgZ5AJsobfe3OqKDBpBXOVq20ekMrcE6LnYjZG/aNtp4OISJGUcG1+/jNpyNebkDCzcEDK3lW5DeVpIjqapicAEKmVPD21NwFVpZZE3KbXMNrtQVZZfNiXxeoDudMhSGSKBpdPpmLcykpu0WF93LM/p7FxJWqcqOKh+BdZqGVfW8dl5qDAjoCiDspT5Mip1sZJ1MnHJ/KWihZ+oYk2bGrnMfeCOuE9lBf+c7Ge1+Ra0dCouCIaS9wPPbM2pAmMetVARo4fKMWmUtRqipgwuhWtZ2k+0wQpbuvtB39x1P5uDxq57MnJt8aMKgrHIgPpSgopMWmgLS1wYXJHFbht/Kpfpog8ioYLOrXHtdqfUGRYFKzT7Xgr3GYU+rzTV0/pPk/b7BV0K8lBnRcYW/OebYDSq2vIkl9CeezQ+kNo30aP89suVN7e94N1uwsPZSQzT4SiGYHgUz5JhPDrBIfBJchyP4tmJmPrXyOkK+bACqeoL16EQsE01UjmVeAb9R6VdcCcDBWE155WhMXQ2DcxFW1jWHRkT9LhwivfZtxRZn05fBvUKXO+xDp3hhiMKwyyF9vRZX0SfXeNK4pq1tFhdbqaoK5Rh9DQwXpBymRML2qBUmEuTuuvA1tKmjE6bMuv74S+MBVuZhnZBrbv4/PX56/nRkh8t+b9b8q8jWiCN99dGdBgfjOhziUqYxxndP8HdfMasdF0SNU/ykxndOtlt62zndPiv5nQ4CerfO5rWjbh3P6wP/pe9MrbvfwMI0LcWlQoAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=e3f7cc03835383505e2cc430ceaad385"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=36f78c03835383505e2cc430ceaad37e"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=36f78c03835383505e2cc430ceaad37e^sys_idNOT IN93f7cc03835383505e2cc430ceaad36d,d7f7cc03835383505e2cc430ceaad37d,d7f7cc03835383505e2cc430ceaad380,dff7cc03835383505e2cc430ceaad37b,dff7cc03835383505e2cc430ceaad37e"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">cef78c03835383505e2cc430ceaad30a</block>
+        <comment>Check if Related Inventory Stock reference is empty</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>1</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:02</sys_created_on>
+        <sys_id>93f7cc03835383505e2cc430ceaad36d</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:33</sys_updated_on>
+        <ui_id>1c44e9a9-eeec-45ee-9e33-26ba42c80add</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Vy27bMBD8lYBnQ5D8CGLfAqcBDCRNUacBiiAQVuTKJkKRKkk5UQX/e5eSbAeNi6SPY2/kcHc5s9yRGmYqX1be3Zpz5+RKs9n9w4BJHTBaN0wKNmNswDQUSCtutJBeGk3QBlQVsKaZWwSP4sTYky+lCMs0iXhlLWofWVQtIvWGtsbWqfOGP263i+WH60+3X6mSkK5UUN/9s4J8LZWg4E5OCZbYe7Rs1vx01MqbwiSfJPGEj4ano2EcD8/GSXY6ypKhGAGOT6mgggwVhc5f6D/SEl+XAXLeSr3q91d96nIHGisClWE8YPjsUQskEjkohwNWgCa5pInNvK0IoEaIG63qfcRaat89SQHPTn7HUCmOQ2SOpItjd7rfpn13Ozi/AA9EpeK+sn0oXxvJ0XUdEZhDpfz8JdYF3JStyjbFQ6Z22UZVhf7YNYPtC+wek5DKEQksg9LAvReSL9fm6fOO5aXUbVf6Q2U4qP0OPPUuq3zg0zBUWFChtICypI6mpTUb2SYTlyJaKdpEuTJPdGmY6Qh4IB5RYyG6JPyihe/AyqDimspQMs2CSx23stxpay9n2wFztZsrcO6gkZqbfqsCw05xry3t2hNS2kLndPEGexnbQcMCqyuzknyhnQeSvazdIoxgwsdjnMIUEfl4gjjFEQ1jBuMhP4tBCNaPah5Dnkx5cnxUYXRkLNMWONj1td/Y2xZ5x72vLHLSTf6vGf2OW5I33NIj77LLZPLfLX/tlkAzAyd52v4tqFz4YP2hXfqmX0pU4ugIHfPTQ5jpjtX+Nbh0lHYbsMXuJxYOahq54LoD9GTsY5B9wLY/ALL/LaMOBwAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">def78c03835383505e2cc430ceaad314</block>
+        <comment>Check if Inventory Stock lookup failed</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>5</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:02</sys_created_on>
+        <sys_id>d7f7cc03835383505e2cc430ceaad37d</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:34</sys_updated_on>
+        <ui_id>a4dcc808-1123-44b1-97ea-d6d39ad4f617</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Vy27bMBD8lZZn29DL8uMWODBgIG2AJsilDYTlQzZRSlRJKokq+N+7lGQ7aFwkba69mUPucmY5Y7VE166qnb3VF9bKbUmWX+9HRJYew98tkZwsCRmREgqBv5guuXRSlwg9gKo91rYpCxczCvNxRCEYJ3SRj2k0E2NgaT6lEV3M+HxiHbja7vcfv9VBEPMAO3BpKwXN3bsbsZ1U3IiBfgUG2TphyLL9bauTs4BpPg2DKYujNI6CIJonIU1jGkY8BpGk2FABFQqPrp7pPTMC11Qess7Icjusr4bSmwOoDfdUomBExJMTJRdIIgdlxYgUUHJw2jRk6UyNgBHAr0vVHE/sZOn6JyjgycqfwncKAn8yF6iLiX73uMyGqfZwfgkOkErNXG2Go2ynJRO2nwgXOdTKrZ5j/YHrqlPZlTig6lCtVV2Un/thkGODwyMiUlskISqv1HMfhOQ3O/345cByLctuKsOm0gzUcQUOZ0dr5/m0RChRYKOsgKrCiWaV0Q+yK0YuxWSrcDHJlX7ES72HJ8A88QkOFiZrxC87+A6M9Co+YRssRi/YzDIjq4O27nKyHxHb2JUCa08acbjZj9oz7BUP2rJ+PL6ka3SBFz+IQcZ+1BLP6kpvJduU6FqUfdPYjbcgJJyxeTAPwyhOEoqux3dPebwAnuRpOCODVfMA8nDBwvNWhfiMLbMOOMXzZc7I6xF5w70vIvKhd/6fGf1NWsJX0jIgb4rLdPo/Le9Oi6dJwUqWdV8HbOf/sP4xLsPQ11IoftZC5/J07z3dszq+BpMWy249tjl8tPxGg5bzqTtBj9p897JP2P4Xxo1EoP4GAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">9ef78c03835383505e2cc430ceaad319</block>
+        <comment>If Available Quantity &lt; Quantity Requested → shortage detected</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>8</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:02</sys_created_on>
+        <sys_id>d7f7cc03835383505e2cc430ceaad380</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:34</sys_updated_on>
+        <ui_id>75fcd6f9-0129-4f2c-befb-9cc078780af1</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Vy27bMBD8lYBnW5Dkp3wLHAQIkDZAkvbSBsKKIm2iNKmQlBNV0L93qYcdNC6StpceeiOHu8uZ4a5UE126onT2Xp9bKzaKrL48jIhQHsN1TUROVoSMiIIdwxXVKhdOaIXQHmTpsbqe0yhZZLAcxxmE42mW8HEWL9gY6JzPsjhLFvkyuGVUmzyAPQgJmWTpYwnKCVc1zdcyDCe0rteGgWP5mTZnn4rcL9MooKUxTLlgCE8NeyyZxcOmQRa5sIWE6vM/QYZuhcwxoLOxAIOuOWbIqv7pqLU1gRmfReGMTuL5JA7DeDmNsvkki+J8Amw6x4JIjkkMXb/w/cRTuKrwkHVGqE2/v+5T7wYQBXsqcTgi7NkxlTMkwUFaNiI7UChRm4qsnCkRQPH5jZLVIWIrlOtaYQfPVnxnvlIY+kjOUBdl3elhm/Yv08H8AhwglZK60vShdKsFZbZzJGccSunWL7Eu4KZoVbYpzj9Wn61luVMfOzPIocDQCIiUFkmwwiv13Hsh/G6rn24HlpdCta70h1JTkIcdOPQuK53nUxMm2Q4LpTsoCnQ0LYzeizYZueyCjcRNwKV+wkv9LAVAPfEAjYXgEvGLFv4MRngVH7AMJmMv2NRSI4pBW3s5aUbEVnYtwdqjRjTXd6ocFPfa0s4en9IWOseL96yX0Yxq4lld642gV8o6QNl3lb3yLbiYcZrPeRJGcTLlMc0YzxJKw8VysQyBR6RvVe43CY1OtypMTrRl2gLHz8TrWSVvj8g77n01Imdd5/+a0e9MS/TGtPTIu8ZlNvs/LX89LZ5mBlbQtP1LYTn/wfrDcelNvxRM5idb6NQ8Pfie7lgdXoMKi2n3Hrsafp7+oMKW81N3hJ60+eZlH7HmB6FaoTCGBwAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">42f78c03835383505e2cc430ceaad311</block>
+        <comment>End flow — no Related Inventory Stock on request</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>3</order>
+        <outputs_assigned/>
+        <parent_ui_id>1c44e9a9-eeec-45ee-9e33-26ba42c80add</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:02</sys_created_on>
+        <sys_id>dff7cc03835383505e2cc430ceaad37b</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:34</sys_updated_on>
+        <ui_id>25e37caf-3710-4518-a3ed-a01c28e1605d</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">9af78c03835383505e2cc430ceaad317</block>
+        <comment>End flow — Inventory Stock record not found</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Stock Shortage Detection">36f78c03835383505e2cc430ceaad37e</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>7</order>
+        <outputs_assigned/>
+        <parent_ui_id>a4dcc808-1123-44b1-97ea-d6d39ad4f617</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:02</sys_created_on>
+        <sys_id>dff7cc03835383505e2cc430ceaad37e</sys_id>
+        <sys_mod_count>12</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:34</sys_updated_on>
+        <ui_id>281bc32f-edf3-4230-a841-4efd659d3063</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=36f78c03835383505e2cc430ceaad37e"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=36f78c03835383505e2cc430ceaad37e"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_36f78c03835383505e2cc430ceaad37e</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:01</sys_created_on>
+        <sys_id>47f7cc03835383505e2cc430ceaad32e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:53:01</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_36f78c03835383505e2cc430ceaad37e</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:01</sys_created_on>
+        <sys_id>4bf7cc03835383505e2cc430ceaad316</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:53:01</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_36f78c03835383505e2cc430ceaad37e</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:01</sys_created_on>
+        <sys_id>8bf78c03835383505e2cc430ceaad3b3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:53:01</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_36f78c03835383505e2cc430ceaad37e"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_36f78c03835383505e2cc430ceaad37e"/>
+    <sys_hub_flow action="UPDATE">
+        <sys_id>c48c330254474da09ca97297f8f8dde9</sys_id>
+        <latest_snapshot>36f78c03835383505e2cc430ceaad37e</latest_snapshot>
+        <compiler_build/>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=c48c330254474da09ca97297f8f8dde9^sys_idNOT INc4080043835383505e2cc430ceaad381"/>
+    <sys_flow_trigger_plan action="INSERT_OR_UPDATE">
+        <binding_strategy>com.snc.process_flow.engine.binding.OncePerUniqueChange</binding_strategy>
+        <plan/>
+        <plan_id>c48c330254474da09ca97297f8f8dde9</plan_id>
+        <snapshot>36f78c03835383505e2cc430ceaad37e</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:53:05</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>c4080043835383505e2cc430ceaad381</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:35</sys_updated_on>
+        <trigger display_value="">29ef4447839383505e2cc430ceaad352</trigger>
+    </sys_flow_trigger_plan>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=c48c330254474da09ca97297f8f8dde9"/>
+</record_update>

@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=1710000</attributes>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name>fd__material_batch_receipt__create_quality_inspection</internal_name>
+        <label_cache>[{"name":"Created_1.current.material_product","label":"Trigger - Record Created➛x_2056099_indust_0_inv_batch Record➛Material Product","type":"string","base_type":"string","usedInstances":{"b7bd540c-75b9-498e-b316-f431bbb5b3d9":["condition"],"198ae2b8-e8fa-48a8-bcd7-fe7239946bc6":["values"]},"attributes":{}},{"name":"Created_1.current","label":"Trigger - Record Created➛x_2056099_indust_0_inv_batch Record","type":"reference","base_type":"reference","usedInstances":{"198ae2b8-e8fa-48a8-bcd7-fe7239946bc6":["values"]},"attributes":{}},{"name":"Created_1.current.supplier","label":"Trigger - Record Created➛x_2056099_indust_0_inv_batch Record➛Supplier","type":"reference","base_type":"reference","usedInstances":{"198ae2b8-e8fa-48a8-bcd7-fe7239946bc6":["values"]},"attributes":{}},{"name":"Created_1.current.quantity_received","label":"Trigger - Record Created➛x_2056099_indust_0_inv_batch Record➛Quantity Received","type":"decimal","base_type":"decimal","usedInstances":{"198ae2b8-e8fa-48a8-bcd7-fe7239946bc6":["values"]},"attributes":{}},{"name":"Created_1.current.certificate_number","label":"Trigger - Record Created➛x_2056099_indust_0_inv_batch Record➛Certificate Number","type":"string","base_type":"string","usedInstances":{"198ae2b8-e8fa-48a8-bcd7-fe7239946bc6":["values"]},"attributes":{}}]</label_cache>
+        <master_snapshot>a2494407835383505e2cc430ceaad318</master_snapshot>
+        <master_snapshot_digest/>
+        <name>FD - Material Batch Receipt - Create Quality Inspection</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id>b3cfcc07839383505e2cc430ceaad37e</remote_trigger_id>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>published</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:37</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>71ffb4b649414914ae2179d45258a44f</sys_id>
+        <sys_mod_count>11</sys_mod_count>
+        <sys_name>FD - Material Batch Receipt - Create Quality Inspection</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_71ffb4b649414914ae2179d45258a44f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:13</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=71ffb4b649414914ae2179d45258a44f"/>
+    <sys_variable_value action="delete_multiple" query="document_key=71ffb4b649414914ae2179d45258a44f"/>
+    <sys_flow_record_trigger action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition/>
+        <name/>
+        <on_delete>false</on_delete>
+        <on_insert>true</on_insert>
+        <on_update>false</on_update>
+        <published_version/>
+        <run_flow_in>background</run_flow_in>
+        <run_on_extended>false</run_on_extended>
+        <run_when_setting>both</run_when_setting>
+        <run_when_user_list/>
+        <run_when_user_setting>any</run_when_user_setting>
+        <sys_class_name>sys_flow_record_trigger</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 11:27:12</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>b3cfcc07839383505e2cc430ceaad37e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:12</sys_updated_on>
+        <table>x_2056099_indust_0_inv_batch</table>
+        <trigger_definition/>
+    </sys_flow_record_trigger>
+    <sys_trigger_runner_mapping action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <data>{"run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any","run_on_extended":"false"}</data>
+        <identifier>71ffb4b649414914ae2179d45258a44f</identifier>
+        <identifier_type>flow</identifier_type>
+        <runner>FDTriggerRunner</runner>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 11:27:12</sys_created_on>
+        <sys_id>f7cfcc07839383505e2cc430ceaad37f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:12</sys_updated_on>
+        <trigger display_value="">b3cfcc07839383505e2cc430ceaad37e</trigger>
+    </sys_trigger_runner_mapping>
+    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=71ffb4b649414914ae2179d45258a44f^sys_idNOT INf7cfcc07839383505e2cc430ceaad37f"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=71ffb4b649414914ae2179d45258a44f"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=71ffb4b649414914ae2179d45258a44f"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=71ffb4b649414914ae2179d45258a44f^sys_idNOT INca490407835383505e2cc430ceaad33d,ce490407835383505e2cc430ceaad353"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=10000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Material Batch Receipt - Create Quality Inspection">71ffb4b649414914ae2179d45258a44f</model>
+        <model_id>71ffb4b649414914ae2179d45258a44f</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_71ffb4b649414914ae2179d45258a44f</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:41</sys_created_on>
+        <sys_id>ca490407835383505e2cc430ceaad33d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:41</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=ca490407835383505e2cc430ceaad33d"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Material Batch Receipt - Create Quality Inspection">71ffb4b649414914ae2179d45258a44f</model>
+        <model_id>71ffb4b649414914ae2179d45258a44f</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_71ffb4b649414914ae2179d45258a44f</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:41</sys_created_on>
+        <sys_id>ce490407835383505e2cc430ceaad353</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:41</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=ce490407835383505e2cc430ceaad353"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=71ffb4b649414914ae2179d45258a44f"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=71ffb4b649414914ae2179d45258a44f"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=71ffb4b649414914ae2179d45258a44f^sys_idNOT INe4ad87aa00054a5aae77f4d2d0115f83"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Material Batch Receipt - Create Quality Inspection">71ffb4b649414914ae2179d45258a44f</flow>
+        <generation_source/>
+        <name>Created</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:37</sys_created_on>
+        <sys_id>e4ad87aa00054a5aae77f4d2d0115f83</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:06</sys_updated_on>
+        <trigger_definition display_value="Created">798916a0c31322002841b63b12d3ae7c</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1XXW/TMBT9K1aeQCpSQQJpewPGpEqDSduABzRFbnzTWrh2sW/ahqn/net8tF6abhlrAKE9Nf6o77n3nOPcfLuJ0MrJBOxIO+Q6gcvcjUR0HEWDSPExKHq84mMFNJYawWqurvI50DT66VjzmV8TMActQGP512RqZAJn0tH42/UgmnEtOBqbR8doMxhEqTWzK5jNFUc6K+XK0aSxAmx0/HI4HETFuVUQOnDBVebHq/jV8PWb4dFRLLXIHMZDeljEY47J1MOQjo7Mv3TbnUylEhZ0iXHOLcVEj+BmJ/cGHGwpQYWesMMKfTHEJrEg/WrGAhfnWuXBlpWTP6H4f+YgDgpa7Ugvp2Z5ASkQ4gROKSMfrlpUJuFqM+JIrI4zBEe5rNebupxKUBW5LrFyjm8TlIuagPWgixouMs3ONftQ5ciKCrldeZQSuEcaN5QV/Mh8QkXmac2cVwltTs+CqEazJLOUPTKqJ6urzLBGkI5mfAJlGDpXQYIBCelnF44+SuekngS574FSrO9iUXkIqBbGYyBctwmlq1FspmOj4430tpap8Te8UU93MMFeyvfGxoYG/lVvRFwsvM5FLbkezPJ1CppdAlFt/C+ip/zAdhkbnDYlmhrL3tE8G/lIvABfGOeT0S/CuQpbfw7SJA65DRgC9TyzGu0eYL3h6oKJjrbs8KAe7fUlqSp2GzUtbguh4fVqtqPV9wh2f/AntweuU2ZJejm0wbnOd/ztI0lNls5ZYijYCntzypgn3yfWZFrsQ7HdwZ4JSHmm8Hl/r2Rj4W44t3f8TaN6RHT7hR4Ni9l0arjW0a9bybWGfXJnWar3RguJ5dXd9Ga95B70KfNANSQBgFoLuwroxnuYTMvx2JJXb7xXX3S/S/uSa3QxmpgLEQeINx8BMyNAnQSsVFyTvOcZumgdcEZ96OYzradWrugIeurj2q55akL8FU9Ft71dqEZDbNLWJkimrCoOdf7jnOEUCJOi64VOLlD12Th6QpvQTgyjBWb/CLjDNGoeSUu3VtLduADKyYf0ag1F3hP86X3QVr7CmTtunigpIFbl2uFfDIUOAmitzFXRH/vGaE33roDYUoL/UCvXvwD7DaY6BBUAAA==</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=71ffb4b649414914ae2179d45258a44f^sys_idNOT IN198ae2b8e8fa48a8bcd7fe7239946bc6"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Batch Receipt - Create Quality Inspection">71ffb4b649414914ae2179d45258a44f</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:37</sys_created_on>
+        <sys_id>198ae2b8e8fa48a8bcd7fe7239946bc6</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:07</sys_updated_on>
+        <ui_id>198ae2b8-e8fa-48a8-bcd7-fe7239946bc6</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1WTW/bMAz9K4bOgWEnbdDmNrQrMGBr0XXoZWsEWaIbAbLk6iNtFuS/j7LsJGibfQC7FGhOFvlIPT7SZr6viWYNkBnxrFJAu8OILJkK0fhEx8XxtDg9pVKL4Dwt6APHZ9ciSEjXKra6/Rtsyyxm9mDJbE34QiphQZPZ97sRkQKDpyUUx6fllE/KyWRcFOOTo7KaTqpyLCYM4AhTKFaBQui3SBTPr/H2q/ZV2+f92OwyOYwVkU8xIvDkQQtAIjVTDkakYVowb+yKzLwNaLDAxJVWqy1iIbXHhCRin5z8ideeFBFXA1bGIfm2R9qLlcz1OfPsBjNzH2wP5QsjObikiYCaBeXP9m0JcNV6aXQK6crso40Kjb5MkpBtgqE3aAkOSUAb64zM+zLqm4V5/DqwvMDORUl6pzKcqe2JeW9lFXzksyagoMFEtGFtK/U9ba1Zyi4YuTT5vcJDXivziJc6ea9zxiPxHGVl+QXazzvzLbMyVvEF02DwZkTcyp0p5tyuFhSRPoTIJFXW10CTDDGEW9n6D3jBEnq6m9F2sLtZdntDHUcSOjY0zsaPUBQTITXSjoU0DKdUMjUfHmJpAjuVcOv1Gc6CB0HLnAeLsvn8OXKzmVfM8wVV5nAUglxoWyXBHs48IBCMCmgv/Yr29EEcDttiLXBAUcR+fIviDsHFzlwzqXZmDtbLWnJMTHVoqt+RfInF6yw4nL8UFBuG0s6dZz64ZDNonHODGbq20TQeSPghSDvw6FqJqCaOWh/4qW9UNqieDUXm2TVOCdaS7TqcDQmzCmpjIfML2EVKh34FDPXI0JtpY5to1ku8D9/+DF+afP7x+uXH7n2G3mfon2foj0tQAK7PQ0uwrPaW4IUEJdxuC24/csMGhAbHFcVMH71nW7B3Zre9s9+E5f/ahOW06H5vaB+m4t78Otz753NgMd79AoTZOqrzCQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=198ae2b8e8fa48a8bcd7fe7239946bc6"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=71ffb4b649414914ae2179d45258a44f"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=71ffb4b649414914ae2179d45258a44f^sys_idNOT INac168e93baaa4eb18314db22c4e2899a,b7bd540c75b9498eb316f431bbb5b3d9"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">96490407835383505e2cc430ceaad3d9</block>
+        <comment>End flow — Material/Product is missing, cannot create inspection</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Batch Receipt - Create Quality Inspection">71ffb4b649414914ae2179d45258a44f</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>2</order>
+        <outputs_assigned/>
+        <parent_ui_id>b7bd540c-75b9-498e-b316-f431bbb5b3d9</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:37</sys_created_on>
+        <sys_id>ac168e93baaa4eb18314db22c4e2899a</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:07</sys_updated_on>
+        <ui_id>ac168e93-baaa-4eb1-8314-db22c4e2899a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">d6490407835383505e2cc430ceaad3d5</block>
+        <comment>Check if Material/Product is missing from the Batch/Lot</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Batch Receipt - Create Quality Inspection">71ffb4b649414914ae2179d45258a44f</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>1</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:37</sys_created_on>
+        <sys_id>b7bd540c75b9498eb316f431bbb5b3d9</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:06</sys_updated_on>
+        <ui_id>b7bd540c-75b9-498e-b316-f431bbb5b3d9</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXWvbMBT9K0PPwdhxnDZ5K+kCgXYdSymMUczVhxMxWfIkua1n8t93ZTtJWTPada97s47uvTrn6h6rJab2Ve3drblwTm40mX+7HxGpA4bfLZGczAkZEQ2lwC9mNJdeGo3QA6g6YG27sAK84HkSsdpaoX1U4tpKUHllDa+Z3+1W64/Xn2+/Yh6XrlLQ3L0znW2l4hjVU63AIjOMJvP2t62O+gyyIkvijKXjaTqO4/H5JKHTlCZjnoKYTLGgAioUhi6eaTsh1zdVgJy3Um+G9dWQut6DxvJAZRyPiHjyQnOBJApQToxICZqDN7Yhc29rBFA2v9GqOURspfZ9u0t4cvKnCJXiOEQWAnUx0e8elvnQyx4uLsEDUsGG1XYIZVsjmXB9R7gooFZ+8RzrA26qTmWX4oGqfbZRdak/9c0ghwL7q0OkdkhCVEFp4D4IKdZb8/hlz3IpddeVYVMZBuqwAo+9o7UPfFoilCixUF5CVWFHw/0/yC4ZuZTRRuEiKpR5xEPDvEbAAvEIGwvREvHLDr4DnB5UcY1lMBlnweWOWVnttXWHk92IuMYtFDh31IjNzX/UgWGveNCW9+0JKV2hCzz4QQwydqOWBFZXZiPZSjsPKHvduFUYQXpGeTaJ2VlGZ5PZuaBpMi0maUIpzWjKZ2QY1SKGIpmx5PSoQnpiLPMOOFrxpbvI6xZ5w7kvLPKhn/w/M/obtySvuGVA3mSXLPvvln92S6BJwUmWdy8Blgs/rHfaZWj6UgrFT47QKT/dh5nuWR1ug0mHabcBW+0fqLDR4MgF1x2hR2O/B9lHbPcL4i/F8uoGAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=71ffb4b649414914ae2179d45258a44f"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=71ffb4b649414914ae2179d45258a44f"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_71ffb4b649414914ae2179d45258a44f</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:41</sys_created_on>
+        <sys_id>02490407835383505e2cc430ceaad380</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:41</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_71ffb4b649414914ae2179d45258a44f</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:41</sys_created_on>
+        <sys_id>4a490407835383505e2cc430ceaad34e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:41</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_71ffb4b649414914ae2179d45258a44f"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_71ffb4b649414914ae2179d45258a44f"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>false</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <authored_on_release_version>-1</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>fd__material_batch_receipt__create_quality_inspection</internal_name>
+        <label_cache>[{"name":"Created_1.current.material_product","label":"Trigger - Record Created➛x_2056099_indust_0_inv_batch Record➛Material Product","type":"string","base_type":"string","usedInstances":{"b7bd540c-75b9-498e-b316-f431bbb5b3d9":["condition"],"198ae2b8-e8fa-48a8-bcd7-fe7239946bc6":["values"]},"attributes":{}},{"name":"Created_1.current","label":"Trigger - Record Created➛x_2056099_indust_0_inv_batch Record","type":"reference","base_type":"reference","usedInstances":{"198ae2b8-e8fa-48a8-bcd7-fe7239946bc6":["values"]},"attributes":{}},{"name":"Created_1.current.supplier","label":"Trigger - Record Created➛x_2056099_indust_0_inv_batch Record➛Supplier","type":"reference","base_type":"reference","usedInstances":{"198ae2b8-e8fa-48a8-bcd7-fe7239946bc6":["values"]},"attributes":{}},{"name":"Created_1.current.quantity_received","label":"Trigger - Record Created➛x_2056099_indust_0_inv_batch Record➛Quantity Received","type":"decimal","base_type":"decimal","usedInstances":{"198ae2b8-e8fa-48a8-bcd7-fe7239946bc6":["values"]},"attributes":{}},{"name":"Created_1.current.certificate_number","label":"Trigger - Record Created➛x_2056099_indust_0_inv_batch Record➛Certificate Number","type":"string","base_type":"string","usedInstances":{"198ae2b8-e8fa-48a8-bcd7-fe7239946bc6":["values"]},"attributes":{}}]</label_cache>
+        <master>true</master>
+        <name>FD - Material Batch Receipt - Create Quality Inspection</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="FD - Material Batch Receipt - Create Quality Inspection">71ffb4b649414914ae2179d45258a44f</parent_flow>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>draft</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:43</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>a2494407835383505e2cc430ceaad318</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:11</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=a2494407835383505e2cc430ceaad318"/>
+    <sys_variable_value action="delete_multiple" query="document_key=a2494407835383505e2cc430ceaad318"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=a2494407835383505e2cc430ceaad318"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=a2494407835383505e2cc430ceaad318^sys_idNOT INee494407835383505e2cc430ceaad319"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>a2494407835383505e2cc430ceaad318</id>
+        <name>FD - Material Batch Receipt - Create Quality Inspection</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:43</sys_created_on>
+        <sys_id>ee494407835383505e2cc430ceaad319</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:43</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=ee494407835383505e2cc430ceaad319"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=a2494407835383505e2cc430ceaad318^sys_idNOT IN22494407835383505e2cc430ceaad31c,6e494407835383505e2cc430ceaad32b"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=10000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Material Batch Receipt - Create Quality Inspection">a2494407835383505e2cc430ceaad318</model>
+        <model_id>a2494407835383505e2cc430ceaad318</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_a2494407835383505e2cc430ceaad318</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:43</sys_created_on>
+        <sys_id>22494407835383505e2cc430ceaad31c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:43</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=22494407835383505e2cc430ceaad31c"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Material Batch Receipt - Create Quality Inspection">a2494407835383505e2cc430ceaad318</model>
+        <model_id>a2494407835383505e2cc430ceaad318</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_a2494407835383505e2cc430ceaad318</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:43</sys_created_on>
+        <sys_id>6e494407835383505e2cc430ceaad32b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:43</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=6e494407835383505e2cc430ceaad32b"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=a2494407835383505e2cc430ceaad318"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=a2494407835383505e2cc430ceaad318"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=a2494407835383505e2cc430ceaad318^sys_idNOT INb6494407835383505e2cc430ceaad352"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Material Batch Receipt - Create Quality Inspection">a2494407835383505e2cc430ceaad318</flow>
+        <generation_source/>
+        <name>Created</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:44</sys_created_on>
+        <sys_id>b6494407835383505e2cc430ceaad352</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:44</sys_updated_on>
+        <trigger_definition display_value="Created">798916a0c31322002841b63b12d3ae7c</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1XXW/TMBT9K1aeQCpSQQJpewPGpEqDSduABzRFbnzTWrh2sW/ahqn/net8tF6abhlrAKE9Nf6o77n3nOPcfLuJ0MrJBOxIO+Q6gcvcjUR0HEWDSPExKHq84mMFNJYawWqurvI50DT66VjzmV8TMActQGP512RqZAJn0tH42/UgmnEtOBqbR8doMxhEqTWzK5jNFUc6K+XK0aSxAmx0/HI4HETFuVUQOnDBVebHq/jV8PWb4dFRLLXIHMZDeljEY47J1MOQjo7Mv3TbnUylEhZ0iXHOLcVEj+BmJ/cGHGwpQYWesMMKfTHEJrEg/WrGAhfnWuXBlpWTP6H4f+YgDgpa7Ugvp2Z5ASkQ4gROKSMfrlpUJuFqM+JIrI4zBEe5rNebupxKUBW5LrFyjm8TlIuagPWgixouMs3ONftQ5ciKCrldeZQSuEcaN5QV/Mh8QkXmac2cVwltTs+CqEazJLOUPTKqJ6urzLBGkI5mfAJlGDpXQYIBCelnF44+SuekngS574FSrO9iUXkIqBbGYyBctwmlq1FspmOj4430tpap8Te8UU93MMFeyvfGxoYG/lVvRFwsvM5FLbkezPJ1CppdAlFt/C+ip/zAdhkbnDYlmhrL3tE8G/lIvABfGOeT0S/CuQpbfw7SJA65DRgC9TyzGu0eYL3h6oKJjrbs8KAe7fUlqSp2GzUtbguh4fVqtqPV9wh2f/AntweuU2ZJejm0wbnOd/ztI0lNls5ZYijYCntzypgn3yfWZFrsQ7HdwZ4JSHmm8Hl/r2Rj4W44t3f8TaN6RHT7hR4Ni9l0arjW0a9bybWGfXJnWar3RguJ5dXd9Ga95B70KfNANSQBgFoLuwroxnuYTMvx2JJXb7xXX3S/S/uSa3QxmpgLEQeINx8BMyNAnQSsVFyTvOcZumgdcEZ96OYzradWrugIeurj2q55akL8FU9Ft71dqEZDbNLWJkimrCoOdf7jnOEUCJOi64VOLlD12Th6QpvQTgyjBWb/CLjDNGoeSUu3VtLduADKyYf0ag1F3hP86X3QVr7CmTtunigpIFbl2uFfDIUOAmitzFXRH/vGaE33roDYUoL/UCvXvwD7DaY6BBUAAA==</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=a2494407835383505e2cc430ceaad318^sys_idNOT INfa494407835383505e2cc430ceaad34f"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Batch Receipt - Create Quality Inspection">a2494407835383505e2cc430ceaad318</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:44</sys_created_on>
+        <sys_id>fa494407835383505e2cc430ceaad34f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:44</sys_updated_on>
+        <ui_id>198ae2b8-e8fa-48a8-bcd7-fe7239946bc6</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1WTW/bMAz9K4bOgWEnbdDmNrQrMGBr0XXoZWsEWaIbAbLk6iNtFuS/j7LsJGibfQC7FGhOFvlIPT7SZr6viWYNkBnxrFJAu8OILJkK0fhEx8XxtDg9pVKL4Dwt6APHZ9ciSEjXKra6/Rtsyyxm9mDJbE34QiphQZPZ97sRkQKDpyUUx6fllE/KyWRcFOOTo7KaTqpyLCYM4AhTKFaBQui3SBTPr/H2q/ZV2+f92OwyOYwVkU8xIvDkQQtAIjVTDkakYVowb+yKzLwNaLDAxJVWqy1iIbXHhCRin5z8ideeFBFXA1bGIfm2R9qLlcz1OfPsBjNzH2wP5QsjObikiYCaBeXP9m0JcNV6aXQK6crso40Kjb5MkpBtgqE3aAkOSUAb64zM+zLqm4V5/DqwvMDORUl6pzKcqe2JeW9lFXzksyagoMFEtGFtK/U9ba1Zyi4YuTT5vcJDXivziJc6ea9zxiPxHGVl+QXazzvzLbMyVvEF02DwZkTcyp0p5tyuFhSRPoTIJFXW10CTDDGEW9n6D3jBEnq6m9F2sLtZdntDHUcSOjY0zsaPUBQTITXSjoU0DKdUMjUfHmJpAjuVcOv1Gc6CB0HLnAeLsvn8OXKzmVfM8wVV5nAUglxoWyXBHs48IBCMCmgv/Yr29EEcDttiLXBAUcR+fIviDsHFzlwzqXZmDtbLWnJMTHVoqt+RfInF6yw4nL8UFBuG0s6dZz64ZDNonHODGbq20TQeSPghSDvw6FqJqCaOWh/4qW9UNqieDUXm2TVOCdaS7TqcDQmzCmpjIfML2EVKh34FDPXI0JtpY5to1ku8D9/+DF+afP7x+uXH7n2G3mfon2foj0tQAK7PQ0uwrPaW4IUEJdxuC24/csMGhAbHFcVMH71nW7B3Zre9s9+E5f/ahOW06H5vaB+m4t78Otz753NgMd79AoTZOqrzCQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=fa494407835383505e2cc430ceaad34f"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=a2494407835383505e2cc430ceaad318"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=a2494407835383505e2cc430ceaad318^sys_idNOT IN36494407835383505e2cc430ceaad34e,be494407835383505e2cc430ceaad34b"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">96490407835383505e2cc430ceaad3d9</block>
+        <comment>End flow — Material/Product is missing, cannot create inspection</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Batch Receipt - Create Quality Inspection">a2494407835383505e2cc430ceaad318</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>2</order>
+        <outputs_assigned/>
+        <parent_ui_id>b7bd540c-75b9-498e-b316-f431bbb5b3d9</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:44</sys_created_on>
+        <sys_id>36494407835383505e2cc430ceaad34e</sys_id>
+        <sys_mod_count>10</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:11</sys_updated_on>
+        <ui_id>ac168e93-baaa-4eb1-8314-db22c4e2899a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=10000</attributes>
+        <block display_value="">d6490407835383505e2cc430ceaad3d5</block>
+        <comment>Check if Material/Product is missing from the Batch/Lot</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Batch Receipt - Create Quality Inspection">a2494407835383505e2cc430ceaad318</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>1</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:44</sys_created_on>
+        <sys_id>be494407835383505e2cc430ceaad34b</sys_id>
+        <sys_mod_count>10</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:11</sys_updated_on>
+        <ui_id>b7bd540c-75b9-498e-b316-f431bbb5b3d9</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXWvbMBT9K0PPwdhxnDZ5K+kCgXYdSymMUczVhxMxWfIkua1n8t93ZTtJWTPada97s47uvTrn6h6rJab2Ve3drblwTm40mX+7HxGpA4bfLZGczAkZEQ2lwC9mNJdeGo3QA6g6YG27sAK84HkSsdpaoX1U4tpKUHllDa+Z3+1W64/Xn2+/Yh6XrlLQ3L0znW2l4hjVU63AIjOMJvP2t62O+gyyIkvijKXjaTqO4/H5JKHTlCZjnoKYTLGgAioUhi6eaTsh1zdVgJy3Um+G9dWQut6DxvJAZRyPiHjyQnOBJApQToxICZqDN7Yhc29rBFA2v9GqOURspfZ9u0t4cvKnCJXiOEQWAnUx0e8elvnQyx4uLsEDUsGG1XYIZVsjmXB9R7gooFZ+8RzrA26qTmWX4oGqfbZRdak/9c0ghwL7q0OkdkhCVEFp4D4IKdZb8/hlz3IpddeVYVMZBuqwAo+9o7UPfFoilCixUF5CVWFHw/0/yC4ZuZTRRuEiKpR5xEPDvEbAAvEIGwvREvHLDr4DnB5UcY1lMBlnweWOWVnttXWHk92IuMYtFDh31IjNzX/UgWGveNCW9+0JKV2hCzz4QQwydqOWBFZXZiPZSjsPKHvduFUYQXpGeTaJ2VlGZ5PZuaBpMi0maUIpzWjKZ2QY1SKGIpmx5PSoQnpiLPMOOFrxpbvI6xZ5w7kvLPKhn/w/M/obtySvuGVA3mSXLPvvln92S6BJwUmWdy8Blgs/rHfaZWj6UgrFT47QKT/dh5nuWR1ug0mHabcBW+0fqLDR4MgF1x2hR2O/B9lHbPcL4i/F8uoGAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=a2494407835383505e2cc430ceaad318"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=a2494407835383505e2cc430ceaad318"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_a2494407835383505e2cc430ceaad318</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:43</sys_created_on>
+        <sys_id>26494407835383505e2cc430ceaad327</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:43</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_a2494407835383505e2cc430ceaad318</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:44</sys_created_on>
+        <sys_id>6a494407835383505e2cc430ceaad332</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 10:58:44</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_a2494407835383505e2cc430ceaad318"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_a2494407835383505e2cc430ceaad318"/>
+    <sys_hub_flow action="UPDATE">
+        <sys_id>71ffb4b649414914ae2179d45258a44f</sys_id>
+        <latest_snapshot>a2494407835383505e2cc430ceaad318</latest_snapshot>
+        <compiler_build/>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=71ffb4b649414914ae2179d45258a44f^sys_idNOT IN72494407835383505e2cc430ceaad371"/>
+    <sys_flow_trigger_plan action="INSERT_OR_UPDATE">
+        <binding_strategy>com.snc.process_flow.engine.binding.OncePerRecord</binding_strategy>
+        <plan/>
+        <plan_id>71ffb4b649414914ae2179d45258a44f</plan_id>
+        <snapshot>a2494407835383505e2cc430ceaad318</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-17 10:58:45</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>72494407835383505e2cc430ceaad371</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-17 11:27:12</sys_updated_on>
+        <trigger display_value="">b3cfcc07839383505e2cc430ceaad37e</trigger>
+    </sys_flow_trigger_plan>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=71ffb4b649414914ae2179d45258a44f"/>
+</record_update>
