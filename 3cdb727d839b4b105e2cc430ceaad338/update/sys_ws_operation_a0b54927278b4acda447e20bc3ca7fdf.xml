@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>GET</http_method>
+        <name>Run Seed</name>
+        <operation_script><![CDATA[(function process(request, response) {
+  var MAT = "x_2056099_indust_0_mat_master";
+  var LOC = "x_2056099_indust_0_inv_loc";
+  var BATCH = "x_2056099_indust_0_inv_batch";
+  var STOCK = "x_2056099_indust_0_inv_stock";
+  var counts = { materials: 0, locations: 0, batches: 0, stock: 0 };
+  var errors = [];
+
+  function findOrCreate(table, keyField, keyValue, fields) {
+    try {
+      var gr = new GlideRecord(table);
+      gr.addQuery(keyField, keyValue);
+      gr.query();
+      if (gr.next()) { return gr.getValue("sys_id"); }
+      gr.initialize();
+      gr.setValue(keyField, keyValue);
+      for (var f in fields) {
+        if (fields.hasOwnProperty(f)) { gr.setValue(f, fields[f]); }
+      }
+      var id = gr.insert();
+      if (!id) { errors.push("Insert failed: " + table + " " + keyField + "=" + keyValue); }
+      return id || "";
+    } catch (e) {
+      errors.push("Error " + table + ": " + String(e));
+      return "";
+    }
+  }
+
+  function findCompany(name) {
+    var gr = new GlideRecord("core_company");
+    gr.addQuery("name", name);
+    gr.setLimit(1);
+    gr.query();
+    return gr.next() ? gr.getValue("sys_id") : "";
+  }
+
+  var supA = findCompany("SAP America") || findCompany("AT&T") || "";
+  var supB = findCompany("Puma") || supA;
+
+  // ── 1. MATERIALS ──
+  var m1 = findOrCreate(MAT, "material_product_id", "MAT-RM-001", { name:"Steel Rod 12mm", material_type:"raw_material", category:"component", unit_of_measure:"kg", criticality:"critical", safety_stock:200, reorder_level:500, standard_cost:45, description:"Carbon steel rod 12mm for shaft production", active:true, shelf_life_days:730 });
+  if (m1) counts.materials++;
+  var m2 = findOrCreate(MAT, "material_product_id", "MAT-MRO-001", { name:"Industrial Lubricant ISO VG 68", material_type:"mro", category:"consumable", unit_of_measure:"litres", criticality:"medium", safety_stock:50, reorder_level:100, standard_cost:28, description:"Multi-purpose industrial lubricant", active:true, shelf_life_days:365 });
+  if (m2) counts.materials++;
+  var m3 = findOrCreate(MAT, "material_product_id", "MAT-MRO-002", { name:"Hydraulic Pump Assembly HPA-200", material_type:"mro", category:"maintenance_spare", unit_of_measure:"nos", criticality:"high", safety_stock:5, reorder_level:10, standard_cost:1250, description:"Replacement hydraulic pump for CNC line", active:true });
+  if (m3) counts.materials++;
+  var m4 = findOrCreate(MAT, "material_product_id", "MAT-RM-002", { name:"Copper Wire Spool 2.5mm", material_type:"raw_material", category:"component", unit_of_measure:"metres", criticality:"high", safety_stock:500, reorder_level:1000, standard_cost:12, description:"Enamelled copper wire for motor winding", active:true, shelf_life_days:1095 });
+  if (m4) counts.materials++;
+  var m5 = findOrCreate(MAT, "material_product_id", "MAT-FG-001", { name:"Precision Bearing Set PB-6200", material_type:"finished_goods", category:"finished_product", unit_of_measure:"nos", criticality:"critical", safety_stock:100, reorder_level:250, standard_cost:85, description:"Sealed precision bearing set", active:true });
+  if (m5) counts.materials++;
+  var m6 = findOrCreate(MAT, "material_product_id", "MAT-RM-003", { name:"Thermal Compound TC-500", material_type:"raw_material", category:"consumable", unit_of_measure:"kg", criticality:"low", safety_stock:10, reorder_level:25, standard_cost:65, description:"Thermal interface compound", active:true, shelf_life_days:180 });
+  if (m6) counts.materials++;
+
+  // ── 2. LOCATIONS ──
+  var l1 = findOrCreate(LOC, "location_id", "LOC-RMW-001", { location_name:"Raw Material Warehouse A", location_type:"raw_material_warehouse", description:"Primary raw materials warehouse", active:true });
+  if (l1) counts.locations++;
+  var l2 = findOrCreate(LOC, "location_id", "LOC-MRO-001", { location_name:"MRO Parts Store", location_type:"mro_store", description:"MRO parts storage", active:true });
+  if (l2) counts.locations++;
+  var l3 = findOrCreate(LOC, "location_id", "LOC-FGW-001", { location_name:"Finished Goods Warehouse", location_type:"finished_goods_warehouse", description:"Finished products storage", active:true });
+  if (l3) counts.locations++;
+  var l4 = findOrCreate(LOC, "location_id", "LOC-PRD-001", { location_name:"Production Floor - Line 1", location_type:"production_area", description:"Production line area", active:true });
+  if (l4) counts.locations++;
+  var l5 = findOrCreate(LOC, "location_id", "LOC-QUA-001", { location_name:"Quarantine Holding Area", location_type:"quarantine_area", description:"Non-conforming material area", active:true });
+  if (l5) counts.locations++;
+  var l6 = findOrCreate(LOC, "location_id", "LOC-TMP-001", { location_name:"Temporary Storage Bay", location_type:"temporary_storage", description:"Temporary holding area", active:true });
+  if (l6) counts.locations++;
+
+  // ── 3. BATCHES ──
+  var b1 = findOrCreate(BATCH, "batch_number", "BAT-2024-001", { material_product:m1, received_date:"2024-08-15", quantity_received:5000, quality_status:"passed", status:"active", manufacturing_date:"2024-08-01", expiry_date:"2026-08-01", supplier:supA, supplier_batch_number:"SUP-SR-44021", certificate_number:"QC-2024-0815-A" });
+  if (b1) counts.batches++;
+  var b2 = findOrCreate(BATCH, "batch_number", "BAT-2024-002", { material_product:m2, received_date:"2024-09-01", quantity_received:200, quality_status:"passed", status:"active", manufacturing_date:"2024-07-15", expiry_date:"2025-07-15", supplier:supB, supplier_batch_number:"SUP-LB-90102", certificate_number:"QC-2024-0901-B" });
+  if (b2) counts.batches++;
+  var b3 = findOrCreate(BATCH, "batch_number", "BAT-2024-003", { material_product:m3, received_date:"2024-07-20", quantity_received:50, quality_status:"passed", status:"active", manufacturing_date:"2024-06-10", supplier:supA, supplier_batch_number:"SUP-HP-72003", certificate_number:"QC-2024-0720-A" });
+  if (b3) counts.batches++;
+  var b4 = findOrCreate(BATCH, "batch_number", "BAT-2024-004", { material_product:m4, received_date:"2024-09-10", quantity_received:3000, quality_status:"pending", status:"active", manufacturing_date:"2024-08-20", expiry_date:"2027-08-20", supplier:supB, supplier_batch_number:"SUP-CW-91004" });
+  if (b4) counts.batches++;
+  var b5 = findOrCreate(BATCH, "batch_number", "BAT-2024-005", { material_product:m5, received_date:"2024-08-01", quantity_received:500, quality_status:"passed", status:"active", manufacturing_date:"2024-07-01", supplier:supA, supplier_batch_number:"SUP-PB-80051", certificate_number:"QC-2024-0801-A" });
+  if (b5) counts.batches++;
+  var b6 = findOrCreate(BATCH, "batch_number", "BAT-2024-006", { material_product:m6, received_date:"2024-01-15", quantity_received:100, quality_status:"failed", status:"expired", manufacturing_date:"2023-12-01", expiry_date:"2024-06-01", supplier:supB, supplier_batch_number:"SUP-TC-10062" });
+  if (b6) counts.batches++;
+
+  // ── 4. INVENTORY STOCK ──
+  function createStock(matId, type, stat, locId, batchId, total, reserved, avail, safety, reorder, updated, expiry) {
+    try {
+      var gr = new GlideRecord(STOCK);
+      gr.addQuery("material_product", matId);
+      gr.addQuery("location", locId);
+      gr.addQuery("inventory_type", type);
+      gr.query();
+      if (gr.next()) return gr.getValue("sys_id");
+      gr.initialize();
+      gr.setValue("material_product", matId);
+      gr.setValue("inventory_type", type);
+      gr.setValue("status", stat);
+      gr.setValue("location", locId);
+      if (batchId) gr.setValue("batch_lot", batchId);
+      gr.setValue("total_quantity", total);
+      gr.setValue("reserved_quantity", reserved);
+      gr.setValue("available_quantity", avail);
+      gr.setValue("safety_stock", safety);
+      gr.setValue("reorder_level", reorder);
+      gr.setValue("last_updated", updated);
+      if (expiry) gr.setValue("expiry_date", expiry);
+      gr.setValue("active", true);
+      var id = gr.insert();
+      if (!id) errors.push("Stock insert failed: type=" + type);
+      return id || "";
+    } catch (e) {
+      errors.push("Stock error: " + String(e));
+      return "";
+    }
+  }
+
+  if (createStock(m1,"raw_materials","available",l1,b1,2500,200,2300,200,500,"2024-09-15 08:30:00","2026-08-01")) counts.stock++;
+  if (createStock(m2,"mro","available",l2,b2,150,30,120,50,100,"2024-09-14 14:15:00","2025-07-15")) counts.stock++;
+  if (createStock(m3,"mro","available",l2,b3,8,3,5,5,10,"2024-09-13 11:45:00","")) counts.stock++;
+  if (createStock(m4,"raw_materials","inspection",l1,b4,3000,0,3000,500,1000,"2024-09-12 09:00:00","2027-08-20")) counts.stock++;
+  if (createStock(m5,"finished_goods","available",l3,b5,350,50,300,100,250,"2024-09-15 16:00:00","")) counts.stock++;
+  if (createStock(m1,"safety_buffer","available",l4,b1,200,0,200,200,500,"2024-09-10 07:00:00","2026-08-01")) counts.stock++;
+  if (createStock(m6,"temporary_expired","expired",l6,b6,50,0,50,10,25,"2024-09-08 13:20:00","2024-06-01")) counts.stock++;
+  if (createStock(m4,"quarantine_disposal","quarantined",l5,b4,100,0,100,500,1000,"2024-09-11 10:30:00","2027-08-20")) counts.stock++;
+
+  response.setBody({ result: { message:"Demo data seeding complete", counts:counts, errors:errors, suppliers:{a:supA,b:supB}, total:counts.materials+counts.locations+counts.batches+counts.stock } });
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/seed_api/run</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/run</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-19 07:12:22</sys_created_on>
+        <sys_id>a0b54927278b4acda447e20bc3ca7fdf</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Run Seed</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_a0b54927278b4acda447e20bc3ca7fdf</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-19 07:12:22</sys_updated_on>
+        <web_service_definition display_value="Seed API">c3302318e33f49568fef6e897760f199</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="3b15d772613b44aa83e6522c17026d69" label="Inventory Batch / Lot" name="x_2056099_indust_0_inv_batch" type="collection">
-        <element choice="1" label="Quality Status" mandatory="true" max_length="40" name="quality_status" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Passed" sequence="2" value="passed"/>
-                <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
-                <element inactive_on_update="false" label="Conditional Approval" sequence="4" value="conditional_approval"/>
-                <element inactive_on_update="false" label="Failed" sequence="3" value="failed"/>
-            </choice>
-        </element>
+        <element label="Manufacturing Date" max_length="40" name="manufacturing_date" type="glide_date"/>
         <element choice="1" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Closed" sequence="4" value="closed"/>
-                <element inactive_on_update="false" label="Active" sequence="1" value="active"/>
                 <element inactive_on_update="false" label="Expired" sequence="3" value="expired"/>
                 <element inactive_on_update="false" label="Blocked" sequence="2" value="blocked"/>
+                <element inactive_on_update="false" label="Active" sequence="1" value="active"/>
+                <element inactive_on_update="false" label="Closed" sequence="4" value="closed"/>
             </choice>
         </element>
         <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="core_company" type="reference"/>
-        <element label="Supplier Batch Number" max_length="100" name="supplier_batch_number" type="string"/>
-        <element label="Certificate Number" max_length="100" name="certificate_number" type="string"/>
-        <element label="Manufacturing Date" max_length="40" name="manufacturing_date" type="glide_date"/>
         <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
-        <element display="true" label="Batch Number" mandatory="true" max_length="40" name="batch_number" type="string" unique="true"/>
         <element label="Expiry Date" max_length="40" name="expiry_date" type="glide_date"/>
+        <element label="Supplier Batch Number" max_length="100" name="supplier_batch_number" type="string"/>
         <element default="0" label="Quantity Received" mandatory="true" max_length="15" name="quantity_received" type="decimal"/>
+        <element display="true" label="Batch Number" mandatory="true" max_length="40" name="batch_number" type="string" unique="true"/>
+        <element choice="1" label="Quality Status" mandatory="true" max_length="40" name="quality_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
+                <element inactive_on_update="false" label="Conditional Approval" sequence="4" value="conditional_approval"/>
+                <element inactive_on_update="false" label="Failed" sequence="3" value="failed"/>
+                <element inactive_on_update="false" label="Passed" sequence="2" value="passed"/>
+            </choice>
+        </element>
+        <element label="Certificate Number" max_length="100" name="certificate_number" type="string"/>
         <element label="Received Date" mandatory="true" max_length="40" name="received_date" type="glide_date"/>
         <index name="index" unique="true">
             <element name="batch_number"/>

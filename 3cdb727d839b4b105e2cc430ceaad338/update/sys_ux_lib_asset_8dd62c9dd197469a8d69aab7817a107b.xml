@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ux_lib_asset">
+    <sys_ux_lib_asset action="INSERT_OR_UPDATE">
+        <bundled_asset>false</bundled_asset>
+        <category>source_map</category>
+        <checksum>62bc97523490cb6ec6a869f63d3c8128</checksum>
+        <config_option/>
+        <content>{"version":3,"file":"main.jsdbx","sources":["../../../src/client/seed/main.ts"],"sourcesContent":["async function seedData() {\n  const el = document.getElementById(\"output\");\n  if (!el) return;\n  el.textContent = \"Seeding demo data...\";\n  try {\n    const r = await fetch(\"/api/x_2056099_indust_0/seed_api/run\", {\n      headers: {\n        Accept: \"application/json\",\n        \"X-UserToken\": (window as any).g_ck,\n      },\n    });\n    const d = await r.json();\n    el.textContent = JSON.stringify(d.result || d, null, 2);\n  } catch (e: any) {\n    el.textContent = \"Error: \" + e.message;\n  }\n}\nseedData();\n"],"names":["seedData","el","document","getElementById","textContent","r","fetch","headers","Accept","window","g_ck","d","json","JSON","stringify","result","e","message"],"mappings":"wCAiBAA,CAjBA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CACE,CAAA,CAAA,CAAA,CAAMC,CAAAA,CAAAA,CAAKC,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAASC,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAc,CAAC,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CACnC,CAAA,CAAA,CAAKF,CAAAA,CAAAA,CAAAA,CACLA,CAAAA,CAAAA,CAAGG,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAW,CAAG,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CACjB,CAAA,CAAA,CAAI,CACF,CAAA,CAAA,CAAA,CAAMC,CAAAA,CAAI,CAAA,CAAA,CAAA,CAAA,CAAA,CAAMC,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAM,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAwC,CAC5DC,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAS,CACPC,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAQ,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CACR,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAgBC,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAeC,CAAAA,CAAAA,CAAAA,CAAAA,CAEnC,CAAA,CAAA,CACMC,CAAAA,CAAI,CAAA,CAAA,CAAA,CAAA,CAAA,CAAMN,CAAAA,CAAEO,CAAAA,CAAAA,CAAAA,CAAI,CAAA,CACtBX,CAAAA,CAAAA,CAAAA,CAAGG,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAW,CAAGS,CAAAA,CAAAA,CAAAA,CAAAA,CAAKC,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAS,CAACH,CAAAA,CAAEI,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAM,CAAA,CAAIJ,CAAAA,CAAG,CAAA,CAAA,CAAA,CAAA,CAAM,CAAA,CACvD,CAAE,CAAA,CAAA,CAAA,CAAA,CAAA,CAAOK,CAAAA,CAAQ,CACff,CAAAA,CAAAA,CAAGG,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAW,CAAG,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAA,CAAYY,CAAAA,CAAEC,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CAAAA,CACjC,CAAA,CACF,CAAA,CAAA,CAAA"}</content>
+        <content_meta/>
+        <dependencies/>
+        <device_type/>
+        <es_module>false</es_module>
+        <is_attachment>false</is_attachment>
+        <mime_type>application/json</mime_type>
+        <name>x_2056099_indust_0/seed/main.js.map</name>
+        <sys_class_name>sys_ux_lib_asset</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-19 07:12:17</sys_created_on>
+        <sys_id>8dd62c9dd197469a8d69aab7817a107b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_2056099_indust_0/seed/main.js.map</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ux_lib_asset_8dd62c9dd197469a8d69aab7817a107b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-19 07:12:17</sys_updated_on>
+    </sys_ux_lib_asset>
+    <sn_glider_source_artifact_m2m action="INSERT_OR_UPDATE">
+        <application_file display_value="x_2056099_indust_0/seed/main.js.map">8dd62c9dd197469a8d69aab7817a107b</application_file>
+        <source_artifact display_value="x_2056099_indust_0_seed.do - BYOUI Files">e98f8af5d92146ecb7bcf10af1957b29</source_artifact>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-19 07:12:17</sys_created_on>
+        <sys_id>ed48e2a987a44384a1e870ca40dc565b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-19 07:12:17</sys_updated_on>
+    </sn_glider_source_artifact_m2m>
+    <sn_glider_source_artifact action="INSERT_OR_UPDATE">
+        <name>x_2056099_indust_0_seed.do - BYOUI Files</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-19 07:12:15</sys_created_on>
+        <sys_id>e98f8af5d92146ecb7bcf10af1957b29</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-19 07:12:15</sys_updated_on>
+    </sn_glider_source_artifact>
+    <sys_attachment action="INSERT_OR_UPDATE">
+        <average_image_color/>
+        <chunk_size_bytes>933336</chunk_size_bytes>
+        <compressed>true</compressed>
+        <content_type>application/zip</content_type>
+        <file_name>x_2056099_indust_0_seed.do - BYOUI Files.zip</file_name>
+        <hash>aef0a0cec8457edc9c2a6abf2543b652e3d6ac703835ba6093d88ac4e6adde83</hash>
+        <image_height/>
+        <image_width/>
+        <size_bytes>798</size_bytes>
+        <size_compressed>791</size_compressed>
+        <state/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-19 07:14:03</sys_created_on>
+        <sys_id>6f45fead1347db3355ff2ad50c76349e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-19 07:14:03</sys_updated_on>
+        <table_name>sn_glider_source_artifact</table_name>
+        <table_sys_id>e98f8af5d92146ecb7bcf10af1957b29</table_sys_id>
+    </sys_attachment>
+    <sys_attachment_doc action="INSERT_OR_UPDATE">
+        <data>UEsDBBQAAAAIAAAAIQSGLy22zAAAACcBAAAaAAAAc3JjL2NsaWVudC9zZWVkL2luZGV4Lmh0bWxtkD1PwzAQhvf+CstigCHJjhyzVJWYCxNiuMSnxOo5tnxnNeXX4yZlYzu9et4PnZklkBoJmHvdpEiQPWt7UMrMCO5+1FO8ENozolNHDFEdQcB0u7oT7C6vS7w2ZW0migMQW9P9Iz7oMfskivPY6wB+aYXfyprGoX/6+lxPGQJeY76cNwwGQm4nlBMVnj98QBYI6fnlWyu5JawR0RVCfW/cHNv87m+/GaK7PYpTRuVdr2ORVETb98WLB/I/fpnatjVdBXb3bqop9T/28AtQSwMEFAAAAAgAAAAhBNS8MTM7AQAA9wEAABcAAABzcmMvY2xpZW50L3NlZWQvbWFpbi50c2VRvU7DMBDe8xSHp0QUp6oEUlMx8NMBBhgKEltk2Zc01LUj+6w2onl3nNCWodvp7rvv5074zkiogpHUWAMeUT0LEmkGPwmAtMYToIZ7UFaGLRriNdJS41A+di8qZTZQG4hli4hvKkivUGfgkIIzQws1J9zTkzUUVyIRW0WNxtSgcGtBRTHOORug5LpR9aTrIlrsRENQIcl1ynLRNvm+nE1v76bzedkYFTyV03xwXQ4zFwybHDkA1igUOl+cGwAPUmJLBTDRtrqRYgidf3sb184Y9nXz6dF92A0aVkC6izp2B8KDMF3G61JuTuD+r+jH8Cfb6mzb8YE6PU4vLvG6en/jnlw8RlN1qeIOfdAEhwOoCZig9QRm43IP0apcQ4rFaOKY6PK2S+esi/HgGpBv0XtR40iQ9Mn/bxfJL1BLAQIUABQAAAAIAAAAIQSGLy22zAAAACcBAAAaAAAAAAAAAAAAAAAAAAAAAABzcmMvY2xpZW50L3NlZWQvaW5kZXguaHRtbFBLAQIUABQAAAAIAAAAIQTUvDEzOwEAAPcBAAAXAAAAAAAAAAAAAAAAAAQBAABzcmMvY2xpZW50L3NlZWQvbWFpbi50c1BLBQYAAAAAAgACAI0AAAB0AgAAAAA=</data>
+        <length/>
+        <position>0</position>
+        <sys_attachment display_value="x_2056099_indust_0_seed.do - BYOUI Files.zip" sys_id="6f45fead1347db3355ff2ad50c76349e">6f45fead1347db3355ff2ad50c76349e</sys_attachment>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-19 07:14:03</sys_created_on>
+        <sys_id>5541802e7c3aab20e9faca5fe3731520</sys_id>
+    </sys_attachment_doc>
+</record_update>

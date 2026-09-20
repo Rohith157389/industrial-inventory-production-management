@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>GET</http_method>
+        <name>Get KPIs</name>
+        <operation_script><![CDATA[(function process(request, response) {
+  function countRecords(table, query) {
+    var ga = new GlideAggregate(table);
+    if (query) ga.addEncodedQuery(query);
+    ga.addAggregate("COUNT");
+    ga.query();
+    ga.next();
+    return parseInt(ga.getAggregate("COUNT") || "0", 10);
+  }
+
+  var STOCK = "x_2056099_indust_0_inv_stock";
+  var ALERT = "x_2056099_indust_0_inv_alert";
+  var QC    = "x_2056099_indust_0_qc_insp";
+  var REQ   = "x_2056099_indust_0_inv_req";
+  var TXN   = "x_2056099_indust_0_inv_txn";
+  var BATCH = "x_2056099_indust_0_inv_batch";
+
+  // ── KPIs ──
+  var totalStock = countRecords(STOCK, "active=true");
+  var lowStock = countRecords(STOCK, "active=true^available_quantityLESSTHANreorder_level");
+  var openAlerts = countRecords(ALERT, "status=open");
+  var pendingInspections = countRecords(QC, "status=open^ORstatus=in_progress");
+
+  // ── Category Summaries ──
+  var categoryDefs = [
+    { value: "raw_materials", label: "Raw Materials" },
+    { value: "mro", label: "MRO Inventory" },
+    { value: "finished_goods", label: "Finished Goods" },
+    { value: "safety_buffer", label: "Safety / Buffer" },
+    { value: "temporary_expired", label: "Temporary / Expired" },
+    { value: "quarantine_disposal", label: "Quarantine / Disposal" }
+  ];
+  var categories = [];
+  for (var i = 0; i < categoryDefs.length; i++) {
+    var cat = categoryDefs[i];
+    var q = "inventory_type=" + cat.value;
+    var cnt = countRecords(STOCK, q);
+    var ga = new GlideAggregate(STOCK);
+    ga.addEncodedQuery(q);
+    ga.addAggregate("SUM", "available_quantity");
+    ga.query();
+    var availQty = 0;
+    if (ga.next()) availQty = parseInt(ga.getAggregate("SUM", "available_quantity") || "0", 10);
+    categories.push({ type: cat.value, label: cat.label, count: cnt, availableQty: availQty });
+  }
+
+  // ── Alert Summary ──
+  var alerts = {
+    critical: countRecords(ALERT, "severity=critical^statusNOT INresolved,dismissed"),
+    high: countRecords(ALERT, "severity=high^statusNOT INresolved,dismissed"),
+    open: countRecords(ALERT, "status=open"),
+    expiredMaterial: countRecords(ALERT, "alert_type=expired_material^statusNOT INresolved,dismissed"),
+    qualityFailure: countRecords(ALERT, "alert_type=quality_failure^statusNOT INresolved,dismissed"),
+    materialShortage: countRecords(ALERT, "alert_type=material_shortage^statusNOT INresolved,dismissed")
+  };
+
+  // ── Quality Summary ──
+  var quality = {
+    pending: countRecords(QC, "result=pending"),
+    passed: countRecords(QC, "result=passed"),
+    failed: countRecords(QC, "result=failed"),
+    blockedBatches: countRecords(BATCH, "status=blocked")
+  };
+
+  // ── Request Summary ──
+  var requests = {
+    draft: countRecords(REQ, "status=draft"),
+    pendingApproval: countRecords(REQ, "status=pending_approval"),
+    approved: countRecords(REQ, "status=approved"),
+    inProgress: countRecords(REQ, "status=in_progress"),
+    completed: countRecords(REQ, "status=completed"),
+    rejected: countRecords(REQ, "status=rejected")
+  };
+
+  // ── Recent Transactions (last 10) ──
+  var transactions = [];
+  var gr = new GlideRecord(TXN);
+  gr.orderByDesc("transaction_date");
+  gr.setLimit(10);
+  gr.query();
+  while (gr.next()) {
+    transactions.push({
+      number: gr.getValue("number") || "",
+      material: gr.getDisplayValue("material_product") || "",
+      quantity: gr.getValue("quantity") || "0",
+      transactionType: gr.getDisplayValue("transaction_type") || "",
+      transactionDate: gr.getDisplayValue("transaction_date") || "",
+      status: gr.getDisplayValue("status") || ""
+    });
+  }
+
+  response.setBody({
+    result: {
+      totalStock: totalStock,
+      lowStock: lowStock,
+      openAlerts: openAlerts,
+      pendingInspections: pendingInspections,
+      categories: categories,
+      alerts: alerts,
+      quality: quality,
+      requests: requests,
+      recentTransactions: transactions
+    }
+  });
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/dashboard_api/kpis</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/kpis</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-19 05:55:13</sys_created_on>
+        <sys_id>7401d7f2a1ca4cd3ab6e8325a34f1ec9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get KPIs</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_7401d7f2a1ca4cd3ab6e8325a34f1ec9</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-19 05:55:13</sys_updated_on>
+        <web_service_definition display_value="Dashboard API">0cd7b7e07d51482f91bb5e3f8ee69330</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

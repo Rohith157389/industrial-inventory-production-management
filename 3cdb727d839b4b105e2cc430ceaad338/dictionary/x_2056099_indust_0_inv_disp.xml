@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="1b9fbc5d6ba5449a829aaa741fc8f3b9" label="Inventory Disposition" name="x_2056099_indust_0_inv_disp" type="collection">
-        <element label="Reason" mandatory="true" max_length="2000" name="reason" type="string"/>
-        <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
-        <element label="Responsible Group" max_length="32" name="responsible_group" reference="sys_user_group" type="reference"/>
+        <element label="Requested By" mandatory="true" max_length="32" name="requested_by" reference="sys_user" type="reference"/>
         <element choice="3" default="draft" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
                 <element inactive_on_update="false" label="In Progress" sequence="4" value="in_progress"/>
                 <element inactive_on_update="false" label="Cancelled" sequence="7" value="cancelled"/>
                 <element inactive_on_update="false" label="Approved" sequence="3" value="approved"/>
-                <element inactive_on_update="false" label="Rejected" sequence="6" value="rejected"/>
                 <element inactive_on_update="false" label="Pending Approval" sequence="2" value="pending_approval"/>
+                <element inactive_on_update="false" label="Rejected" sequence="6" value="rejected"/>
                 <element inactive_on_update="false" label="Completed" sequence="5" value="completed"/>
                 <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
             </choice>
         </element>
+        <element default="0" label="Quantity" mandatory="true" max_length="15" name="quantity" type="decimal"/>
         <element label="Notes" max_length="2000" name="notes" type="string"/>
+        <element display="true" label="Disposition Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
+        <element label="Reason" mandatory="true" max_length="2000" name="reason" type="string"/>
+        <element label="Approved By" max_length="32" name="approved_by" reference="sys_user" type="reference"/>
+        <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="Decision Date" max_length="40" name="decision_date" type="glide_date_time"/>
         <element label="Inventory Stock" mandatory="true" max_length="32" name="inventory_stock" reference="x_2056099_indust_0_inv_stock" type="reference"/>
-        <element choice="1" label="Disposition Type" mandatory="true" max_length="40" name="disposition_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Rework" sequence="4" value="rework"/>
-                <element inactive_on_update="false" label="Return to Available Stock" sequence="7" value="return_to_available_stock"/>
-                <element inactive_on_update="false" label="Return to Supplier" sequence="3" value="return_to_supplier"/>
-                <element inactive_on_update="false" label="Release from Quarantine" sequence="2" value="release_from_quarantine"/>
-                <element inactive_on_update="false" label="Scrap" sequence="6" value="scrap"/>
-                <element inactive_on_update="false" label="Disposal" sequence="5" value="disposal"/>
-                <element inactive_on_update="false" label="Quarantine" sequence="1" value="quarantine"/>
-            </choice>
-        </element>
+        <element label="Related Quality Inspection" max_length="32" name="related_quality_inspection" reference="x_2056099_indust_0_qc_insp" type="reference"/>
         <element label="Batch/Lot" mandatory="true" max_length="32" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
         <element label="Completed Date" max_length="40" name="completed_date" type="glide_date_time"/>
-        <element label="Requested By" mandatory="true" max_length="32" name="requested_by" reference="sys_user" type="reference"/>
-        <element label="Approved By" max_length="32" name="approved_by" reference="sys_user" type="reference"/>
-        <element label="Decision Date" max_length="40" name="decision_date" type="glide_date_time"/>
+        <element label="Responsible Group" max_length="32" name="responsible_group" reference="sys_user_group" type="reference"/>
         <element choice="1" label="Disposition Decision" mandatory="true" max_length="40" name="disposition_decision" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Rejected" sequence="3" value="rejected"/>
@@ -39,9 +31,17 @@
                 <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
             </choice>
         </element>
-        <element default="0" label="Quantity" mandatory="true" max_length="15" name="quantity" type="decimal"/>
-        <element display="true" label="Disposition Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
-        <element label="Related Quality Inspection" max_length="32" name="related_quality_inspection" reference="x_2056099_indust_0_qc_insp" type="reference"/>
+        <element choice="1" label="Disposition Type" mandatory="true" max_length="40" name="disposition_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Release from Quarantine" sequence="2" value="release_from_quarantine"/>
+                <element inactive_on_update="false" label="Scrap" sequence="6" value="scrap"/>
+                <element inactive_on_update="false" label="Disposal" sequence="5" value="disposal"/>
+                <element inactive_on_update="false" label="Quarantine" sequence="1" value="quarantine"/>
+                <element inactive_on_update="false" label="Rework" sequence="4" value="rework"/>
+                <element inactive_on_update="false" label="Return to Available Stock" sequence="7" value="return_to_available_stock"/>
+                <element inactive_on_update="false" label="Return to Supplier" sequence="3" value="return_to_supplier"/>
+            </choice>
+        </element>
         <element label="Related Inventory Request" max_length="32" name="related_inventory_request" reference="x_2056099_indust_0_inv_req" type="reference"/>
         <index name="index">
             <element name="approved_by"/>

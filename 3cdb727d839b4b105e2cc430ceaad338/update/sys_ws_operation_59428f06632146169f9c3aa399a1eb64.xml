@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>GET</http_method>
+        <name>Get Inventory Data</name>
+        <operation_script><![CDATA[(function process(request, response) {
+  var STOCK_TABLE = "x_2056099_indust_0_inv_stock";
+  var LOC_TABLE = "x_2056099_indust_0_inv_loc";
+  var MAT_TABLE = "x_2056099_indust_0_mat_master";
+
+  // ── Read filter query params ──
+  var filterType = request.queryParams.inventory_type
+    ? String(request.queryParams.inventory_type)
+    : "";
+  var filterMaterial = request.queryParams.material_product
+    ? String(request.queryParams.material_product)
+    : "";
+  var filterLocation = request.queryParams.location
+    ? String(request.queryParams.location)
+    : "";
+  var filterStatus = request.queryParams.status
+    ? String(request.queryParams.status)
+    : "";
+
+  function buildFilterQuery() {
+    var parts = [];
+    if (filterType) parts.push("inventory_type=" + filterType);
+    if (filterMaterial) parts.push("material_product=" + filterMaterial);
+    if (filterLocation) parts.push("location=" + filterLocation);
+    if (filterStatus) parts.push("status=" + filterStatus);
+    return parts.join("^");
+  }
+
+  var filterQuery = buildFilterQuery();
+
+  // ── Summary section (aggregates with filters applied) ──
+  var summary = { totalRecords: 0, totalQuantity: 0, totalReserved: 0, totalAvailable: 0 };
+
+  var gaCount = new GlideAggregate(STOCK_TABLE);
+  if (filterQuery) gaCount.addEncodedQuery(filterQuery);
+  gaCount.addAggregate("COUNT");
+  gaCount.query();
+  if (gaCount.next()) {
+    summary.totalRecords = parseInt(gaCount.getAggregate("COUNT") || "0", 10);
+  }
+
+  var gaQty = new GlideAggregate(STOCK_TABLE);
+  if (filterQuery) gaQty.addEncodedQuery(filterQuery);
+  gaQty.addAggregate("SUM", "total_quantity");
+  gaQty.query();
+  if (gaQty.next()) {
+    summary.totalQuantity = parseInt(gaQty.getAggregate("SUM", "total_quantity") || "0", 10);
+  }
+
+  var gaRes = new GlideAggregate(STOCK_TABLE);
+  if (filterQuery) gaRes.addEncodedQuery(filterQuery);
+  gaRes.addAggregate("SUM", "reserved_quantity");
+  gaRes.query();
+  if (gaRes.next()) {
+    summary.totalReserved = parseInt(gaRes.getAggregate("SUM", "reserved_quantity") || "0", 10);
+  }
+
+  var gaAvail = new GlideAggregate(STOCK_TABLE);
+  if (filterQuery) gaAvail.addEncodedQuery(filterQuery);
+  gaAvail.addAggregate("SUM", "available_quantity");
+  gaAvail.query();
+  if (gaAvail.next()) {
+    summary.totalAvailable = parseInt(gaAvail.getAggregate("SUM", "available_quantity") || "0", 10);
+  }
+
+  // ── Category counts (always full counts — no filters) ──
+  var categoryDefs = [
+    { value: "raw_materials", label: "Raw Materials" },
+    { value: "mro", label: "MRO Inventory" },
+    { value: "finished_goods", label: "Finished Goods" },
+    { value: "safety_buffer", label: "Safety / Buffer" },
+    { value: "temporary_expired", label: "Temporary / Expired" },
+    { value: "quarantine_disposal", label: "Quarantine / Disposal" }
+  ];
+
+  var categories = [];
+  for (var c = 0; c < categoryDefs.length; c++) {
+    var catDef = categoryDefs[c];
+    var gaCat = new GlideAggregate(STOCK_TABLE);
+    gaCat.addEncodedQuery("inventory_type=" + catDef.value);
+    gaCat.addAggregate("COUNT");
+    gaCat.query();
+    var catCount = 0;
+    if (gaCat.next()) {
+      catCount = parseInt(gaCat.getAggregate("COUNT") || "0", 10);
+    }
+    categories.push({ value: catDef.value, label: catDef.label, count: catCount });
+  }
+
+  // ── Stock list (filtered, ordered by last_updated DESC, limit 50) ──
+  var stockList = [];
+  var gr = new GlideRecord(STOCK_TABLE);
+  if (filterQuery) gr.addEncodedQuery(filterQuery);
+  gr.orderByDesc("last_updated");
+  gr.setLimit(50);
+  gr.query();
+  while (gr.next()) {
+    stockList.push({
+      number: gr.getValue("number") || "",
+      material: gr.getDisplayValue("material_product") || "",
+      inventoryType: gr.getDisplayValue("inventory_type") || "",
+      location: gr.getDisplayValue("location") || "",
+      batchLot: gr.getDisplayValue("batch_lot") || "",
+      totalQty: gr.getValue("total_quantity") || "0",
+      reservedQty: gr.getValue("reserved_quantity") || "0",
+      availableQty: gr.getValue("available_quantity") || "0",
+      status: gr.getDisplayValue("status") || "",
+      lastUpdated: gr.getDisplayValue("last_updated") || "",
+      sysId: gr.getValue("sys_id") || ""
+    });
+  }
+
+  // ── Filter options ──
+  var inventoryTypes = [
+    { value: "raw_materials", label: "Raw Materials" },
+    { value: "mro", label: "MRO Inventory" },
+    { value: "finished_goods", label: "Finished Goods" },
+    { value: "safety_buffer", label: "Safety / Buffer" },
+    { value: "temporary_expired", label: "Temporary / Expired" },
+    { value: "quarantine_disposal", label: "Quarantine / Disposal" }
+  ];
+
+  var statuses = [
+    { value: "available", label: "Available" },
+    { value: "reserved", label: "Reserved" },
+    { value: "inspection", label: "Inspection" },
+    { value: "blocked", label: "Blocked" },
+    { value: "quarantined", label: "Quarantined" },
+    { value: "expired", label: "Expired" }
+  ];
+
+  var locations = [];
+  var grLoc = new GlideRecord(LOC_TABLE);
+  grLoc.orderBy("location_name");
+  grLoc.query();
+  while (grLoc.next()) {
+    locations.push({
+      value: grLoc.getValue("sys_id") || "",
+      label: grLoc.getValue("location_name") || ""
+    });
+  }
+
+  var materials = [];
+  var grMat = new GlideRecord(MAT_TABLE);
+  grMat.orderBy("name");
+  grMat.query();
+  while (grMat.next()) {
+    materials.push({
+      value: grMat.getValue("sys_id") || "",
+      label: grMat.getValue("name") || ""
+    });
+  }
+
+  response.setBody({
+    result: {
+      summary: summary,
+      categories: categories,
+      stockList: stockList,
+      filterOptions: {
+        inventoryTypes: inventoryTypes,
+        statuses: statuses,
+        locations: locations,
+        materials: materials
+      }
+    }
+  });
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/inventory_api/data</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/data</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-19 06:16:16</sys_created_on>
+        <sys_id>59428f06632146169f9c3aa399a1eb64</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get Inventory Data</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_59428f06632146169f9c3aa399a1eb64</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-19 06:16:16</sys_updated_on>
+        <web_service_definition display_value="Inventory API">2e3c5b6ef89d4c40bb503d201d0132de</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

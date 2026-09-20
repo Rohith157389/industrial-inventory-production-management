@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>GET</http_method>
+        <name>Get Stock Record</name>
+        <operation_script><![CDATA[(function process(request, response) {
+  var STOCK_TABLE = "x_2056099_indust_0_inv_stock";
+  var BATCH_TABLE = "x_2056099_indust_0_inv_batch";
+  var TXN_TABLE = "x_2056099_indust_0_inv_txn";
+  var REQ_TABLE = "x_2056099_indust_0_inv_req";
+  var ALERT_TABLE = "x_2056099_indust_0_inv_alert";
+
+  var sysId = request.queryParams.sys_id ? String(request.queryParams.sys_id) : "";
+
+  if (!sysId) {
+    response.setBody({ error: "Missing required parameter: sys_id" });
+    return;
+  }
+
+  // ── Stock record ──
+  var stock = null;
+  var gr = new GlideRecord(STOCK_TABLE);
+  if (gr.get(sysId)) {
+    stock = {
+      number: gr.getValue("number") || "",
+      material: gr.getDisplayValue("material_product") || "",
+      materialSysId: gr.getValue("material_product") || "",
+      inventoryType: gr.getDisplayValue("inventory_type") || "",
+      status: gr.getDisplayValue("status") || "",
+      location: gr.getDisplayValue("location") || "",
+      locationSysId: gr.getValue("location") || "",
+      batchLot: gr.getDisplayValue("batch_lot") || "",
+      batchLotSysId: gr.getValue("batch_lot") || "",
+      totalQty: gr.getValue("total_quantity") || "0",
+      reservedQty: gr.getValue("reserved_quantity") || "0",
+      availableQty: gr.getValue("available_quantity") || "0",
+      safetyStock: gr.getValue("safety_stock") || "0",
+      reorderLevel: gr.getValue("reorder_level") || "0",
+      lastUpdated: gr.getDisplayValue("last_updated") || "",
+      expiryDate: gr.getDisplayValue("expiry_date") || "",
+      active: gr.getValue("active") || "true",
+      sysId: sysId
+    };
+  } else {
+    response.setBody({ error: "Stock record not found for sys_id: " + sysId });
+    return;
+  }
+
+  // ── Batch info ──
+  var batch = null;
+  if (stock.batchLotSysId) {
+    var grBatch = new GlideRecord(BATCH_TABLE);
+    if (grBatch.get(stock.batchLotSysId)) {
+      batch = {
+        batchNumber: grBatch.getValue("batch_number") || "",
+        qualityStatus: grBatch.getDisplayValue("quality_status") || "",
+        manufacturingDate: grBatch.getDisplayValue("manufacturing_date") || "",
+        expiryDate: grBatch.getDisplayValue("expiry_date") || "",
+        supplierBatchNumber: grBatch.getValue("supplier_batch_number") || "",
+        certificateNumber: grBatch.getValue("certificate_number") || ""
+      };
+    }
+  }
+
+  // ── Recent transactions ──
+  var transactions = [];
+  var grTxn = new GlideRecord(TXN_TABLE);
+  grTxn.addQuery("inventory_stock", sysId);
+  grTxn.orderByDesc("transaction_date");
+  grTxn.setLimit(10);
+  grTxn.query();
+  while (grTxn.next()) {
+    transactions.push({
+      number: grTxn.getValue("number") || "",
+      transactionType: grTxn.getDisplayValue("transaction_type") || "",
+      quantity: grTxn.getValue("quantity") || "0",
+      transactionDate: grTxn.getDisplayValue("transaction_date") || "",
+      status: grTxn.getDisplayValue("status") || "",
+      sysId: grTxn.getValue("sys_id") || ""
+    });
+  }
+
+  // ── Related requests ──
+  var requests = [];
+  var grReq = new GlideRecord(REQ_TABLE);
+  grReq.addQuery("related_inventory_stock", sysId);
+  grReq.orderByDesc("requested_date");
+  grReq.setLimit(10);
+  grReq.query();
+  while (grReq.next()) {
+    requests.push({
+      number: grReq.getValue("number") || "",
+      requestType: grReq.getDisplayValue("request_type") || "",
+      quantityRequested: grReq.getValue("quantity_requested") || "0",
+      priority: grReq.getDisplayValue("priority") || "",
+      status: grReq.getDisplayValue("status") || "",
+      requestedDate: grReq.getDisplayValue("requested_date") || "",
+      sysId: grReq.getValue("sys_id") || ""
+    });
+  }
+
+  // ── Inventory alerts ──
+  var alerts = [];
+  var grAlert = new GlideRecord(ALERT_TABLE);
+  grAlert.addQuery("inventory_stock", sysId);
+  grAlert.orderByDesc("alert_date");
+  grAlert.setLimit(10);
+  grAlert.query();
+  while (grAlert.next()) {
+    alerts.push({
+      number: grAlert.getValue("number") || "",
+      alertType: grAlert.getDisplayValue("alert_type") || "",
+      severity: grAlert.getDisplayValue("severity") || "",
+      alertMessage: grAlert.getValue("alert_message") || "",
+      status: grAlert.getDisplayValue("status") || "",
+      alertDate: grAlert.getDisplayValue("alert_date") || "",
+      sysId: grAlert.getValue("sys_id") || ""
+    });
+  }
+
+  response.setBody({
+    result: {
+      stock: stock,
+      batch: batch,
+      transactions: transactions,
+      requests: requests,
+      alerts: alerts
+    }
+  });
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/stock_detail_api/record</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/record</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-19 06:59:02</sys_created_on>
+        <sys_id>77434094df3c438c9dc2750fbee1be87</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get Stock Record</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_77434094df3c438c9dc2750fbee1be87</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-19 06:59:02</sys_updated_on>
+        <web_service_definition display_value="Stock Detail API">ba063d80780d49e6825a38377057304b</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>
