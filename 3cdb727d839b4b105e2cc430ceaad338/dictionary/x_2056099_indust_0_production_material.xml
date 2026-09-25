@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="bc93b6ab1139407caac7772aedd8d524" label="Production Material Requirement" name="x_2056099_indust_0_production_material" type="collection">
+        <element attributes="scale=2" default="0" label="Issued Quantity" name="issued_quantity" type="decimal"/>
+        <element default="required" label="Status" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Cancelled" sequence="7" value="cancelled"/>
+                <element inactive_on_update="false" label="Shortage" sequence="6" value="shortage"/>
+                <element inactive_on_update="false" label="Partially Issued" sequence="4" value="partially_issued"/>
+                <element inactive_on_update="false" label="Fully Issued" sequence="5" value="fully_issued"/>
+                <element inactive_on_update="false" label="Reserved" sequence="3" value="reserved"/>
+                <element inactive_on_update="false" label="Material Check" sequence="2" value="material_check"/>
+                <element inactive_on_update="false" label="Required" sequence="1" value="required"/>
+            </choice>
+        </element>
+        <element attributes="scale=2" default="0" label="Remaining Quantity" name="remaining_quantity" type="decimal"/>
+        <element display="true" label="Production Material Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
+        <element label="Notes" max_length="4000" name="notes" type="string"/>
+        <element attributes="scale=2" default="0" label="Reserved Quantity" name="reserved_quantity" type="decimal"/>
+        <element label="Source Location" name="source_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Material/Product" mandatory="true" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element attributes="scale=2" default="1" label="Required Quantity" mandatory="true" name="required_quantity" type="decimal"/>
+        <element default="true" label="Active" name="active" type="boolean"/>
+        <element label="Unit of Measure" name="unit_of_measure" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Metres" sequence="4" value="metres"/>
+                <element inactive_on_update="false" label="Nos" sequence="1" value="nos"/>
+                <element inactive_on_update="false" label="Kg" sequence="2" value="kg"/>
+                <element inactive_on_update="false" label="Litres" sequence="3" value="litres"/>
+            </choice>
+        </element>
+        <element label="Batch/Lot" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
+        <element label="Production Order" mandatory="true" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
+        <index name="index">
+            <element name="batch_lot"/>
+        </index>
+        <index name="index2">
+            <element name="material_product"/>
+        </index>
+        <index name="index3">
+            <element name="production_order"/>
+        </index>
+        <index name="index4">
+            <element name="source_location"/>
+        </index>
+    </element>
+</database>

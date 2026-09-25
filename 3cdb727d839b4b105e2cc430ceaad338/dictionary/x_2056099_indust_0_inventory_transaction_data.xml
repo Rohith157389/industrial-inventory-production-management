@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true,timeFromCreateToActivate=52000" db_object_id="d22fd0412f670f50450e4b707fa4e365" extends="sys_import_set_row" label="inventory_transaction_data" max_length="40" name="x_2056099_indust_0_inventory_transaction_data" type="collection">
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=material_product" label="material_product" max_length="40" name="u_material_product" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=transaction_number" label="transaction_number" max_length="40" name="u_transaction_number" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=reason" label="reason" max_length="105" name="u_reason" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=approved_by" label="approved_by" max_length="40" name="u_approved_by" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=reference_request" label="reference_request" max_length="40" name="u_reference_request" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=notes" label="notes" max_length="43" name="u_notes" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=source_location" label="source_location" max_length="40" name="u_source_location" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=transaction_date" label="transaction_date" max_length="40" name="u_transaction_date" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=destination_location" label="destination_location" max_length="40" name="u_destination_location" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=status" label="status" max_length="40" name="u_status" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=transaction_type" label="transaction_type" max_length="40" name="u_transaction_type" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=quantity" label="quantity" max_length="40" name="u_quantity" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=requested_by" label="requested_by" max_length="40" name="u_requested_by" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=inventory_stock" label="inventory_stock" max_length="40" name="u_inventory_stock" type="string"/>
+        <element attributes="edge_encryption_enabled=true,import_attribute_name=batch_lot" label="batch_lot" max_length="40" name="u_batch_lot" type="string"/>
+    </element>
+</database>

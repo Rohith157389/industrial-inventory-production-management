@@ -6,40 +6,40 @@
         <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
         <element choice="1" label="Unit of Measure" mandatory="true" max_length="40" name="unit_of_measure" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Kg" sequence="2" value="kg"/>
                 <element inactive_on_update="false" label="Nos" sequence="1" value="nos"/>
                 <element inactive_on_update="false" label="Metres" sequence="4" value="metres"/>
                 <element inactive_on_update="false" label="Litres" sequence="3" value="litres"/>
-                <element inactive_on_update="false" label="Kg" sequence="2" value="kg"/>
             </choice>
         </element>
         <element default="0" label="Reorder Level" mandatory="true" max_length="15" name="reorder_level" type="decimal"/>
-        <element choice="1" label="Material Type" mandatory="true" max_length="40" name="material_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Finished Goods" sequence="3" value="finished_goods"/>
-                <element inactive_on_update="false" label="Raw Material" sequence="1" value="raw_material"/>
-                <element inactive_on_update="false" label="MRO" sequence="2" value="mro"/>
-            </choice>
-        </element>
         <element choice="1" label="Category" mandatory="true" max_length="40" name="category" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Maintenance Spare" sequence="3" value="maintenance_spare"/>
-                <element inactive_on_update="false" label="Consumable" sequence="2" value="consumable"/>
-                <element inactive_on_update="false" label="Component" sequence="1" value="component"/>
                 <element inactive_on_update="false" label="Finished Product" sequence="4" value="finished_product"/>
+                <element inactive_on_update="false" label="Maintenance Spare" sequence="3" value="maintenance_spare"/>
+                <element inactive_on_update="false" label="Component" sequence="1" value="component"/>
+                <element inactive_on_update="false" label="Consumable" sequence="2" value="consumable"/>
             </choice>
         </element>
         <element default="0" label="Safety Stock" mandatory="true" max_length="15" name="safety_stock" type="decimal"/>
-        <element label="Preferred Supplier" max_length="32" name="preferred_supplier" reference="core_company" type="reference"/>
-        <element label="Description" max_length="1000" name="description" type="string"/>
+        <element choice="1" label="Material Type" mandatory="true" max_length="40" name="material_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="MRO" sequence="2" value="mro"/>
+                <element inactive_on_update="false" label="Raw Material" sequence="1" value="raw_material"/>
+                <element inactive_on_update="false" label="Finished Goods" sequence="3" value="finished_goods"/>
+            </choice>
+        </element>
         <element choice="1" label="Criticality" mandatory="true" max_length="40" name="criticality" type="choice">
             <choice>
-                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
-                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
                 <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
                 <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
+                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
+                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
             </choice>
         </element>
         <element default="0" label="Standard Cost" mandatory="true" max_length="20" name="standard_cost" type="currency"/>
+        <element label="Preferred Supplier" max_length="32" name="preferred_supplier" reference="core_company" type="reference"/>
+        <element label="Description" max_length="1000" name="description" type="string"/>
         <index name="index" unique="true">
             <element name="material_product_id"/>
         </index>

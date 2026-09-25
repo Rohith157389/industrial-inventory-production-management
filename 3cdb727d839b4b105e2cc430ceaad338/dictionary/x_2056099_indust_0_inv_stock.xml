@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="7f007360755c44f7b847c13b0eb462d9" label="Inventory Stock" name="x_2056099_indust_0_inv_stock" type="collection">
-        <element default="0" label="Reserved Quantity" mandatory="true" max_length="15" name="reserved_quantity" type="decimal"/>
-        <element default="0" label="Total Quantity" mandatory="true" max_length="15" name="total_quantity" type="decimal"/>
+        <element default="0" label="Reorder Level" mandatory="true" max_length="15" name="reorder_level" type="decimal"/>
         <element choice="1" label="Inventory Type" mandatory="true" max_length="40" name="inventory_type" type="choice">
             <choice>
-                <element inactive_on_update="false" label="MRO" sequence="2" value="mro"/>
-                <element inactive_on_update="false" label="Quarantine / Disposal" sequence="6" value="quarantine_disposal"/>
-                <element inactive_on_update="false" label="Temporary / Expired" sequence="5" value="temporary_expired"/>
-                <element inactive_on_update="false" label="Raw Materials" sequence="1" value="raw_materials"/>
                 <element inactive_on_update="false" label="Safety / Buffer" sequence="4" value="safety_buffer"/>
                 <element inactive_on_update="false" label="Finished Goods" sequence="3" value="finished_goods"/>
+                <element inactive_on_update="false" label="Quarantine / Disposal" sequence="6" value="quarantine_disposal"/>
+                <element inactive_on_update="false" label="MRO" sequence="2" value="mro"/>
+                <element inactive_on_update="false" label="Temporary / Expired" sequence="5" value="temporary_expired"/>
+                <element inactive_on_update="false" label="Raw Materials" sequence="1" value="raw_materials"/>
             </choice>
         </element>
+        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
+        <element default="0" label="Total Quantity" mandatory="true" max_length="15" name="total_quantity" type="decimal"/>
         <element label="Expiry Date" max_length="40" name="expiry_date" type="glide_date"/>
+        <element default="0" label="Reserved Quantity" mandatory="true" max_length="15" name="reserved_quantity" type="decimal"/>
         <element label="Last Updated" mandatory="true" max_length="40" name="last_updated" type="glide_date_time"/>
         <element label="Location" mandatory="true" max_length="32" name="location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Batch/Lot" max_length="32" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
-        <element default="0" label="Safety Stock" mandatory="true" max_length="15" name="safety_stock" type="decimal"/>
         <element default="0" label="Available Quantity" mandatory="true" max_length="15" name="available_quantity" read_only="true" read_only_option="instance_configured" type="decimal"/>
-        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
-        <element default="0" label="Reorder Level" mandatory="true" max_length="15" name="reorder_level" type="decimal"/>
+        <element default="0" label="Safety Stock" mandatory="true" max_length="15" name="safety_stock" type="decimal"/>
         <element choice="1" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Reserved" sequence="2" value="reserved"/>
                 <element inactive_on_update="false" label="Available" sequence="1" value="available"/>
                 <element inactive_on_update="false" label="Quarantined" sequence="5" value="quarantined"/>
-                <element inactive_on_update="false" label="Blocked" sequence="4" value="blocked"/>
                 <element inactive_on_update="false" label="Expired" sequence="6" value="expired"/>
+                <element inactive_on_update="false" label="Blocked" sequence="4" value="blocked"/>
                 <element inactive_on_update="false" label="Inspection" sequence="3" value="inspection"/>
+                <element inactive_on_update="false" label="Reserved" sequence="2" value="reserved"/>
             </choice>
         </element>
+        <element label="Batch/Lot" max_length="32" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
         <element display="true" label="Inventory ID" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
         <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
         <index name="index">

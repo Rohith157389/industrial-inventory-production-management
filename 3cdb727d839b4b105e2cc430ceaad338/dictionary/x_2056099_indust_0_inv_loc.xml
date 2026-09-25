@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="d3773e108b1744858345d37acdc402ca" label="Inventory Location" name="x_2056099_indust_0_inv_loc" type="collection">
-        <element label="Description" max_length="1000" name="description" type="string"/>
-        <element label="Location ID" mandatory="true" max_length="40" name="location_id" type="string" unique="true"/>
         <element display="true" label="Location Name" mandatory="true" max_length="200" name="location_name" type="string"/>
-        <element label="Responsible Manager" max_length="32" name="responsible_manager" reference="sys_user" type="reference"/>
         <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
+        <element label="Responsible Manager" max_length="32" name="responsible_manager" reference="sys_user" type="reference"/>
+        <element label="Location ID" mandatory="true" max_length="40" name="location_id" type="string" unique="true"/>
         <element choice="1" label="Location Type" mandatory="true" max_length="40" name="location_type" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Disposal Area" sequence="7" value="disposal_area"/>
+                <element inactive_on_update="false" label="Finished Goods Warehouse" sequence="3" value="finished_goods_warehouse"/>
                 <element inactive_on_update="false" label="Production Area" sequence="6" value="production_area"/>
                 <element inactive_on_update="false" label="MRO Store" sequence="2" value="mro_store"/>
                 <element inactive_on_update="false" label="Quarantine Area" sequence="5" value="quarantine_area"/>
-                <element inactive_on_update="false" label="Raw Material Warehouse" sequence="1" value="raw_material_warehouse"/>
                 <element inactive_on_update="false" label="Temporary Storage" sequence="4" value="temporary_storage"/>
-                <element inactive_on_update="false" label="Finished Goods Warehouse" sequence="3" value="finished_goods_warehouse"/>
-                <element inactive_on_update="false" label="Disposal Area" sequence="7" value="disposal_area"/>
+                <element inactive_on_update="false" label="Raw Material Warehouse" sequence="1" value="raw_material_warehouse"/>
             </choice>
         </element>
+        <element label="Description" max_length="1000" name="description" type="string"/>
         <index name="index" unique="true">
             <element name="location_id"/>
         </index>
