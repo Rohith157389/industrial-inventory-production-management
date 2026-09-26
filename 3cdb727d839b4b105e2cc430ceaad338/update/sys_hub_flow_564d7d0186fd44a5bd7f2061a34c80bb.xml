@@ -1,0 +1,1318 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=2068000</attributes>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>When an Inventory Stock record is created or updated, check whether available quantity has reached or fallen below the safety stock threshold. If so, and no existing open alert exists for this stock, create a below_safety_stock Inventory Alert.</description>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name>fd__inventory_stock__safety_stock_monitoring</internal_name>
+        <label_cache>[{"name":"Created or Updated_1.current.safety_stock","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record➛Safety Stock","type":"decimal","base_type":"decimal","usedInstances":{"c37e20e4-bee6-4a72-b567-f36536f84a56":["condition"],"4a32e637-7238-4aeb-bfa7-358bbf912692":["condition"],"d14b048a-93d9-48ce-b185-cc1080ef077c":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.available_quantity","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record➛Available Quantity","type":"decimal","base_type":"decimal","usedInstances":{"4a32e637-7238-4aeb-bfa7-358bbf912692":["condition"],"d14b048a-93d9-48ce-b185-cc1080ef077c":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.sys_id","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record➛Sys Id","type":"string","base_type":"string","usedInstances":{"c2d1fad7-d17f-49c4-8b4b-a329ec3c0550":["conditions"]},"attributes":{}},{"name":"c2d1fad7-d17f-49c4-8b4b-a329ec3c0550.Count","label":"c2d1fad7-d17f-49c4-8b4b-a329ec3c0550➛Count","type":"integer","base_type":"integer","usedInstances":{"79504530-2bc3-4803-b534-a8e514432fed":["condition"]},"attributes":{}},{"name":"Created or Updated_1.current.last_updated","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record➛Last Updated","type":"glide_date_time","base_type":"glide_date_time","usedInstances":{"d14b048a-93d9-48ce-b185-cc1080ef077c":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.material_product","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record➛Material Product","type":"reference","base_type":"reference","usedInstances":{"d14b048a-93d9-48ce-b185-cc1080ef077c":["values"]},"attributes":{}},{"name":"Created or Updated_1.current","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record","type":"reference","base_type":"reference","usedInstances":{"d14b048a-93d9-48ce-b185-cc1080ef077c":["values"]},"attributes":{}}]</label_cache>
+        <master_snapshot>7420d5f59363831092227b018bba10c2</master_snapshot>
+        <master_snapshot_digest/>
+        <name>FD - Inventory Stock - Safety Stock Monitoring</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id>8ef759b993a3831092227b018bba1093</remote_trigger_id>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>published</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:14</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>564d7d0186fd44a5bd7f2061a34c80bb</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>FD - Inventory Stock - Safety Stock Monitoring</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_564d7d0186fd44a5bd7f2061a34c80bb</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:46</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_variable_value action="delete_multiple" query="document_key=564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_flow_record_trigger action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition table="x_2056099_indust_0_inv_stock">active=true<item endquery="false" field="active" goto="false" newquery="false" operator="=" or="false" value="true"/>
+        </condition>
+        <name/>
+        <on_delete>false</on_delete>
+        <on_insert>true</on_insert>
+        <on_update>true</on_update>
+        <published_version/>
+        <run_flow_in>background</run_flow_in>
+        <run_on_extended>false</run_on_extended>
+        <run_when_setting>both</run_when_setting>
+        <run_when_user_list/>
+        <run_when_user_setting>any</run_when_user_setting>
+        <sys_class_name>sys_flow_record_trigger</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:45:45</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>8ef759b993a3831092227b018bba1093</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:45</sys_updated_on>
+        <table>x_2056099_indust_0_inv_stock</table>
+        <trigger_definition/>
+    </sys_flow_record_trigger>
+    <sys_trigger_runner_mapping action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <data>{"run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any","run_on_extended":"false"}</data>
+        <identifier>564d7d0186fd44a5bd7f2061a34c80bb</identifier>
+        <identifier_type>flow</identifier_type>
+        <runner>FDTriggerRunner</runner>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:45:46</sys_created_on>
+        <sys_id>8af759b993a3831092227b018bba1094</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:46</sys_updated_on>
+        <trigger display_value="">8ef759b993a3831092227b018bba1093</trigger>
+    </sys_trigger_runner_mapping>
+    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=564d7d0186fd44a5bd7f2061a34c80bb^sys_idNOT IN8af759b993a3831092227b018bba1094"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=564d7d0186fd44a5bd7f2061a34c80bb^sys_idNOT INcc2095f59363831092227b018bba106f,d02095f59363831092227b018bba10c3,dc2095f59363831092227b018bba10b7"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</model>
+        <model_id>564d7d0186fd44a5bd7f2061a34c80bb</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_564d7d0186fd44a5bd7f2061a34c80bb</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:30</sys_created_on>
+        <sys_id>cc2095f59363831092227b018bba106f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:30</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=cc2095f59363831092227b018bba106f"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</model>
+        <model_id>564d7d0186fd44a5bd7f2061a34c80bb</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_564d7d0186fd44a5bd7f2061a34c80bb</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:30</sys_created_on>
+        <sys_id>d02095f59363831092227b018bba10c3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:30</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=d02095f59363831092227b018bba10c3"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</model>
+        <model_id>564d7d0186fd44a5bd7f2061a34c80bb</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_564d7d0186fd44a5bd7f2061a34c80bb</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:30</sys_created_on>
+        <sys_id>dc2095f59363831092227b018bba10b7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:30</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=dc2095f59363831092227b018bba10b7"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=564d7d0186fd44a5bd7f2061a34c80bb^sys_idNOT IN4a701ff17c8e4e7e929b12213e355290"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</flow>
+        <generation_source/>
+        <name>Created or Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:14</sys_created_on>
+        <sys_id>4a701ff17c8e4e7e929b12213e355290</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:42</sys_updated_on>
+        <trigger_definition display_value="Created or Updated">a45d9180c32222002841b63b12d3aea7</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1Y224bNxD9FWKfWkABlAQtEL+1TQwYSBsgdtKHxFhQ5KxEhCJVclbyxvC/d7gXidpLsq61SQr4SVpyxDkzc84MVx9uE3RquQR3YTxyI+Cy8BcyOUuSWaL5AjR9veILDfSsDIIzXF8VG6BlDMup4euwJ2EDRoLB6qdiZZWA18rT84frWbLmRnK0rkjO0OUwSzJn11ew3miOdFbGtadF6yS45OzpfD5LynNrJ3Tglus8PN+kz+a//Dp/8SJVRuYe0zl92aYerfgUYChPRxbvx1mLldLSgakwbrgjnxgQ3HZib8HBnhTU6Ak73GBIhtwHFoVfrzjg8o3RRWRy49VnKH+fe0ijhNYW2eXK7t5CBoRYwDlFFNzVm9oKrvdPHKmqixzBUyx3d/u8nCvQdXG9cGqDvwlU26YAd7MxbHibG/bGsFd1jKzMkO/So6LAV6hxS1HBP3kIqIw8ayoXWELG2evIqzVM5I6iR0b5ZE2WGTYIsos1X0Llhs7VIDAqQvbOx09/Ku+VWUaxD0Ap97tYdBEDaojxEAjXfUQZKxSXm9SadE+9g2Qa/C1tNMsjRDBY8kHf2OLAj6qNhMtt4LlsKDeBWDJtd+zCnFoh3BRtUpaelCF1FExYcnaDk6liwcWnpbO5kUMoDhbsJwkZzzX+PJ1IrYMvwzm2+J4yDYhoDkUSPUpmS6dHeyPFeqBcr9tHdVap+sMaqVDZPm02W/5el5t7skFEABou8DKOj/l8/lzWU7DFiB6LEbyIg+1xjz1xT8aL+g74X2mx4wZ9ijblUqYR4v21YW0l6JdR1WouEP03OfrkLqopTa79xe70zf/vFRh2CdRAbPhEDI3kxJOgPKwiRdz8QjFY2Q2sY9TRHHWEvWGDabKGbOhCMAbYX9Y8+Za4FhZXnRFBOH6n9aMEhSvmALiH3jUfPEF2xKrU79m0PY6tPUCq1ZGjY4Cww84fh0kreaXUSs12dL7USkKqq73TT5WSBxG0dtEooa7x3nCmy5d7ciUO90sOsScFj1wJyZtoLPS9IFCjCy8HoS6TdVhrILVZb8NXGauTQ2+Ri4LhCgiTpospnVyimu413tgw6tvQXlpGG8x9E3Cn6fulqLrNvyp3+6pYLt5bzsN9v+X8sfkf0ndVWZ1axtaI1u1JPPSPpmGRcL3jhe9ol6QRVFL/2UULxAdTMWAaHLAFd9S9zqlzlYss38iglKk850bRcipW3CzBdyBwsWKVCatMvmdLaN5qPDqyXBZRN+iE0WoMnf2RPeJA8mEM/5emML4HXP8L4OhpVSgZAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create_or_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=564d7d0186fd44a5bd7f2061a34c80bb^sys_idNOT INc2d1fad7d17f49c48b4ba329ec3c0550,d14b048a93d948ceb185cc1080ef077c"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="">43400a1587003300663ca1bb36cb0b4b</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</flow>
+        <generation_source/>
+        <order>5</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:14</sys_created_on>
+        <sys_id>c2d1fad7d17f49c48b4ba329ec3c0550</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:42</sys_updated_on>
+        <ui_id>c2d1fad7-d17f-49c4-8b4b-a329ec3c0550</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VX207jMBD9lSrPUZVQKJe3FQgJaQEJWF5YsBzbaS1cO2s7LaXqv+84dkK2DbfdIoH2rRmPZ84cnxm7N4tI4gmLDiKiJOWWK2miOJpiUTojl1MmrdJzZKwi9z/LJBnQxeJQM2wZ7Snd+1FQ9xOlfVJqDc59MzeI0+XyDgumLbLzgvl9GRNqhgzOmQ3x7ozFtjQnZ6pgMsbkXqqZYHTEKGCg3BQCz68/AZQCayDJMh0dLCIy5oJC+Ojg5jaOOAVse/l2kuB0Z28Xgg+SZDgcEJxm2WBIsiTbSSCEwJATXA/bNHdR70B22b53BVCaOlBpHLEHyyQFtAc5FobF0QRLoAP4aizAFD2X4skw5tJCxMg5Pxj+CHmhjsR55gwqJMyvNp8onIk350fY4kurS2JLHVzJWHHCjOeGshyXwh62bd7hvHAV+C0WZ6LerUQ5kWeelagJUEsALKUBEKxwpTrskBzqyC/HanZRgzzmsiIlFCkUwaL5wtZqnpXWwVlETLAJxEETXBRcjlCh1ZRXmwHKpD8S8NHPnVQoM3wk+5g43H0gFvePwX5Uma+x5q6IUwgDm5dxBMI7FNiYp1KAQ/SrdEh8YaEEVLHgKXD7iOaF/QZZpixgXsZNi3q3p+58QFvJzjDZ30dQcmksSuDHFFViX2+gV7z/TePbWUvjVwHnCuyg7OoTVWt/Krva1jvzC0HZycaUvfeVdB3K+GTCBkBcgEKQP0KjSl1ROUVEgKDcgsbS+Fh/0Qavd4BRYYy3uqCyYUPWFY97VvUe36Dt5OX5vd/S9iVk6115BB2g6uldqWF1ctfGoO3BxrQ92NqMthdNmQ11HSzXrenOpfZ/dP541R/E1dqQLrt651050/fm3Fqu9+bgXc3ZlpdfOXpGZRvu4ZyinDNBYUoLLqvJCbcd5Pmw5qZoDFtDPuQ7Ec04PILsU/baiyo7w+K+az0oDtUHVZX3IfMAOgBpZuBQ2q/WdH0UpG+YAtsvToFh2poCp/ihd9Hk7QQTJgE0KxtV9LZHwUljDTrd3uAL7tPecyk8Lp9tozT2q1/iJvywu80zuK7fN8iX7L54ie205HvuRNfL5it3WJM8aNePn46X2rFbWHmpbf2fL7VP+Q8kfu7y2PBfk9vf1DYtJj8QAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=c2d1fad7d17f49c48b4ba329ec3c0550"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</flow>
+        <generation_source/>
+        <order>8</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:14</sys_created_on>
+        <sys_id>d14b048a93d948ceb185cc1080ef077c</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:42</sys_updated_on>
+        <ui_id>d14b048a-93d9-48ce-b185-cc1080ef077c</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1W30/bMBD+VyI/V1HSQgV9m2BIkzbQYOOFUcuNL40158fsSyCr+r/vHLuhYiBA2ssk+tL6fPf5+85fcr3ZsEqUwBYMxUoDHxYT1gnduuA9nyaH8+T4mKtKthZ5Qj86LjQYpDSpbKNFf/267EYYQkcwbLFhWaG0NFCxxc3thClJ5fMUksPjdJ7N0tlsmiTTo4N0NZ+t0qmcCYADgtBiBZpSvzmytH6KO/bNk7HP+7XRud+ojXR8kgmDe4RKAhHJhbYwYaWopMDa9GyBpqWAASEvKt2PGYWqkACZy7236jcde5S4vBxIWQZ+b1zy0C4fzk8FiitCzrA1ITUrapWB9T2RkItW48l+zCdcNKjqypcMMkN1rduyOvctYSPA7nYo0loiAY3T6ZgHGflVUd9d7lie0d25loRNXWdCjyuBaNSqRcdnw0BDSUC8FE2jqjVvTN2poZi4lPFa0yLOdX1Hh1q1rmKROeIxtVXEZxQ/HcLXwiin4gvBUPF2wmxvT7Sw9kELNZH/ah0Tryxo4L4NriQzqsEPdEAHge52Mpp78LPdM/bgSe5s8aNNkpkkaxBNK3LAnluss59LCx0Yhb1PKNS6WFoU2FofqInC0sOQngCz2ZyQSxBkVJvoe+M2JE/jrDXUW4xJE/LWh7fbZUnfJF27xknywaswHhcRDj1ktENO9cxfA0NV4Zdra4WjzhdOF51QeniydmWEhIUBW9Ravg1rv9uE4ntZgrViHdr5aScsGpKiQtiIELPCQ9Ita6ii4e4iLCDK6ipXa3qcZOTBQ52mq9RxdAmdgrsQC0qUJroRPequ2Dr30gkNwSpbOHPHy49f/37Tvdvn3T5vsc+Lo08Cjc3nRl+62ht9Zwq0tA+zb3y17eYelORUBO5fdY9mX9iMrsNmmH/pv5p/6TwZPv/RFPTi/vshuPd/55lxePsHV7veau0JAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=d14b048a93d948ceb185cc1080ef077c"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=564d7d0186fd44a5bd7f2061a34c80bb^sys_idNOT IN15973e2ba29846a89eea98c567249e0c,4a32e63772384aebbfa7358bbf912692,795045302bc34803b534a8e514432fed,c37e20e4bee64a72b567f36536f84a56,c6b93471aa0c45d8be913c57a3e4d989,d78a86d65e4743e4a44a924d04bf52fe"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6c20d5f59363831092227b018bba1072</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>2</order>
+        <outputs_assigned/>
+        <parent_ui_id>c37e20e4-bee6-4a72-b567-f36536f84a56</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:14</sys_created_on>
+        <sys_id>15973e2ba29846a89eea98c567249e0c</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:42</sys_updated_on>
+        <ui_id>15973e2b-a298-46a8-9eea-98c567249e0c</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6020d5f59363831092227b018bba1075</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>3</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:14</sys_created_on>
+        <sys_id>4a32e63772384aebbfa7358bbf912692</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:42</sys_updated_on>
+        <ui_id>4a32e637-7238-4aeb-bfa7-358bbf912692</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VTW/bMAz9K4XOgeGPJG1yK1IUKNCtwNr1shUGLdOJUFnyJDmtZ/i/j7KdpFgztNuAnXaK9CSS7z2Rcct07ara2Tt9bq1YK7b88jBhQnmM1i0TOVsyNmEKSqQV1yoXTmhF0BZk7bG2XRkEh/mJNiefq9wv0yjgtTGoXABbEBIyiem3GpQTrum6r3UYJvhGoIUCXZNap/lj11HBXNhKQnP/r+vyjZA5HQ3mVGDIC4eGLdufjnqzFjArZlE440k8T+IwjM+mUTZPsijOE8DpnBISLZR0dfXCzSMGu6bykHVGqPW4vx5Db3egNrmnEocThs8OVY5EogBpccJKUCROm4YtnakJINn5jZLN/sZGKDc8cAnPVnxHnykM/c0CSRfH4XS/TcdHGODiAhwQlZq72oxX+UYLjnZwJMcCaulWL7Hhwk3Vq+xDnH+mMVrLulQfBzPYPsHuzQmpLZHAyiv13Echxe1GP33asbwUqndlPJSag9zvwJF3We08n5ahxJISpSVUFTmaVkZvRR9MXMpgLWkTFFI/UVE/IQFwTzwgYyG4JPyih+/BCK/iA6WhYOoFm1puRLXT1hdn3YTZxq4kWHvQSOb6HpU7xaO2dLDHh/SJzqnwFkcZ3aRlntW1Xgt+pawDkn3b2CvfglNIYpwnp6dxcjYFzLICTpPZGf0uoni+iNnYqkUIRbTg0fFWheRIW6Y9cBj+12PJ3h6Rd9R9NSInQ+f/mtHvTEv0xrSMyLvGZTb7Py1/PS2eZgZW8LT/9lA6/4f1h+Mymn4pUOZHW+jYPD34nh5Y7V+DC0thdx672n0S/UFDLeen7gA9afPoZR+w7gfoYQWUXAcAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6c20d5f59363831092227b018bba107a</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>6</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:14</sys_created_on>
+        <sys_id>795045302bc34803b534a8e514432fed</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:42</sys_updated_on>
+        <ui_id>79504530-2bc3-4803-b534-a8e514432fed</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1V0U7bMBT9lcnPbeXECbR9Q0VISGxIA/GyoejGdlprjp3FDpBF/fddJ2mLoBNsvO4tPva9PufmnKQjtvFV492tPXNOrQ1ZfrufEGUChs8dUYIsCZkQA6XEJ26NUF5Zg9AD6CZgXcdjERUgTqciOi2myYIn03me5FNg8UJyxmma0tnKNsZvt98bSpmkWC+UqzS0dx9swzdKi1qO1CuokamXNVl2L7Z6KQtIizSiKWfxCYspjedJlJ+wPIoFA5mcYEMNudR4dPVM6xH5vq0C5HytzHpcX42lNzvQ1iJQiemEyCcvjZBIogDt5ISUYAR4W7dk6esGgVqCuDa63Z/YKOOH8Zfw5NQvGTpRGk4WEnVxOezul9k40wEuzsEDUmm4b+rxKN9YxaUbJiJkAY32q+fYcOC66lX2JR5yvau2uinNl2EYZN9g9woRaRySkFVQGriPQoqbjX38umN5oUw/lXFTWw56vwKPs8sbH/h0RGpZYqOshKrCiWZVbR9UX4xcytla42JWaPuIlwb/zoAH4jMcLMwuED/v4TuoVVDxGdtgMXrBZY7Xqtpp6y8n2wlxrVtpcO6gEYeb/WwCw0HxqC0bxhNK+kZnePGDHGVsJx0JrK7sWvFL4zyg7JvWXQYLni5SmqSMxjlnyZyyPGUJzGUaJQmLCzTIaNWCQhEteHTcqsCO2DLrgUM0X6eMvB2Rd9z7KiKfBuf/mdHfpCV6Iy0j8q64pOn/tHw4LYFmDk7xrP8zYLvwwfrHuIxDv1BSi6MWOpan++DpgdX+bXDlsOw2YJe7H1bYaNFyIXUH6NHWP4LsA7b9DdOprxb6BgAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6420d5f59363831092227b018bba1057</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>1</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:14</sys_created_on>
+        <sys_id>c37e20e4bee64a72b567f36536f84a56</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:42</sys_updated_on>
+        <ui_id>c37e20e4-bee6-4a72-b567-f36536f84a56</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K8jPVZSPJkDfUBESEhvSYLxsKLqxndbCsTN/AFnU/77rJG3R6AT7eNxLZR/fe33O9T1NT7R3rXf2Vp9ZK1aKLL7cz4hQAcN1TwQjC0JmREHDcUW1YsIJrRB6BOkD1vdLw8FxdqTN0eeWhWWZRNQbw5WLLNTcdaV1mj5sNl99HGd0+GUxFmHCthK6u39Ri66FZBg3imjBIGfHDVn0Px0Nok4hr/MkzmmWFlkax+nJPKmKrEpSlgGfF1hQQsUlhi5fqD7QCNe1AbLOCLWa9ldT6s0W1IYFKmk8I/zZccU4kqhBWj4jDShUqk1HFs54BLAH7FrJbhexFsqND9HAsxXfeagUxyGy5qiL8vF0ty2nxo5wfQ4OkIqnzpsplK61oNyOHWG8Bi/d8iU2Bly3g8ohxUElt9la+kZ9HJtBdgW274iIt0iCt0Fp4D4JqW/W+unTluWFUENXpkOpKcjdDhz2rvIu8OkJl7zBQmUDbYsdLVujH8WQjFyaaCVxE9VSP+GlYZIjoIF4hI2F6ALx8wG+AyOCig9YBpNxFmxpqRHtVttwOdnMiO3sUoK1e43Y3PKbDwxHxZO2cmxPSBkKneHFj3ySsZn1JLC60itBL5V1gLJvOnsZRpBmxzyN+bzivJjDcVrlxXGdFXlW1CdzyMMIDqNax1AnpzQ5PKqQHRjLcgD2Jn1tNfK2Rd5x7yuLHI2T/2tGv+OW5A23TMi77JLn/93y124JNCuwgpbDNwLLhT+sP7TL1PQLwSU7OEKH/HQfZnpktXsNKiym3QbscvvpCgcdjlxw3R560uYhyN5jmx/Z1wj/BAcAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6020d5f59363831092227b018bba1077</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>4</order>
+        <outputs_assigned/>
+        <parent_ui_id>4a32e637-7238-4aeb-bfa7-358bbf912692</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:14</sys_created_on>
+        <sys_id>c6b93471aa0c45d8be913c57a3e4d989</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:42</sys_updated_on>
+        <ui_id>c6b93471-aa0c-45d8-be91-3c57a3e4d989</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6c20d5f59363831092227b018bba107c</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>7</order>
+        <outputs_assigned/>
+        <parent_ui_id>79504530-2bc3-4803-b534-a8e514432fed</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:14</sys_created_on>
+        <sys_id>d78a86d65e4743e4a44a924d04bf52fe</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:42</sys_updated_on>
+        <ui_id>d78a86d6-5e47-43e4-a44a-924d04bf52fe</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_564d7d0186fd44a5bd7f2061a34c80bb</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:30</sys_created_on>
+        <sys_id>982095f59363831092227b018bba10be</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:30</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_564d7d0186fd44a5bd7f2061a34c80bb</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:30</sys_created_on>
+        <sys_id>d02095f59363831092227b018bba10d7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:30</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_564d7d0186fd44a5bd7f2061a34c80bb</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:30</sys_created_on>
+        <sys_id>dc2095f59363831092227b018bba10a6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:30</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_564d7d0186fd44a5bd7f2061a34c80bb"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <authored_on_release_version>-1</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>When an Inventory Stock record is created or updated, check whether available quantity has reached or fallen below the safety stock threshold. If so, and no existing open alert exists for this stock, create a below_safety_stock Inventory Alert.</description>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>fd__inventory_stock__safety_stock_monitoring</internal_name>
+        <label_cache>[{"name":"Created or Updated_1.current.safety_stock","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record➛Safety Stock","type":"decimal","base_type":"decimal","usedInstances":{"c37e20e4-bee6-4a72-b567-f36536f84a56":["condition"],"4a32e637-7238-4aeb-bfa7-358bbf912692":["condition"],"d14b048a-93d9-48ce-b185-cc1080ef077c":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.available_quantity","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record➛Available Quantity","type":"decimal","base_type":"decimal","usedInstances":{"4a32e637-7238-4aeb-bfa7-358bbf912692":["condition"],"d14b048a-93d9-48ce-b185-cc1080ef077c":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.sys_id","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record➛Sys Id","type":"string","base_type":"string","usedInstances":{"c2d1fad7-d17f-49c4-8b4b-a329ec3c0550":["conditions"]},"attributes":{}},{"name":"c2d1fad7-d17f-49c4-8b4b-a329ec3c0550.Count","label":"c2d1fad7-d17f-49c4-8b4b-a329ec3c0550➛Count","type":"integer","base_type":"integer","usedInstances":{"79504530-2bc3-4803-b534-a8e514432fed":["condition"]},"attributes":{}},{"name":"Created or Updated_1.current.last_updated","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record➛Last Updated","type":"glide_date_time","base_type":"glide_date_time","usedInstances":{"d14b048a-93d9-48ce-b185-cc1080ef077c":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.material_product","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record➛Material Product","type":"reference","base_type":"reference","usedInstances":{"d14b048a-93d9-48ce-b185-cc1080ef077c":["values"]},"attributes":{}},{"name":"Created or Updated_1.current","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_inv_stock Record","type":"reference","base_type":"reference","usedInstances":{"d14b048a-93d9-48ce-b185-cc1080ef077c":["values"]},"attributes":{}}]</label_cache>
+        <master>true</master>
+        <name>FD - Inventory Stock - Safety Stock Monitoring</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="FD - Inventory Stock - Safety Stock Monitoring">564d7d0186fd44a5bd7f2061a34c80bb</parent_flow>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>published</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:32</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>7420d5f59363831092227b018bba10c2</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:45</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=7420d5f59363831092227b018bba10c2"/>
+    <sys_variable_value action="delete_multiple" query="document_key=7420d5f59363831092227b018bba10c2"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=7420d5f59363831092227b018bba10c2"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=7420d5f59363831092227b018bba10c2^sys_idNOT INb420d5f59363831092227b018bba10c3"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>7420d5f59363831092227b018bba10c2</id>
+        <name>FD - Inventory Stock - Safety Stock Monitoring</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:32</sys_created_on>
+        <sys_id>b420d5f59363831092227b018bba10c3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:32</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=b420d5f59363831092227b018bba10c3"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=7420d5f59363831092227b018bba10c2^sys_idNOT IN7c20d5f59363831092227b018bba10f9,f420d5f59363831092227b018bba10e1,f820d5f59363831092227b018bba10c4"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</model>
+        <model_id>7420d5f59363831092227b018bba10c2</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_7420d5f59363831092227b018bba10c2</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>7c20d5f59363831092227b018bba10f9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:33</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=7c20d5f59363831092227b018bba10f9"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</model>
+        <model_id>7420d5f59363831092227b018bba10c2</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_7420d5f59363831092227b018bba10c2</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:32</sys_created_on>
+        <sys_id>f420d5f59363831092227b018bba10e1</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:17:08</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=f420d5f59363831092227b018bba10e1"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</model>
+        <model_id>7420d5f59363831092227b018bba10c2</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_7420d5f59363831092227b018bba10c2</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:32</sys_created_on>
+        <sys_id>f820d5f59363831092227b018bba10c4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:32</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=f820d5f59363831092227b018bba10c4"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=7420d5f59363831092227b018bba10c2"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=7420d5f59363831092227b018bba10c2"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=7420d5f59363831092227b018bba10c2^sys_idNOT IN812019f59363831092227b018bba104c"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</flow>
+        <generation_source/>
+        <name>Created or Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>812019f59363831092227b018bba104c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:33</sys_updated_on>
+        <trigger_definition display_value="Created or Updated">a45d9180c32222002841b63b12d3aea7</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1Y224bNxD9FWKfWkABlAQtEL+1TQwYSBsgdtKHxFhQ5KxEhCJVclbyxvC/d7gXidpLsq61SQr4SVpyxDkzc84MVx9uE3RquQR3YTxyI+Cy8BcyOUuSWaL5AjR9veILDfSsDIIzXF8VG6BlDMup4euwJ2EDRoLB6qdiZZWA18rT84frWbLmRnK0rkjO0OUwSzJn11ew3miOdFbGtadF6yS45OzpfD5LynNrJ3Tglus8PN+kz+a//Dp/8SJVRuYe0zl92aYerfgUYChPRxbvx1mLldLSgakwbrgjnxgQ3HZib8HBnhTU6Ak73GBIhtwHFoVfrzjg8o3RRWRy49VnKH+fe0ijhNYW2eXK7t5CBoRYwDlFFNzVm9oKrvdPHKmqixzBUyx3d/u8nCvQdXG9cGqDvwlU26YAd7MxbHibG/bGsFd1jKzMkO/So6LAV6hxS1HBP3kIqIw8ayoXWELG2evIqzVM5I6iR0b5ZE2WGTYIsos1X0Llhs7VIDAqQvbOx09/Ku+VWUaxD0Ap97tYdBEDaojxEAjXfUQZKxSXm9SadE+9g2Qa/C1tNMsjRDBY8kHf2OLAj6qNhMtt4LlsKDeBWDJtd+zCnFoh3BRtUpaelCF1FExYcnaDk6liwcWnpbO5kUMoDhbsJwkZzzX+PJ1IrYMvwzm2+J4yDYhoDkUSPUpmS6dHeyPFeqBcr9tHdVap+sMaqVDZPm02W/5el5t7skFEABou8DKOj/l8/lzWU7DFiB6LEbyIg+1xjz1xT8aL+g74X2mx4wZ9ijblUqYR4v21YW0l6JdR1WouEP03OfrkLqopTa79xe70zf/vFRh2CdRAbPhEDI3kxJOgPKwiRdz8QjFY2Q2sY9TRHHWEvWGDabKGbOhCMAbYX9Y8+Za4FhZXnRFBOH6n9aMEhSvmALiH3jUfPEF2xKrU79m0PY6tPUCq1ZGjY4Cww84fh0kreaXUSs12dL7USkKqq73TT5WSBxG0dtEooa7x3nCmy5d7ciUO90sOsScFj1wJyZtoLPS9IFCjCy8HoS6TdVhrILVZb8NXGauTQ2+Ri4LhCgiTpospnVyimu413tgw6tvQXlpGG8x9E3Cn6fulqLrNvyp3+6pYLt5bzsN9v+X8sfkf0ndVWZ1axtaI1u1JPPSPpmGRcL3jhe9ol6QRVFL/2UULxAdTMWAaHLAFd9S9zqlzlYss38iglKk850bRcipW3CzBdyBwsWKVCatMvmdLaN5qPDqyXBZRN+iE0WoMnf2RPeJA8mEM/5emML4HXP8L4OhpVSgZAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create_or_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=7420d5f59363831092227b018bba10c2^sys_idNOT IN892019f59363831092227b018bba1048,8d2019f59363831092227b018bba1049"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="Look Up Records">d1c56ec50b30030085c083eb37673a50</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>43400a1587003300663ca1bb36cb0b4b</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</flow>
+        <generation_source/>
+        <order>5</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>892019f59363831092227b018bba1048</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:33</sys_updated_on>
+        <ui_id>c2d1fad7-d17f-49c4-8b4b-a329ec3c0550</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VX207jMBD9lSrPUZVQKJe3FQgJaQEJWF5YsBzbaS1cO2s7LaXqv+84dkK2DbfdIoH2rRmPZ84cnxm7N4tI4gmLDiKiJOWWK2miOJpiUTojl1MmrdJzZKwi9z/LJBnQxeJQM2wZ7Snd+1FQ9xOlfVJqDc59MzeI0+XyDgumLbLzgvl9GRNqhgzOmQ3x7ozFtjQnZ6pgMsbkXqqZYHTEKGCg3BQCz68/AZQCayDJMh0dLCIy5oJC+Ojg5jaOOAVse/l2kuB0Z28Xgg+SZDgcEJxm2WBIsiTbSSCEwJATXA/bNHdR70B22b53BVCaOlBpHLEHyyQFtAc5FobF0QRLoAP4aizAFD2X4skw5tJCxMg5Pxj+CHmhjsR55gwqJMyvNp8onIk350fY4kurS2JLHVzJWHHCjOeGshyXwh62bd7hvHAV+C0WZ6LerUQ5kWeelagJUEsALKUBEKxwpTrskBzqyC/HanZRgzzmsiIlFCkUwaL5wtZqnpXWwVlETLAJxEETXBRcjlCh1ZRXmwHKpD8S8NHPnVQoM3wk+5g43H0gFvePwX5Uma+x5q6IUwgDm5dxBMI7FNiYp1KAQ/SrdEh8YaEEVLHgKXD7iOaF/QZZpixgXsZNi3q3p+58QFvJzjDZ30dQcmksSuDHFFViX2+gV7z/TePbWUvjVwHnCuyg7OoTVWt/Krva1jvzC0HZycaUvfeVdB3K+GTCBkBcgEKQP0KjSl1ROUVEgKDcgsbS+Fh/0Qavd4BRYYy3uqCyYUPWFY97VvUe36Dt5OX5vd/S9iVk6115BB2g6uldqWF1ctfGoO3BxrQ92NqMthdNmQ11HSzXrenOpfZ/dP541R/E1dqQLrt651050/fm3Fqu9+bgXc3ZlpdfOXpGZRvu4ZyinDNBYUoLLqvJCbcd5Pmw5qZoDFtDPuQ7Ec04PILsU/baiyo7w+K+az0oDtUHVZX3IfMAOgBpZuBQ2q/WdH0UpG+YAtsvToFh2poCp/ihd9Hk7QQTJgE0KxtV9LZHwUljDTrd3uAL7tPecyk8Lp9tozT2q1/iJvywu80zuK7fN8iX7L54ie205HvuRNfL5it3WJM8aNePn46X2rFbWHmpbf2fL7VP+Q8kfu7y2PBfk9vf1DYtJj8QAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=892019f59363831092227b018bba1048"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</flow>
+        <generation_source/>
+        <order>8</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>8d2019f59363831092227b018bba1049</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:33</sys_updated_on>
+        <ui_id>d14b048a-93d9-48ce-b185-cc1080ef077c</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1W30/bMBD+VyI/V1HSQgV9m2BIkzbQYOOFUcuNL40158fsSyCr+r/vHLuhYiBA2ssk+tL6fPf5+85fcr3ZsEqUwBYMxUoDHxYT1gnduuA9nyaH8+T4mKtKthZ5Qj86LjQYpDSpbKNFf/267EYYQkcwbLFhWaG0NFCxxc3thClJ5fMUksPjdJ7N0tlsmiTTo4N0NZ+t0qmcCYADgtBiBZpSvzmytH6KO/bNk7HP+7XRud+ojXR8kgmDe4RKAhHJhbYwYaWopMDa9GyBpqWAASEvKt2PGYWqkACZy7236jcde5S4vBxIWQZ+b1zy0C4fzk8FiitCzrA1ITUrapWB9T2RkItW48l+zCdcNKjqypcMMkN1rduyOvctYSPA7nYo0loiAY3T6ZgHGflVUd9d7lie0d25loRNXWdCjyuBaNSqRcdnw0BDSUC8FE2jqjVvTN2poZi4lPFa0yLOdX1Hh1q1rmKROeIxtVXEZxQ/HcLXwiin4gvBUPF2wmxvT7Sw9kELNZH/ah0Tryxo4L4NriQzqsEPdEAHge52Mpp78LPdM/bgSe5s8aNNkpkkaxBNK3LAnluss59LCx0Yhb1PKNS6WFoU2FofqInC0sOQngCz2ZyQSxBkVJvoe+M2JE/jrDXUW4xJE/LWh7fbZUnfJF27xknywaswHhcRDj1ktENO9cxfA0NV4Zdra4WjzhdOF51QeniydmWEhIUBW9Ravg1rv9uE4ntZgrViHdr5aScsGpKiQtiIELPCQ9Ita6ii4e4iLCDK6ipXa3qcZOTBQ52mq9RxdAmdgrsQC0qUJroRPequ2Dr30gkNwSpbOHPHy49f/37Tvdvn3T5vsc+Lo08Cjc3nRl+62ht9Zwq0tA+zb3y17eYelORUBO5fdY9mX9iMrsNmmH/pv5p/6TwZPv/RFPTi/vshuPd/55lxePsHV7veau0JAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=8d2019f59363831092227b018bba1049"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=7420d5f59363831092227b018bba10c2"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=7420d5f59363831092227b018bba10c2^sys_idNOT IN012019f59363831092227b018bba1041,012019f59363831092227b018bba1044,012019f59363831092227b018bba1047,092019f59363831092227b018bba1042,092019f59363831092227b018bba1045,892019f59363831092227b018bba103e"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6c20d5f59363831092227b018bba1072</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>2</order>
+        <outputs_assigned/>
+        <parent_ui_id>c37e20e4-bee6-4a72-b567-f36536f84a56</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>012019f59363831092227b018bba1041</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:45</sys_updated_on>
+        <ui_id>15973e2b-a298-46a8-9eea-98c567249e0c</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6020d5f59363831092227b018bba1077</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>4</order>
+        <outputs_assigned/>
+        <parent_ui_id>4a32e637-7238-4aeb-bfa7-358bbf912692</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>012019f59363831092227b018bba1044</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:45</sys_updated_on>
+        <ui_id>c6b93471-aa0c-45d8-be91-3c57a3e4d989</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6c20d5f59363831092227b018bba107c</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>7</order>
+        <outputs_assigned/>
+        <parent_ui_id>79504530-2bc3-4803-b534-a8e514432fed</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>012019f59363831092227b018bba1047</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:45</sys_updated_on>
+        <ui_id>d78a86d6-5e47-43e4-a44a-924d04bf52fe</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6020d5f59363831092227b018bba1075</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>3</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>092019f59363831092227b018bba1042</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:45</sys_updated_on>
+        <ui_id>4a32e637-7238-4aeb-bfa7-358bbf912692</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VTW/bMAz9K4XOgeGPJG1yK1IUKNCtwNr1shUGLdOJUFnyJDmtZ/i/j7KdpFgztNuAnXaK9CSS7z2Rcct07ara2Tt9bq1YK7b88jBhQnmM1i0TOVsyNmEKSqQV1yoXTmhF0BZk7bG2XRkEh/mJNiefq9wv0yjgtTGoXABbEBIyiem3GpQTrum6r3UYJvhGoIUCXZNap/lj11HBXNhKQnP/r+vyjZA5HQ3mVGDIC4eGLdufjnqzFjArZlE440k8T+IwjM+mUTZPsijOE8DpnBISLZR0dfXCzSMGu6bykHVGqPW4vx5Db3egNrmnEocThs8OVY5EogBpccJKUCROm4YtnakJINn5jZLN/sZGKDc8cAnPVnxHnykM/c0CSRfH4XS/TcdHGODiAhwQlZq72oxX+UYLjnZwJMcCaulWL7Hhwk3Vq+xDnH+mMVrLulQfBzPYPsHuzQmpLZHAyiv13Echxe1GP33asbwUqndlPJSag9zvwJF3We08n5ahxJISpSVUFTmaVkZvRR9MXMpgLWkTFFI/UVE/IQFwTzwgYyG4JPyih+/BCK/iA6WhYOoFm1puRLXT1hdn3YTZxq4kWHvQSOb6HpU7xaO2dLDHh/SJzqnwFkcZ3aRlntW1Xgt+pawDkn3b2CvfglNIYpwnp6dxcjYFzLICTpPZGf0uoni+iNnYqkUIRbTg0fFWheRIW6Y9cBj+12PJ3h6Rd9R9NSInQ+f/mtHvTEv0xrSMyLvGZTb7Py1/PS2eZgZW8LT/9lA6/4f1h+Mymn4pUOZHW+jYPD34nh5Y7V+DC0thdx672n0S/UFDLeen7gA9afPoZR+w7gfoYQWUXAcAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6c20d5f59363831092227b018bba107a</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>6</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>092019f59363831092227b018bba1045</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:45</sys_updated_on>
+        <ui_id>79504530-2bc3-4803-b534-a8e514432fed</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1V0U7bMBT9lcnPbeXECbR9Q0VISGxIA/GyoejGdlprjp3FDpBF/fddJ2mLoBNsvO4tPva9PufmnKQjtvFV492tPXNOrQ1ZfrufEGUChs8dUYIsCZkQA6XEJ26NUF5Zg9AD6CZgXcdjERUgTqciOi2myYIn03me5FNg8UJyxmma0tnKNsZvt98bSpmkWC+UqzS0dx9swzdKi1qO1CuokamXNVl2L7Z6KQtIizSiKWfxCYspjedJlJ+wPIoFA5mcYEMNudR4dPVM6xH5vq0C5HytzHpcX42lNzvQ1iJQiemEyCcvjZBIogDt5ISUYAR4W7dk6esGgVqCuDa63Z/YKOOH8Zfw5NQvGTpRGk4WEnVxOezul9k40wEuzsEDUmm4b+rxKN9YxaUbJiJkAY32q+fYcOC66lX2JR5yvau2uinNl2EYZN9g9woRaRySkFVQGriPQoqbjX38umN5oUw/lXFTWw56vwKPs8sbH/h0RGpZYqOshKrCiWZVbR9UX4xcytla42JWaPuIlwb/zoAH4jMcLMwuED/v4TuoVVDxGdtgMXrBZY7Xqtpp6y8n2wlxrVtpcO6gEYeb/WwCw0HxqC0bxhNK+kZnePGDHGVsJx0JrK7sWvFL4zyg7JvWXQYLni5SmqSMxjlnyZyyPGUJzGUaJQmLCzTIaNWCQhEteHTcqsCO2DLrgUM0X6eMvB2Rd9z7KiKfBuf/mdHfpCV6Iy0j8q64pOn/tHw4LYFmDk7xrP8zYLvwwfrHuIxDv1BSi6MWOpan++DpgdX+bXDlsOw2YJe7H1bYaNFyIXUH6NHWP4LsA7b9DdOprxb6BgAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6420d5f59363831092227b018bba1057</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Stock - Safety Stock Monitoring">7420d5f59363831092227b018bba10c2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>1</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>892019f59363831092227b018bba103e</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:45</sys_updated_on>
+        <ui_id>c37e20e4-bee6-4a72-b567-f36536f84a56</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K8jPVZSPJkDfUBESEhvSYLxsKLqxndbCsTN/AFnU/77rJG3R6AT7eNxLZR/fe33O9T1NT7R3rXf2Vp9ZK1aKLL7cz4hQAcN1TwQjC0JmREHDcUW1YsIJrRB6BOkD1vdLw8FxdqTN0eeWhWWZRNQbw5WLLNTcdaV1mj5sNl99HGd0+GUxFmHCthK6u39Ri66FZBg3imjBIGfHDVn0Px0Nok4hr/MkzmmWFlkax+nJPKmKrEpSlgGfF1hQQsUlhi5fqD7QCNe1AbLOCLWa9ldT6s0W1IYFKmk8I/zZccU4kqhBWj4jDShUqk1HFs54BLAH7FrJbhexFsqND9HAsxXfeagUxyGy5qiL8vF0ty2nxo5wfQ4OkIqnzpsplK61oNyOHWG8Bi/d8iU2Bly3g8ohxUElt9la+kZ9HJtBdgW274iIt0iCt0Fp4D4JqW/W+unTluWFUENXpkOpKcjdDhz2rvIu8OkJl7zBQmUDbYsdLVujH8WQjFyaaCVxE9VSP+GlYZIjoIF4hI2F6ALx8wG+AyOCig9YBpNxFmxpqRHtVttwOdnMiO3sUoK1e43Y3PKbDwxHxZO2cmxPSBkKneHFj3ySsZn1JLC60itBL5V1gLJvOnsZRpBmxzyN+bzivJjDcVrlxXGdFXlW1CdzyMMIDqNax1AnpzQ5PKqQHRjLcgD2Jn1tNfK2Rd5x7yuLHI2T/2tGv+OW5A23TMi77JLn/93y124JNCuwgpbDNwLLhT+sP7TL1PQLwSU7OEKH/HQfZnpktXsNKiym3QbscvvpCgcdjlxw3R560uYhyN5jmx/Z1wj/BAcAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=7420d5f59363831092227b018bba10c2"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=7420d5f59363831092227b018bba10c2"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_7420d5f59363831092227b018bba10c2</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>3420d5f59363831092227b018bba10f5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:33</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_7420d5f59363831092227b018bba10c2</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:33</sys_created_on>
+        <sys_id>742019f59363831092227b018bba1032</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:33</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_7420d5f59363831092227b018bba10c2</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:32</sys_created_on>
+        <sys_id>bc20d5f59363831092227b018bba10dc</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:11:32</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_7420d5f59363831092227b018bba10c2"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_7420d5f59363831092227b018bba10c2"/>
+    <sys_hub_flow action="UPDATE">
+        <sys_id>564d7d0186fd44a5bd7f2061a34c80bb</sys_id>
+        <latest_snapshot>7420d5f59363831092227b018bba10c2</latest_snapshot>
+        <compiler_build/>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=564d7d0186fd44a5bd7f2061a34c80bb^sys_idNOT IN012019f59363831092227b018bba1069"/>
+    <sys_flow_trigger_plan action="INSERT_OR_UPDATE">
+        <binding_strategy>com.snc.process_flow.engine.binding.OncePerUniqueChange</binding_strategy>
+        <plan/>
+        <plan_id>564d7d0186fd44a5bd7f2061a34c80bb</plan_id>
+        <snapshot>7420d5f59363831092227b018bba10c2</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:11:34</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>012019f59363831092227b018bba1069</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:46</sys_updated_on>
+        <trigger display_value="">8ef759b993a3831092227b018bba1093</trigger>
+    </sys_flow_trigger_plan>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=564d7d0186fd44a5bd7f2061a34c80bb"/>
+</record_update>

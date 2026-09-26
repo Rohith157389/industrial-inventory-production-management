@@ -1,0 +1,1511 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=1728000</attributes>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>When a material_reservation Inventory Request is cancelled, release the reserved quantity back to available stock, create a release_reservation transaction, and prevent duplicate releases.</description>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name>fd__inventory_request__cancel_reservation_and_release_stock</internal_name>
+        <label_cache>[{"name":"Updated_1.current.related_inventory_stock","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Related Inventory Stock","type":"string","base_type":"string","usedInstances":{"eed5403f-133e-4de3-a813-711b3fdb1e4b":["condition"],"793e2643-92b4-43ad-859b-bd2602f47155":["conditions"],"fec7e9c9-e16a-4e6b-9982-328887a17531":["conditions"],"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.sys_updated_on","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Sys Updated On","type":"glide_date_time","base_type":"glide_date_time","usedInstances":{"4513146b-39f3-4fee-9bf6-238ae3b6a14d":["values"],"a6f5e8f5-309d-4204-8cd5-4aa12784b08a":["values"],"bdb0a5eb-100d-4389-98d4-0955bb6fe39f":["values"],"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.material_product","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Material Product","type":"reference","base_type":"reference","usedInstances":{"4513146b-39f3-4fee-9bf6-238ae3b6a14d":["values"],"a6f5e8f5-309d-4204-8cd5-4aa12784b08a":["values"],"fec7e9c9-e16a-4e6b-9982-328887a17531":["conditions"],"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record","type":"reference","base_type":"reference","usedInstances":{"4513146b-39f3-4fee-9bf6-238ae3b6a14d":["values"],"a6f5e8f5-309d-4204-8cd5-4aa12784b08a":["values"]},"attributes":{}},{"name":"793e2643-92b4-43ad-859b-bd2602f47155.status","label":"793e2643-92b4-43ad-859b-bd2602f47155➛status","type":"string","base_type":"string","usedInstances":{"3835d384-bdc2-4ae9-b873-29b7f437f2b0":["condition"]},"attributes":{}},{"name":"Updated_1.current.quantity_requested","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Quantity Requested","type":"decimal","base_type":"decimal","usedInstances":{"fec7e9c9-e16a-4e6b-9982-328887a17531":["conditions"],"bdb0a5eb-100d-4389-98d4-0955bb6fe39f":["values"],"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.requested_by","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Requested By","type":"string","base_type":"string","usedInstances":{"fec7e9c9-e16a-4e6b-9982-328887a17531":["conditions"],"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"fec7e9c9-e16a-4e6b-9982-328887a17531.Count","label":"fec7e9c9-e16a-4e6b-9982-328887a17531➛Count","type":"integer","base_type":"integer","usedInstances":{"42f974e8-ed6e-4581-9773-d4d566958ebb":["condition"]},"attributes":{}},{"name":"793e2643-92b4-43ad-859b-bd2602f47155.Record","label":"793e2643-92b4-43ad-859b-bd2602f47155➛Record","type":"reference","base_type":"reference","usedInstances":{"bdb0a5eb-100d-4389-98d4-0955bb6fe39f":["record"]},"attributes":{}},{"name":"793e2643-92b4-43ad-859b-bd2602f47155.Record.reserved_quantity","label":"793e2643-92b4-43ad-859b-bd2602f47155➛Record➛reserved_quantity","type":"decimal","base_type":"decimal","usedInstances":{"bdb0a5eb-100d-4389-98d4-0955bb6fe39f":["values"]},"attributes":{}},{"name":"Updated_1.current.related_batch_lot","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Related Batch Lot","type":"reference","base_type":"reference","usedInstances":{"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.approved_by","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Approved By","type":"reference","base_type":"reference","usedInstances":{"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.source_location","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Source Location","type":"reference","base_type":"reference","usedInstances":{"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.destination_location","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Destination Location","type":"reference","base_type":"reference","usedInstances":{"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}}]</label_cache>
+        <master_snapshot>4b5195b99363831092227b018bba1058</master_snapshot>
+        <master_snapshot_digest/>
+        <name>FD - Inventory Request - Cancel Reservation and Release Stock</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id>5fe715b993a3831092227b018bba103c</remote_trigger_id>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>published</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>1643f74a3f054b3a8a8f4001f45d8394</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name>FD - Inventory Request - Cancel Reservation and Release Stock</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_1643f74a3f054b3a8a8f4001f45d8394</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:34</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_variable_value action="delete_multiple" query="document_key=1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_flow_record_trigger action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition table="x_2056099_indust_0_inv_req">status=cancelled^request_type=material_reservation<item display_value="Cancelled" endquery="false" field="status" goto="false" newquery="false" operator="=" or="false" value="cancelled"/>
+            <item display_value="Material Reservation" endquery="false" field="request_type" goto="false" newquery="false" operator="=" or="false" value="material_reservation"/>
+        </condition>
+        <name/>
+        <on_delete>false</on_delete>
+        <on_insert>false</on_insert>
+        <on_update>true</on_update>
+        <published_version/>
+        <run_flow_in>background</run_flow_in>
+        <run_on_extended>false</run_on_extended>
+        <run_when_setting>both</run_when_setting>
+        <run_when_user_list/>
+        <run_when_user_setting>any</run_when_user_setting>
+        <sys_class_name>sys_flow_record_trigger</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:45:34</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>5fe715b993a3831092227b018bba103c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:34</sys_updated_on>
+        <table>x_2056099_indust_0_inv_req</table>
+        <trigger_definition/>
+    </sys_flow_record_trigger>
+    <sys_trigger_runner_mapping action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <data>{"run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any","run_on_extended":"false"}</data>
+        <identifier>1643f74a3f054b3a8a8f4001f45d8394</identifier>
+        <identifier_type>flow</identifier_type>
+        <runner>FDTriggerRunner</runner>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:45:34</sys_created_on>
+        <sys_id>5be715b993a3831092227b018bba103d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:34</sys_updated_on>
+        <trigger display_value="">5fe715b993a3831092227b018bba103c</trigger>
+    </sys_trigger_runner_mapping>
+    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=1643f74a3f054b3a8a8f4001f45d8394^sys_idNOT IN5be715b993a3831092227b018bba103d"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=1643f74a3f054b3a8a8f4001f45d8394^sys_idNOT IN925155b99363831092227b018bba1057,965155b99363831092227b018bba1004,de5155b99363831092227b018bba1019"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</model>
+        <model_id>1643f74a3f054b3a8a8f4001f45d8394</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_1643f74a3f054b3a8a8f4001f45d8394</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:50</sys_created_on>
+        <sys_id>925155b99363831092227b018bba1057</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:50</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=925155b99363831092227b018bba1057"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</model>
+        <model_id>1643f74a3f054b3a8a8f4001f45d8394</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_1643f74a3f054b3a8a8f4001f45d8394</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:50</sys_created_on>
+        <sys_id>965155b99363831092227b018bba1004</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:50</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=965155b99363831092227b018bba1004"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</model>
+        <model_id>1643f74a3f054b3a8a8f4001f45d8394</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_1643f74a3f054b3a8a8f4001f45d8394</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:50</sys_created_on>
+        <sys_id>de5155b99363831092227b018bba1019</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:50</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=de5155b99363831092227b018bba1019"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=1643f74a3f054b3a8a8f4001f45d8394^sys_idNOT IN6f5de3f4a38b4e299adbdf90715ccca5"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>6f5de3f4a38b4e299adbdf90715ccca5</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1YbW/TMBD+K1E+gVSkAgKJfeNt0iReJDbgw4DItS+thWsX+9IuTPvvnBOn9ZIUAiwMxD61OTu+5+6e52zn9DxFK+dzsEfaIdMcjkt3JNKDNJ2kis1A0d8TNlNAz1IjWM3USbkCMqM3Z5ot/ZiAFWgBGutX+cJIDi+ko+fTj5N0ybRgaGyZHqAtYJLm1ixPYLlSDGmtnClHRmMF2PTg7nQ6Sat1gxNacM1U4Z/PsnvTBw+njx5lUovCYTalP+vMwhcPQjpasHw3ZC5fSCUs6Brfilnyh977eSfuFhTsCT8gJ9xwhj4RYhtUFHqwWGDitVZlNOXMya9QvV84yKJkhhn58cJs3kAOhJjDIcXj3YVBZThT2yeGVNFZgeAolouLbVYOJahQWMetXOFjjnLdJP9iMoQJbwqdvF+ATt46sElV3g4t5koKyFQ9NpwWTaA/4kVFhAhaKI4tdLYhZBnlzzbeG9J0qTGMAL3hfs8h9qTgb6VGysTal9nn0WsyHYsrx+CcNP4XUep5lzE1K37AlnMKFL4UPsYqGXlTymoxVuMj84vg3mcx8RhyY+v6He0mNpj8C0dLNg+UIA8KOEYVyunN6OmlpNcohF0e9oDSRmdDgL0y+s6fxDUzuIjBNDiekP1SgoiZ+8C530T3a7pvy85t2bS+HFtL6cH6M2rvEna/c2xR+H9We67Mhkh01QJnuuxQ1nuSmlhaJtyQszMcTTIkD5hbU2ixD8XlGePolvHP3wexm5HcEpCzQuHt6xaqx0ZtMNZoHEdbqfHYQL3uKNfr9kadu1S91snzEHRSnWzdVQu1Qt6iJ7VRXlhKB1ZbSpP2BBsEI4nWj3ex0M4bAWoO9NeqEToobLm400mDvyWRxjxQHb0l3+v7Rix15p4aLSTWp7C2PpohN8rdJpSGRwAaQhBaLNyHYjq9L7gHrhSIT9aTny62vnT12JLWtpIpuuXSmXfNwjItHv3magPoFyexJyzsyedofAtfHH6Vbhum0WVoMiZEFiHeNrylEaCeRWwIHKM9aFWgSy8irpDmtp8Sxrybj3TZ6juL0fXBn8P8PXi0fm40ZCbvvUbJPAnJoS43KxNcAGFSdAaglStU420z2viCtqE9MwkNJPaPgLua21T1EaN7parL3WoetfGnP5/sv021nN/sQ7v0ndSzrlrGhZZkzviC6Xl9Cmu4e0hqBsYXST0lqaeMqGve+jjCx3MGa7BlJ1hvTIqV8FIZyzNTG1a6Tvui7uAbRTiPkoEkoWsRXFtLaPYuh5ZmzsuoG3RY02oMnfGBPWJH8v0Y/pWmMLwHfPwGHh+GCXwZAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=1643f74a3f054b3a8a8f4001f45d8394^sys_idNOT IN4513146b39f34fee9bf6238ae3b6a14d,793e264392b443ad859bbd2602f47155,a6f5e8f5309d42048cd54aa12784b08a,bdb0a5eb100d438998d40955bb6fe39f,d2187cbacf9f41d19f22afd765187b60,fec7e9c9e16a4e6b9982328887a17531"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id>eed5403f-133e-4de3-a813-711b3fdb1e4b</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>4513146b39f34fee9bf6238ae3b6a14d</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>4513146b-39f3-4fee-9bf6-238ae3b6a14d</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VTU8bMRD9Kyufo9VuAhHkVkGRKrWgQsuFEmt2PUmser2LPwJplP/e8doJESVqD+0BqTnF8/nmjf32bs00NMgmzEGlkPeHAVuC8sH4xIfF8bg4PeVSC28dL+jPkoNC4yhMSNspWN3+WXQHhqo7NGyyZvVCKmFQs8nd/YBJQenjEovj03Jcj8rRaFgUw5OjshqPqnIoRoB4RCUUVKgo9EsAS+fXsLtV96rt435udhkdrREBTzFg+ORQCyQgM1AWB6wBLcC1ZsUmzngyGARxpdVqF7GQ2lFBFmKfrPxBbU+KEDdDmqzG6NsdeaIrmmfn4OCGKtfOmxRaL1pZo42cCJyBV+5s3xYDrjonWx1T+jFTdqt8oy8jJWxXYLsdsnhLILALcwbkaYzZzaJ9vN6ivKDdBUqSU7U1qN0JnDOy8i7gWTNU2FAh3kDXST3nnWmXsk8mLE0+V3TIZ6p9pKZWznUOdQCeE62QX5D9vDffgpFhik9UhpI3A2ZX9kyBtc+zEIn8wQckcbI0A480hJTayM69owZLTHA3g93l7u+z3bvY/Z3k4Vp880UxEta19XfeSNuAqxdTi0s00q2is0EhfTO1Dpy30dQSgGksQtOkIuv11y6cBC/z2hui0+U0CvfJ2urNZkoNqDSowJag5R9OfRlJyQZVH0TPiiLobnKDDzTZ4SqUFGE2aC3ME9IzoE0rhSIzaNEsIewlW4DNdJulJtmHbZPsJrCTZ9d9LHloE9oRPVndeiUox2UVhjwEiyKfvv/8qzj8Z/yfM/5bgRVI4nxIYMtqT2AvJCphnxV294C26opNFzDz+KBeKGxyZrfJmVS2/FsqW46L/veGtDYO9+aldu+rekB0738COXs3iVMIAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=4513146b39f34fee9bf6238ae3b6a14d"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>793e264392b443ad859bbd2602f47155</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>793e2643-92b4-43ad-859b-bd2602f47155</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY32/iOBD+V6I8Uy7hV6Bvp1ZIK+1tpW23L3sry7GdYq2xs7ZDS1H/9xsnTuAghXIFaat7QrHHnm+++WZs830VSjxn4WVolLbILnMWdsIFFkUzhg2BIcpNLvDy3s/gwKrgGcZzrGG9ZTq8XIVkxgXVTIaX3390Qk7BcEijSTaZDMdJFPX7UTQa9QmO07Q/ImmUpjFsIXDKBJjegrfgrkLQAqr8uQQfipP6+7NfelUPKk0dlH4nZE+WScoAQ4aFYZ1wjiXFVullM6IZpjdSrAdmXFrYLXTGT4Y/g79+z9llDKIirJprPpEnpRrOrrHFt1YXxBbam1ZgDfCxasJsqGth2cOPXjpr+2dnj7ftKdtcEL8A35RluBD26r/5jI/12XM+qwBvcssVZD3su7zgVNThK1HM5Zcql2GD8L5FXtXM9SsqKwyQzXKXUJchn67sdqYev9bZmHJZ4vKTQhEsmi9sreZpYR0vqzCjKONMUMSl4NJ5grQ5+TDB5uABzXGec/mAcq0WvNwVYpl3HwR8dDOhHh0X/EF2MXGRd0FYuDuF8ety+B5r7lj4C7aBxR3ncAZLvT9kiOa5RY+cPjC79l5bUWUfsfjZNu8Vh+pEleGFL53QLM2VwMasyQaZol+F46Ci3rOHykSVS0oUf0IEC+aJchrwpUeUpNwFZzZlsDSI078LqGW6Wn3LIW5GUdwlhYYc2K5mohzhcgGfUGvIWEV+vrzsdpD3bHWo6dDhvqaDJxtN52ozzLbQ67azPfa5bYO6lk7WfgZRFJ2mAbU1iN0CPqp+dwvTCfUddXme8ju+OioKDpZIZbaujifUi4ajaDIB0dLCWBQ59Va63S2AA9YHNT7Zq/HBhsbvPM4t2F7Z5Scq5/6t7HJZ8KWaqE+mkyl7/JF0/d4D52znChegEFSl0KhCl1QuEBEgKDehsTTVXmc5JHiG5kAcz8G9ZgREYhDWDGWqkBR5x+sCcaxmXIPWK+PdovjKIMcyUCCewM5YUFoHjfWhooj3FkW62fg/ZUEN3e9vAoAelNCDBvpxgR5zRx2c8JA49R11irko+QcV5RsJZFor/co99UDq9mjgjZfYN4KKTwrq/bfcNtG33nYPYP0QLekcTaZ8JlQk7zaMtzSFvU9QTDeawo1LepAut16gjXNf39XjoeXInLqJrSOz9/88Mn/Lq2Dntaff2e6ICBlJ4EUHyzLoX7AW1f2qbj7RrqqrZ91haROG00EPj5J+HEdRHNEkGidJPB6l2Qgng2xD2tdKusdWL7GBAwJtJqiBHIbqdZ8qJRiWW6K/AwL/mHrEXvTD3+5w+xD3xILfbTNdDbVyfa4aKfg3yX8V7JOT2JhFvXFMycU4iZOLQUZHFxOKhxd4kg6TPmVkkJ3yD4gf/wC1a5gWkhQAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=793e264392b443ad859bbd2602f47155"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <generation_source/>
+        <order>6</order>
+        <parent_ui_id>3835d384-bdc2-4ae9-b873-29b7f437f2b0</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>a6f5e8f5309d42048cd54aa12784b08a</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>a6f5e8f5-309d-4204-8cd5-4aa12784b08a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VW0/bMBT+K5GfqyhpoYK+TTCkSRtosPHCqHUan7bWHDv4Uuiq/vcdx2moGNX2MGlCWp/qc/n8nYu/3G2YhhrZhHmYKeTtYcBWoEI0PvFhcTwuTk+51CI4zwv6s+Kg0HoKE9I1Cta3fxbdgCV0j5ZNNqxaSiUsaja5ux8wKSh9XGJxfFqOq1E5Gg2LYnhyVM7Go1k5FCNAPCIIBTNUFPolkqXza9z9unnV9nE/N7tMDmNF5FMMGD551AKJyByUwwGrQQvwxq7ZxNtABosgrrRa9xFLqT0Bshj75OQPuvakiHFzpMoqTL7+yLt2JfP8HDzcEHLlg+1Cq6WRFbrUE4FzCMqf7dtSwFXjpdEppS2zyzYq1PoytYT1ALvpkCU4IoFNrDMy78qY3yzN4/WO5QXNLrakcypTgepP4L2Vs+Ajnw1DhTUB8RqaRuoFb6xZyTaZuNT5QtEhnyvzSJc6udA5VJF4Tm2F/ILs5635FqyMVXwiGEreDphbuzMFzj3XQk3kDyEySZV1NfDUhphSWdn4d3TBCju620G/3O0+u73FbneSx7X4FopiJJw31XdeS1eDr5ZThyu00q+Ts0YhQz11HnxwyWSIwDSBUDUdyGbztYknwcu8Cpba6XMqhYfOavR2O6ULCBpU7Jag4R9OfRlJyRZVG0TPiiJoN7nFB6rsMAolJZo1OgeLjukZ0KSVQpFZdGhXEOeS9ZvqMtDZh90d2U1sDnkrei2ZX4LPKhOUyLTx2QyzuQla5Nl1i0SQNCftqXmtnxgjOBT59P3nXxXj/xj+zRh+K8UCScYPSXE525PiC4lKuGct7p/aToexbmK3eHp6L7S4c2a3nbPT4/Jv6XE5LtrfG1LlVNybF+W97+8Beb7/CRZP5hd9CAAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=a6f5e8f5309d42048cd54aa12784b08a"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent display_value="">f9d01dd2c31332002841b63b12d3aea1</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <generation_source/>
+        <order>11</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>bdb0a5eb100d438998d40955bb6fe39f</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>bdb0a5eb-100d-4389-98d4-0955bb6fe39f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VW0/bMBj9K8jPbZRbC+nbRIc0aQMNNl4Yixz7C7XmXLCdQhflv+9zbkQUAZN4GNL6VH83n3N8+vWqJjnNgKyIoYmEuD3MyJbKygbvY99dLN0oikXOK21iF79sY20K9gvLuNClpLvL11WXVOF0A4qsasI2QnIFOVldXc+I4NieLLjrRd6SBV4Q+K7rH4VesgwSz+cBBRbhCEkTkFj6zYLF81PYza58MvZ52ntw2iUKxS2ehTsjcG8g54BIUio1zEhGc05NoXZkZVSFAQWUn+VyN1ZsRG5wIrG191r8xnuPXFuXAlJj0OXGY9zr1YXTNTX0AiczU6m+lG0KwUB3onBIaSXN8TTWFZyVRhR519Ly7LsLWWX5aacJGQcMz4ORSiMIKC1Pi7ynkV5sirvzAeUJPp7VpE/KglE5nqgxSiSVsXhqAhIyHBRntCxFfhOXqtiKthmxZM6NxIOTyuIOL9XiJncos8AdlJU6Jxhft+FLqoRl8QXHYHMzI3qnjyXV+oELihjfVhZJx6znEHcy2BamRGk+4AVb6OE2s9HdChg+9cTZdX0YBeAvw2Ae+Uk4DwPK50eLKJkn3F+6fhoeeouFc972Nc2+2V9h6BCeMzR4E0OfD/ge4+3dzAtWtVIL/sjO6z5z8Gn94Gfvzfwcvic/d7TevZ0nq+tFY7d+1hNjK9CgtsDt+NwIs/tRuW7A/8rvzt6QppnX9fcSmWLQc1ilUFzjDOlYwS3CwGTT/ESmJq662uHy/VbUZChC1tj28ev+j+x9k3lpP7j+s/sBJvvhRIDk+mE/jM8+/NtBhroZiDsbPPrH65MHl31y3BJvtia8pdt+/i+Lf29ZXP8Ba5R8TOUJAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=bdb0a5eb100d438998d40955bb6fe39f"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <generation_source/>
+        <order>12</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>d2187cbacf9f41d19f22afd765187b60</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>d2187cba-cf9f-41d1-9f22-afd765187b60</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1WwVLbMBD9FY/OqcdOIAPcOlBOLUyh5UKJZm0pRIMiG0kOSTP59z7ZjnEpAQ69MENO0e57q93Vs1bXa2ZoLtkR85RpyevFgC1IV8G45MNkf5wcHnJlROU8T/Bnwf3SACSUKzWtrt6CLckispeWHa1ZPlNaWGnY0fXNgCkB8jiVyf5hOs5H6Wg0TJLhwV6ajUdZOhQjknIPITRlUgP6IySK9XN5+1X5rO1rnxudNY7CipBPMmBy6aUREolMSTs5YHMygnxhV+zI2woGK0mcG73qEDNlPAKygF069RvbHiQBN5WoLJeNr1vytlmNeXpCni4ROfeVbaH5rFC5dE1PhJxSpf1x39YAzkuvCtNQ6jJbdqGruTlrWsK6ANuzgaVySEKWoc6QeVvG9HJWPFxsszzFyYWWtE5d5KS7FXlvVVb5kM+aSS3nCMTnVJbK3PLSFgtVk5HLPL7VWMRTXTxgU6duTUx5SDxGWyk+hf2kNl+RVaGKbwgD8mbA3Moda3LusRY0kd9XIZOmsrYG3rQhUHKrSv8ZGyxkm+5m0Am71rLridpbMq5Jhwdx/KqSZAQ9aknokZVO2gUF78R58pVr/Kiq1FCwmMwJOlakQ80CR9j41+ufJYqTgqdxXln008dPkZvNBJ8EPFAWd77I73ZzkU9teUJACPTCeOVXu7lbBIq5R+1wgpaRz2dcFy/ku92zg4LWheDZCzv2USDhNKGHVzg9ECj9UwnI3TwohFettTCguqKy+MSCXAP9BebfQFAhTq9MvXoD/zl03SJyW9rFo3yinPBNaS1F9ClqZIW/27OJWsGJKKP8LvJFRAtSur6g6pOOJ1++/3vLfoj3Q7zvR7yvjn0h8WDYNfbTrDf2T5XUwj3O/e5a3858CYmjZN5c80/mfuuMrlpnO/vT/zX703FS/97RC6Ap7t0/AHpvvR1PgZs/nl6EQOUKAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=d2187cbacf9f41d19f22afd765187b60"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="">43400a1587003300663ca1bb36cb0b4b</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <generation_source/>
+        <order>8</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>fec7e9c9e16a4e6b9982328887a17531</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>fec7e9c9-e16a-4e6b-9982-328887a17531</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+2XW0/bMBSA/0qV56hK6IXL2wRCmjRAAsYLA8uxndbCdYLt9EKV/77jOEmzNu1gKxJoe2uOz/G5+DvH7v3Sk3jCvBOPJJJywxOpPd+bYpFZoVFYakysGJlFyn5kQdCjigmGNUOKaaam2K4+cjll0iRqgbRJyJNTXC6/pxQbRlHYJZlSoNEF40KyZpDnjxOQK44FSlVCM2K277GuCcbPGZaGm8V2o0oDwn7OmIZFMKt/o2iHaVMrz6E+lOtU4MXd/zLtLFOKFcAFQXgnS4+MuYCaSO/k/sH3OIW6HcX9IMDh4OgQtuwFwXDYIziMot6QREE0CGALgSMmQPW0iWcbsrbubbJvbRskitqgQt9jc8MkZRBNjIVmvjfBEvKCgtcSxTC9kmIlGHNpYEfPKs81fwG/kEdgNWMGGRLmVutPVPLixPEZNvjGKDiRTJWqZJxwwrSrDWUxzoQ5bcqcwlVqM3AmBkeisk5ENpGXripevUGFJ0gy4JCy1KZqYwfnkEd8M05m11WQ51wWRSmTFAnBov7CxigeZcaGs/QA7AnsgyY4TbkcWb6mvDCGUCbdkYCPbiySGfjUfCS7rje6UFjcPQf5WSG+w0AnJHEB24Bx7nt6oU8F1nqVCtQQAZKiSqxMARVVcCWwdkTx1HwBL1NWxpz79WhzaqupNkcHwWAYHB9Dd9FMGxTYNkNmLjdbe6fu3/Hdjxp835YxroVcUl18omLtV6oLs86lWyipDvZG9dFnYrpM44NBDQFxAYQgd4Q6yVRRyikiAnCyC6vL4w9a4Pf060SZ4lZqdEAhw5ps8o47Jum8vILtYPfsPm6wfQPeOrcugpagqsld0LA+tSthyXZvb2z3DvbD9rJOsy5dS5Wr1rTnUum/WH28rg9wNQzCvK133uQzfKvPg3yzN3tvas4mXm7lbAtle+7hmKKYM2GfTYJL9zTLLD7v1twUjcG09IdcJ6IZpyNmVt4rLZqYGRZPbeslcag6qCK9d5kH0AH2SQqH0nzph5ujIHzFFOjvnALDsDEFLvC8c137bQ2mnATQrGxUlLc5Cr7W0pLT/h5fbx/2ngvhYbm1jULfrX6Km/Dd7jZXwU1+X4EvOdx5iQ0a+F5Z6DrRYu0Oq52X7Lrx0/JSO7cLay+1g3/zpfYh/3342y6PPf8tefgJfXVaX3MRAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=fec7e9c9e16a4e6b9982328887a17531"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=1643f74a3f054b3a8a8f4001f45d8394^sys_idNOT IN08272b9ef2f44f5b88b40f94fdb72abb,3835d384bdc24ae9b87329b7f437f2b0,42f974e8ed6e45819773d4d566958ebb,6a447b9fd0434c10be2bc8336ce401cd,b187ebadafa244b7820b3896bf097cf9,eed5403f133e4de3a813711b3fdb1e4b"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6a5155b99363831092227b018bba10e6</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>7</order>
+        <outputs_assigned/>
+        <parent_ui_id>3835d384-bdc2-4ae9-b873-29b7f437f2b0</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>08272b9ef2f44f5b88b40f94fdb72abb</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>08272b9e-f2f4-4f5b-88b4-0f94fdb72abb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">2a5155b99363831092227b018bba10be</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>5</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>3835d384bdc24ae9b87329b7f437f2b0</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>3835d384-bdc2-4ae9-b873-29b7f437f2b0</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXW+bMBT9K5OfkwgwJCFvVapKlbpVWqu+bBW6/iCxZjDDpi1D+e+7BpJUbaZ26+ve8LHv9TmHe6AjpnFV4+ytObNWbUqy+nY/Iar0GD53RAmyImRCSigkPnFTCuWUKRF6AN14rOsWKZXRPKbTNGLxNKYgpsskZVMmonkQ5fEiTJKZdeAau9t9b4KAihAbCGUrDe3dR/vwrdKiliP5Cmrk6mRNVt2LrV5MCkmehEHCaTSnURBEyzhkc8rCSFCQ8RwbamBS49H1M7UnDHBt5SHralVuxvXVWHqzB00tPJUomBD55GQpJJLIQVs5IQWUApypW7JydYNALUFcl7o9nNiq0g0voIAnq35J3ykI/Mlcoi4uh93DMhtNHeD8HBwglYa7ph6P8q1RXNrBESFzaLRbP8eGA9dVr7IvccD0vtropii/DGaQQ4P9O0SksUhCVl6p5z4KyW+25vHrnuWFKntXxk1tOOjDChx6xxrn+XREallgo6yAqkJHs6o2D6ovRi7FbKNxMcu1ecRL/QTPgHviMzQWZheIn/fwHdTKq/iMbbAYZ8Fmlteq2mvrLye7CbGtXWuw9qgRzc1+Np7hoHjUlg32+JK+0Rle/CBHGbtJRzyrK7NR/LLEoUXZN6299CNIlzQRdBkzwaMYZMqWCxqlbJHHdJFHLCDjqOYB5GHKw9OjCvTEWGY9cAzn65iRtyPyjntfReTTMPl/ZvQ3aQnfSMuIvCsuSfI/LR9Oi6fJwCqe9f8GbOc/WP8Yl9H0CyW1ODlCp/J072d6YHV4G1xZLLv12OX+l+U3Whw5n7oj9GjqH172Edv9BhCwQqv8BgAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">a65155b99363831092227b018bba10ea</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>9</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>42f974e8ed6e45819773d4d566958ebb</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>42f974e8-ed6e-4581-9773-d4d566958ebb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXW+bMBT9K5Ofk4jvQN6qVJUqdau0Vn3ZKnQxl8SawQybtgzlv+8aSFK1mdqtr3vDx77X5xzugZ6p1tSt0bfqTGuxqdjq2/2Micpi9NwzkbMVYzNWQYn0xFWVCyNURdADyNZifV8gX2LCkzm6EcwDjLJ5ksTe3PfiOF6Cuwx9d7FWbWV2u++t4/joUH0udC2hu/tgG74VMm9wol5DQ0wNNmzVv9gapCQQFqHrhNz3It9zHC8O3CzyM9fLfcAgooYSMpR0dP1M6wn5pqstpE0jqs20vppKb/aganJLxXNmDJ8MVjkSiQKkxhkrocrBqKZjK9O0BDQI+XUlu8OJrajMaH8JT1r8QtvJcezJAkkXx3H3sEwnT0e4OAcDRKXlpm2mo3yrBEc9OpJjAa006+fYeOC6HlQOJQYyua9Wsi2rL6MZ7NBg/woJaTWRwNoqtdwnIcXNVj1+3bO8ENXgyrQpFQd5WIEh77LWWD49Q4klNUpLqGtyNK0b9SCGYuJSLjaSFotCqke61M7vArglviBjYXFB+PkA30EjrIrP1IaKaRZ0qnkj6r224XK2mzHd6bUErY8aydz0Z2sZjoonbelojy0ZGp3RxQ84ydjNemZZXamN4JeVNkCybzp9aUcw8IpkGWCMeYRBGLvJcunnQR5GURLGmGVsGtXCgcJNuHt6VME/MZbpAByj+Tpl7O2IvOPeVxH5NE7+nxn9TVrcN9IyIe+KSxj+T8uH02JpZqAFT4c/A7WzH6x/jMtk+oVAmZ8coVN5urczPbI6vA0uNJXdWuxy/8OyGx2NnE3dEXpUzQ8r+4jtfgOvhUSU+gYAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">e65155b99363831092227b018bba10ec</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>10</order>
+        <outputs_assigned/>
+        <parent_ui_id>42f974e8-ed6e-4581-9773-d4d566958ebb</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>6a447b9fd0434c10be2bc8336ce401cd</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>6a447b9f-d043-4c10-be2b-c8336ce401cd</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6a5155b99363831092227b018bba10ba</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>3</order>
+        <outputs_assigned/>
+        <parent_ui_id>eed5403f-133e-4de3-a813-711b3fdb1e4b</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>b187ebadafa244b7820b3896bf097cf9</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>b187ebad-afa2-44b7-820b-3896bf097cf9</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6a5155b99363831092227b018bba10b6</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>1</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:41</sys_created_on>
+        <sys_id>eed5403f133e4de3a813711b3fdb1e4b</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:29</sys_updated_on>
+        <ui_id>eed5403f-133e-4de3-a813-711b3fdb1e4b</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VUU/bMBD+K5OfqyhpWgZ9QzCkSjCmlSGhCUUX+9JaOHZmO4Us6n/fOUlbNDrBxuvecp/vzt93uS9pmal9VXt3Y06dk0vNZt/vR0zqgNFzy6RgM8ZGTEOJ9MSNFtJLowlag6oD1rbfKgEeRZZEvLYWtY8sqg6Rek2hsU3mvOEPm8188enqy80dlQvpKgXN7fu68JVUgpJ74hVY4unRsln721En5ASmxTSJpzwdH6XjOB4fT5L8KM2TsUgBJ0fUUEGOilLPnik9IN43VYCct1Ivh/hyKF1sQWNFoDKORwyfPGqBRKIA5XDEStAklzSxmbc1ARZBXGvV7DJWUvt++CU8OfkTQ6c4DpkFki6O/ekuzIaR9nBxDh6ISs19bYdUvjKSo+snIrCAWvmz51ifcF11KrsSD7naVhtVl/pzPwy2a7B9g4TUjkhgFZQG7oOQYrEyj1+3LC+k7qYyHCrDQe0i8DS7vPaBT8tQYUmNshKqiiaaVdasZVdMXMpoqSiICmUe6dKwvRHwQDyiwUJ0Qfh5B9+ClUHFFbWhYtoFlzluZbXV1l3ONiPmGnemwLm9Rhpu9qMODHvFg7asH08o6Rqd0sVrHGRsRi0LrC7NUvK5dh5I9qJx87CCiGI6idMiSVOcCEzhOEk/JkmeFiJPcJKzYVWLGIrkhCeHVxXSA2uZdcDemC9Nxl63yBvufWGRD/3m/5nR37glecUtA/Imu0yn/93ybrcEmjk4ybPuv0DtwgfrH+0yDP1CohIHV+iQn+7DTvesdm+DS0dlNwGbb39X4aChlQuu20OPxj4E2Xts8wumsVQg+AYAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_1643f74a3f054b3a8a8f4001f45d8394</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:50</sys_created_on>
+        <sys_id>1a5155b99363831092227b018bba1052</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:50</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_1643f74a3f054b3a8a8f4001f45d8394</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:50</sys_created_on>
+        <sys_id>965155b99363831092227b018bba1015</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:50</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_1643f74a3f054b3a8a8f4001f45d8394</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:50</sys_created_on>
+        <sys_id>d25155b99363831092227b018bba106b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:50</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_1643f74a3f054b3a8a8f4001f45d8394"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <authored_on_release_version>-1</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>When a material_reservation Inventory Request is cancelled, release the reserved quantity back to available stock, create a release_reservation transaction, and prevent duplicate releases.</description>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>fd__inventory_request__cancel_reservation_and_release_stock</internal_name>
+        <label_cache>[{"name":"Updated_1.current.related_inventory_stock","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Related Inventory Stock","type":"string","base_type":"string","usedInstances":{"eed5403f-133e-4de3-a813-711b3fdb1e4b":["condition"],"793e2643-92b4-43ad-859b-bd2602f47155":["conditions"],"fec7e9c9-e16a-4e6b-9982-328887a17531":["conditions"],"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.sys_updated_on","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Sys Updated On","type":"glide_date_time","base_type":"glide_date_time","usedInstances":{"4513146b-39f3-4fee-9bf6-238ae3b6a14d":["values"],"a6f5e8f5-309d-4204-8cd5-4aa12784b08a":["values"],"bdb0a5eb-100d-4389-98d4-0955bb6fe39f":["values"],"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.material_product","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Material Product","type":"reference","base_type":"reference","usedInstances":{"4513146b-39f3-4fee-9bf6-238ae3b6a14d":["values"],"a6f5e8f5-309d-4204-8cd5-4aa12784b08a":["values"],"fec7e9c9-e16a-4e6b-9982-328887a17531":["conditions"],"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record","type":"reference","base_type":"reference","usedInstances":{"4513146b-39f3-4fee-9bf6-238ae3b6a14d":["values"],"a6f5e8f5-309d-4204-8cd5-4aa12784b08a":["values"]},"attributes":{}},{"name":"793e2643-92b4-43ad-859b-bd2602f47155.status","label":"793e2643-92b4-43ad-859b-bd2602f47155➛status","type":"string","base_type":"string","usedInstances":{"3835d384-bdc2-4ae9-b873-29b7f437f2b0":["condition"]},"attributes":{}},{"name":"Updated_1.current.quantity_requested","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Quantity Requested","type":"decimal","base_type":"decimal","usedInstances":{"fec7e9c9-e16a-4e6b-9982-328887a17531":["conditions"],"bdb0a5eb-100d-4389-98d4-0955bb6fe39f":["values"],"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.requested_by","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Requested By","type":"string","base_type":"string","usedInstances":{"fec7e9c9-e16a-4e6b-9982-328887a17531":["conditions"],"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"fec7e9c9-e16a-4e6b-9982-328887a17531.Count","label":"fec7e9c9-e16a-4e6b-9982-328887a17531➛Count","type":"integer","base_type":"integer","usedInstances":{"42f974e8-ed6e-4581-9773-d4d566958ebb":["condition"]},"attributes":{}},{"name":"793e2643-92b4-43ad-859b-bd2602f47155.Record","label":"793e2643-92b4-43ad-859b-bd2602f47155➛Record","type":"reference","base_type":"reference","usedInstances":{"bdb0a5eb-100d-4389-98d4-0955bb6fe39f":["record"]},"attributes":{}},{"name":"793e2643-92b4-43ad-859b-bd2602f47155.Record.reserved_quantity","label":"793e2643-92b4-43ad-859b-bd2602f47155➛Record➛reserved_quantity","type":"decimal","base_type":"decimal","usedInstances":{"bdb0a5eb-100d-4389-98d4-0955bb6fe39f":["values"]},"attributes":{}},{"name":"Updated_1.current.related_batch_lot","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Related Batch Lot","type":"reference","base_type":"reference","usedInstances":{"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.approved_by","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Approved By","type":"reference","base_type":"reference","usedInstances":{"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.source_location","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Source Location","type":"reference","base_type":"reference","usedInstances":{"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}},{"name":"Updated_1.current.destination_location","label":"Trigger - Record Updated➛x_2056099_indust_0_inv_req Record➛Destination Location","type":"reference","base_type":"reference","usedInstances":{"d2187cba-cf9f-41d1-9f22-afd765187b60":["values"]},"attributes":{}}]</label_cache>
+        <master>true</master>
+        <name>FD - Inventory Request - Cancel Reservation and Release Stock</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">1643f74a3f054b3a8a8f4001f45d8394</parent_flow>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>published</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:53</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>4b5195b99363831092227b018bba1058</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:33</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=4b5195b99363831092227b018bba1058"/>
+    <sys_variable_value action="delete_multiple" query="document_key=4b5195b99363831092227b018bba1058"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=4b5195b99363831092227b018bba1058"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=4b5195b99363831092227b018bba1058^sys_idNOT IN4f5195b99363831092227b018bba1059"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>4b5195b99363831092227b018bba1058</id>
+        <name>FD - Inventory Request - Cancel Reservation and Release Stock</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:53</sys_created_on>
+        <sys_id>4f5195b99363831092227b018bba1059</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:53</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=4f5195b99363831092227b018bba1059"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=4b5195b99363831092227b018bba1058^sys_idNOT IN135195b99363831092227b018bba1079,835195b99363831092227b018bba105b,975195b99363831092227b018bba10aa"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</model>
+        <model_id>4b5195b99363831092227b018bba1058</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_4b5195b99363831092227b018bba1058</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:54</sys_created_on>
+        <sys_id>135195b99363831092227b018bba1079</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:32</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=135195b99363831092227b018bba1079"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</model>
+        <model_id>4b5195b99363831092227b018bba1058</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_4b5195b99363831092227b018bba1058</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:53</sys_created_on>
+        <sys_id>835195b99363831092227b018bba105b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:53</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=835195b99363831092227b018bba105b"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</model>
+        <model_id>4b5195b99363831092227b018bba1058</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_4b5195b99363831092227b018bba1058</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:54</sys_created_on>
+        <sys_id>975195b99363831092227b018bba10aa</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:54</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=975195b99363831092227b018bba10aa"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=4b5195b99363831092227b018bba1058"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=4b5195b99363831092227b018bba1058"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=4b5195b99363831092227b018bba1058^sys_idNOT INef51d5b99363831092227b018bba100d"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>ef51d5b99363831092227b018bba100d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:55</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1YbW/TMBD+K1E+gVSkAgKJfeNt0iReJDbgw4DItS+thWsX+9IuTPvvnBOn9ZIUAiwMxD61OTu+5+6e52zn9DxFK+dzsEfaIdMcjkt3JNKDNJ2kis1A0d8TNlNAz1IjWM3USbkCMqM3Z5ot/ZiAFWgBGutX+cJIDi+ko+fTj5N0ybRgaGyZHqAtYJLm1ixPYLlSDGmtnClHRmMF2PTg7nQ6Sat1gxNacM1U4Z/PsnvTBw+njx5lUovCYTalP+vMwhcPQjpasHw3ZC5fSCUs6Brfilnyh977eSfuFhTsCT8gJ9xwhj4RYhtUFHqwWGDitVZlNOXMya9QvV84yKJkhhn58cJs3kAOhJjDIcXj3YVBZThT2yeGVNFZgeAolouLbVYOJahQWMetXOFjjnLdJP9iMoQJbwqdvF+ATt46sElV3g4t5koKyFQ9NpwWTaA/4kVFhAhaKI4tdLYhZBnlzzbeG9J0qTGMAL3hfs8h9qTgb6VGysTal9nn0WsyHYsrx+CcNP4XUep5lzE1K37AlnMKFL4UPsYqGXlTymoxVuMj84vg3mcx8RhyY+v6He0mNpj8C0dLNg+UIA8KOEYVyunN6OmlpNcohF0e9oDSRmdDgL0y+s6fxDUzuIjBNDiekP1SgoiZ+8C530T3a7pvy85t2bS+HFtL6cH6M2rvEna/c2xR+H9We67Mhkh01QJnuuxQ1nuSmlhaJtyQszMcTTIkD5hbU2ixD8XlGePolvHP3wexm5HcEpCzQuHt6xaqx0ZtMNZoHEdbqfHYQL3uKNfr9kadu1S91snzEHRSnWzdVQu1Qt6iJ7VRXlhKB1ZbSpP2BBsEI4nWj3ex0M4bAWoO9NeqEToobLm400mDvyWRxjxQHb0l3+v7Rix15p4aLSTWp7C2PpohN8rdJpSGRwAaQhBaLNyHYjq9L7gHrhSIT9aTny62vnT12JLWtpIpuuXSmXfNwjItHv3magPoFyexJyzsyedofAtfHH6Vbhum0WVoMiZEFiHeNrylEaCeRWwIHKM9aFWgSy8irpDmtp8Sxrybj3TZ6juL0fXBn8P8PXi0fm40ZCbvvUbJPAnJoS43KxNcAGFSdAaglStU420z2viCtqE9MwkNJPaPgLua21T1EaN7parL3WoetfGnP5/sv021nN/sQ7v0ndSzrlrGhZZkzviC6Xl9Cmu4e0hqBsYXST0lqaeMqGve+jjCx3MGa7BlJ1hvTIqV8FIZyzNTG1a6Tvui7uAbRTiPkoEkoWsRXFtLaPYuh5ZmzsuoG3RY02oMnfGBPWJH8v0Y/pWmMLwHfPwGHh+GCXwZAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=4b5195b99363831092227b018bba1058^sys_idNOT IN2751d5b99363831092227b018bba1008,6351d5b99363831092227b018bba1006,6351d5b99363831092227b018bba100b,ab51d5b99363831092227b018bba1007,eb51d5b99363831092227b018bba1009,eb51d5b99363831092227b018bba100b"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <generation_source/>
+        <order>6</order>
+        <parent_ui_id>3835d384-bdc2-4ae9-b873-29b7f437f2b0</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>2751d5b99363831092227b018bba1008</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:55</sys_updated_on>
+        <ui_id>a6f5e8f5-309d-4204-8cd5-4aa12784b08a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VW0/bMBT+K5GfqyhpoYK+TTCkSRtosPHCqHUan7bWHDv4Uuiq/vcdx2moGNX2MGlCWp/qc/n8nYu/3G2YhhrZhHmYKeTtYcBWoEI0PvFhcTwuTk+51CI4zwv6s+Kg0HoKE9I1Cta3fxbdgCV0j5ZNNqxaSiUsaja5ux8wKSh9XGJxfFqOq1E5Gg2LYnhyVM7Go1k5FCNAPCIIBTNUFPolkqXza9z9unnV9nE/N7tMDmNF5FMMGD551AKJyByUwwGrQQvwxq7ZxNtABosgrrRa9xFLqT0Bshj75OQPuvakiHFzpMoqTL7+yLt2JfP8HDzcEHLlg+1Cq6WRFbrUE4FzCMqf7dtSwFXjpdEppS2zyzYq1PoytYT1ALvpkCU4IoFNrDMy78qY3yzN4/WO5QXNLrakcypTgepP4L2Vs+Ajnw1DhTUB8RqaRuoFb6xZyTaZuNT5QtEhnyvzSJc6udA5VJF4Tm2F/ILs5635FqyMVXwiGEreDphbuzMFzj3XQk3kDyEySZV1NfDUhphSWdn4d3TBCju620G/3O0+u73FbneSx7X4FopiJJw31XdeS1eDr5ZThyu00q+Ts0YhQz11HnxwyWSIwDSBUDUdyGbztYknwcu8Cpba6XMqhYfOavR2O6ULCBpU7Jag4R9OfRlJyRZVG0TPiiJoN7nFB6rsMAolJZo1OgeLjukZ0KSVQpFZdGhXEOeS9ZvqMtDZh90d2U1sDnkrei2ZX4LPKhOUyLTx2QyzuQla5Nl1i0SQNCftqXmtnxgjOBT59P3nXxXj/xj+zRh+K8UCScYPSXE525PiC4lKuGct7p/aToexbmK3eHp6L7S4c2a3nbPT4/Jv6XE5LtrfG1LlVNybF+W97+8Beb7/CRZP5hd9CAAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=2751d5b99363831092227b018bba1008"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id>eed5403f-133e-4de3-a813-711b3fdb1e4b</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>6351d5b99363831092227b018bba1006</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:55</sys_updated_on>
+        <ui_id>4513146b-39f3-4fee-9bf6-238ae3b6a14d</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VTU8bMRD9Kyufo9VuAhHkVkGRKrWgQsuFEmt2PUmser2LPwJplP/e8doJESVqD+0BqTnF8/nmjf32bs00NMgmzEGlkPeHAVuC8sH4xIfF8bg4PeVSC28dL+jPkoNC4yhMSNspWN3+WXQHhqo7NGyyZvVCKmFQs8nd/YBJQenjEovj03Jcj8rRaFgUw5OjshqPqnIoRoB4RCUUVKgo9EsAS+fXsLtV96rt435udhkdrREBTzFg+ORQCyQgM1AWB6wBLcC1ZsUmzngyGARxpdVqF7GQ2lFBFmKfrPxBbU+KEDdDmqzG6NsdeaIrmmfn4OCGKtfOmxRaL1pZo42cCJyBV+5s3xYDrjonWx1T+jFTdqt8oy8jJWxXYLsdsnhLILALcwbkaYzZzaJ9vN6ivKDdBUqSU7U1qN0JnDOy8i7gWTNU2FAh3kDXST3nnWmXsk8mLE0+V3TIZ6p9pKZWznUOdQCeE62QX5D9vDffgpFhik9UhpI3A2ZX9kyBtc+zEIn8wQckcbI0A480hJTayM69owZLTHA3g93l7u+z3bvY/Z3k4Vp880UxEta19XfeSNuAqxdTi0s00q2is0EhfTO1Dpy30dQSgGksQtOkIuv11y6cBC/z2hui0+U0CvfJ2urNZkoNqDSowJag5R9OfRlJyQZVH0TPiiLobnKDDzTZ4SqUFGE2aC3ME9IzoE0rhSIzaNEsIewlW4DNdJulJtmHbZPsJrCTZ9d9LHloE9oRPVndeiUox2UVhjwEiyKfvv/8qzj8Z/yfM/5bgRVI4nxIYMtqT2AvJCphnxV294C26opNFzDz+KBeKGxyZrfJmVS2/FsqW46L/veGtDYO9+aldu+rekB0738COXs3iVMIAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=6351d5b99363831092227b018bba1006"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent display_value="Update Record">baf174c8c3c232002841b63b12d3aee4</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>f9d01dd2c31332002841b63b12d3aea1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <generation_source/>
+        <order>11</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>6351d5b99363831092227b018bba100b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:55</sys_updated_on>
+        <ui_id>bdb0a5eb-100d-4389-98d4-0955bb6fe39f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VW0/bMBj9K8jPbZRbC+nbRIc0aQMNNl4Yixz7C7XmXLCdQhflv+9zbkQUAZN4GNL6VH83n3N8+vWqJjnNgKyIoYmEuD3MyJbKygbvY99dLN0oikXOK21iF79sY20K9gvLuNClpLvL11WXVOF0A4qsasI2QnIFOVldXc+I4NieLLjrRd6SBV4Q+K7rH4VesgwSz+cBBRbhCEkTkFj6zYLF81PYza58MvZ52ntw2iUKxS2ehTsjcG8g54BIUio1zEhGc05NoXZkZVSFAQWUn+VyN1ZsRG5wIrG191r8xnuPXFuXAlJj0OXGY9zr1YXTNTX0AiczU6m+lG0KwUB3onBIaSXN8TTWFZyVRhR519Ly7LsLWWX5aacJGQcMz4ORSiMIKC1Pi7ynkV5sirvzAeUJPp7VpE/KglE5nqgxSiSVsXhqAhIyHBRntCxFfhOXqtiKthmxZM6NxIOTyuIOL9XiJncos8AdlJU6Jxhft+FLqoRl8QXHYHMzI3qnjyXV+oELihjfVhZJx6znEHcy2BamRGk+4AVb6OE2s9HdChg+9cTZdX0YBeAvw2Ae+Uk4DwPK50eLKJkn3F+6fhoeeouFc972Nc2+2V9h6BCeMzR4E0OfD/ge4+3dzAtWtVIL/sjO6z5z8Gn94Gfvzfwcvic/d7TevZ0nq+tFY7d+1hNjK9CgtsDt+NwIs/tRuW7A/8rvzt6QppnX9fcSmWLQc1ilUFzjDOlYwS3CwGTT/ESmJq662uHy/VbUZChC1tj28ev+j+x9k3lpP7j+s/sBJvvhRIDk+mE/jM8+/NtBhroZiDsbPPrH65MHl31y3BJvtia8pdt+/i+Lf29ZXP8Ba5R8TOUJAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=6351d5b99363831092227b018bba100b"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="Look Up Record">b93f42810b30030085c083eb37673a63</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>ab51d5b99363831092227b018bba1007</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:55</sys_updated_on>
+        <ui_id>793e2643-92b4-43ad-859b-bd2602f47155</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY32/iOBD+V6I8Uy7hV6Bvp1ZIK+1tpW23L3sry7GdYq2xs7ZDS1H/9xsnTuAghXIFaat7QrHHnm+++WZs830VSjxn4WVolLbILnMWdsIFFkUzhg2BIcpNLvDy3s/gwKrgGcZzrGG9ZTq8XIVkxgXVTIaX3390Qk7BcEijSTaZDMdJFPX7UTQa9QmO07Q/ImmUpjFsIXDKBJjegrfgrkLQAqr8uQQfipP6+7NfelUPKk0dlH4nZE+WScoAQ4aFYZ1wjiXFVullM6IZpjdSrAdmXFrYLXTGT4Y/g79+z9llDKIirJprPpEnpRrOrrHFt1YXxBbam1ZgDfCxasJsqGth2cOPXjpr+2dnj7ftKdtcEL8A35RluBD26r/5jI/12XM+qwBvcssVZD3su7zgVNThK1HM5Zcql2GD8L5FXtXM9SsqKwyQzXKXUJchn67sdqYev9bZmHJZ4vKTQhEsmi9sreZpYR0vqzCjKONMUMSl4NJ5grQ5+TDB5uABzXGec/mAcq0WvNwVYpl3HwR8dDOhHh0X/EF2MXGRd0FYuDuF8ety+B5r7lj4C7aBxR3ncAZLvT9kiOa5RY+cPjC79l5bUWUfsfjZNu8Vh+pEleGFL53QLM2VwMasyQaZol+F46Ci3rOHykSVS0oUf0IEC+aJchrwpUeUpNwFZzZlsDSI078LqGW6Wn3LIW5GUdwlhYYc2K5mohzhcgGfUGvIWEV+vrzsdpD3bHWo6dDhvqaDJxtN52ozzLbQ67azPfa5bYO6lk7WfgZRFJ2mAbU1iN0CPqp+dwvTCfUddXme8ju+OioKDpZIZbaujifUi4ajaDIB0dLCWBQ59Va63S2AA9YHNT7Zq/HBhsbvPM4t2F7Z5Scq5/6t7HJZ8KWaqE+mkyl7/JF0/d4D52znChegEFSl0KhCl1QuEBEgKDehsTTVXmc5JHiG5kAcz8G9ZgREYhDWDGWqkBR5x+sCcaxmXIPWK+PdovjKIMcyUCCewM5YUFoHjfWhooj3FkW62fg/ZUEN3e9vAoAelNCDBvpxgR5zRx2c8JA49R11irko+QcV5RsJZFor/co99UDq9mjgjZfYN4KKTwrq/bfcNtG33nYPYP0QLekcTaZ8JlQk7zaMtzSFvU9QTDeawo1LepAut16gjXNf39XjoeXInLqJrSOz9/88Mn/Lq2Dntaff2e6ICBlJ4EUHyzLoX7AW1f2qbj7RrqqrZ91haROG00EPj5J+HEdRHNEkGidJPB6l2Qgng2xD2tdKusdWL7GBAwJtJqiBHIbqdZ8qJRiWW6K/AwL/mHrEXvTD3+5w+xD3xILfbTNdDbVyfa4aKfg3yX8V7JOT2JhFvXFMycU4iZOLQUZHFxOKhxd4kg6TPmVkkJ3yD4gf/wC1a5gWkhQAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=ab51d5b99363831092227b018bba1007"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="Look Up Records">d1c56ec50b30030085c083eb37673a50</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>43400a1587003300663ca1bb36cb0b4b</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <generation_source/>
+        <order>8</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>eb51d5b99363831092227b018bba1009</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:55</sys_updated_on>
+        <ui_id>fec7e9c9-e16a-4e6b-9982-328887a17531</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+2XW0/bMBSA/0qV56hK6IXL2wRCmjRAAsYLA8uxndbCdYLt9EKV/77jOEmzNu1gKxJoe2uOz/G5+DvH7v3Sk3jCvBOPJJJywxOpPd+bYpFZoVFYakysGJlFyn5kQdCjigmGNUOKaaam2K4+cjll0iRqgbRJyJNTXC6/pxQbRlHYJZlSoNEF40KyZpDnjxOQK44FSlVCM2K277GuCcbPGZaGm8V2o0oDwn7OmIZFMKt/o2iHaVMrz6E+lOtU4MXd/zLtLFOKFcAFQXgnS4+MuYCaSO/k/sH3OIW6HcX9IMDh4OgQtuwFwXDYIziMot6QREE0CGALgSMmQPW0iWcbsrbubbJvbRskitqgQt9jc8MkZRBNjIVmvjfBEvKCgtcSxTC9kmIlGHNpYEfPKs81fwG/kEdgNWMGGRLmVutPVPLixPEZNvjGKDiRTJWqZJxwwrSrDWUxzoQ5bcqcwlVqM3AmBkeisk5ENpGXripevUGFJ0gy4JCy1KZqYwfnkEd8M05m11WQ51wWRSmTFAnBov7CxigeZcaGs/QA7AnsgyY4TbkcWb6mvDCGUCbdkYCPbiySGfjUfCS7rje6UFjcPQf5WSG+w0AnJHEB24Bx7nt6oU8F1nqVCtQQAZKiSqxMARVVcCWwdkTx1HwBL1NWxpz79WhzaqupNkcHwWAYHB9Dd9FMGxTYNkNmLjdbe6fu3/Hdjxp835YxroVcUl18omLtV6oLs86lWyipDvZG9dFnYrpM44NBDQFxAYQgd4Q6yVRRyikiAnCyC6vL4w9a4Pf060SZ4lZqdEAhw5ps8o47Jum8vILtYPfsPm6wfQPeOrcugpagqsld0LA+tSthyXZvb2z3DvbD9rJOsy5dS5Wr1rTnUum/WH28rg9wNQzCvK133uQzfKvPg3yzN3tvas4mXm7lbAtle+7hmKKYM2GfTYJL9zTLLD7v1twUjcG09IdcJ6IZpyNmVt4rLZqYGRZPbeslcag6qCK9d5kH0AH2SQqH0nzph5ujIHzFFOjvnALDsDEFLvC8c137bQ2mnATQrGxUlLc5Cr7W0pLT/h5fbx/2ngvhYbm1jULfrX6Km/Dd7jZXwU1+X4EvOdx5iQ0a+F5Z6DrRYu0Oq52X7Lrx0/JSO7cLay+1g3/zpfYh/3342y6PPf8tefgJfXVaX3MRAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=eb51d5b99363831092227b018bba1009"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <generation_source/>
+        <order>12</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>eb51d5b99363831092227b018bba100b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:55</sys_updated_on>
+        <ui_id>d2187cba-cf9f-41d1-9f22-afd765187b60</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1WwVLbMBD9FY/OqcdOIAPcOlBOLUyh5UKJZm0pRIMiG0kOSTP59z7ZjnEpAQ69MENO0e57q93Vs1bXa2ZoLtkR85RpyevFgC1IV8G45MNkf5wcHnJlROU8T/Bnwf3SACSUKzWtrt6CLckispeWHa1ZPlNaWGnY0fXNgCkB8jiVyf5hOs5H6Wg0TJLhwV6ajUdZOhQjknIPITRlUgP6IySK9XN5+1X5rO1rnxudNY7CipBPMmBy6aUREolMSTs5YHMygnxhV+zI2woGK0mcG73qEDNlPAKygF069RvbHiQBN5WoLJeNr1vytlmNeXpCni4ROfeVbaH5rFC5dE1PhJxSpf1x39YAzkuvCtNQ6jJbdqGruTlrWsK6ANuzgaVySEKWoc6QeVvG9HJWPFxsszzFyYWWtE5d5KS7FXlvVVb5kM+aSS3nCMTnVJbK3PLSFgtVk5HLPL7VWMRTXTxgU6duTUx5SDxGWyk+hf2kNl+RVaGKbwgD8mbA3Moda3LusRY0kd9XIZOmsrYG3rQhUHKrSv8ZGyxkm+5m0Am71rLridpbMq5Jhwdx/KqSZAQ9aknokZVO2gUF78R58pVr/Kiq1FCwmMwJOlakQ80CR9j41+ufJYqTgqdxXln008dPkZvNBJ8EPFAWd77I73ZzkU9teUJACPTCeOVXu7lbBIq5R+1wgpaRz2dcFy/ku92zg4LWheDZCzv2USDhNKGHVzg9ECj9UwnI3TwohFettTCguqKy+MSCXAP9BebfQFAhTq9MvXoD/zl03SJyW9rFo3yinPBNaS1F9ClqZIW/27OJWsGJKKP8LvJFRAtSur6g6pOOJ1++/3vLfoj3Q7zvR7yvjn0h8WDYNfbTrDf2T5XUwj3O/e5a3858CYmjZN5c80/mfuuMrlpnO/vT/zX703FS/97RC6Ap7t0/AHpvvR1PgZs/nl6EQOUKAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=eb51d5b99363831092227b018bba100b"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=4b5195b99363831092227b018bba1058"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=4b5195b99363831092227b018bba1058^sys_idNOT IN2f5195b99363831092227b018bba10cf,6351d5b99363831092227b018bba1003,ab5195b99363831092227b018bba10cc,ab51d5b99363831092227b018bba1004,d35195b99363831092227b018bba10ca,e35195b99363831092227b018bba10ce"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6a5155b99363831092227b018bba10e6</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>7</order>
+        <outputs_assigned/>
+        <parent_ui_id>3835d384-bdc2-4ae9-b873-29b7f437f2b0</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>2f5195b99363831092227b018bba10cf</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:32</sys_updated_on>
+        <ui_id>08272b9e-f2f4-4f5b-88b4-0f94fdb72abb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">a65155b99363831092227b018bba10ea</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>9</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>6351d5b99363831092227b018bba1003</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:33</sys_updated_on>
+        <ui_id>42f974e8-ed6e-4581-9773-d4d566958ebb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXW+bMBT9K5Ofk4jvQN6qVJUqdau0Vn3ZKnQxl8SawQybtgzlv+8aSFK1mdqtr3vDx77X5xzugZ6p1tSt0bfqTGuxqdjq2/2Micpi9NwzkbMVYzNWQYn0xFWVCyNURdADyNZifV8gX2LCkzm6EcwDjLJ5ksTe3PfiOF6Cuwx9d7FWbWV2u++t4/joUH0udC2hu/tgG74VMm9wol5DQ0wNNmzVv9gapCQQFqHrhNz3It9zHC8O3CzyM9fLfcAgooYSMpR0dP1M6wn5pqstpE0jqs20vppKb/aganJLxXNmDJ8MVjkSiQKkxhkrocrBqKZjK9O0BDQI+XUlu8OJrajMaH8JT1r8QtvJcezJAkkXx3H3sEwnT0e4OAcDRKXlpm2mo3yrBEc9OpJjAa006+fYeOC6HlQOJQYyua9Wsi2rL6MZ7NBg/woJaTWRwNoqtdwnIcXNVj1+3bO8ENXgyrQpFQd5WIEh77LWWD49Q4klNUpLqGtyNK0b9SCGYuJSLjaSFotCqke61M7vArglviBjYXFB+PkA30EjrIrP1IaKaRZ0qnkj6r224XK2mzHd6bUErY8aydz0Z2sZjoonbelojy0ZGp3RxQ84ydjNemZZXamN4JeVNkCybzp9aUcw8IpkGWCMeYRBGLvJcunnQR5GURLGmGVsGtXCgcJNuHt6VME/MZbpAByj+Tpl7O2IvOPeVxH5NE7+nxn9TVrcN9IyIe+KSxj+T8uH02JpZqAFT4c/A7WzH6x/jMtk+oVAmZ8coVN5urczPbI6vA0uNJXdWuxy/8OyGx2NnE3dEXpUzQ8r+4jtfgOvhUSU+gYAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6a5155b99363831092227b018bba10ba</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>3</order>
+        <outputs_assigned/>
+        <parent_ui_id>eed5403f-133e-4de3-a813-711b3fdb1e4b</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>ab5195b99363831092227b018bba10cc</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:32</sys_updated_on>
+        <ui_id>b187ebad-afa2-44b7-820b-3896bf097cf9</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">e65155b99363831092227b018bba10ec</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>10</order>
+        <outputs_assigned/>
+        <parent_ui_id>42f974e8-ed6e-4581-9773-d4d566958ebb</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>ab51d5b99363831092227b018bba1004</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:33</sys_updated_on>
+        <ui_id>6a447b9f-d043-4c10-be2b-c8336ce401cd</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">6a5155b99363831092227b018bba10b6</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>1</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:54</sys_created_on>
+        <sys_id>d35195b99363831092227b018bba10ca</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:32</sys_updated_on>
+        <ui_id>eed5403f-133e-4de3-a813-711b3fdb1e4b</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VUU/bMBD+K5OfqyhpWgZ9QzCkSjCmlSGhCUUX+9JaOHZmO4Us6n/fOUlbNDrBxuvecp/vzt93uS9pmal9VXt3Y06dk0vNZt/vR0zqgNFzy6RgM8ZGTEOJ9MSNFtJLowlag6oD1rbfKgEeRZZEvLYWtY8sqg6Rek2hsU3mvOEPm8188enqy80dlQvpKgXN7fu68JVUgpJ74hVY4unRsln721En5ASmxTSJpzwdH6XjOB4fT5L8KM2TsUgBJ0fUUEGOilLPnik9IN43VYCct1Ivh/hyKF1sQWNFoDKORwyfPGqBRKIA5XDEStAklzSxmbc1ARZBXGvV7DJWUvt++CU8OfkTQ6c4DpkFki6O/ekuzIaR9nBxDh6ISs19bYdUvjKSo+snIrCAWvmz51ifcF11KrsSD7naVhtVl/pzPwy2a7B9g4TUjkhgFZQG7oOQYrEyj1+3LC+k7qYyHCrDQe0i8DS7vPaBT8tQYUmNshKqiiaaVdasZVdMXMpoqSiICmUe6dKwvRHwQDyiwUJ0Qfh5B9+ClUHFFbWhYtoFlzluZbXV1l3ONiPmGnemwLm9Rhpu9qMODHvFg7asH08o6Rqd0sVrHGRsRi0LrC7NUvK5dh5I9qJx87CCiGI6idMiSVOcCEzhOEk/JkmeFiJPcJKzYVWLGIrkhCeHVxXSA2uZdcDemC9Nxl63yBvufWGRD/3m/5nR37glecUtA/Imu0yn/93ybrcEmjk4ybPuv0DtwgfrH+0yDP1CohIHV+iQn+7DTvesdm+DS0dlNwGbb39X4aChlQuu20OPxj4E2Xts8wumsVQg+AYAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">2a5155b99363831092227b018bba10be</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Inventory Request - Cancel Reservation and Release Stock">4b5195b99363831092227b018bba1058</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>5</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:55</sys_created_on>
+        <sys_id>e35195b99363831092227b018bba10ce</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:32</sys_updated_on>
+        <ui_id>3835d384-bdc2-4ae9-b873-29b7f437f2b0</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXW+bMBT9K5OfkwgwJCFvVapKlbpVWqu+bBW6/iCxZjDDpi1D+e+7BpJUbaZ26+ve8LHv9TmHe6AjpnFV4+ytObNWbUqy+nY/Iar0GD53RAmyImRCSigkPnFTCuWUKRF6AN14rOsWKZXRPKbTNGLxNKYgpsskZVMmonkQ5fEiTJKZdeAau9t9b4KAihAbCGUrDe3dR/vwrdKiliP5Cmrk6mRNVt2LrV5MCkmehEHCaTSnURBEyzhkc8rCSFCQ8RwbamBS49H1M7UnDHBt5SHralVuxvXVWHqzB00tPJUomBD55GQpJJLIQVs5IQWUApypW7JydYNALUFcl7o9nNiq0g0voIAnq35J3ykI/Mlcoi4uh93DMhtNHeD8HBwglYa7ph6P8q1RXNrBESFzaLRbP8eGA9dVr7IvccD0vtropii/DGaQQ4P9O0SksUhCVl6p5z4KyW+25vHrnuWFKntXxk1tOOjDChx6xxrn+XREallgo6yAqkJHs6o2D6ovRi7FbKNxMcu1ecRL/QTPgHviMzQWZheIn/fwHdTKq/iMbbAYZ8Fmlteq2mvrLye7CbGtXWuw9qgRzc1+Np7hoHjUlg32+JK+0Rle/CBHGbtJRzyrK7NR/LLEoUXZN6299CNIlzQRdBkzwaMYZMqWCxqlbJHHdJFHLCDjqOYB5GHKw9OjCvTEWGY9cAzn65iRtyPyjntfReTTMPl/ZvQ3aQnfSMuIvCsuSfI/LR9Oi6fJwCqe9f8GbOc/WP8Yl9H0CyW1ODlCp/J072d6YHV4G1xZLLv12OX+l+U3Whw5n7oj9GjqH172Edv9BhCwQqv8BgAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=4b5195b99363831092227b018bba1058"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=4b5195b99363831092227b018bba1058"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_4b5195b99363831092227b018bba1058</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:54</sys_created_on>
+        <sys_id>175195b99363831092227b018bba10b1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:54</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_4b5195b99363831092227b018bba1058</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:54</sys_created_on>
+        <sys_id>1f5195b99363831092227b018bba10a5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:54</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_4b5195b99363831092227b018bba1058</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:54</sys_created_on>
+        <sys_id>975195b99363831092227b018bba1074</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:16:54</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_4b5195b99363831092227b018bba1058"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_4b5195b99363831092227b018bba1058"/>
+    <sys_hub_flow action="UPDATE">
+        <sys_id>1643f74a3f054b3a8a8f4001f45d8394</sys_id>
+        <latest_snapshot>4b5195b99363831092227b018bba1058</latest_snapshot>
+        <compiler_build/>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=1643f74a3f054b3a8a8f4001f45d8394^sys_idNOT INb351d5b99363831092227b018bba107b"/>
+    <sys_flow_trigger_plan action="INSERT_OR_UPDATE">
+        <binding_strategy>com.snc.process_flow.engine.binding.OncePerUniqueChange</binding_strategy>
+        <plan/>
+        <plan_id>1643f74a3f054b3a8a8f4001f45d8394</plan_id>
+        <snapshot>4b5195b99363831092227b018bba1058</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 05:16:56</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>b351d5b99363831092227b018bba107b</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 05:45:34</sys_updated_on>
+        <trigger display_value="">5fe715b993a3831092227b018bba103c</trigger>
+    </sys_flow_trigger_plan>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=1643f74a3f054b3a8a8f4001f45d8394"/>
+</record_update>

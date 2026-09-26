@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element db_object_id="51948d6566744a7fa55bbe20601b5f74" label="Production Order" name="x_2056099_indust_0_production_order" type="collection">
-        <element default="0" label="Required Capacity Per Day" name="required_capacity_per_day" type="decimal"/>
-        <element default="true" label="Active" name="active" type="boolean"/>
-        <element label="Finished Product" mandatory="true" name="finished_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
         <element label="Resource Feasibility Notes" max_length="1000" name="resource_feasibility_notes" type="string"/>
-        <element label="Description" max_length="4000" name="description" type="string"/>
-        <element label="Customer Order" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
-        <element attributes="scale=2" default="0" label="Quantity Remaining" name="quantity_remaining" type="decimal"/>
-        <element label="Assigned Resource" name="assigned_resource" reference="x_2056099_indust_0_prod_res" type="reference"/>
-        <element default="medium" label="Priority" name="priority" type="choice">
+        <element default="medium" label="Priority" max_length="40" name="priority" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
                 <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
                 <element inactive_on_update="false" label="High" sequence="2" value="high"/>
+                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
                 <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
             </choice>
         </element>
-        <element label="Actual End Date" name="actual_end_date" type="glide_date_time"/>
-        <element attributes="scale=2" default="0" label="Quantity Produced" name="quantity_produced" type="decimal"/>
-        <element label="Assigned Production Planner" name="assigned_planner" reference="sys_user" type="reference"/>
-        <element label="Production Location" mandatory="true" name="production_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Planned End Date" name="planned_end_date" type="glide_date_time"/>
+        <element label="Planned End Date" max_length="40" name="planned_end_date" type="glide_date_time"/>
+        <element attributes="scale=2" default="1" label="Quantity Planned" mandatory="true" max_length="15" name="quantity_planned" type="decimal"/>
+        <element default="0" label="Required Capacity Per Day" max_length="15" name="required_capacity_per_day" type="decimal"/>
+        <element label="Description" max_length="4000" name="description" type="string"/>
+        <element label="Actual End Date" max_length="40" name="actual_end_date" type="glide_date_time"/>
         <element label="Notes" max_length="4000" name="notes" type="string"/>
-        <element default="not_checked" label="Resource Feasibility Status" name="resource_feasibility_status" type="choice">
+        <element label="Actual Start Date" max_length="40" name="actual_start_date" type="glide_date_time"/>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="Customer Order" max_length="32" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
+        <element attributes="scale=2" default="0" label="Quantity Produced" max_length="15" name="quantity_produced" type="decimal"/>
+        <element default="not_checked" label="Resource Feasibility Status" max_length="40" name="resource_feasibility_status" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Resource Missing" sequence="4" value="resource_missing"/>
                 <element inactive_on_update="false" label="Capacity Shortage" sequence="3" value="capacity_shortage"/>
                 <element inactive_on_update="false" label="Under Maintenance" sequence="6" value="under_maintenance"/>
-                <element inactive_on_update="false" label="Resource Unavailable" sequence="5" value="resource_unavailable"/>
                 <element inactive_on_update="false" label="Feasible" sequence="2" value="feasible"/>
-                <element inactive_on_update="false" label="Resource Missing" sequence="4" value="resource_missing"/>
+                <element inactive_on_update="false" label="Resource Unavailable" sequence="5" value="resource_unavailable"/>
                 <element inactive_on_update="false" label="Not Checked" sequence="1" value="not_checked"/>
             </choice>
         </element>
-        <element label="Planned Start Date" name="planned_start_date" type="glide_date_time"/>
-        <element attributes="scale=2" default="1" label="Quantity Planned" mandatory="true" name="quantity_planned" type="decimal"/>
-        <element label="Actual Start Date" name="actual_start_date" type="glide_date_time"/>
         <element display="true" label="Production Order Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
-        <element default="draft" label="Status" name="status" type="choice">
+        <element default="draft" label="Status" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
-                <element inactive_on_update="false" label="Cancelled" sequence="7" value="cancelled"/>
-                <element inactive_on_update="false" label="Planned" sequence="2" value="planned"/>
+                <element inactive_on_update="false" label="Materials Reserved" sequence="4" value="materials_reserved"/>
                 <element inactive_on_update="false" label="Material Check" sequence="3" value="material_check"/>
                 <element inactive_on_update="false" label="On Hold" sequence="8" value="on_hold"/>
-                <element inactive_on_update="false" label="In Production" sequence="5" value="in_production"/>
-                <element inactive_on_update="false" label="Materials Reserved" sequence="4" value="materials_reserved"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="7" value="cancelled"/>
+                <element inactive_on_update="false" label="Planned" sequence="2" value="planned"/>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
                 <element inactive_on_update="false" label="Completed" sequence="6" value="completed"/>
+                <element inactive_on_update="false" label="In Production" sequence="5" value="in_production"/>
             </choice>
         </element>
+        <element label="Finished Product" mandatory="true" max_length="32" name="finished_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="Assigned Resource" max_length="32" name="assigned_resource" reference="x_2056099_indust_0_prod_res" type="reference"/>
+        <element label="Production Location" mandatory="true" max_length="32" name="production_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element attributes="scale=2" default="0" label="Quantity Remaining" max_length="15" name="quantity_remaining" type="decimal"/>
+        <element label="Assigned Production Planner" max_length="32" name="assigned_planner" reference="sys_user" type="reference"/>
+        <element label="Planned Start Date" max_length="40" name="planned_start_date" type="glide_date_time"/>
         <index name="index">
             <element name="assigned_planner"/>
         </index>
@@ -60,7 +60,10 @@
         <index name="index4">
             <element name="finished_product"/>
         </index>
-        <index name="index5">
+        <index name="index5" unique="true">
+            <element name="number"/>
+        </index>
+        <index name="index6">
             <element name="production_location"/>
         </index>
     </element>

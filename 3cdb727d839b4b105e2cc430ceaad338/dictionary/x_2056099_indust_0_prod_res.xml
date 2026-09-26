@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" audit="true" db_object_id="2409684e4d8c432a8c8feb4eafa0897c" label="Production Resource" name="x_2056099_indust_0_prod_res" type="collection">
-        <element label="Capacity Unit" mandatory="true" name="capacity_unit" type="choice">
+        <element label="Maintenance Required" mandatory="true" max_length="40" name="maintenance_required" type="boolean"/>
+        <element default="available" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Hours" sequence="1" value="hours"/>
-                <element inactive_on_update="false" label="Metres" sequence="5" value="metres"/>
-                <element inactive_on_update="false" label="Units" sequence="2" value="units"/>
-                <element inactive_on_update="false" label="Kg" sequence="3" value="kg"/>
-                <element inactive_on_update="false" label="Litres" sequence="4" value="litres"/>
-            </choice>
-        </element>
-        <element default="true" label="Active" mandatory="true" name="active" type="boolean"/>
-        <element display="true" label="Resource ID" mandatory="true" max_length="50" name="resource_id" type="string" unique="true"/>
-        <element label="Maintenance Required" mandatory="true" name="maintenance_required" type="boolean"/>
-        <element label="Shift End" name="shift_end" type="glide_time"/>
-        <element label="Notes" max_length="1000" name="notes" type="string"/>
-        <element label="Resource Type" mandatory="true" name="resource_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Machine" sequence="1" value="machine"/>
-                <element inactive_on_update="false" label="Work Center" sequence="2" value="work_center"/>
-                <element inactive_on_update="false" label="Workforce" sequence="3" value="workforce"/>
-            </choice>
-        </element>
-        <element default="0" label="Capacity Per Day" mandatory="true" name="capacity_per_day" type="decimal"/>
-        <element default="100" label="Efficiency Percentage" mandatory="true" name="efficiency_percentage" type="decimal"/>
-        <element label="Resource Name" mandatory="true" max_length="200" name="resource_name" type="string"/>
-        <element label="Production Area" name="production_area" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element default="available" label="Status" mandatory="true" name="status" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Busy" sequence="2" value="busy"/>
+                <element inactive_on_update="false" label="Available" sequence="1" value="available"/>
                 <element inactive_on_update="false" label="Unavailable" sequence="4" value="unavailable"/>
                 <element inactive_on_update="false" label="Maintenance" sequence="3" value="maintenance"/>
-                <element inactive_on_update="false" label="Available" sequence="1" value="available"/>
+                <element inactive_on_update="false" label="Busy" sequence="2" value="busy"/>
             </choice>
         </element>
-        <element label="Shift Start" name="shift_start" type="glide_time"/>
+        <element default="0" label="Capacity Per Day" mandatory="true" max_length="15" name="capacity_per_day" type="decimal"/>
+        <element label="Capacity Unit" mandatory="true" max_length="40" name="capacity_unit" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Kg" sequence="3" value="kg"/>
+                <element inactive_on_update="false" label="Units" sequence="2" value="units"/>
+                <element inactive_on_update="false" label="Metres" sequence="5" value="metres"/>
+                <element inactive_on_update="false" label="Litres" sequence="4" value="litres"/>
+                <element inactive_on_update="false" label="Hours" sequence="1" value="hours"/>
+            </choice>
+        </element>
+        <element label="Shift End" max_length="40" name="shift_end" type="glide_time"/>
+        <element default="100" label="Efficiency Percentage" mandatory="true" max_length="15" name="efficiency_percentage" type="decimal"/>
+        <element label="Shift Start" max_length="40" name="shift_start" type="glide_time"/>
+        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
+        <element label="Notes" max_length="1000" name="notes" type="string"/>
+        <element label="Resource Name" mandatory="true" max_length="200" name="resource_name" type="string"/>
+        <element display="true" label="Resource ID" mandatory="true" max_length="50" name="resource_id" type="string" unique="true"/>
+        <element label="Resource Type" mandatory="true" max_length="40" name="resource_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Workforce" sequence="3" value="workforce"/>
+                <element inactive_on_update="false" label="Work Center" sequence="2" value="work_center"/>
+                <element inactive_on_update="false" label="Machine" sequence="1" value="machine"/>
+            </choice>
+        </element>
+        <element label="Production Area" max_length="32" name="production_area" reference="x_2056099_indust_0_inv_loc" type="reference"/>
         <index name="index">
             <element name="production_area"/>
         </index>

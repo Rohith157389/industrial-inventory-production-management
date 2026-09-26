@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="a63ab38a36584ed1a15a3d0c8a817930" label="Customer Feedback" name="x_2056099_indust_0_cust_fb" type="collection">
+        <element label="Comments / Suggestions" max_length="4000" name="comments" type="string"/>
+        <element label="Product Quality" mandatory="true" name="product_quality_rating" type="integer"/>
+        <element label="Delivery Experience" mandatory="true" name="delivery_rating" type="integer"/>
+        <element label="Overall Satisfaction" mandatory="true" name="overall_rating" type="integer"/>
+        <element label="Customer" name="customer" reference="x_2056099_indust_0_cust_master" type="reference"/>
+        <element label="Customer Order" mandatory="true" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
+        <element default="submitted" label="Status" max_length="40" name="status" type="string"/>
+        <element label="Ordering Experience" mandatory="true" name="ordering_rating" type="integer"/>
+        <element label="Submitted Date" mandatory="true" name="submitted_date" type="glide_date_time"/>
+        <index name="index">
+            <element name="customer"/>
+        </index>
+        <index name="index2">
+            <element name="customer_order"/>
+        </index>
+    </element>
+</database>
