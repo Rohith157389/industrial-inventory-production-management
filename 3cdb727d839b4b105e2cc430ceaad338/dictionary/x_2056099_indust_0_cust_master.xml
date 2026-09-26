@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element db_object_id="5e01397d79984cb29575b8554cb94c21" label="Customer Master" name="x_2056099_indust_0_cust_master" type="collection">
-        <element display="true" label="Customer Name" mandatory="true" max_length="200" name="customer_name" type="string"/>
-        <element label="Primary Contact Email" max_length="200" name="primary_contact_email" type="string"/>
-        <element label="Industry" max_length="100" name="industry" type="string"/>
         <element label="Customer ID" mandatory="true" max_length="50" name="customer_id" type="string" unique="true"/>
-        <element default="0" label="Credit Limit" max_length="20" name="credit_limit" type="currency"/>
-        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
-        <element label="Payment Terms" max_length="40" name="payment_terms" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Net 60" sequence="5" value="net_60"/>
-                <element inactive_on_update="false" label="Advance" sequence="1" value="advance"/>
-                <element inactive_on_update="false" label="Net 45" sequence="4" value="net_45"/>
-                <element inactive_on_update="false" label="Net 30" sequence="3" value="net_30"/>
-                <element inactive_on_update="false" label="Net 15" sequence="2" value="net_15"/>
-            </choice>
-        </element>
         <element label="Primary Contact Phone" max_length="50" name="primary_contact_phone" type="string"/>
+        <element display="true" label="Customer Name" mandatory="true" max_length="200" name="customer_name" type="string"/>
+        <element default="0" label="Credit Limit" max_length="20" name="credit_limit" type="currency"/>
+        <element label="Notes" max_length="1000" name="notes" type="string"/>
         <element label="Customer Type" mandatory="true" max_length="40" name="customer_type" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Distributor" sequence="2" value="distributor"/>
+                <element inactive_on_update="false" label="OEM" sequence="1" value="oem"/>
+                <element inactive_on_update="false" label="Internal Customer" sequence="5" value="internal_customer"/>
                 <element inactive_on_update="false" label="End Customer" sequence="4" value="end_customer"/>
                 <element inactive_on_update="false" label="Dealer" sequence="3" value="dealer"/>
-                <element inactive_on_update="false" label="Distributor" sequence="2" value="distributor"/>
-                <element inactive_on_update="false" label="Internal Customer" sequence="5" value="internal_customer"/>
-                <element inactive_on_update="false" label="OEM" sequence="1" value="oem"/>
             </choice>
         </element>
-        <element label="Notes" max_length="1000" name="notes" type="string"/>
-        <index name="index" unique="true">
+        <element label="Primary Contact Email" max_length="200" name="primary_contact_email" type="string"/>
+        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
+        <element label="Industry" max_length="100" name="industry" type="string"/>
+        <element label="Payment Terms" max_length="40" name="payment_terms" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Net 30" sequence="3" value="net_30"/>
+                <element inactive_on_update="false" label="Net 15" sequence="2" value="net_15"/>
+                <element inactive_on_update="false" label="Advance" sequence="1" value="advance"/>
+                <element inactive_on_update="false" label="Net 60" sequence="5" value="net_60"/>
+                <element inactive_on_update="false" label="Net 45" sequence="4" value="net_45"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="customer_id"/>
+        </index>
+        <index name="index2" unique="true">
             <element name="customer_id"/>
         </index>
     </element>

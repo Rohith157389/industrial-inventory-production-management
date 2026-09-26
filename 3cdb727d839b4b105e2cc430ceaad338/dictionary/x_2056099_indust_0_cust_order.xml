@@ -1,35 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element db_object_id="cb5087bf35fe4c2281db68d5d8315298" label="Customer Order" name="x_2056099_indust_0_cust_order" type="collection">
-        <element default="javascript:gs.nowDateTime()" label="Order Date" mandatory="true" max_length="40" name="order_date" type="glide_date_time"/>
-        <element label="Requested Delivery Date" mandatory="true" max_length="40" name="requested_delivery_date" type="glide_date_time"/>
-        <element label="Notes" max_length="1000" name="notes" type="string"/>
-        <element label="Delivery Location" max_length="500" name="delivery_location" type="string"/>
-        <element label="Customer" mandatory="true" max_length="32" name="customer" reference="x_2056099_indust_0_cust_master" type="reference"/>
-        <element label="Order Type" mandatory="true" max_length="40" name="order_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Repeat Order" sequence="3" value="repeat_order"/>
-                <element inactive_on_update="false" label="Urgent" sequence="2" value="urgent"/>
-                <element inactive_on_update="false" label="Contract Order" sequence="4" value="contract_order"/>
-                <element inactive_on_update="false" label="Standard" sequence="1" value="standard"/>
-            </choice>
-        </element>
         <element label="Special Instructions" max_length="1000" name="special_instructions" type="string"/>
-        <element label="Customer Reference" max_length="100" name="customer_reference" type="string"/>
-        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
-        <element attributes="scale=2" default="0" label="Total Order Quantity" mandatory="true" max_length="15" name="total_order_quantity" type="decimal"/>
-        <element default="draft" label="Status" mandatory="true" max_length="40" name="status" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Submitted" sequence="2" value="submitted"/>
-                <element inactive_on_update="false" label="In Production" sequence="6" value="in_production"/>
-                <element inactive_on_update="false" label="Cancelled" sequence="9" value="cancelled"/>
-                <element inactive_on_update="false" label="Rejected" sequence="5" value="rejected"/>
-                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
-                <element inactive_on_update="false" label="Completed" sequence="8" value="completed"/>
-                <element inactive_on_update="false" label="Approved" sequence="4" value="approved"/>
-                <element inactive_on_update="false" label="Partially Completed" sequence="7" value="partially_completed"/>
-                <element inactive_on_update="false" label="Under Validation" sequence="3" value="under_validation"/>
-            </choice>
-        </element>
         <element default="medium" label="Priority" mandatory="true" max_length="40" name="priority" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
@@ -38,11 +9,43 @@
                 <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
             </choice>
         </element>
+        <element label="Notes" max_length="1000" name="notes" type="string"/>
+        <element label="Customer Reference" max_length="100" name="customer_reference" type="string"/>
+        <element label="Delivery Location" max_length="500" name="delivery_location" type="string"/>
+        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
         <element display="true" label="Order Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
+        <element label="Customer" mandatory="true" max_length="32" name="customer" reference="x_2056099_indust_0_cust_master" type="reference"/>
+        <element attributes="scale=2" default="0" label="Total Order Quantity" mandatory="true" max_length="15" name="total_order_quantity" type="decimal"/>
+        <element label="Requested Delivery Date" mandatory="true" max_length="40" name="requested_delivery_date" type="glide_date_time"/>
+        <element default="javascript:gs.nowDateTime()" label="Order Date" mandatory="true" max_length="40" name="order_date" type="glide_date_time"/>
+        <element label="Order Type" mandatory="true" max_length="40" name="order_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Contract Order" sequence="4" value="contract_order"/>
+                <element inactive_on_update="false" label="Repeat Order" sequence="3" value="repeat_order"/>
+                <element inactive_on_update="false" label="Urgent" sequence="2" value="urgent"/>
+                <element inactive_on_update="false" label="Standard" sequence="1" value="standard"/>
+            </choice>
+        </element>
+        <element default="draft" label="Status" mandatory="true" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="9" value="cancelled"/>
+                <element inactive_on_update="false" label="Rejected" sequence="5" value="rejected"/>
+                <element inactive_on_update="false" label="Completed" sequence="8" value="completed"/>
+                <element inactive_on_update="false" label="Approved" sequence="4" value="approved"/>
+                <element inactive_on_update="false" label="Partially Completed" sequence="7" value="partially_completed"/>
+                <element inactive_on_update="false" label="Under Validation" sequence="3" value="under_validation"/>
+                <element inactive_on_update="false" label="In Production" sequence="6" value="in_production"/>
+                <element inactive_on_update="false" label="Submitted" sequence="2" value="submitted"/>
+            </choice>
+        </element>
         <index name="index">
             <element name="customer"/>
         </index>
-        <index name="index2" unique="true">
+        <index name="index2">
+            <element name="number"/>
+        </index>
+        <index name="index3" unique="true">
             <element name="number"/>
         </index>
     </element>

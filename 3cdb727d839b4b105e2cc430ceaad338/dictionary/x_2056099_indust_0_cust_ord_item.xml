@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element db_object_id="df87e8ad12714caca01fcd352285f1df" label="Customer Order Item" name="x_2056099_indust_0_cust_ord_item" type="collection">
+        <element label="Customer Order" mandatory="true" max_length="32" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
+        <element default="pending" label="Item Status" mandatory="true" max_length="40" name="item_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Completed" sequence="7" value="completed"/>
+                <element inactive_on_update="false" label="Material Check" sequence="3" value="material_check"/>
+                <element inactive_on_update="false" label="Partially Completed" sequence="6" value="partially_completed"/>
+                <element inactive_on_update="false" label="Validated" sequence="2" value="validated"/>
+                <element inactive_on_update="false" label="In Production" sequence="5" value="in_production"/>
+                <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
+                <element inactive_on_update="false" label="Approved" sequence="4" value="approved"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="8" value="cancelled"/>
+            </choice>
+        </element>
         <element label="Special Instructions" max_length="1000" name="special_instructions" type="string"/>
         <element label="Unit of Measure" mandatory="true" max_length="40" name="unit_of_measure" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Metres" sequence="4" value="metres"/>
                 <element inactive_on_update="false" label="Litres" sequence="3" value="litres"/>
                 <element inactive_on_update="false" label="Kg" sequence="2" value="kg"/>
                 <element inactive_on_update="false" label="Nos" sequence="1" value="nos"/>
-                <element inactive_on_update="false" label="Metres" sequence="4" value="metres"/>
             </choice>
         </element>
+        <element label="Requested Delivery Date" max_length="40" name="requested_delivery_date" type="glide_date_time"/>
+        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
         <element label="Notes" max_length="1000" name="notes" type="string"/>
+        <element attributes="scale=2" default="0" label="Quantity Ordered" mandatory="true" max_length="15" name="quantity_ordered" type="decimal"/>
+        <element display="true" label="Order Item Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
         <element default="medium" label="Priority" mandatory="true" max_length="40" name="priority" type="choice">
             <choice>
                 <element inactive_on_update="false" label="High" sequence="2" value="high"/>
@@ -18,24 +35,7 @@
                 <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
             </choice>
         </element>
-        <element label="Customer Order" mandatory="true" max_length="32" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
-        <element label="Requested Delivery Date" max_length="40" name="requested_delivery_date" type="glide_date_time"/>
-        <element attributes="scale=2" default="0" label="Quantity Ordered" mandatory="true" max_length="15" name="quantity_ordered" type="decimal"/>
         <element label="Material / Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
-        <element default="pending" label="Item Status" mandatory="true" max_length="40" name="item_status" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="In Production" sequence="5" value="in_production"/>
-                <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
-                <element inactive_on_update="false" label="Cancelled" sequence="8" value="cancelled"/>
-                <element inactive_on_update="false" label="Approved" sequence="4" value="approved"/>
-                <element inactive_on_update="false" label="Completed" sequence="7" value="completed"/>
-                <element inactive_on_update="false" label="Material Check" sequence="3" value="material_check"/>
-                <element inactive_on_update="false" label="Partially Completed" sequence="6" value="partially_completed"/>
-                <element inactive_on_update="false" label="Validated" sequence="2" value="validated"/>
-            </choice>
-        </element>
-        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
-        <element display="true" label="Order Item Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
         <index name="index">
             <element name="customer_order"/>
         </index>
@@ -43,6 +43,9 @@
             <element name="material_product"/>
         </index>
         <index name="index3" unique="true">
+            <element name="number"/>
+        </index>
+        <index name="index4">
             <element name="number"/>
         </index>
     </element>

@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="e9e1c2d5894542d594631829f6e91631" label="Quality Inspection" name="x_2056099_indust_0_qc_insp" type="collection">
-        <element default="0" label="Quantity Failed" mandatory="true" max_length="15" name="quantity_failed" type="decimal"/>
-        <element choice="1" label="Inspection Type" mandatory="true" max_length="40" name="inspection_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Weekly Quality Inspection" sequence="4" value="weekly_quality_inspection"/>
-                <element inactive_on_update="false" label="Final Product" sequence="3" value="final_product"/>
-                <element inactive_on_update="false" label="In-Process" sequence="2" value="in_process"/>
-                <element inactive_on_update="false" label="Return Inspection" sequence="5" value="return_inspection"/>
-                <element inactive_on_update="false" label="Incoming Material" sequence="1" value="incoming_material"/>
-            </choice>
-        </element>
+        <element label="Certificate Number" max_length="100" name="certificate_number" type="string"/>
         <element label="Batch/Lot" mandatory="true" max_length="32" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
+        <element label="Comments" max_length="2000" name="comments" type="string"/>
+        <element display="true" label="Inspection Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
+        <element label="Inspector" mandatory="true" max_length="32" name="inspector" reference="sys_user" type="reference"/>
+        <element default="0" label="Quantity Passed" mandatory="true" max_length="15" name="quantity_passed" type="decimal"/>
+        <element default="0" label="Quantity Failed" mandatory="true" max_length="15" name="quantity_failed" type="decimal"/>
         <element choice="3" default="open" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
                 <element inactive_on_update="false" label="In Progress" sequence="2" value="in_progress"/>
@@ -19,25 +15,29 @@
                 <element inactive_on_update="false" label="Completed" sequence="3" value="completed"/>
             </choice>
         </element>
-        <element default="0" label="Quantity Inspected" mandatory="true" max_length="15" name="quantity_inspected" type="decimal"/>
-        <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
-        <element label="Comments" max_length="2000" name="comments" type="string"/>
         <element label="Inventory Stock" max_length="32" name="inventory_stock" reference="x_2056099_indust_0_inv_stock" type="reference"/>
+        <element default="0" label="Quantity Inspected" mandatory="true" max_length="15" name="quantity_inspected" type="decimal"/>
         <element label="Defect Details" max_length="2000" name="defect_details" type="string"/>
+        <element label="Supplier" max_length="32" name="supplier" reference="core_company" type="reference"/>
+        <element choice="1" label="Inspection Type" mandatory="true" max_length="40" name="inspection_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Incoming Material" sequence="1" value="incoming_material"/>
+                <element inactive_on_update="false" label="Return Inspection" sequence="5" value="return_inspection"/>
+                <element inactive_on_update="false" label="Weekly Quality Inspection" sequence="4" value="weekly_quality_inspection"/>
+                <element inactive_on_update="false" label="Final Product" sequence="3" value="final_product"/>
+                <element inactive_on_update="false" label="In-Process" sequence="2" value="in_process"/>
+            </choice>
+        </element>
+        <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
         <element default="javascript:gs.nowDateTime()" label="Inspection Date" mandatory="true" max_length="40" name="inspection_date" type="glide_date_time"/>
-        <element display="true" label="Inspection Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
-        <element label="Inspector" mandatory="true" max_length="32" name="inspector" reference="sys_user" type="reference"/>
         <element choice="3" default="pending" label="Result" mandatory="true" max_length="40" name="result" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Failed" sequence="3" value="failed"/>
                 <element inactive_on_update="false" label="Passed" sequence="2" value="passed"/>
                 <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
                 <element inactive_on_update="false" label="Conditional Approval" sequence="4" value="conditional_approval"/>
-                <element inactive_on_update="false" label="Failed" sequence="3" value="failed"/>
             </choice>
         </element>
-        <element label="Certificate Number" max_length="100" name="certificate_number" type="string"/>
-        <element default="0" label="Quantity Passed" mandatory="true" max_length="15" name="quantity_passed" type="decimal"/>
-        <element label="Supplier" max_length="32" name="supplier" reference="core_company" type="reference"/>
         <element label="Corrective Action Required" mandatory="true" max_length="40" name="corrective_action_required" type="boolean"/>
         <index name="index">
             <element name="batch_lot"/>
@@ -51,10 +51,13 @@
         <index name="index4">
             <element name="material_product"/>
         </index>
-        <index name="index5" unique="true">
+        <index name="index5">
             <element name="number"/>
         </index>
-        <index name="index6">
+        <index name="index6" unique="true">
+            <element name="number"/>
+        </index>
+        <index name="index7">
             <element name="supplier"/>
         </index>
     </element>

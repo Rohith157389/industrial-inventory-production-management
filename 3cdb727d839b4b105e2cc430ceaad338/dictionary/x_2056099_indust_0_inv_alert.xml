@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element db_object_id="254123f90e9e4f15b2062c44cd19a816" label="Inventory Alert" name="x_2056099_indust_0_inv_alert" type="collection">
+        <element default="0" label="Current Quantity" max_length="15" name="current_quantity" type="decimal"/>
+        <element label="Batch/Lot" max_length="32" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
+        <element label="Resolution Notes" max_length="2000" name="resolution_notes" type="string"/>
+        <element default="0" label="Threshold Quantity" max_length="15" name="threshold_quantity" type="decimal"/>
         <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="Resolved Date" max_length="40" name="resolved_date" type="glide_date_time"/>
+        <element default="javascript:gs.nowDateTime()" label="Alert Date" mandatory="true" max_length="40" name="alert_date" type="glide_date_time"/>
         <element choice="3" default="medium" label="Severity" mandatory="true" max_length="40" name="severity" type="choice">
             <choice>
-                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
-                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
                 <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
                 <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
+                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
+                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
+            </choice>
+        </element>
+        <element choice="1" label="Alert Type" mandatory="true" max_length="40" name="alert_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Below Safety Stock" sequence="2" value="below_safety_stock"/>
+                <element inactive_on_update="false" label="Quarantine" sequence="8" value="quarantine"/>
+                <element inactive_on_update="false" label="Expired Material" sequence="6" value="expired_material"/>
+                <element inactive_on_update="false" label="Expiry Warning" sequence="5" value="expiry_warning"/>
+                <element inactive_on_update="false" label="Stock Mismatch" sequence="11" value="stock_mismatch"/>
+                <element inactive_on_update="false" label="Low Stock" sequence="1" value="low_stock"/>
+                <element inactive_on_update="false" label="Overstock" sequence="10" value="overstock"/>
+                <element inactive_on_update="false" label="Material Shortage" sequence="4" value="material_shortage"/>
+                <element inactive_on_update="false" label="Quality Failure" sequence="7" value="quality_failure"/>
+                <element inactive_on_update="false" label="Reorder Required" sequence="3" value="reorder_required"/>
+                <element inactive_on_update="false" label="Supplier Delay" sequence="9" value="supplier_delay"/>
+            </choice>
+        </element>
+        <element label="Related Inventory Request" max_length="32" name="related_inventory_request" reference="x_2056099_indust_0_inv_req" type="reference"/>
+        <element label="Inventory Stock" max_length="32" name="inventory_stock" reference="x_2056099_indust_0_inv_stock" type="reference"/>
+        <element label="Alert Message" mandatory="true" max_length="2000" name="alert_message" type="string"/>
+        <element label="Assigned Group" max_length="32" name="assigned_group" reference="sys_user_group" type="reference"/>
+        <element display="true" label="Alert Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
+        <element choice="3" default="open" label="Status" mandatory="true" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Resolved" sequence="4" value="resolved"/>
+                <element inactive_on_update="false" label="Open" sequence="1" value="open"/>
+                <element inactive_on_update="false" label="In Progress" sequence="3" value="in_progress"/>
+                <element inactive_on_update="false" label="Dismissed" sequence="5" value="dismissed"/>
+                <element inactive_on_update="false" label="Acknowledged" sequence="2" value="acknowledged"/>
             </choice>
         </element>
         <element label="Assigned To" max_length="32" name="assigned_to" reference="sys_user" type="reference"/>
-        <element label="Resolution Notes" max_length="2000" name="resolution_notes" type="string"/>
-        <element default="0" label="Threshold Quantity" max_length="15" name="threshold_quantity" type="decimal"/>
-        <element label="Inventory Stock" max_length="32" name="inventory_stock" reference="x_2056099_indust_0_inv_stock" type="reference"/>
         <element label="Related Quality Inspection" max_length="32" name="related_quality_inspection" reference="x_2056099_indust_0_qc_insp" type="reference"/>
-        <element label="Alert Message" mandatory="true" max_length="2000" name="alert_message" type="string"/>
-        <element display="true" label="Alert Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
-        <element default="0" label="Current Quantity" max_length="15" name="current_quantity" type="decimal"/>
-        <element label="Resolved Date" max_length="40" name="resolved_date" type="glide_date_time"/>
-        <element choice="1" label="Alert Type" mandatory="true" max_length="40" name="alert_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Supplier Delay" sequence="9" value="supplier_delay"/>
-                <element inactive_on_update="false" label="Expired Material" sequence="6" value="expired_material"/>
-                <element inactive_on_update="false" label="Below Safety Stock" sequence="2" value="below_safety_stock"/>
-                <element inactive_on_update="false" label="Low Stock" sequence="1" value="low_stock"/>
-                <element inactive_on_update="false" label="Quarantine" sequence="8" value="quarantine"/>
-                <element inactive_on_update="false" label="Expiry Warning" sequence="5" value="expiry_warning"/>
-                <element inactive_on_update="false" label="Material Shortage" sequence="4" value="material_shortage"/>
-                <element inactive_on_update="false" label="Stock Mismatch" sequence="11" value="stock_mismatch"/>
-                <element inactive_on_update="false" label="Overstock" sequence="10" value="overstock"/>
-                <element inactive_on_update="false" label="Quality Failure" sequence="7" value="quality_failure"/>
-                <element inactive_on_update="false" label="Reorder Required" sequence="3" value="reorder_required"/>
-            </choice>
-        </element>
-        <element label="Assigned Group" max_length="32" name="assigned_group" reference="sys_user_group" type="reference"/>
-        <element choice="3" default="open" label="Status" mandatory="true" max_length="40" name="status" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="In Progress" sequence="3" value="in_progress"/>
-                <element inactive_on_update="false" label="Acknowledged" sequence="2" value="acknowledged"/>
-                <element inactive_on_update="false" label="Dismissed" sequence="5" value="dismissed"/>
-                <element inactive_on_update="false" label="Open" sequence="1" value="open"/>
-                <element inactive_on_update="false" label="Resolved" sequence="4" value="resolved"/>
-            </choice>
-        </element>
-        <element label="Batch/Lot" max_length="32" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
-        <element default="javascript:gs.nowDateTime()" label="Alert Date" mandatory="true" max_length="40" name="alert_date" type="glide_date_time"/>
-        <element label="Related Inventory Request" max_length="32" name="related_inventory_request" reference="x_2056099_indust_0_inv_req" type="reference"/>
         <index name="index">
             <element name="assigned_group"/>
         </index>
@@ -65,9 +65,12 @@
             <element name="number"/>
         </index>
         <index name="index7">
-            <element name="related_inventory_request"/>
+            <element name="number"/>
         </index>
         <index name="index8">
+            <element name="related_inventory_request"/>
+        </index>
+        <index name="index9">
             <element name="related_quality_inspection"/>
         </index>
     </element>

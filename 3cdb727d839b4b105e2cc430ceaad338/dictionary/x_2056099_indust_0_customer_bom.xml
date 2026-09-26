@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="c3a479705cb24724855ff3593a2072cc" label="Customer BOM" name="x_2056099_indust_0_customer_bom" type="collection">
-        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
-        <element label="Version" max_length="40" name="version" type="string"/>
-        <element label="Effective From" max_length="40" name="effective_from" type="glide_date_time"/>
-        <element label="Effective To" max_length="40" name="effective_to" type="glide_date_time"/>
+        <element label="Description" max_length="4000" name="description" type="string"/>
         <element default="draft" label="Status" max_length="40" name="status" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Active" sequence="2" value="active"/>
                 <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
                 <element inactive_on_update="false" label="Superseded" sequence="4" value="superseded"/>
                 <element inactive_on_update="false" label="Inactive" sequence="3" value="inactive"/>
-                <element inactive_on_update="false" label="Active" sequence="2" value="active"/>
             </choice>
         </element>
+        <element label="Version" max_length="40" name="version" type="string"/>
+        <element label="BOM Name" mandatory="true" max_length="100" name="bom_name" type="string"/>
+        <element label="Effective From" max_length="40" name="effective_from" type="glide_date_time"/>
         <element display="true" label="BOM Number" max_length="40" name="number" read_only="true" read_only_option="instance_configured" type="string" unique="true"/>
+        <element label="Finished Product" mandatory="true" max_length="32" name="finished_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
         <element label="Customer" mandatory="true" max_length="32" name="customer" reference="core_company" type="reference"/>
         <element label="Generate Material Requests" max_length="40" name="generate_material_requests" type="boolean"/>
-        <element label="Description" max_length="4000" name="description" type="string"/>
-        <element label="BOM Name" mandatory="true" max_length="100" name="bom_name" type="string"/>
-        <element label="Finished Product" mandatory="true" max_length="32" name="finished_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="Effective To" max_length="40" name="effective_to" type="glide_date_time"/>
         <index name="index">
             <element name="customer"/>
         </index>
         <index name="index2">
             <element name="finished_product"/>
         </index>
-        <index name="index3" unique="true">
+        <index name="index3">
+            <element name="number"/>
+        </index>
+        <index name="index4" unique="true">
             <element name="number"/>
         </index>
     </element>

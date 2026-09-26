@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="70aef4271c8544b188265cee0bb78bb5" label="Inventory Transaction" name="x_2056099_indust_0_inv_txn" type="collection">
+        <element label="Reason" max_length="1000" name="reason" type="string"/>
         <element choice="1" label="Transaction Type" mandatory="true" max_length="40" name="transaction_type" type="choice">
             <choice>
-                <element inactive_on_update="false" label="return" sequence="0" value="return"/>
-                <element inactive_on_update="false" label="Adjustment" sequence="6" value="adjustment"/>
-                <element inactive_on_update="false" label="Issue" sequence="4" value="issue"/>
-                <element inactive_on_update="false" label="Rework" sequence="10" value="rework"/>
+                <element inactive_on_update="false" label="Transfer" sequence="5" value="transfer"/>
+                <element inactive_on_update="false" label="Receipt" sequence="1" value="receipt"/>
                 <element inactive_on_update="false" label="Return to Supplier" sequence="9" value="return_to_supplier"/>
-                <element inactive_on_update="false" label="Release Reservation" sequence="3" value="release_reservation"/>
-                <element inactive_on_update="false" label="Reservation" sequence="2" value="reservation"/>
+                <element inactive_on_update="false" label="Issue" sequence="4" value="issue"/>
+                <element inactive_on_update="false" label="return" sequence="0" value="return"/>
                 <element inactive_on_update="false" label="Shipment" sequence="12" value="shipment"/>
                 <element inactive_on_update="false" label="Release from Quarantine" sequence="8" value="release_from_quarantine"/>
-                <element inactive_on_update="false" label="Receipt" sequence="1" value="receipt"/>
+                <element inactive_on_update="false" label="Release Reservation" sequence="3" value="release_reservation"/>
                 <element inactive_on_update="false" label="Disposal" sequence="11" value="disposal"/>
                 <element inactive_on_update="false" label="Quarantine" sequence="7" value="quarantine"/>
-                <element inactive_on_update="false" label="Transfer" sequence="5" value="transfer"/>
+                <element inactive_on_update="false" label="Reservation" sequence="2" value="reservation"/>
+                <element inactive_on_update="false" label="Rework" sequence="10" value="rework"/>
+                <element inactive_on_update="false" label="Adjustment" sequence="6" value="adjustment"/>
             </choice>
         </element>
+        <element label="Requested By" mandatory="true" max_length="32" name="requested_by" reference="sys_user" type="reference"/>
+        <element label="Related Purchase Order" max_length="100" name="related_purchase_order" type="string"/>
+        <element label="Approved By" max_length="32" name="approved_by" reference="sys_user" type="reference"/>
+        <element label="Destination Location" max_length="32" name="destination_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
         <element choice="1" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Completed" sequence="3" value="completed"/>
-                <element inactive_on_update="false" label="Approved" sequence="2" value="approved"/>
                 <element inactive_on_update="false" label="Rejected" sequence="5" value="rejected"/>
+                <element inactive_on_update="false" label="Approved" sequence="2" value="approved"/>
                 <element inactive_on_update="false" label="Cancelled" sequence="4" value="cancelled"/>
                 <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
+                <element inactive_on_update="false" label="Completed" sequence="3" value="completed"/>
             </choice>
         </element>
-        <element label="Batch/Lot" max_length="32" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
-        <element label="Source Location" max_length="32" name="source_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Requested By" mandatory="true" max_length="32" name="requested_by" reference="sys_user" type="reference"/>
         <element label="Inventory Stock" mandatory="true" max_length="32" name="inventory_stock" reference="x_2056099_indust_0_inv_stock" type="reference"/>
-        <element label="Related Purchase Order" max_length="100" name="related_purchase_order" type="string"/>
-        <element label="Destination Location" max_length="32" name="destination_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
         <element display="true" label="Transaction ID" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
-        <element default="javascript:gs.nowDateTime()" label="Transaction Date" mandatory="true" max_length="40" name="transaction_date" type="glide_date_time"/>
-        <element label="Reason" max_length="1000" name="reason" type="string"/>
-        <element label="Approved By" max_length="32" name="approved_by" reference="sys_user" type="reference"/>
-        <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
         <element label="Related Production Order" max_length="100" name="related_production_order" type="string"/>
+        <element label="Batch/Lot" max_length="32" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
+        <element default="javascript:gs.nowDateTime()" label="Transaction Date" mandatory="true" max_length="40" name="transaction_date" type="glide_date_time"/>
         <element default="0" label="Quantity" mandatory="true" max_length="15" name="quantity" type="decimal"/>
+        <element label="Source Location" max_length="32" name="source_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
         <index name="index">
             <element name="approved_by"/>
         </index>
@@ -54,13 +54,16 @@
         <index name="index5">
             <element name="material_product"/>
         </index>
-        <index name="index6" unique="true">
+        <index name="index6">
             <element name="number"/>
         </index>
-        <index name="index7">
-            <element name="requested_by"/>
+        <index name="index7" unique="true">
+            <element name="number"/>
         </index>
         <index name="index8">
+            <element name="requested_by"/>
+        </index>
+        <index name="index9">
             <element name="source_location"/>
         </index>
     </element>

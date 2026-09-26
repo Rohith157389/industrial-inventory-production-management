@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element db_object_id="bc93b6ab1139407caac7772aedd8d524" label="Production Material Requirement" name="x_2056099_indust_0_production_material" type="collection">
         <element display="true" label="Production Material Number" mandatory="true" max_length="40" name="number" type="string" unique="true"/>
-        <element attributes="scale=2" default="0" label="Remaining Quantity" max_length="15" name="remaining_quantity" type="decimal"/>
-        <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
-        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
         <element label="Unit of Measure" max_length="40" name="unit_of_measure" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Kg" sequence="2" value="kg"/>
@@ -12,24 +9,27 @@
                 <element inactive_on_update="false" label="Litres" sequence="3" value="litres"/>
             </choice>
         </element>
-        <element label="Notes" max_length="4000" name="notes" type="string"/>
+        <element label="Source Location" max_length="32" name="source_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
         <element attributes="scale=2" default="1" label="Required Quantity" mandatory="true" max_length="15" name="required_quantity" type="decimal"/>
         <element label="Batch/Lot" max_length="32" name="batch_lot" reference="x_2056099_indust_0_inv_batch" type="reference"/>
+        <element attributes="scale=2" default="0" label="Remaining Quantity" max_length="15" name="remaining_quantity" type="decimal"/>
         <element attributes="scale=2" default="0" label="Issued Quantity" max_length="15" name="issued_quantity" type="decimal"/>
-        <element attributes="scale=2" default="0" label="Reserved Quantity" max_length="15" name="reserved_quantity" type="decimal"/>
+        <element label="Material/Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
         <element label="Production Order" mandatory="true" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
         <element default="required" label="Status" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Partially Issued" sequence="4" value="partially_issued"/>
-                <element inactive_on_update="false" label="Cancelled" sequence="7" value="cancelled"/>
-                <element inactive_on_update="false" label="Reserved" sequence="3" value="reserved"/>
                 <element inactive_on_update="false" label="Material Check" sequence="2" value="material_check"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="7" value="cancelled"/>
+                <element inactive_on_update="false" label="Required" sequence="1" value="required"/>
                 <element inactive_on_update="false" label="Shortage" sequence="6" value="shortage"/>
                 <element inactive_on_update="false" label="Fully Issued" sequence="5" value="fully_issued"/>
-                <element inactive_on_update="false" label="Required" sequence="1" value="required"/>
+                <element inactive_on_update="false" label="Reserved" sequence="3" value="reserved"/>
+                <element inactive_on_update="false" label="Partially Issued" sequence="4" value="partially_issued"/>
             </choice>
         </element>
-        <element label="Source Location" max_length="32" name="source_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Notes" max_length="4000" name="notes" type="string"/>
+        <element attributes="scale=2" default="0" label="Reserved Quantity" max_length="15" name="reserved_quantity" type="decimal"/>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
         <index name="index">
             <element name="batch_lot"/>
         </index>
@@ -40,9 +40,12 @@
             <element name="number"/>
         </index>
         <index name="index4">
-            <element name="production_order"/>
+            <element name="number"/>
         </index>
         <index name="index5">
+            <element name="production_order"/>
+        </index>
+        <index name="index6">
             <element name="source_location"/>
         </index>
     </element>
