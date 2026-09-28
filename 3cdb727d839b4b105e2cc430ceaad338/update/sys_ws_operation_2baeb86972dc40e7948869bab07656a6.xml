@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>POST</http_method>
+        <name>Record Production</name>
+        <operation_script><![CDATA[(function process(request, response) {
+  var PO_TABLE = "x_2056099_indust_0_production_order";
+
+  var body = {};
+  try {
+    body = JSON.parse(request.body.dataString);
+  } catch (e) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Invalid request body" } });
+    return;
+  }
+
+  var sysId = body.sys_id;
+  var producedQty = parseFloat(body.produced_quantity);
+  var rejectedQty = parseFloat(body.rejected_quantity) || 0;
+  var notes = body.notes || "";
+
+  // Validate required fields
+  if (!sysId) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "sys_id is required" } });
+    return;
+  }
+  if (isNaN(producedQty)) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Produced Quantity is required and must be a number" } });
+    return;
+  }
+
+  // Validate non-negative
+  if (producedQty < 0) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Produced Quantity cannot be negative" } });
+    return;
+  }
+  if (rejectedQty < 0) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Rejected Quantity cannot be negative" } });
+    return;
+  }
+  if (producedQty === 0 && rejectedQty === 0) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Produced or Rejected Quantity must be greater than 0" } });
+    return;
+  }
+
+  // Look up the Production Order
+  var gr = new GlideRecord(PO_TABLE);
+  if (!gr.get(sysId)) {
+    response.setStatus(404);
+    response.setBody({ result: { success: false, error: "Production Order not found" } });
+    return;
+  }
+
+  // Validate active
+  if (gr.getValue("active") != "1") {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Production Order is inactive" } });
+    return;
+  }
+
+  // Validate status: must be in_production
+  var currentStatus = gr.getValue("status");
+  if (currentStatus == "completed") {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Cannot record production on a completed order" } });
+    return;
+  }
+  if (currentStatus == "cancelled") {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Cannot record production on a cancelled order" } });
+    return;
+  }
+  if (currentStatus != "in_production") {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Order must be In Production to record quantities. Current status: " + gr.getDisplayValue("status") } });
+    return;
+  }
+
+  // Read current quantities
+  var planned = parseFloat(gr.getValue("quantity_planned")) || 0;
+  var alreadyProduced = parseFloat(gr.getValue("quantity_produced")) || 0;
+
+  // Validate: total processed must not exceed planned
+  var totalProcessed = producedQty + rejectedQty;
+  var newTotalProduced = alreadyProduced + producedQty;
+  var totalAccountedFor = newTotalProduced + rejectedQty;
+
+  if (totalProcessed > (planned - alreadyProduced)) {
+    response.setStatus(400);
+    response.setBody({
+      result: {
+        success: false,
+        error: "Total quantity (produced " + producedQty + " + rejected " + rejectedQty + " = " + totalProcessed + ") exceeds remaining capacity (" + (planned - alreadyProduced) + "). Already produced: " + alreadyProduced + ", Planned: " + planned
+      }
+    });
+    return;
+  }
+
+  // Calculate new values
+  var newProduced = alreadyProduced + producedQty;
+  var newRemaining = planned - newProduced;
+
+  // Guard against negative remaining
+  if (newRemaining < 0) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Update would result in negative remaining quantity" } });
+    return;
+  }
+
+  // Update the record
+  gr.setValue("quantity_produced", newProduced.toString());
+  gr.setValue("quantity_remaining", newRemaining.toString());
+
+  // Append notes if provided
+  if (notes) {
+    var existingNotes = gr.getValue("notes") || "";
+    var timestamp = new GlideDateTime().getDisplayValue();
+    var userName = gs.getUserDisplayName();
+    var entry = timestamp + " [" + userName + "] Recorded: +" + producedQty + " produced";
+    if (rejectedQty > 0) entry += ", " + rejectedQty + " rejected";
+    entry += ". " + notes;
+    var updatedNotes = existingNotes ? existingNotes + "\n" + entry : entry;
+    gr.setValue("notes", updatedNotes);
+  }
+
+  gr.update();
+
+  response.setBody({
+    result: {
+      success: true,
+      message: "Production recorded: " + producedQty + " produced" + (rejectedQty > 0 ? ", " + rejectedQty + " rejected" : "") + ". Total produced: " + newProduced + "/" + planned,
+      record: {
+        sys_id: gr.getValue("sys_id"),
+        number: gr.getValue("number") || gr.getValue("sys_id"),
+        status: gr.getValue("status"),
+        statusDisplay: gr.getDisplayValue("status"),
+        quantityPlanned: gr.getValue("quantity_planned"),
+        quantityProduced: gr.getValue("quantity_produced"),
+        quantityRemaining: gr.getValue("quantity_remaining")
+      }
+    }
+  });
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/operator_api/record-production</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/record-production</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description>Records produced and rejected quantities against a Production Order</short_description>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-27 08:10:34</sys_created_on>
+        <sys_id>2baeb86972dc40e7948869bab07656a6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record Production</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_2baeb86972dc40e7948869bab07656a6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-27 08:10:34</sys_updated_on>
+        <web_service_definition display_value="Operator API">7acd7c17725147d9a550963b7da0fe53</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

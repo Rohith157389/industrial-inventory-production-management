@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>POST</http_method>
+        <name>Issue Material</name>
+        <operation_script><![CDATA[(function process(request, response) {
+  var PM_TABLE = "x_2056099_indust_0_production_material";
+  var PO_TABLE = "x_2056099_indust_0_production_order";
+  var STOCK_TABLE = "x_2056099_indust_0_inv_stock";
+  var TXN_TABLE = "x_2056099_indust_0_inv_txn";
+
+  var body = {};
+  try { body = JSON.parse(request.body.dataString); } catch (e) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Invalid request body" } });
+    return;
+  }
+
+  var pmSysId = body.production_material_id;
+  var issueQty = parseFloat(body.issue_quantity);
+
+  if (!pmSysId) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "production_material_id is required" } });
+    return;
+  }
+  if (isNaN(issueQty) || issueQty <= 0) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Issue Quantity must be a positive number" } });
+    return;
+  }
+
+  // Look up the Production Material
+  var pm = new GlideRecord(PM_TABLE);
+  if (!pm.get(pmSysId)) {
+    response.setStatus(404);
+    response.setBody({ result: { success: false, error: "Production Material not found" } });
+    return;
+  }
+
+  // Look up the parent Production Order
+  var poId = pm.getValue("production_order");
+  var po = new GlideRecord(PO_TABLE);
+  if (!po.get(poId)) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Related Production Order not found" } });
+    return;
+  }
+
+  // Validate PO is active and in_production
+  if (po.getValue("active") != "1") {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Production Order is inactive" } });
+    return;
+  }
+  if (po.getValue("status") != "in_production") {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Production Order must be In Production. Current: " + po.getDisplayValue("status") } });
+    return;
+  }
+
+  // Validate PM status is not cancelled or fully_issued
+  var pmStatus = pm.getValue("status");
+  if (pmStatus == "cancelled") {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Material requirement is cancelled" } });
+    return;
+  }
+  if (pmStatus == "fully_issued") {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Material requirement is already fully issued" } });
+    return;
+  }
+
+  // Validate issue quantity vs remaining
+  var currentRemaining = parseFloat(pm.getValue("remaining_quantity")) || 0;
+  if (issueQty > currentRemaining) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Issue quantity (" + issueQty + ") exceeds remaining quantity (" + currentRemaining + ")" } });
+    return;
+  }
+
+  // Find matching inventory stock
+  var materialId = pm.getValue("material_product");
+  var stockGr = new GlideRecord(STOCK_TABLE);
+  stockGr.addQuery("material_product", materialId);
+  stockGr.addQuery("active", true);
+  stockGr.addQuery("status", "available");
+  stockGr.orderByDesc("available_quantity");
+  stockGr.setLimit(1);
+  stockGr.query();
+
+  if (!stockGr.next()) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "No available inventory stock found for this material" } });
+    return;
+  }
+
+  var availableStock = parseFloat(stockGr.getValue("available_quantity")) || 0;
+  if (issueQty > availableStock) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Insufficient stock. Available: " + availableStock + ", Requested: " + issueQty } });
+    return;
+  }
+
+  // === All validations passed - execute the issue ===
+
+  // 1. Deduct from inventory stock (reduce total_quantity; BR recalculates available_quantity)
+  var currentTotal = parseFloat(stockGr.getValue("total_quantity")) || 0;
+  stockGr.setValue("total_quantity", (currentTotal - issueQty).toString());
+  stockGr.update();
+
+  // 2. Update production material
+  var currentIssued = parseFloat(pm.getValue("issued_quantity")) || 0;
+  var newIssued = currentIssued + issueQty;
+  var newRemaining = currentRemaining - issueQty;
+  pm.setValue("issued_quantity", newIssued.toString());
+  pm.setValue("remaining_quantity", newRemaining.toString());
+
+  // Update status
+  if (newRemaining <= 0) {
+    pm.setValue("status", "fully_issued");
+  } else {
+    pm.setValue("status", "partially_issued");
+  }
+  pm.update();
+
+  // 3. Create inventory transaction record
+  var txn = new GlideRecord(TXN_TABLE);
+  txn.initialize();
+  txn.setValue("transaction_type", "issue");
+  txn.setValue("status", "completed");
+  txn.setValue("transaction_date", new GlideDateTime().getValue());
+  txn.setValue("quantity", issueQty.toString());
+  txn.setValue("material_product", materialId);
+  txn.setValue("inventory_stock", stockGr.getValue("sys_id"));
+  txn.setValue("requested_by", gs.getUserID());
+  txn.setValue("source_location", pm.getValue("source_location") || stockGr.getValue("location"));
+  txn.setValue("destination_location", po.getValue("production_location"));
+  txn.setValue("related_production_order", po.getValue("number") || po.getValue("sys_id"));
+  txn.setValue("reason", "Material issue for production order " + (po.getValue("number") || po.getValue("sys_id")));
+  if (pm.getValue("batch_lot")) {
+    txn.setValue("batch_lot", pm.getValue("batch_lot"));
+  }
+  var txnId = txn.insert();
+
+  response.setBody({
+    result: {
+      success: true,
+      message: "Issued " + issueQty + " units. Material: " + newIssued + "/" + pm.getValue("required_quantity") + " issued. " + (newRemaining <= 0 ? "Fully issued." : newRemaining + " remaining."),
+      material: {
+        sys_id: pm.getValue("sys_id"),
+        issuedQuantity: pm.getValue("issued_quantity"),
+        remainingQuantity: pm.getValue("remaining_quantity"),
+        status: pm.getDisplayValue("status")
+      },
+      transaction_id: txnId
+    }
+  });
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/operator_api/issue-material</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/issue-material</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description>Issues material from inventory stock to a production material requirement</short_description>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-27 08:52:53</sys_created_on>
+        <sys_id>ff0425119c7d4062b93c6167527be13f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Issue Material</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_ff0425119c7d4062b93c6167527be13f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-27 08:52:53</sys_updated_on>
+        <web_service_definition display_value="Operator API">7acd7c17725147d9a550963b7da0fe53</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>
