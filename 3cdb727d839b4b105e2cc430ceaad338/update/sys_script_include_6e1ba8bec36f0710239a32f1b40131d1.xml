@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.WarehouseRouter</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Warehouse routing and validation service for multi-warehouse fulfillment. Resolves a customer's preferred delivery location to a validated warehouse record. Provides reusable methods for downstream consumers: flows, simulation engine, production scheduling, and stock transfer logic.
+
+Usage:
+  var router = new x_2056099_indust_0.WarehouseRouter();
+  var result = router.resolveFromOrder(orderSysId);
+  var result = router.resolveWarehouse(warehouseSysId);
+  var list   = router.listActiveWarehouses();
+  var alts   = router.listAlternateWarehouses(excludeSysId);
+
+Returns: { success, warehouse: { sys_id, location_id, location_name, location_type, active, description }, error }</description>
+        <mobile_callable>false</mobile_callable>
+        <name>WarehouseRouter</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * WarehouseRouter
+ *
+ * Server-side warehouse routing and validation service for
+ * multi-warehouse fulfillment.
+ *
+ * Resolves a customer's preferred delivery location to a validated,
+ * active warehouse record. Designed as the single entry point for
+ * all downstream warehouse-dependent logic:
+ *   - Multi-warehouse simulation engine
+ *   - Production order routing
+ *   - Stock transfer proposals
+ *   - Delivery date calculations
+ *
+ * Follows the same pattern as ProductionScheduler:
+ *   { success: true, warehouse: {...} }
+ *   { success: false, error: "reason" }
+ *
+ * Usage:
+ *   var router = new x_2056099_indust_0.WarehouseRouter();
+ *
+ *   // From a Customer Order:
+ *   var result = router.resolveFromOrder(orderSysId);
+ *   if (result.success) {
+ *       var whSysId = result.warehouse.sys_id;
+ *       var whName  = result.warehouse.location_name;
+ *   }
+ *
+ *   // From a warehouse sys_id directly:
+ *   var result = router.resolveWarehouse(warehouseSysId);
+ *
+ *   // All active warehouses:
+ *   var list = router.listActiveWarehouses();
+ *
+ *   // Alternate warehouses (for cross-warehouse sourcing):
+ *   var alts = router.listAlternateWarehouses(preferredSysId);
+ */
+var WarehouseRouter = Class.create();
+WarehouseRouter.prototype = {
+    initialize: function () {
+        this.LOC_TABLE = 'x_2056099_indust_0_inv_loc';
+        this.CO_TABLE = 'x_2056099_indust_0_cust_order';
+        this.WAREHOUSE_TYPE = 'inventory_warehouse';
+    },
+
+    /**
+     * Resolves the preferred fulfillment warehouse from a Customer Order.
+     *
+     * Reads the order's preferred_delivery_location field, validates the
+     * referenced warehouse exists and is active, and returns the full
+     * warehouse record.
+     *
+     * @param {string} orderSysId - sys_id of the Customer Order
+     * @returns {object} { success, warehouse, order_number, order_sys_id, error }
+     */
+    resolveFromOrder: function (orderSysId) {
+        if (!orderSysId) {
+            return this._fail('Customer Order sys_id is required');
+        }
+
+        var order = new GlideRecord(this.CO_TABLE);
+        if (!order.get(orderSysId)) {
+            return this._fail('Customer Order not found: ' + orderSysId);
+        }
+
+        var orderNumber = order.getValue('number') || orderSysId;
+
+        var locationSysId = order.getValue('preferred_delivery_location');
+        if (!locationSysId) {
+            return this._fail(
+                'Customer Order ' + orderNumber +
+                ' has no preferred delivery location set. ' +
+                'The customer must select a warehouse before fulfillment can proceed.'
+            );
+        }
+
+        var warehouseResult = this.resolveWarehouse(locationSysId);
+        if (!warehouseResult.success) {
+            return this._fail(
+                'Customer Order ' + orderNumber + ': ' + warehouseResult.error
+            );
+        }
+
+        return {
+            success: true,
+            warehouse: warehouseResult.warehouse,
+            order_number: orderNumber,
+            order_sys_id: orderSysId
+        };
+    },
+
+    /**
+     * Validates and resolves a warehouse by its sys_id.
+     *
+     * Checks:
+     *   1. Record exists in inv_loc
+     *   2. Record is active
+     *   3. Record is of type inventory_warehouse
+     *
+     * @param {string} warehouseSysId - sys_id of the Inventory Location
+     * @returns {object} { success, warehouse, error }
+     */
+    resolveWarehouse: function (warehouseSysId) {
+        if (!warehouseSysId) {
+            return this._fail('Warehouse sys_id is required');
+        }
+
+        var loc = new GlideRecord(this.LOC_TABLE);
+        if (!loc.get(warehouseSysId)) {
+            return this._fail(
+                'Warehouse not found: ' + warehouseSysId +
+                '. The referenced location does not exist.'
+            );
+        }
+
+        var locName = loc.getValue('location_name') || warehouseSysId;
+        var locId   = loc.getValue('location_id') || '';
+
+        if (loc.getValue('active') != '1') {
+            return this._fail(
+                'Warehouse "' + locName + '" (' + locId +
+                ') is inactive. Only active warehouses can be used for fulfillment.'
+            );
+        }
+
+        var locType = loc.getValue('location_type');
+        if (locType != this.WAREHOUSE_TYPE) {
+            return this._fail(
+                'Location "' + locName + '" (' + locId +
+                ') is of type "' + locType +
+                '", not "' + this.WAREHOUSE_TYPE +
+                '". Only inventory warehouses can be used for customer fulfillment.'
+            );
+        }
+
+        return {
+            success: true,
+            warehouse: {
+                sys_id: loc.getValue('sys_id'),
+                location_id: locId,
+                location_name: locName,
+                location_type: locType,
+                description: loc.getValue('description') || '',
+                active: true
+            }
+        };
+    },
+
+    /**
+     * Returns all active inventory warehouses.
+     *
+     * Used by downstream logic that needs the full warehouse list
+     * (e.g., multi-warehouse simulation to check stock across all).
+     *
+     * @returns {object} { success, warehouses[], count, error }
+     */
+    listActiveWarehouses: function () {
+        var gr = new GlideRecord(this.LOC_TABLE);
+        gr.addQuery('active', true);
+        gr.addQuery('location_type', this.WAREHOUSE_TYPE);
+        gr.orderBy('location_name');
+        gr.query();
+
+        var warehouses = [];
+        while (gr.next()) {
+            warehouses.push({
+                sys_id: gr.getValue('sys_id'),
+                location_id: gr.getValue('location_id'),
+                location_name: gr.getValue('location_name'),
+                location_type: gr.getValue('location_type'),
+                description: gr.getValue('description') || '',
+                active: true
+            });
+        }
+
+        if (warehouses.length === 0) {
+            return this._fail(
+                'No active inventory warehouses found. ' +
+                'At least one warehouse must be active for fulfillment.'
+            );
+        }
+
+        return {
+            success: true,
+            warehouses: warehouses,
+            count: warehouses.length
+        };
+    },
+
+    /**
+     * Returns active warehouses excluding a specified one.
+     *
+     * Used by multi-warehouse simulation to find alternate
+     * sourcing locations when the preferred warehouse has
+     * insufficient stock.
+     *
+     * @param {string} excludeSysId - sys_id of warehouse to exclude
+     * @returns {object} { success, warehouses[], count, error }
+     */
+    listAlternateWarehouses: function (excludeSysId) {
+        var allResult = this.listActiveWarehouses();
+        if (!allResult.success) {
+            return allResult;
+        }
+
+        var alternates = [];
+        for (var i = 0; i < allResult.warehouses.length; i++) {
+            if (allResult.warehouses[i].sys_id != excludeSysId) {
+                alternates.push(allResult.warehouses[i]);
+            }
+        }
+
+        if (alternates.length === 0) {
+            return this._fail(
+                'No alternate warehouses available. Only one active ' +
+                'warehouse exists and it is the preferred location.'
+            );
+        }
+
+        return {
+            success: true,
+            warehouses: alternates,
+            count: alternates.length
+        };
+    },
+
+    /**
+     * Standard failure response.
+     * @param {string} reason
+     * @returns {object} { success: false, error: reason }
+     */
+    _fail: function (reason) {
+        return { success: false, error: reason };
+    },
+
+    type: 'WarehouseRouter'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-29 05:03:40</sys_created_on>
+        <sys_id>6e1ba8bec36f0710239a32f1b40131d1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>WarehouseRouter</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_6e1ba8bec36f0710239a32f1b40131d1</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-29 05:03:40</sys_updated_on>
+    </sys_script_include>
+</record_update>

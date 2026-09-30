@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.MaterialFulfillmentDecision</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Material Fulfillment Decision Engine — 20-step multi-warehouse fulfillment strategy evaluator.
+
+Determines the safest and fastest fulfillment strategy across three warehouses.
+Creates a recommendation record in x_2056099_indust_0_fulfill_dec.
+READ-ONLY: does NOT modify inventory, orders, or transfers.
+
+Decision types: LOCAL_AVAILABLE_STOCK, LOCAL_SAFETY_STOCK, INTER_WAREHOUSE_TRANSFER,
+PROCUREMENT_LOCAL_SUPPLIER, PROCUREMENT_ALTERNATE_WAREHOUSE_SUPPLIER,
+RESERVED_STOCK_REALLOCATION, MANUAL_REVIEW, UNFULFILLABLE
+
+Usage:
+  var engine = new x_2056099_indust_0.MaterialFulfillmentDecision();
+  var result = engine.evaluate({
+      materialSysId: "...",
+      quantityRequired: 100,
+      warehouseSysId: "...",
+      customerRequiredDate: "2026-10-15 00:00:00",
+      customerOrderSysId: "...",
+      productionOrderSysId: "..."
+  });</description>
+        <mobile_callable>false</mobile_callable>
+        <name>MaterialFulfillmentDecision</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var MaterialFulfillmentDecision = Class.create();
+MaterialFulfillmentDecision.prototype = {
+    initialize: function () {
+        this.STOCK = 'x_2056099_indust_0_inv_stock';
+        this.LOC = 'x_2056099_indust_0_inv_loc';
+        this.MAT = 'x_2056099_indust_0_mat_master';
+        this.LEAD = 'x_2056099_indust_0_transfer_lead_time';
+        this.DEC = 'x_2056099_indust_0_fulfill_dec';
+        this.ALERT = 'x_2056099_indust_0_inv_alert';
+    },
+
+    /**
+     * Evaluates the fulfillment strategy for a single material requirement.
+     * Creates a decision record. Does NOT modify inventory.
+     *
+     * @param {object} params
+     *   materialSysId, quantityRequired, warehouseSysId,
+     *   customerRequiredDate (optional), customerOrderSysId (optional),
+     *   productionOrderSysId (optional)
+     * @returns {object} { success, decision_type, decision_sys_id, reason, details }
+     */
+    evaluate: function (params) {
+        if (!params) return this._fail('Parameters required');
+        if (!params.materialSysId) return this._fail('materialSysId required');
+        if (!params.quantityRequired || params.quantityRequired <= 0)
+            return this._fail('quantityRequired must be positive');
+        if (!params.warehouseSysId) return this._fail('warehouseSysId required');
+
+        var matId = params.materialSysId;
+        var qtyReq = parseFloat(params.quantityRequired);
+        var whId = params.warehouseSysId;
+        var custDate = params.customerRequiredDate || '';
+        var coId = params.customerOrderSysId || '';
+        var poId = params.productionOrderSysId || '';
+
+        // Step 1: Validate assigned warehouse
+        var router = new x_2056099_indust_0.WarehouseRouter();
+        var whResult = router.resolveWarehouse(whId);
+        if (!whResult.success) return this._fail('Step 1: ' + whResult.error);
+        var assignedWh = whResult.warehouse;
+
+        // Step 2: Validate material
+        var matGr = new GlideRecord(this.MAT);
+        if (!matGr.get(matId)) return this._fail('Step 2: Material not found');
+        var matName = matGr.getValue('name');
+        var supplierSysId = matGr.getValue('preferred_supplier') || '';
+
+        // Steps 3-4: Check assigned warehouse available stock
+        // available_quantity already excludes reserved (BR: avail = total - reserved)
+        var localStock = this._getStock(matId, whId);
+        var availQty = localStock.available;
+        var safetyQty = localStock.safety_stock;
+
+        // Determine urgency from customer date
+        var urgency = this._calcUrgency(custDate);
+
+        // ========================================
+        // Step 5: Sufficient available stock?
+        // ========================================
+        if (availQty >= qtyReq) {
+            var reason5 = matName + ': ' + qtyReq + ' units available at ' +
+                          assignedWh.location_name + ' (' + availQty +
+                          ' available). No other warehouses needed. Safety stock (' +
+                          safetyQty + ') preserved.';
+            return this._createDecision({
+                decision_type: 'LOCAL_AVAILABLE_STOCK',
+                material_product: matId,
+                required_quantity: qtyReq,
+                available_quantity: availQty,
+                shortage_quantity: 0,
+                assigned_warehouse: whId,
+                customer_required_date: custDate,
+                customer_order: coId,
+                production_order: poId,
+                urgency: urgency,
+                decision_reason: reason5
+            });
+        }
+
+        // ========================================
+        // Step 6: Calculate shortage
+        // ========================================
+        var shortage = qtyReq - availQty;
+
+        // ========================================
+        // Steps 7-9: Can safety stock cover the shortage?
+        // ========================================
+        if (availQty + safetyQty >= qtyReq) {
+            var safetyConsumed = shortage; // amount taken from safety
+            var reason9 = matName + ': ' + qtyReq + ' units needed at ' +
+                          assignedWh.location_name + '. Available: ' + availQty +
+                          ', shortage: ' + shortage +
+                          '. Consuming ' + safetyConsumed +
+                          ' from safety stock (' + safetyQty +
+                          '). Safety stock NOT permanently reduced — ' +
+                          'replenishment/procurement request recommended.';
+
+            // Create safety stock alert (Step 9)
+            this._createSafetyStockAlert(matId, whId, safetyConsumed, localStock.stock_sys_id);
+
+            return this._createDecision({
+                decision_type: 'LOCAL_SAFETY_STOCK',
+                material_product: matId,
+                required_quantity: qtyReq,
+                available_quantity: availQty,
+                shortage_quantity: shortage,
+                assigned_warehouse: whId,
+                safety_stock_consumed: safetyConsumed,
+                supplier: supplierSysId,
+                customer_required_date: custDate,
+                customer_order: coId,
+                production_order: poId,
+                urgency: urgency,
+                decision_reason: reason9
+            });
+        }
+
+        // ========================================
+        // Steps 10-14: Check alternate warehouses
+        // ========================================
+        var altResult = router.listAlternateWarehouses(whId);
+        var candidates = [];
+
+        if (altResult.success) {
+            for (var i = 0; i < altResult.warehouses.length; i++) {
+                var altWh = altResult.warehouses[i];
+                var altStock = this._getStock(matId, altWh.sys_id);
+                // Step 11-12: Transferable = available only, NEVER safety stock
+                var transferable = altStock.available;
+                if (transferable <= 0) continue;
+
+                var leadDays = this._getLeadTime(altWh.sys_id, whId);
+                var arrivalDate = this._addDays(new GlideDateTime(), leadDays);
+                var meetsDeadline = !custDate || arrivalDate.compareTo(new GlideDateTime(custDate)) <= 0;
+
+                candidates.push({
+                    warehouse: altWh,
+                    transferable: transferable,
+                    lead_time: leadDays,
+                    arrival: arrivalDate,
+                    meets_deadline: meetsDeadline
+                });
+            }
+        }
+
+        // Step 13-14: Evaluate candidates
+        // Sort by: meets deadline first, then shortest lead time, then most stock
+        candidates.sort(function (a, b) {
+            if (a.meets_deadline && !b.meets_deadline) return -1;
+            if (!a.meets_deadline && b.meets_deadline) return 1;
+            if (a.lead_time !== b.lead_time) return a.lead_time - b.lead_time;
+            return b.transferable - a.transferable;
+        });
+
+        // Check if one or more candidates can cover the shortage
+        var totalTransferable = 0;
+        for (var t = 0; t < candidates.length; t++) {
+            totalTransferable += candidates[t].transferable;
+        }
+
+        if (totalTransferable >= shortage && candidates.length > 0) {
+            var bestCandidate = candidates[0];
+            var transferQty = Math.min(bestCandidate.transferable, shortage);
+            var reason14 = matName + ': ' + qtyReq + ' units needed at ' +
+                           assignedWh.location_name + '. Available locally: ' +
+                           availQty + ', shortage: ' + shortage +
+                           '. Transfer ' + transferQty + ' from ' +
+                           bestCandidate.warehouse.location_name +
+                           ' (available: ' + bestCandidate.transferable +
+                           ', lead time: ' + bestCandidate.lead_time + 'd).';
+            if (bestCandidate.meets_deadline) {
+                reason14 += ' Meets customer deadline.';
+            } else {
+                reason14 += ' WARNING: May miss customer deadline.';
+            }
+            if (candidates.length > 1) {
+                reason14 += ' Selected over ' + (candidates.length - 1) +
+                            ' other warehouse(s) based on lead time and stock.';
+            }
+
+            return this._createDecision({
+                decision_type: 'INTER_WAREHOUSE_TRANSFER',
+                material_product: matId,
+                required_quantity: qtyReq,
+                available_quantity: availQty,
+                shortage_quantity: shortage,
+                assigned_warehouse: whId,
+                source_warehouse: bestCandidate.warehouse.sys_id,
+                transfer_lead_time_days: bestCandidate.lead_time,
+                expected_fulfillment_date: bestCandidate.arrival.getValue(),
+                customer_required_date: custDate,
+                customer_order: coId,
+                production_order: poId,
+                urgency: urgency,
+                decision_reason: reason14
+            });
+        }
+
+        // ========================================
+        // Steps 15-18: Evaluate procurement
+        // ========================================
+        if (supplierSysId) {
+            // Note: no supplier_lead_time field exists yet on mat_master.
+            // Use a default estimate. When the supplier price comparison
+            // table is implemented, this will read actual lead times.
+            var defaultSupplierLeadDays = 7;
+            var procArrival = this._addDays(new GlideDateTime(), defaultSupplierLeadDays);
+            var meetsProcDeadline = !custDate || procArrival.compareTo(new GlideDateTime(custDate)) <= 0;
+
+            if (meetsProcDeadline) {
+                var reason17 = matName + ': ' + qtyReq + ' units needed at ' +
+                               assignedWh.location_name + '. Available locally: ' +
+                               availQty + ', shortage: ' + shortage +
+                               '. No alternate warehouse can supply. ' +
+                               'Local supplier can deliver in ~' + defaultSupplierLeadDays +
+                               ' days — within customer deadline. Recommend normal procurement.';
+                return this._createDecision({
+                    decision_type: 'PROCUREMENT_LOCAL_SUPPLIER',
+                    material_product: matId,
+                    required_quantity: qtyReq,
+                    available_quantity: availQty,
+                    shortage_quantity: shortage,
+                    assigned_warehouse: whId,
+                    supplier: supplierSysId,
+                    supplier_lead_time_days: defaultSupplierLeadDays,
+                    expected_fulfillment_date: procArrival.getValue(),
+                    customer_required_date: custDate,
+                    customer_order: coId,
+                    production_order: poId,
+                    urgency: urgency,
+                    decision_reason: reason17
+                });
+            }
+
+            // Step 18: Check if alternate WH supplier route is faster
+            // (supplier → alt WH → transfer → assigned WH)
+            for (var p = 0; p < candidates.length; p++) {
+                var altProcLead = defaultSupplierLeadDays;
+                var altTransferLead = candidates[p].lead_time;
+                var totalAltLead = altProcLead + altTransferLead;
+                var altArrival = this._addDays(new GlideDateTime(), totalAltLead);
+                if (!custDate || altArrival.compareTo(new GlideDateTime(custDate)) <= 0) {
+                    var reason18 = matName + ': alternate route via ' +
+                                   candidates[p].warehouse.location_name +
+                                   '. Supplier → alt WH (' + altProcLead +
+                                   'd) → transfer (' + altTransferLead +
+                                   'd) = ' + totalAltLead + 'd total. Meets deadline.';
+                    return this._createDecision({
+                        decision_type: 'PROCUREMENT_ALTERNATE_WAREHOUSE_SUPPLIER',
+                        material_product: matId,
+                        required_quantity: qtyReq,
+                        available_quantity: availQty,
+                        shortage_quantity: shortage,
+                        assigned_warehouse: whId,
+                        source_warehouse: candidates[p].warehouse.sys_id,
+                        supplier: supplierSysId,
+                        supplier_lead_time_days: altProcLead,
+                        transfer_lead_time_days: altTransferLead,
+                        expected_fulfillment_date: altArrival.getValue(),
+                        customer_required_date: custDate,
+                        customer_order: coId,
+                        production_order: poId,
+                        urgency: urgency,
+                        decision_reason: reason18
+                    });
+                }
+            }
+        }
+
+        // ========================================
+        // Step 20: Unfulfillable
+        // ========================================
+        var reasonUnfulfillable = matName + ': ' + qtyReq + ' units needed at ' +
+            assignedWh.location_name + '. Available locally: ' + availQty +
+            ', safety stock: ' + safetyQty + ', shortage: ' + shortage +
+            '. Alternate warehouses transferable: ' + totalTransferable +
+            '. No supplier or procurement route can meet the deadline. ' +
+            'Manual review required.';
+
+        return this._createDecision({
+            decision_type: 'UNFULFILLABLE',
+            material_product: matId,
+            required_quantity: qtyReq,
+            available_quantity: availQty,
+            shortage_quantity: shortage,
+            assigned_warehouse: whId,
+            supplier: supplierSysId,
+            customer_required_date: custDate,
+            customer_order: coId,
+            production_order: poId,
+            urgency: urgency,
+            decision_reason: reasonUnfulfillable
+        });
+    },
+
+    /** Aggregate stock at a warehouse. READ-ONLY. */
+    _getStock: function (matId, whId) {
+        var result = { available: 0, safety_stock: 0, stock_sys_id: '' };
+        var ga = new GlideAggregate(this.STOCK);
+        ga.addQuery('material_product', matId);
+        ga.addQuery('location', whId);
+        ga.addQuery('active', true);
+        ga.addQuery('status', 'available');
+        ga.addAggregate('SUM', 'available_quantity');
+        ga.addAggregate('SUM', 'safety_stock');
+        ga.query();
+        if (ga.next()) {
+            result.available = parseFloat(ga.getAggregate('SUM', 'available_quantity')) || 0;
+            result.safety_stock = parseFloat(ga.getAggregate('SUM', 'safety_stock')) || 0;
+        }
+        // Get a specific stock record sys_id for alerts
+        var sg = new GlideRecord(this.STOCK);
+        sg.addQuery('material_product', matId);
+        sg.addQuery('location', whId);
+        sg.addQuery('active', true);
+        sg.addQuery('status', 'available');
+        sg.setLimit(1);
+        sg.query();
+        if (sg.next()) result.stock_sys_id = sg.getValue('sys_id');
+        return result;
+    },
+
+    /** Directional lead time lookup. */
+    _getLeadTime: function (srcId, dstId) {
+        var lt = new GlideRecord(this.LEAD);
+        lt.addQuery('source_warehouse', srcId);
+        lt.addQuery('destination_warehouse', dstId);
+        lt.addQuery('active', true);
+        lt.setLimit(1);
+        lt.query();
+        if (lt.next()) return parseFloat(lt.getValue('lead_time_days')) || 0;
+        return 0;
+    },
+
+    /** Calculate urgency from customer date. */
+    _calcUrgency: function (custDate) {
+        if (!custDate) return 'medium';
+        var now = new GlideDateTime();
+        var deadline = new GlideDateTime(custDate);
+        var diffMs = GlideDateTime.subtract(now, deadline).getNumericValue();
+        var diffDays = diffMs / (1000 * 60 * 60 * 24);
+        if (diffDays <= 0) return 'critical';
+        if (diffDays <= 2) return 'critical';
+        if (diffDays <= 5) return 'high';
+        if (diffDays <= 14) return 'medium';
+        return 'low';
+    },
+
+    /** Add days to a GlideDateTime. */
+    _addDays: function (gdt, days) {
+        var result = new GlideDateTime(gdt);
+        result.addDaysLocalTime(days);
+        return result;
+    },
+
+    /** Create safety stock consumption alert (Step 9). */
+    _createSafetyStockAlert: function (matId, whId, consumed, stockSysId) {
+        if (!stockSysId) return;
+        try {
+            var alert = new GlideRecord(this.ALERT);
+            alert.initialize();
+            alert.setValue('alert_type', 'below_safety_stock');
+            alert.setValue('severity', 'high');
+            alert.setValue('material_product', matId);
+            alert.setValue('inventory_stock', stockSysId);
+            alert.setValue('alert_message',
+                'Safety stock consumed for fulfillment: ' + consumed +
+                ' units. Replenishment required.');
+            alert.setValue('alert_date', new GlideDateTime().getValue());
+            alert.setValue('status', 'new');
+            alert.insert();
+        } catch (e) {
+            gs.warn('MaterialFulfillmentDecision: Could not create alert: ' + e.message);
+        }
+    },
+
+    /** Persist the decision record. */
+    _createDecision: function (data) {
+        var dec = new GlideRecord(this.DEC);
+        dec.initialize();
+        for (var key in data) {
+            if (data.hasOwnProperty(key) && data[key] !== '' && data[key] !== null && data[key] !== undefined) {
+                dec.setValue(key, data[key].toString());
+            }
+        }
+        dec.setValue('status', 'pending');
+        dec.setValue('active', true);
+        var decId = dec.insert();
+
+        if (decId) {
+            return {
+                success: true,
+                decision_type: data.decision_type,
+                decision_sys_id: decId,
+                reason: data.decision_reason,
+                details: data
+            };
+        }
+        return this._fail('Failed to create decision record');
+    },
+
+    _fail: function (reason) {
+        return { success: false, error: reason };
+    },
+
+    type: 'MaterialFulfillmentDecision'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-30 06:02:36</sys_created_on>
+        <sys_id>6f220647c3ebc710239a32f1b401319b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>MaterialFulfillmentDecision</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_6f220647c3ebc710239a32f1b401319b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-30 06:02:36</sys_updated_on>
+    </sys_script_include>
+</record_update>

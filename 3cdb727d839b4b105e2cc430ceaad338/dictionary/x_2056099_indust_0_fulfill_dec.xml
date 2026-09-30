@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="5ac92f2dc07949719fe108ccefcffe8a" label="Fulfillment Decision" name="x_2056099_indust_0_fulfill_dec" type="collection">
+        <element label="Available Quantity" name="available_quantity" type="decimal"/>
+        <element default="true" label="Active" mandatory="true" name="active" type="boolean"/>
+        <element default="pending" label="Status" mandatory="true" name="status" type="string"/>
+        <element label="Assigned Warehouse" mandatory="true" name="assigned_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Source Warehouse" name="source_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Transfer Lead Time Days" name="transfer_lead_time_days" type="decimal"/>
+        <element label="Shortage Quantity" name="shortage_quantity" type="decimal"/>
+        <element label="Customer Order" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
+        <element label="Customer Required Date" name="customer_required_date" type="glide_date_time"/>
+        <element label="Supplier Lead Time Days" name="supplier_lead_time_days" type="decimal"/>
+        <element label="Decision Reason" max_length="4000" name="decision_reason" type="string"/>
+        <element label="Decision Type" mandatory="true" max_length="40" name="decision_type" type="string"/>
+        <element label="Safety Stock Consumed" name="safety_stock_consumed" type="decimal"/>
+        <element label="Urgency" name="urgency" type="string"/>
+        <element label="Expected Fulfillment Date" name="expected_fulfillment_date" type="glide_date_time"/>
+        <element label="Production Order" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
+        <element label="Supplier" name="supplier" reference="core_company" type="reference"/>
+        <element label="Required Quantity" mandatory="true" name="required_quantity" type="decimal"/>
+        <element label="Material Product" mandatory="true" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <index name="index">
+            <element name="assigned_warehouse"/>
+        </index>
+        <index name="index2">
+            <element name="customer_order"/>
+        </index>
+        <index name="index3">
+            <element name="material_product"/>
+        </index>
+        <index name="index4">
+            <element name="production_order"/>
+        </index>
+        <index name="index5">
+            <element name="source_warehouse"/>
+        </index>
+        <index name="index6">
+            <element name="supplier"/>
+        </index>
+    </element>
+</database>

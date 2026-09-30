@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_production_order</collection>
+        <condition/>
+        <description>When a Production Order is created or updated with a customer_order reference, resolves the customer's preferred delivery location using WarehouseRouter and sets it as the fulfillment_location.
+
+IMPORTANT: This sets fulfillment_location (customer's delivery warehouse), NOT production_location. The three warehouses (Bangalore, Hyderabad, Chennai) are inventory-only and have no production machines. production_location is determined by the assigned production resource, not by the customer's choice.
+
+Concept separation:
+  fulfillment_location  = WHERE the customer wants delivery (inventory warehouse)
+  production_location   = WHERE production machines are (production facility)
+  assigned_resource     = WHICH machine produces the order
+
+Does NOT run if fulfillment_location is already set (respects manual overrides).
+Does NOT modify production_location, inventory, stock transfers, or resource allocation.</description>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Propagate Warehouse from Customer Order</name>
+        <order>50</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous) {
+    // Only act when a customer_order is linked
+    var coSysId = current.getValue('customer_order');
+    if (!coSysId) {
+        return;
+    }
+
+    // On insert: only propagate if fulfillment_location is empty
+    // On update: only propagate if customer_order just changed
+    var isInsert = current.operation() == 'insert';
+    var coChanged = previous && current.customer_order.changes();
+
+    if (isInsert) {
+        var existingLoc = current.getValue('fulfillment_location');
+        if (existingLoc) {
+            return; // Respect explicit value
+        }
+    } else {
+        if (!coChanged) {
+            return;
+        }
+    }
+
+    // Use WarehouseRouter to resolve and validate the warehouse
+    var router = new x_2056099_indust_0.WarehouseRouter();
+    var result = router.resolveFromOrder(coSysId);
+
+    if (result.success) {
+        // Set fulfillment_location — the customer's delivery warehouse.
+        // Do NOT set production_location — that represents where
+        // production machines are, which is determined by
+        // assigned_resource / resource allocation, not by the
+        // customer's warehouse choice.
+        current.setValue('fulfillment_location', result.warehouse.sys_id);
+        gs.info(
+            'WarehouseRouter: Set fulfillment_location to "' +
+            result.warehouse.location_name + '" (' +
+            result.warehouse.location_id + ') on Production Order ' +
+            (current.getValue('number') || '(new)') +
+            ' from Customer Order ' + result.order_number
+        );
+    } else {
+        gs.warn(
+            'WarehouseRouter: Could not resolve fulfillment warehouse ' +
+            'for Production Order from Customer Order ' + coSysId +
+            ': ' + result.error
+        );
+    }
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-29 05:08:54</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>0b4cac72c3af0710239a32f1b401317b</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Propagate Warehouse from Customer Order</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_0b4cac72c3af0710239a32f1b401317b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-29 05:14:25</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=0b4cac72c3af0710239a32f1b401317b"/>
+</record_update>

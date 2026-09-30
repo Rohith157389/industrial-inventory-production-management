@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.WarehouseSimulator</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Read-only multi-warehouse transfer simulation engine.
+
+Checks stock at the preferred warehouse, detects shortages, finds alternate
+sources (protecting safety stock), supports split sourcing across multiple
+warehouses, uses directional transfer lead times, and calculates delivery impact.
+
+DOES NOT modify inventory. DOES NOT execute transfers. DOES NOT change orders.
+
+Usage:
+  var sim = new x_2056099_indust_0.WarehouseSimulator();
+  var result = sim.simulate({
+      materialSysId: "...",
+      quantityRequired: 100,
+      preferredWarehouseSysId: "...",
+      requestedDeliveryDate: "2026-10-15 00:00:00"
+  });</description>
+        <mobile_callable>false</mobile_callable>
+        <name>WarehouseSimulator</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var WarehouseSimulator = Class.create();
+WarehouseSimulator.prototype = {
+    initialize: function () {
+        this.STOCK_TABLE = 'x_2056099_indust_0_inv_stock';
+        this.LEAD_TIME_TABLE = 'x_2056099_indust_0_transfer_lead_time';
+        this.CO_TABLE = 'x_2056099_indust_0_cust_order';
+        this.CO_ITEM_TABLE = 'x_2056099_indust_0_cust_ord_item';
+    },
+
+    /**
+     * Runs simulation from a Customer Order.
+     * Reads order items, resolves preferred warehouse, and simulates
+     * each material line independently.
+     *
+     * @param {string} orderSysId
+     * @returns {object} { success, order_number, original_delivery_date,
+     *   simulated_delivery_date, delivery_impact_days, line_results[], summary }
+     */
+    simulateFromOrder: function (orderSysId) {
+        if (!orderSysId) return this._fail('Customer Order sys_id is required');
+
+        var router = new x_2056099_indust_0.WarehouseRouter();
+        var resolved = router.resolveFromOrder(orderSysId);
+        if (!resolved.success) return this._fail(resolved.error);
+
+        var order = new GlideRecord(this.CO_TABLE);
+        if (!order.get(orderSysId)) return this._fail('Order not found');
+
+        var originalDate = order.getValue('requested_delivery_date');
+        var preferredWh = resolved.warehouse;
+
+        // Gather order items
+        var items = new GlideRecord(this.CO_ITEM_TABLE);
+        items.addQuery('customer_order', orderSysId);
+        items.addQuery('active', true);
+        items.query();
+
+        var lineResults = [];
+        var maxImpactDays = 0;
+
+        while (items.next()) {
+            var matSysId = items.getValue('material_product');
+            var qtyRequired = parseFloat(items.getValue('quantity_ordered')) || 0;
+            if (!matSysId || qtyRequired <= 0) continue;
+
+            var lineResult = this.simulate({
+                materialSysId: matSysId,
+                quantityRequired: qtyRequired,
+                preferredWarehouseSysId: preferredWh.sys_id,
+                requestedDeliveryDate: originalDate
+            });
+
+            lineResult.material_display = items.getDisplayValue('material_product');
+            lineResult.quantity_ordered = qtyRequired;
+            lineResults.push(lineResult);
+
+            if (lineResult.success && lineResult.delivery_impact_days > maxImpactDays) {
+                maxImpactDays = lineResult.delivery_impact_days;
+            }
+        }
+
+        // Calculate simulated delivery date
+        var simulatedDate = null;
+        if (originalDate) {
+            var simGdt = new GlideDateTime(originalDate);
+            simGdt.addDaysLocalTime(maxImpactDays);
+            simulatedDate = simGdt.getDisplayValue();
+        }
+
+        var allFulfilled = lineResults.every(function (lr) {
+            return lr.success && lr.status === 'fulfilled';
+        });
+        var anyShortage = lineResults.some(function (lr) {
+            return lr.success && lr.remaining_shortage > 0;
+        });
+
+        return {
+            success: true,
+            order_number: resolved.order_number,
+            order_sys_id: orderSysId,
+            preferred_warehouse: preferredWh.location_name,
+            original_delivery_date: originalDate ? new GlideDateTime(originalDate).getDisplayValue() : null,
+            simulated_delivery_date: simulatedDate,
+            delivery_impact_days: maxImpactDays,
+            overall_status: allFulfilled ? 'fulfilled' : (anyShortage ? 'partial' : 'fulfilled_with_transfers'),
+            line_results: lineResults,
+            line_count: lineResults.length,
+            summary: 'Simulation complete. ' + lineResults.length + ' line(s). ' +
+                     'Max delivery impact: ' + maxImpactDays + ' day(s). ' +
+                     'Read-only — no inventory modified.'
+        };
+    },
+
+    /**
+     * Core simulation for a single material at a single preferred warehouse.
+     *
+     * @param {object} params
+     *   - materialSysId {string}
+     *   - quantityRequired {number}
+     *   - preferredWarehouseSysId {string}
+     *   - requestedDeliveryDate {string} (optional)
+     * @returns {object} simulation result
+     */
+    simulate: function (params) {
+        if (!params) return this._fail('Simulation parameters required');
+        if (!params.materialSysId) return this._fail('materialSysId is required');
+        if (!params.quantityRequired || params.quantityRequired <= 0)
+            return this._fail('quantityRequired must be positive');
+        if (!params.preferredWarehouseSysId)
+            return this._fail('preferredWarehouseSysId is required');
+
+        var matId = params.materialSysId;
+        var qtyNeeded = params.quantityRequired;
+        var prefWhId = params.preferredWarehouseSysId;
+        var deliveryDate = params.requestedDeliveryDate || null;
+
+        // Step 1: Check preferred warehouse
+        var prefStock = this._getStockAtWarehouse(matId, prefWhId);
+        var prefAllocatable = Math.max(0, prefStock.available - prefStock.safety_stock);
+        var prefAllocated = Math.min(prefAllocatable, qtyNeeded);
+        var shortage = qtyNeeded - prefAllocated;
+
+        var preferredResult = {
+            warehouse_sys_id: prefWhId,
+            warehouse_name: prefStock.warehouse_name,
+            warehouse_id: prefStock.warehouse_id,
+            available_quantity: prefStock.available,
+            safety_stock: prefStock.safety_stock,
+            allocatable: prefAllocatable,
+            allocated: prefAllocated
+        };
+
+        // Step 2: If no shortage, fulfilled from preferred
+        if (shortage <= 0) {
+            return {
+                success: true,
+                status: 'fulfilled',
+                preferred_warehouse: preferredResult,
+                transfers: [],
+                total_allocated: prefAllocated,
+                remaining_shortage: 0,
+                delivery_impact_days: 0,
+                message: 'Fully fulfilled from preferred warehouse.'
+            };
+        }
+
+        // Step 3: Check alternate warehouses (split sourcing)
+        var router = new x_2056099_indust_0.WarehouseRouter();
+        var altResult = router.listAlternateWarehouses(prefWhId);
+        var transfers = [];
+        var remainingShortage = shortage;
+        var maxLeadDays = 0;
+
+        if (altResult.success) {
+            for (var i = 0; i < altResult.warehouses.length && remainingShortage > 0; i++) {
+                var altWh = altResult.warehouses[i];
+                var altStock = this._getStockAtWarehouse(matId, altWh.sys_id);
+                var altAllocatable = Math.max(0, altStock.available - altStock.safety_stock);
+
+                if (altAllocatable <= 0) continue;
+
+                var altAllocated = Math.min(altAllocatable, remainingShortage);
+                var leadDays = this._getLeadTimeDays(altWh.sys_id, prefWhId);
+
+                // Calculate expected arrival
+                var now = new GlideDateTime();
+                var arrival = new GlideDateTime(now);
+                arrival.addDaysLocalTime(leadDays);
+
+                transfers.push({
+                    source_warehouse_sys_id: altWh.sys_id,
+                    source_warehouse_name: altWh.location_name,
+                    source_warehouse_id: altWh.location_id,
+                    destination_warehouse_sys_id: prefWhId,
+                    destination_warehouse_name: prefStock.warehouse_name,
+                    available_at_source: altStock.available,
+                    safety_stock_at_source: altStock.safety_stock,
+                    allocatable_at_source: altAllocatable,
+                    transfer_quantity: altAllocated,
+                    lead_time_days: leadDays,
+                    expected_arrival: arrival.getDisplayValue(),
+                    transport_mode: 'standard'
+                });
+
+                remainingShortage -= altAllocated;
+                if (leadDays > maxLeadDays) maxLeadDays = leadDays;
+            }
+        }
+
+        var totalAllocated = prefAllocated;
+        for (var t = 0; t < transfers.length; t++) {
+            totalAllocated += transfers[t].transfer_quantity;
+        }
+
+        var status;
+        if (remainingShortage <= 0) {
+            status = transfers.length > 0 ? 'fulfilled_with_transfers' : 'fulfilled';
+        } else {
+            status = 'partial';
+        }
+
+        var msg = 'Preferred warehouse: ' + prefAllocated + ' of ' + qtyNeeded + ' units.';
+        if (transfers.length > 0) {
+            msg += ' Transfers proposed: ' + transfers.length + '.';
+            msg += ' Max lead time: ' + maxLeadDays + ' day(s).';
+        }
+        if (remainingShortage > 0) {
+            msg += ' Remaining shortage: ' + remainingShortage + ' units across all warehouses.';
+        }
+
+        return {
+            success: true,
+            status: status,
+            preferred_warehouse: preferredResult,
+            transfers: transfers,
+            total_allocated: totalAllocated,
+            remaining_shortage: remainingShortage,
+            delivery_impact_days: maxLeadDays,
+            message: msg
+        };
+    },
+
+    /**
+     * Gets aggregated stock for a material at a specific warehouse.
+     * READ-ONLY — does not modify any records.
+     */
+    _getStockAtWarehouse: function (materialSysId, warehouseSysId) {
+        var wh = new GlideRecord('x_2056099_indust_0_inv_loc');
+        var whName = '', whId = '';
+        if (wh.get(warehouseSysId)) {
+            whName = wh.getValue('location_name') || '';
+            whId = wh.getValue('location_id') || '';
+        }
+
+        var ga = new GlideAggregate(this.STOCK_TABLE);
+        ga.addQuery('material_product', materialSysId);
+        ga.addQuery('location', warehouseSysId);
+        ga.addQuery('active', true);
+        ga.addQuery('status', 'available');
+        ga.addAggregate('SUM', 'available_quantity');
+        ga.addAggregate('SUM', 'safety_stock');
+        ga.query();
+
+        var available = 0;
+        var safetyStock = 0;
+        if (ga.next()) {
+            available = parseFloat(ga.getAggregate('SUM', 'available_quantity')) || 0;
+            safetyStock = parseFloat(ga.getAggregate('SUM', 'safety_stock')) || 0;
+        }
+
+        return {
+            warehouse_name: whName,
+            warehouse_id: whId,
+            available: available,
+            safety_stock: safetyStock
+        };
+    },
+
+    /**
+     * Looks up directional transfer lead time between two warehouses.
+     * Returns days as a number. Falls back to 0 if no route configured.
+     */
+    _getLeadTimeDays: function (sourceSysId, destinationSysId) {
+        var lt = new GlideRecord(this.LEAD_TIME_TABLE);
+        lt.addQuery('source_warehouse', sourceSysId);
+        lt.addQuery('destination_warehouse', destinationSysId);
+        lt.addQuery('active', true);
+        lt.setLimit(1);
+        lt.query();
+        if (lt.next()) {
+            return parseFloat(lt.getValue('lead_time_days')) || 0;
+        }
+        return 0;
+    },
+
+    _fail: function (reason) {
+        return { success: false, error: reason };
+    },
+
+    type: 'WarehouseSimulator'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-29 05:23:55</sys_created_on>
+        <sys_id>c7bfe47ac3af0710239a32f1b401319a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>WarehouseSimulator</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_c7bfe47ac3af0710239a32f1b401319a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-29 05:23:55</sys_updated_on>
+    </sys_script_include>
+</record_update>

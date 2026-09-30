@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>false</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_inv_stock</collection>
+        <condition/>
+        <description>Prevents duplicate active Inventory Stock records for the same material + location + inventory_type combination. When a batch/lot is specified, the uniqueness check includes the batch. When no batch is specified, only one non-batch record per material + location + inventory_type is allowed.
+
+This supports the multi-warehouse design where each material has exactly one stock record per warehouse per inventory type (with optional batch-level granularity).
+
+Does NOT prevent multiple records for different batches at the same warehouse.</description>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Prevent Duplicate Stock per Material-Loc</name>
+        <order>50</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous) {
+    var matId = current.getValue('material_product');
+    var locId = current.getValue('location');
+    var invType = current.getValue('inventory_type');
+    var batchId = current.getValue('batch_lot') || '';
+    var isActive = current.getValue('active');
+
+    // Only enforce for active records
+    if (isActive != '1' && isActive != 'true' && isActive !== true) {
+        return;
+    }
+
+    if (!matId || !locId || !invType) {
+        return;
+    }
+
+    var dup = new GlideRecord('x_2056099_indust_0_inv_stock');
+    dup.addQuery('material_product', matId);
+    dup.addQuery('location', locId);
+    dup.addQuery('inventory_type', invType);
+    dup.addQuery('active', true);
+
+    if (batchId) {
+        dup.addQuery('batch_lot', batchId);
+    } else {
+        dup.addNullQuery('batch_lot');
+    }
+
+    // Exclude self for safety (in case this is somehow called on update)
+    var selfId = current.getValue('sys_id');
+    if (selfId) {
+        dup.addQuery('sys_id', '!=', selfId);
+    }
+
+    dup.setLimit(1);
+    dup.query();
+
+    if (dup.hasNext()) {
+        var locName = current.getDisplayValue('location') || locId;
+        var matName = current.getDisplayValue('material_product') || matId;
+        var msg = 'Duplicate stock record: An active inventory record for "' +
+                  matName + '" already exists at "' + locName +
+                  '" for type "' + invType + '".';
+        if (batchId) {
+            msg += ' Batch: ' + current.getDisplayValue('batch_lot');
+        }
+        gs.addErrorMessage(msg);
+        current.setAbortAction(true);
+    }
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-30 05:14:41</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>3137794fc36bc710239a32f1b40131f6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Prevent Duplicate Stock per Material-Loc</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_3137794fc36bc710239a32f1b40131f6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-30 05:14:41</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=3137794fc36bc710239a32f1b40131f6"/>
+</record_update>

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.AlternateWarehouseAvailability</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Evaluates alternate warehouses for inter-warehouse transfer feasibility.
+
+For each alternate warehouse, calculates transferable quantity
+(available stock only — excludes reserved, safety, blocked, quarantined,
+expired, and inspection stock), transfer lead time, and expected arrival.
+
+Returns ranked candidates with feasibility assessment.
+Creates transfer recommendation records in fulfill_dec.
+READ-ONLY: does NOT modify inventory or create actual transfers.
+
+Usage:
+  var awa = new x_2056099_indust_0.AlternateWarehouseAvailability();
+  var result = awa.evaluate({
+      materialSysId: "...",
+      shortageQuantity: 70,
+      destinationWarehouseSysId: "...",
+      customerRequiredDate: "2026-10-15 00:00:00",
+      customerOrderSysId: "...",
+      productionOrderSysId: "..."
+  });</description>
+        <mobile_callable>false</mobile_callable>
+        <name>AlternateWarehouseAvailability</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var AlternateWarehouseAvailability = Class.create();
+AlternateWarehouseAvailability.prototype = {
+    initialize: function () {
+        this.STOCK = 'x_2056099_indust_0_inv_stock';
+        this.LEAD = 'x_2056099_indust_0_transfer_lead_time';
+        this.MAT = 'x_2056099_indust_0_mat_master';
+        this.DEC = 'x_2056099_indust_0_fulfill_dec';
+    },
+
+    /**
+     * Evaluates all alternate warehouses for a material shortage.
+     *
+     * @param {object} params
+     *   materialSysId, shortageQuantity, destinationWarehouseSysId,
+     *   customerRequiredDate (opt), customerOrderSysId (opt), productionOrderSysId (opt)
+     * @returns {object} { success, candidates[], best_candidate, total_transferable,
+     *   can_fulfill, remaining_shortage, recommendation_sys_id }
+     */
+    evaluate: function (params) {
+        if (!params) return this._fail('Parameters required');
+        if (!params.materialSysId) return this._fail('materialSysId required');
+        if (!params.shortageQuantity || params.shortageQuantity <= 0)
+            return this._fail('shortageQuantity must be positive');
+        if (!params.destinationWarehouseSysId)
+            return this._fail('destinationWarehouseSysId required');
+
+        var matId = params.materialSysId;
+        var shortage = parseFloat(params.shortageQuantity);
+        var destWhId = params.destinationWarehouseSysId;
+        var custDate = params.customerRequiredDate || '';
+        var coId = params.customerOrderSysId || '';
+        var poId = params.productionOrderSysId || '';
+
+        // Validate material
+        var matGr = new GlideRecord(this.MAT);
+        if (!matGr.get(matId)) return this._fail('Material not found');
+        var matName = matGr.getValue('name');
+
+        // Validate destination warehouse
+        var router = new x_2056099_indust_0.WarehouseRouter();
+        var destResult = router.resolveWarehouse(destWhId);
+        if (!destResult.success) return this._fail(destResult.error);
+        var destWh = destResult.warehouse;
+
+        // Get alternate warehouses
+        var altResult = router.listAlternateWarehouses(destWhId);
+        if (!altResult.success) return this._fail(altResult.error);
+
+        var candidates = [];
+        var now = new GlideDateTime();
+
+        for (var i = 0; i < altResult.warehouses.length; i++) {
+            var altWh = altResult.warehouses[i];
+
+            // Step 1-2: Get detailed stock at this alternate warehouse
+            var stockDetail = this._getDetailedStock(matId, altWh.sys_id);
+
+            // Step 3: Transferable = ONLY available status stock that is NOT
+            // reserved, NOT safety stock, NOT blocked/quarantined/expired/inspection.
+            // available_quantity already excludes reserved (BR: avail = total - reserved).
+            // We further subtract safety_stock to get transferable.
+            var transferable = Math.max(0, stockDetail.available_quantity - stockDetail.safety_stock);
+
+            // Step 5: Transfer lead time
+            var leadDays = this._getLeadTime(altWh.sys_id, destWhId);
+
+            // Step 6: Expected arrival
+            var arrival = new GlideDateTime(now);
+            arrival.addDaysLocalTime(leadDays);
+
+            // Step 7: Compare with required date
+            var meetsDeadline = true;
+            var daysUntilDeadline = -1;
+            if (custDate) {
+                var deadline = new GlideDateTime(custDate);
+                meetsDeadline = arrival.compareTo(deadline) <= 0;
+                var diffMs = GlideDateTime.subtract(now, deadline).getNumericValue();
+                daysUntilDeadline = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            }
+
+            // Step 4: How much of the shortage can this warehouse cover?
+            var canSupply = Math.min(transferable, shortage);
+            var remainingAfter = shortage - canSupply;
+
+            candidates.push({
+                warehouse_sys_id: altWh.sys_id,
+                warehouse_name: altWh.location_name,
+                warehouse_id: altWh.location_id,
+                available_quantity: stockDetail.available_quantity,
+                reserved_quantity: stockDetail.reserved_quantity,
+                safety_stock: stockDetail.safety_stock,
+                total_quantity: stockDetail.total_quantity,
+                transferable_quantity: transferable,
+                can_supply: canSupply,
+                remaining_shortage: remainingAfter,
+                transfer_lead_time_days: leadDays,
+                expected_arrival: arrival.getDisplayValue(),
+                expected_arrival_value: arrival.getValue(),
+                meets_deadline: meetsDeadline,
+                days_until_deadline: daysUntilDeadline,
+                feasible: transferable > 0 && (meetsDeadline || !custDate)
+            });
+        }
+
+        // Sort: feasible first, then meets-deadline first, then shortest lead, then most stock
+        candidates.sort(function (a, b) {
+            if (a.feasible && !b.feasible) return -1;
+            if (!a.feasible && b.feasible) return 1;
+            if (a.meets_deadline && !b.meets_deadline) return -1;
+            if (!a.meets_deadline && b.meets_deadline) return 1;
+            if (a.transfer_lead_time_days !== b.transfer_lead_time_days)
+                return a.transfer_lead_time_days - b.transfer_lead_time_days;
+            return b.transferable_quantity - a.transferable_quantity;
+        });
+
+        var totalTransferable = 0;
+        var feasibleCandidates = [];
+        for (var c = 0; c < candidates.length; c++) {
+            totalTransferable += candidates[c].transferable_quantity;
+            if (candidates[c].feasible) feasibleCandidates.push(candidates[c]);
+        }
+
+        var canFulfill = totalTransferable >= shortage;
+        var remainingShortage = Math.max(0, shortage - totalTransferable);
+        var bestCandidate = feasibleCandidates.length > 0 ? feasibleCandidates[0] : null;
+
+        // Step 8-9: Create recommendation record if there is a feasible candidate
+        var recSysId = '';
+        if (bestCandidate) {
+            var reason = matName + ': shortage of ' + shortage + ' units at ' +
+                destWh.location_name + '. Best source: ' +
+                bestCandidate.warehouse_name + ' (transferable: ' +
+                bestCandidate.transferable_quantity + ', lead time: ' +
+                bestCandidate.transfer_lead_time_days + 'd, arrival: ' +
+                bestCandidate.expected_arrival + ').';
+            if (bestCandidate.meets_deadline) {
+                reason += ' Meets customer deadline.';
+            } else {
+                reason += ' WARNING: May miss customer deadline.';
+            }
+            if (feasibleCandidates.length > 1) {
+                reason += ' (' + feasibleCandidates.length + ' alternate warehouses evaluated; ';
+                for (var f = 1; f < feasibleCandidates.length; f++) {
+                    reason += feasibleCandidates[f].warehouse_name + ': ' +
+                              feasibleCandidates[f].transferable_quantity + ' units/' +
+                              feasibleCandidates[f].transfer_lead_time_days + 'd';
+                    if (f < feasibleCandidates.length - 1) reason += ', ';
+                }
+                reason += ')';
+            }
+
+            recSysId = this._createRecommendation({
+                decision_type: 'INTER_WAREHOUSE_TRANSFER',
+                material_product: matId,
+                required_quantity: shortage,
+                available_quantity: bestCandidate.transferable_quantity,
+                shortage_quantity: bestCandidate.remaining_shortage,
+                assigned_warehouse: destWhId,
+                source_warehouse: bestCandidate.warehouse_sys_id,
+                transfer_lead_time_days: bestCandidate.transfer_lead_time_days,
+                expected_fulfillment_date: bestCandidate.expected_arrival_value,
+                customer_required_date: custDate,
+                customer_order: coId,
+                production_order: poId,
+                urgency: this._calcUrgency(custDate),
+                decision_reason: reason
+            });
+        }
+
+        return {
+            success: true,
+            material: matName,
+            destination_warehouse: destWh.location_name,
+            shortage_quantity: shortage,
+            candidates: candidates,
+            feasible_count: feasibleCandidates.length,
+            best_candidate: bestCandidate,
+            total_transferable: totalTransferable,
+            can_fulfill: canFulfill,
+            remaining_shortage: remainingShortage,
+            recommendation_sys_id: recSysId,
+            message: canFulfill
+                ? 'Shortage can be fulfilled via inter-warehouse transfer.'
+                : (totalTransferable > 0
+                    ? 'Partial fulfillment possible. Remaining: ' + remainingShortage + ' units.'
+                    : 'No transferable stock available at alternate warehouses.')
+        };
+    },
+
+    /**
+     * Detailed stock query for a material at a specific warehouse.
+     * Only counts records with status=available and active=true.
+     * Returns available, reserved, safety_stock, and total quantities.
+     */
+    _getDetailedStock: function (matId, whId) {
+        var result = { available_quantity: 0, reserved_quantity: 0,
+                       safety_stock: 0, total_quantity: 0 };
+
+        // Only status=available, active=true stock is considered.
+        // This automatically excludes reserved, inspection, blocked,
+        // quarantined, and expired status records per requirement 3.
+        var ga = new GlideAggregate(this.STOCK);
+        ga.addQuery('material_product', matId);
+        ga.addQuery('location', whId);
+        ga.addQuery('active', true);
+        ga.addQuery('status', 'available');
+        ga.addAggregate('SUM', 'available_quantity');
+        ga.addAggregate('SUM', 'reserved_quantity');
+        ga.addAggregate('SUM', 'safety_stock');
+        ga.addAggregate('SUM', 'total_quantity');
+        ga.query();
+
+        if (ga.next()) {
+            result.available_quantity = parseFloat(ga.getAggregate('SUM', 'available_quantity')) || 0;
+            result.reserved_quantity = parseFloat(ga.getAggregate('SUM', 'reserved_quantity')) || 0;
+            result.safety_stock = parseFloat(ga.getAggregate('SUM', 'safety_stock')) || 0;
+            result.total_quantity = parseFloat(ga.getAggregate('SUM', 'total_quantity')) || 0;
+        }
+
+        return result;
+    },
+
+    /** Directional lead time lookup */
+    _getLeadTime: function (srcId, dstId) {
+        var lt = new GlideRecord(this.LEAD);
+        lt.addQuery('source_warehouse', srcId);
+        lt.addQuery('destination_warehouse', dstId);
+        lt.addQuery('active', true);
+        lt.setLimit(1);
+        lt.query();
+        if (lt.next()) return parseFloat(lt.getValue('lead_time_days')) || 0;
+        return 0;
+    },
+
+    /** Create recommendation record in fulfill_dec */
+    _createRecommendation: function (data) {
+        var dec = new GlideRecord(this.DEC);
+        dec.initialize();
+        for (var key in data) {
+            if (data.hasOwnProperty(key) && data[key] !== '' &&
+                data[key] !== null && data[key] !== undefined) {
+                dec.setValue(key, data[key].toString());
+            }
+        }
+        dec.setValue('status', 'pending');
+        dec.setValue('active', true);
+        return dec.insert() || '';
+    },
+
+    /** Urgency from customer date */
+    _calcUrgency: function (custDate) {
+        if (!custDate) return 'medium';
+        var now = new GlideDateTime();
+        var deadline = new GlideDateTime(custDate);
+        var diffMs = GlideDateTime.subtract(now, deadline).getNumericValue();
+        var diffDays = diffMs / (1000 * 60 * 60 * 24);
+        if (diffDays <= 2) return 'critical';
+        if (diffDays <= 5) return 'high';
+        if (diffDays <= 14) return 'medium';
+        return 'low';
+    },
+
+    _fail: function (reason) {
+        return { success: false, error: reason };
+    },
+
+    type: 'AlternateWarehouseAvailability'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-30 06:18:59</sys_created_on>
+        <sys_id>2be5cac7c3ebc710239a32f1b40131f4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>AlternateWarehouseAvailability</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_2be5cac7c3ebc710239a32f1b40131f4</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-30 06:18:59</sys_updated_on>
+    </sys_script_include>
+</record_update>

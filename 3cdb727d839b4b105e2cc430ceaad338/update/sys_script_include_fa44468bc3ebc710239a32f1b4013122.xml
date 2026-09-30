@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.SafetyStockReplenishment</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Handles safety stock consumption and replenishment.
+
+When a fulfillment decision consumes safety stock (LOCAL_SAFETY_STOCK),
+this engine:
+  1. Records the consumed quantity
+  2. Creates a replenishment inventory request (safety_stock_replenishment)
+  3. Creates a safety stock consumption alert
+  4. Prevents duplicate requests for the same decision
+
+Does NOT modify the configured safety_stock threshold.
+Does NOT auto-approve procurement.
+Does NOT modify inventory quantities directly.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>SafetyStockReplenishment</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var SafetyStockReplenishment = Class.create();
+SafetyStockReplenishment.prototype = {
+    initialize: function () {
+        this.STOCK = 'x_2056099_indust_0_inv_stock';
+        this.REQ = 'x_2056099_indust_0_inv_req';
+        this.ALERT = 'x_2056099_indust_0_inv_alert';
+        this.DEC = 'x_2056099_indust_0_fulfill_dec';
+    },
+
+    /**
+     * Process a safety stock consumption event from a fulfillment decision.
+     *
+     * @param {string} decisionSysId - sys_id of the fulfill_dec record
+     * @returns {object} { success, request_sys_id, alert_sys_id, message, error }
+     */
+    processFromDecision: function (decisionSysId) {
+        if (!decisionSysId) return this._fail('Decision sys_id required');
+
+        var dec = new GlideRecord(this.DEC);
+        if (!dec.get(decisionSysId)) return this._fail('Decision record not found');
+
+        var decType = dec.getValue('decision_type');
+        if (decType !== 'LOCAL_SAFETY_STOCK')
+            return this._fail('Decision type is ' + decType + ', not LOCAL_SAFETY_STOCK');
+
+        var matId = dec.getValue('material_product');
+        var whId = dec.getValue('assigned_warehouse');
+        var consumed = parseFloat(dec.getValue('safety_stock_consumed')) || 0;
+        var coId = dec.getValue('customer_order') || '';
+        var poId = dec.getValue('production_order') || '';
+
+        if (consumed <= 0)
+            return this._fail('No safety stock consumed (value: ' + consumed + ')');
+
+        // Rule 12: Check for duplicate replenishment request
+        var dupCheck = new GlideRecord(this.REQ);
+        dupCheck.addQuery('request_type', 'safety_stock_replenishment');
+        dupCheck.addQuery('material_product', matId);
+        dupCheck.addQuery('destination_location', whId);
+        dupCheck.addQuery('status', 'IN', 'draft,submitted,pending_approval,approved,in_progress');
+        dupCheck.addQuery('reason', 'CONTAINS', decisionSysId);
+        dupCheck.setLimit(1);
+        dupCheck.query();
+        if (dupCheck.hasNext()) {
+            dupCheck.next();
+            return {
+                success: true,
+                request_sys_id: dupCheck.getValue('sys_id'),
+                alert_sys_id: '',
+                message: 'Replenishment request already exists: ' + dupCheck.getValue('number'),
+                duplicate: true
+            };
+        }
+
+        // Get current stock details for the alert
+        var stockInfo = this._getStockInfo(matId, whId);
+
+        // Rule 5: Create replenishment inventory request
+        var req = new GlideRecord(this.REQ);
+        req.initialize();
+        req.setValue('request_type', 'safety_stock_replenishment');
+        req.setValue('material_product', matId);
+        req.setValue('destination_location', whId);
+        req.setValue('quantity_requested', consumed.toString());
+        req.setValue('inventory_type', 'safety_buffer');
+        req.setValue('priority', 'high');
+        req.setValue('status', 'draft'); // Rule 9: do NOT auto-approve
+        req.setValue('requested_by', gs.getUserID());
+        req.setValue('requested_date', new GlideDateTime().getValue());
+        req.setValue('reason',
+            'Safety stock replenishment: ' + consumed + ' units consumed at ' +
+            (stockInfo.warehouse_name || whId) + ' for material ' +
+            (stockInfo.material_name || matId) + '. ' +
+            'Current available: ' + stockInfo.available +
+            ', Safety stock threshold: ' + stockInfo.safety_stock +
+            '. Decision ref: ' + decisionSysId +
+            (coId ? '. Customer Order: ' + coId : '') +
+            (poId ? '. Production Order: ' + poId : ''));
+        if (stockInfo.stock_sys_id) {
+            req.setValue('related_inventory_stock', stockInfo.stock_sys_id);
+        }
+        var reqId = req.insert();
+
+        if (!reqId) return this._fail('Failed to create replenishment request');
+
+        // Rule 10-11: Create alert
+        var alertId = '';
+        if (stockInfo.stock_sys_id) {
+            var al = new GlideRecord(this.ALERT);
+            al.initialize();
+            al.setValue('alert_type', 'below_safety_stock');
+            al.setValue('severity', 'high');
+            al.setValue('material_product', matId);
+            al.setValue('inventory_stock', stockInfo.stock_sys_id);
+            al.setValue('current_quantity', stockInfo.available.toString());
+            al.setValue('threshold_quantity', stockInfo.safety_stock.toString());
+            al.setValue('alert_message',
+                'Safety stock consumed for fulfillment: ' + consumed +
+                ' units at ' + stockInfo.warehouse_name +
+                ' for ' + stockInfo.material_name +
+                '. Replenishment request ' + req.getValue('number') + ' created.' +
+                ' Current qty: ' + stockInfo.available +
+                ', Safety threshold: ' + stockInfo.safety_stock + '.');
+            al.setValue('alert_date', new GlideDateTime().getValue());
+            al.setValue('status', 'new');
+            alertId = al.insert();
+        }
+
+        return {
+            success: true,
+            request_sys_id: reqId,
+            request_number: req.getValue('number'),
+            alert_sys_id: alertId,
+            consumed_quantity: consumed,
+            warehouse: stockInfo.warehouse_name,
+            material: stockInfo.material_name,
+            current_available: stockInfo.available,
+            safety_threshold: stockInfo.safety_stock,
+            message: 'Replenishment request created for ' + consumed +
+                     ' units at ' + stockInfo.warehouse_name +
+                     '. Status: draft (requires approval).',
+            duplicate: false
+        };
+    },
+
+    /** Get stock details for a material at a warehouse */
+    _getStockInfo: function (matId, whId) {
+        var info = { available: 0, safety_stock: 0, stock_sys_id: '',
+                     warehouse_name: '', material_name: '' };
+
+        var wh = new GlideRecord('x_2056099_indust_0_inv_loc');
+        if (wh.get(whId)) info.warehouse_name = wh.getValue('location_name') || '';
+
+        var mat = new GlideRecord('x_2056099_indust_0_mat_master');
+        if (mat.get(matId)) info.material_name = mat.getValue('name') || '';
+
+        var sg = new GlideRecord(this.STOCK);
+        sg.addQuery('material_product', matId);
+        sg.addQuery('location', whId);
+        sg.addQuery('active', true);
+        sg.addQuery('status', 'available');
+        sg.setLimit(1);
+        sg.query();
+        if (sg.next()) {
+            info.stock_sys_id = sg.getValue('sys_id');
+            info.available = parseFloat(sg.getValue('available_quantity')) || 0;
+            info.safety_stock = parseFloat(sg.getValue('safety_stock')) || 0;
+        }
+        return info;
+    },
+
+    _fail: function (reason) {
+        return { success: false, error: reason };
+    },
+
+    type: 'SafetyStockReplenishment'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-30 06:11:50</sys_created_on>
+        <sys_id>fa44468bc3ebc710239a32f1b4013122</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>SafetyStockReplenishment</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_fa44468bc3ebc710239a32f1b4013122</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-30 06:11:50</sys_updated_on>
+    </sys_script_include>
+</record_update>
