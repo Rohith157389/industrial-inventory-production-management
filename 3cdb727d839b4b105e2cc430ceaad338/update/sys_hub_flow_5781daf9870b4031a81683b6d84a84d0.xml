@@ -1,0 +1,2689 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=1777000</attributes>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>Compares procurement routes by evaluating supplier lead times at the destination warehouse versus alternate warehouses plus inter-warehouse transfer time. Creates a PROCUREMENT_ALTERNATE_WAREHOUSE_SUPPLIER recommendation when an alternate route is faster. Never places orders automatically.</description>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name>fd__material_fulfillment__supplier_lead_time_comparison</internal_name>
+        <label_cache>[{"name":"subflow.materialSysId","label":"Input➛Material sys_id","type":"string","base_type":"string","usedInstances":{"ea3998c7-da58-4c4c-b1bf-3c5d09be4342":["log_message"],"6386b21d-4e06-4697-9e42-f5fb8586078f":["conditions"],"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c":["conditions"],"c2e678b8-1180-4341-8552-8037a54b4570":["conditions"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"subflow.destinationWarehouseSysId","label":"Input➛Destination Warehouse sys_id","type":"string","base_type":"string","usedInstances":{"ea3998c7-da58-4c4c-b1bf-3c5d09be4342":["log_message"],"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c":["conditions"],"c2e678b8-1180-4341-8552-8037a54b4570":["conditions"],"4a9c00e0-02c8-4014-9e07-8522a8f98b5d":["conditions"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"subflow.quantityRequired","label":"Input➛Quantity Required","type":"decimal","base_type":"decimal","usedInstances":{"ea3998c7-da58-4c4c-b1bf-3c5d09be4342":["log_message"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"subflow.productionOrderSysId","label":"Input➛Production Order sys_id","type":"string","base_type":"string","usedInstances":{"c42a6059-27fa-48c6-9c65-9666d60bf50f":["conditions"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"subflow.customerOrderSysId","label":"Input➛Customer Order sys_id","type":"string","base_type":"string","usedInstances":{"a5c8792f-f370-4470-81f1-eda6b4b05362":["conditions"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c.Record.sys_id","label":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c➛Record➛sys_id","type":"string","base_type":"string","usedInstances":{"b5f019a2-bdd4-45e7-94fe-2d06a131c0d7":["condition"]},"attributes":{}},{"name":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c.Record.lead_time_days","label":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c➛Record➛lead_time_days","type":"decimal","base_type":"decimal","usedInstances":{"c2e678b8-1180-4341-8552-8037a54b4570":["conditions"],"5f5b16d1-afb3-4938-80df-401f8034811d":["log_message"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"],"54fe54dc-9dde-4d7c-996f-761bfce323eb":["log_message"]},"attributes":{}},{"name":"c2e678b8-1180-4341-8552-8037a54b4570.Count","label":"c2e678b8-1180-4341-8552-8037a54b4570➛Count","type":"integer","base_type":"integer","usedInstances":{"ba201b9d-b5c8-4e9c-91ab-25e142b9aba0":["condition"]},"attributes":{}},{"name":"c2e678b8-1180-4341-8552-8037a54b4570.Records","label":"c2e678b8-1180-4341-8552-8037a54b4570➛Records","type":"records","base_type":"records","column_name":"Records","usedInstances":{"02d26ae9-d00a-4afb-a9c0-3c73020c8ffb":["items"]},"attributes":{}},{"name":"02d26ae9-d00a-4afb-a9c0-3c73020c8ffb.item.delivery_warehouse","label":"15 - For Each - ➛item➛Delivery Warehouse","type":"string","base_type":"string","usedInstances":{"4a9c00e0-02c8-4014-9e07-8522a8f98b5d":["conditions"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"4a9c00e0-02c8-4014-9e07-8522a8f98b5d.Record.sys_id","label":"4a9c00e0-02c8-4014-9e07-8522a8f98b5d➛Record➛sys_id","type":"string","base_type":"string","usedInstances":{"c2f20d86-4824-4aa2-8d4e-b2cfddc16922":["condition"]},"attributes":{}},{"name":"02d26ae9-d00a-4afb-a9c0-3c73020c8ffb.item.supplier","label":"15 - For Each - ➛item➛Supplier","type":"reference","base_type":"reference","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"02d26ae9-d00a-4afb-a9c0-3c73020c8ffb.item.lead_time_days","label":"15 - For Each - ➛item➛Lead Time Days","type":"decimal","base_type":"decimal","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"],"54fe54dc-9dde-4d7c-996f-761bfce323eb":["log_message"]},"attributes":{}},{"name":"4a9c00e0-02c8-4014-9e07-8522a8f98b5d.Record.lead_time_days","label":"4a9c00e0-02c8-4014-9e07-8522a8f98b5d➛Record➛lead_time_days","type":"decimal","base_type":"decimal","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"],"54fe54dc-9dde-4d7c-996f-761bfce323eb":["log_message"]},"attributes":{}},{"name":"a5c8792f-f370-4470-81f1-eda6b4b05362.Record.requested_delivery_date","label":"a5c8792f-f370-4470-81f1-eda6b4b05362➛Record➛requested_delivery_date","type":"glide_date_time","base_type":"glide_date_time","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"c42a6059-27fa-48c6-9c65-9666d60bf50f.Record.priority","label":"c42a6059-27fa-48c6-9c65-9666d60bf50f➛Record➛priority","type":"string","base_type":"string","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"6386b21d-4e06-4697-9e42-f5fb8586078f.Record.name","label":"6386b21d-4e06-4697-9e42-f5fb8586078f➛Record➛name","type":"string","base_type":"string","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"6386b21d-4e06-4697-9e42-f5fb8586078f.Record.material_product_id","label":"6386b21d-4e06-4697-9e42-f5fb8586078f➛Record➛material_product_id","type":"string","base_type":"string","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c.Record.supplier","label":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c➛Record➛supplier","type":"reference","base_type":"reference","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"c42a6059-27fa-48c6-9c65-9666d60bf50f.Record.planned_end_date","label":"c42a6059-27fa-48c6-9c65-9666d60bf50f➛Record➛planned_end_date","type":"glide_date_time","base_type":"glide_date_time","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}}]</label_cache>
+        <master_snapshot>080207d393ef4310e61e3b277bba1045</master_snapshot>
+        <master_snapshot_digest/>
+        <name>FD - Material Fulfillment - Supplier Lead Time Comparison</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>published</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:11</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>5781daf9870b4031a81683b6d84a84d0</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>FD - Material Fulfillment - Supplier Lead Time Comparison</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_5781daf9870b4031a81683b6d84a84d0</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:59</sys_updated_on>
+        <type>subflow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_variable_value action="delete_multiple" query="document_key=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_element_mapping action="delete_multiple" query="table=var__m_sys_hub_flow_output_5781daf9870b4031a81683b6d84a84d0^id=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=5781daf9870b4031a81683b6d84a84d0^sys_idNOT IN05e398b719e74ed3b1d5361d0fcfdf90,6b7ed635f4ce43428e31cc51f46cf1bc,7ea7443b08f042e794c8b55980428abe,95dede0cc2bb44039c1e9e2d5b1c4bb4,acf9acfe54594cf3ab3afdba9d37ff5d"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=string</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>destinationWarehouseSysId</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Destination Warehouse sys_id</label>
+        <mandatory>true</mandatory>
+        <max_length>40</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</model>
+        <model_id>5781daf9870b4031a81683b6d84a84d0</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0</name>
+        <next_element/>
+        <order>2</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:11</sys_created_on>
+        <sys_id>05e398b719e74ed3b1d5361d0fcfdf90</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:46</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=05e398b719e74ed3b1d5361d0fcfdf90"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=decimal</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>quantityRequired</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="Decimal">decimal</internal_type>
+        <label>Quantity Required</label>
+        <mandatory>true</mandatory>
+        <max_length>20</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</model>
+        <model_id>5781daf9870b4031a81683b6d84a84d0</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0</name>
+        <next_element/>
+        <order>3</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:11</sys_created_on>
+        <sys_id>6b7ed635f4ce43428e31cc51f46cf1bc</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:46</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=6b7ed635f4ce43428e31cc51f46cf1bc"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=string</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>productionOrderSysId</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Production Order sys_id</label>
+        <mandatory>false</mandatory>
+        <max_length>40</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</model>
+        <model_id>5781daf9870b4031a81683b6d84a84d0</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0</name>
+        <next_element/>
+        <order>4</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:11</sys_created_on>
+        <sys_id>7ea7443b08f042e794c8b55980428abe</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:46</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=7ea7443b08f042e794c8b55980428abe"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=string</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>customerOrderSysId</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Customer Order sys_id</label>
+        <mandatory>false</mandatory>
+        <max_length>40</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</model>
+        <model_id>5781daf9870b4031a81683b6d84a84d0</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0</name>
+        <next_element/>
+        <order>5</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:11</sys_created_on>
+        <sys_id>95dede0cc2bb44039c1e9e2d5b1c4bb4</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:46</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=95dede0cc2bb44039c1e9e2d5b1c4bb4"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=string</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>materialSysId</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Material sys_id</label>
+        <mandatory>true</mandatory>
+        <max_length>40</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</model>
+        <model_id>5781daf9870b4031a81683b6d84a84d0</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0</name>
+        <next_element/>
+        <order>1</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:11</sys_created_on>
+        <sys_id>acf9acfe54594cf3ab3afdba9d37ff5d</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:46</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=acf9acfe54594cf3ab3afdba9d37ff5d"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=5781daf9870b4031a81683b6d84a84d0^sys_idNOT INd2beab9f42864f3e8c2a8bb01a4047a1"/>
+    <sys_hub_flow_output action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=boolean</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>recommendationCreated</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_link/>
+        <internal_type display_value="">boolean</internal_type>
+        <label>Recommendation Created</label>
+        <mandatory>true</mandatory>
+        <max_length>40</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</model>
+        <model_id>5781daf9870b4031a81683b6d84a84d0</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_output_5781daf9870b4031a81683b6d84a84d0</name>
+        <next_element/>
+        <order>1</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_output</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>d2beab9f42864f3e8c2a8bb01a4047a1</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:46</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_output>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=d2beab9f42864f3e8c2a8bb01a4047a1"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=5781daf9870b4031a81683b6d84a84d0^sys_idNOT IN25ecbc5f85104127b36269d1aa518f02,4a9c00e002c840149e078522a8f98b5d,54d6e4dcacd94a7d8963c962d9cb9e2c,54fe54dc9dde4d7c996f761bfce323eb,5f5b16d1afb3493880df401f8034811d,6386b21d4e0646979e42f5fb8586078f,76bb71e7169241f5b85b8503703bcf0a,a5c8792ff370447081f1eda6b4b05362,c2e678b81180434185528037a54b4570,c31907bf8a87419aac968a40d71cce1e,c42a605927fa48c69c659666d60bf50f,ea3998c7da584c4cb1bf3c5d09be4342"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>24</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>25ecbc5f85104127b36269d1aa518f02</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:48</sys_updated_on>
+        <ui_id>25ecbc5f-8510-4127-b362-69d1aa518f02</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VUUYsaMRD+KyFPLeji6tnr+Va0BwXvDmqxD8chY3ZWA9lkm2S9s3L/vZPdqMudtBVaKBR8MN/OTOb78s3c77iGAvmIK7NaKNyg4h2+AVUFTOrc0DGTrlSwnUf0U4OWYCnTo+WjHRdrqTKLmo/uHzpcZhQ2XIp0KcS74SDt9Qb0W+ZpdpX2rlAM319ml1RCwZLuG/FpvPdEK35bBkisjRQYz9OYNt6DxmahjV6H45NHnSHdn4Ny2OEF6Ay8sdsDYhGyO62OwFpqT9WozhpV2fwr4MnJ73TzRS9k5EjcBDbfDsdFFKaB8wl4mHlbCV/ZGNq07UiV3YFst8tujUbW7baUbpF47hxjo9Qv3iNGpu3Ir2C11KtW8CMhx+B+O/ijtca2QjGeY+zgmd4wwxwq5cfnM0h/m0H/HAaDMxhcBAaN+Hell4Z8ydPgHliq/dMYVRX6tnEcP/Cdv7B+g05OTkDlyAJYBsMFB0U75bO1efy898i11HVH8aMyAtThBN5buax80HfHUWFBhRYFlCUJsSit2cg6mZotkpWiQ5Ir80iXOrnSCYhALSF/Q3JN+KSG52BloHlDZSj5ucPd1o0VOHckSxZefKtCJw31yGFRC1WnCCtL/4Eu2GBsN8jfGtACnYMVtt7gflaVpZJo2ZRGjH2RBbKxKWhPSGf0A3mGberOGChaGxo8MuIoaFoCb2YNKcFyU+mMvSmkcyQC8xa0Iy2br+5tEspYJEEoh5iTAEzQSHvMkter6l9o6Vd7sj/42Z7EYWtP3hw0P/kQcVc6MlU9R+1dOduD+yH9C7uyPxz+mWV5av28Huiz5vn/G9eHH6xJIiHcBwAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=25ecbc5f85104127b36269d1aa518f02"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>16</order>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>4a9c00e002c840149e078522a8f98b5d</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>4a9c00e0-02c8-4014-9e07-8522a8f98b5d</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY32/iOBD+V6I8A+cQINC3U6tKlfa20ra397C3Z01ip1hnnKzjtKWo//uOYwc4yJb2WqSt9gniXzPzzTffxPmyChUseHgSVoU21CxLHvbCW5D1egyqDIeYqEoJy89+BgJTBA84XoLG/Ybr8GQVZnMhmeYqPPnytRcKhgvHjMzy2Ww8TQiJY0ImkziDKE3jSZaSNI3wCAkpl7j0Cq0F186DDqeanxO0UYisff7gt562g4Vm1pW4F/J7wxXj6EMOsuK9cAGKgSn0cj2iObBLJTcDc6EMnobnzLks3b8F3FfiAS3HQ7sj5xhfxt3c+pF6eNxwfgYGroyuM1Nrv9S5XSEyq3XAaxA78PaBkMfeZv2DXQ+76xnf3hA9IvKM51BLc/r/bEYvtTm0Nl2Al6URBeY/jG2GIJVt+IWsF+qjy2q49vBzB9HczNkP+FZXCDYvbWptrnzi8qt5cfepzca5UI1fflIWGcj1ExijRVobi8sqzBnNBZeMCiWFspYwbZZIXPIFWqALKEuhbmipi1vRnIqxLAY3Eh8GuSzuLBbiRg0gs5EPkGIwOMfxs2b4M2hhUfgDj8HNPWtwjlu9PVplWpSG3gl2w83GeruKFeYO5L9d855xtE1UE1742AurZXUqoao2YCNN6bfaYuCg9+jRJlHNlsaL3zGCW+6BshzwRZgVigkbXPUfGtQaeX8Hms8LTMrfNdY3W63IkA0nwGd9Rgj0R5CnfZhlpB9nSUyGJJvmeToQhi8GjEs0p5ebMx4f/0EwjVBgre2fXdWpRXywteivds3VsrpgeAA0QbgdHqwd6XpHnh8SVzZ+SlxhtiWup9tJ7EpsK6+7Yx+6DmiV4ggyOyKEvI3QdgnhvlC9SKf2Bchm6hX6cxyZebkKOAgOSgGllcpQlXBbDkLiXsq1LvSWMJD9inPSdJjOGYd0NIRJEkcRIRFhCZkmSTSdpPkEklG+ReezQtlKGSYmsI4EhQpaRw676qmeFoXkoHZ4fo0J/e3ce+x5Pj4Kz98Ry1/bZmtxvYu5G+pE/Vi9txZ/KvGt5heWbFNOhtOIZf1pEiX9Uc4m/RmDMWp+Ok5ixrNRfpx26vKwKZh7OiTjCZnN8J2A1ZWhhBoNqkKUKWLFqBGLjjb23G0He8jsyR4y2iq6a+/5TiC+nJpH2sztVJSdCD66ifa99ggVNf2VKupo76dCIleoS6Z7VcIjb2kmkWN2wnLMnXWU6hA5XSBwokTzmmdIl4rimxLNi1ox6g1viseimguN9HeL9+vkE8ccK2wQchmYOQ+a1cF69aHyiJ4sj3T7FesiD1rX/flVgK4HjevB2vWXBfqSW+/oJ25Tmxvlue3XNhPIp3IrlW137rr5HkjiE2x45rX4mU5Fb+rU6+/NXfTvvD8f8PVdiNMx5Kb58OBA3peO58jDk5+3gG3Jw6VNepAud75urY37SnefIzra6Lmd2Gmjw1+9jf6U16/ejz4rvfG97Ot3JLQZIL4VAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=4a9c00e002c840149e078522a8f98b5d"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>5</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>54d6e4dcacd94a7d8963c962d9cb9e2c</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY32/bOAz+Vww/pzk7v9O3Q4sABXYrsPZ6D7udQFtyI5wieZLcNA3yv4+y5SRIvKS5NrgNe0pMiSL58SNp+fMylDBj4WVolLbELnIWtsInEMVaBiZFEeUmF7B48CsQWBW8oDwHjfqW6fByGaZTLqhmMrz8/KUVcoob+zQaZ+NxfzSMom43igaDbgpxknQHaRIlSYxHCEiYwK13aC24rzxocKr8uUQbiqf18wevelULlabOlW4rZM+WScrQhwyEYa1wBpKCVXqxlmgG9FaKjWDKpcXT8JwpE3n1bwbPhr+g5W7HaWQM40tZtbZ+JB6eSpxdg4U7q4vUFtpvrdw2iMxyHfAaxAa8fSDRqrXZ/+L2w+5+yrYV4hUiT1kGhbBX/81mfKrNjrNZBXibW64w/2HXZQgSUYevRDGTH6ushmsPHxqIVq1cf4dvhUGwWe5S63LlE5fdTdX8U52NCZelX35RqBTE+gms1TwprMNlGWaUZJwJSrgUXDpLmDZHJCbYDC2QGeQ5l48k1+qJl6diLLP2o8CHdibU3GHBH2UbUhd5GykG7QnKr0vxA2juUPgDj0HlljM4RVVvj5hU89ySOaePzG6s17uosnMQ/zate8aROlFleOGqFZqFuRJgzAZspCn5WjgMKug9eqRMVKlSevE7RvDEPFCOA74IUyUpd8GZLRrMAGueg3DAUCT63wXWN10uTZE4VNr1+t3C3NDV6h/KBB6uF2QOmk0VpnFXA3G0XIIz9Fe9p9aG0rVKw0Ow05D+d3+ONULaP9QIYbzVCK+2AW9KQt0Kd2Ufmg6oq/oMLbEXRdH7NMWmprXfVE7qKfvNwmXqDb3iPC3h9IqtIDhatoQYmWIHQbUMuEBdwrRWequIo/06qtrIcTqnDJJeBwbDbhxHURzRYTQaDuPRIMkGMOxlW3S+VtJVSmdoA+dIoGRQO3LcVU/1RCnBQO7w/B4T+tvEe+x53j8Lz38ilr91JBb8fhfzStSI+rnmZMH/lPxrwW4c2UYs6oximl6MhvHwopfRwcWYQv8Cxkl/2KUs7WXnGX1VHjYF80w6UX8Qjcc4v2lhLImIKfKcIE6UWD5rGEyvUTk6O8YHZ0dvq9juvcc7AfgyKh9JubZTSW4h+Fgt1O+eZ6ik0a9USWd7h+QCuUKqZBpV6BLKJ5IK5Jdb0CBNddZZqoJnZIbA8RzNa5YiXQzBNySSqUJS4g1visahmnGN1K8279fIJ4Y5ljgYxCKwUxaUu4P17mPlER8sj2T71eomC2rX/fkmQNeD0vVg7fppgZ5yM+39wONpc+ubuDntMoF8yrdSWU/lptvpkSQeYMMrr66vdCp+V6fefrdton/jHfeIrz9FczpHuyk/DlQg77eO17SHg5+ggG61h1uX9CBZ7HyBWhv3lV59MmgYoxO3sDNGO7/6GP0hr12t7336eef72Jdv2/IVxmIVAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=54d6e4dcacd94a7d8963c962d9cb9e2c"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>20</order>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>54fe54dc9dde4d7c996f761bfce323eb</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>54fe54dc-9dde-4d7c-996f-761bfce323eb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Vy27aQBT9FcvbYss2GDA7RIgaiZAISLJII2s8cw0jjR+dGZNSxL/3GhuwEvpAalatxII5vq9zn89bMyUJmANTZMtQwBqE2TLXRBQlxtM4wyfjKhdk81ijNxWaE4maGqQ52Jp0xQWTkJqD55eWyRmK+RF1I0q7ftt1nDb+othlgesEQP1+j/XQhCAR+huYk9rvmVD0Ji8huso4hfo9qdVGBzCTrAzDaZnwTUPKAP3HRChomQlJGdGZ3BwRCYTdpeIErHiq0RraWYHIq38J+ab4d/TccUqNGJAbherb8RnWiang+IpoMteyoLqQtWgVtsKsbI9kLcuYZikYltXIdIPErnWSrVP9ph61pNuUfCIy5emyIfyKyEnYawqPpcxkQxTqdy3b3mENGcSkEHp0OQP3jxl4lzBoX8CgUzKokn+Xa55hX5pu2T0kEofSZKJI0mnVceaR7+Ob1q/Qq7MTUChsAcjLhis7qG6neL7KXmeHHrnm6T6i+qPIKBHHF9Fa8qjQZX63JghI0FCYkDzHRIS5zNZ8r4zBJvZS4MOORfaKThVfpjahJTUb+5vY14hf7eFHInlJ8xbNoPKuZaqNGgmi1IkstnD4tSgjqajXHMJ9ovYqVPJcD9HBGupwy/Q3BjQBpcgSGjV4nhd5LjhIY4IjZix4AsYoS3BPcJWlL8b97G70MBvfjqeLcDhZjGfT4WIcPg1n4893D/NxOH+4v5/cjGeGBOSLqUBiyM+gOLEamG0MhTbUwYdAH18KXCtsu3U85nUJBBZzHGJ1SBxZJKCO1aa9tuM5tB/Hkc01JHapFWqMLGRko3Y7ZnwytCSpwnIdrHVKXQccy/Fo3+o4bscKwOlZfd/zSD8O+pHP7BnGKNkZe2tlYHn0wZjfYV3oMGoRygIMrcesftBtWzToeiygUQAe/amx97v3f44/IMe/u2Re+1eXDPzGJbs9TsXZUamvmcKx32+65jWbH8DDGv2Aa+b5/t85Z+cOxPuVe9HG/fcW6ssPv/Kx6H4JAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=54fe54dc9dde4d7c996f761bfce323eb"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>12</order>
+        <parent_ui_id>ba201b9d-b5c8-4e9c-91ab-25e142b9aba0</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>5f5b16d1afb3493880df401f8034811d</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>5f5b16d1-afb3-4938-80df-401f8034811d</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VU24rbMBD9FaOnFmKT+27yVrJdKOwFmrJ9WBYzlsaJQJZdSc5uGvLvHcVKYnZD20D7UAoBR0cjzZyZo/O4YRoKZFOmykWqcIWKddgKVO0xqfOSlkLaSsH6IaCfGrQCQycdGjbdML6UShjUbPr41GFSUNgo472M8/Fo0Ot2B/TL8p6Y9LoT5KPLC3FBVyjIKN+U3YS8J0px68pDfFlKjmF9E47N9mBphC+j22H44lALpPw5KIsdVoAW4EqzPiAGQdxrdQSWUju6je5ZoqqafwW8WPmdMg+7/kSOxI1js3dYpqExDZxfgYO5MzV3tQmhTdmWurI5kI3j6K7UGMVxq9MtEtvOMTa0+tU8QmSvHfkVjJZ60Qp+JuQY3G8HfzSmNK1QDOsQO9jSDAXmUCs3O59B77cZ9M9hMDiDwdAzaJp/XzlZki5Zz6sHMrUfTanqQt81imMHvg+vpN+gVydfQG1JAlh5wXkFBTnl82X5/HmvkWupdxWFTVVyUIcVOGdkVjvf3w1DhQVdlBZQVdSItDLlSu4OU7FFslC0SHJVPlNSKxc6Ae6pJaRvSK4Jv9rBD2Ckp3lL19DhbYfZtZ0psPZIliScfqt9JQ31wCHdNWp3hBtZuQ+UYIWhXN/+1gMt0FpYYGsGj/O6qpREE93QE4u+yAKjWVmQT0hb6ifSTASK/EKDw8iGWBvlYAmM3BJ0RMScpH2iFb3bbEZDMcah4DFwMYmHcCHiy8l4EPPJuC8mPJtgnyefkdPUE0U5U0c5UwFru91G/vM+8VkNRRTUWrG7OHnraP9Q5b9y3f7gZ66Lo5br3h4meHKswXktSXT3KtvOO9+D+yf/F5y3Pxr9Ges9ZWZv7eEsd/j/Hv/TD5JGUz0qCAAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=5f5b16d1afb3493880df401f8034811d"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>6386b21d4e0646979e42f5fb8586078f</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>6386b21d-4e06-4697-9e42-f5fb8586078f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY227bOBD9FUHPjlfyTXbeFgkMBOg2QJPNS7cgKJGKiaVJlaSSOIb/fYciJQu2asebGGjRJ1u8zZmZc2ZEfV2HAi9peBlqqQwyq4KGvfAJ87IZwzqDIcJ0wfHqwc/gwMjgFcYLrGC/oSq8XIfZgnGiqAgvv37rhYzAwjGJZvlsNp4mUTQcRtFkMsxwnKbDSZZGaRrDERynlMPSO7AW3DsEHaCqn0uwIVlWP3/yW6/qQamIhTLshfTFUEEoYMgx17QXLrEg2Ei1akYUxeRW8O3AggkDp8E5C8oL92+JXzR7BcvDgd2RU/Avo26ueUQ+PG44v8YG3xlVZqZUfqmDrSEy68bhJogd8faORJvedv2rXY931xPa3hBvIPKE5rjk5ur/2YxPtTmwNp2Dt4VhEvIfDm2GcMpr9yUvl+Kzy2rYIHzoIJqbuf4B30oNwaaFTa3NlU9cfreQz1/qbMyZqHD5SS4zzJsnbIxiaWlsXNZhTlDOKCeICc6EtQRps0SinC7BAlriomDiERVKPrHqVPBl2X/k8NDPuXy2sWCPoo8z63kfKIb7cxi/roYfsGI2Cn/BMbC5Zw0uYKu3h3SmWGHQMyOP1Gyt16uINM+Y/9s17xmH6kRV7oWbXqhX+opjrbfBBpqi76WNgQu9jx6qElVtqVD8CR48UR8oywEvwkwKwqxzuk2DlUaM/FOCqsl6rcvUxqK/xFAJGOZ3K31DNpv9uvHWbcfKChkfKit41iorV234XS7VhWV37FPXAbVGzlBgRlEUfUyJ6SoB+xI9SaH70rNUfIfyziOw0/nvQnBUBAhpkYEeYVuOGYe9iColVUsS0T7dnSiP0zmjOB0N8CQZxnEUxRFJommSxNNJmk9wMspbdL6WwspnkJjAAgmkCGogx6F6qqdScorFDs/vIaF/zD1iz/PxWXj+C7H8vQ2mZPe7MXdDnVE/V9cp2d+CfS/pjSXblEaDaUyyi2kSJxejnEwuZgSPL/AsHSdDQrNRfp5G4vKwFcwLGkTjSTSbQTckpTYoAset89pUqHfEdGz50Z4xO9gzRi2R3XukO8C9fKpHVM3tKMhOBJ/dRP0GdwYFTX8nBZ3tTYxx4ApyydSyVFUon1DGS11NKCy0O+ssamA5WkLgWAHmFc2ALhphRVEuS0GQN7wVi41qzhTQ3i3e18cXCjkW0BD4KjALGlSrg2b1MXnEB+WRtl+pbvKghu7P1wFADyroQQP9NEdPud+NfuK2tL07zW1/tpkAPhWtVNbduOuOdySJB9jwxgvgG0HFHwrq/TfELvp33hSPYP0litM5yk11xXZB3i8dbykPBz/kYNIqD7c26UG62vmO0xj3SncX7442OrcTO2108Lu30Z/yutX70QeUD76HffsPqWq6vKgUAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=6386b21d4e0646979e42f5fb8586078f"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>19</order>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>76bb71e7169241f5b85b8503703bcf0a</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>76bb71e7-1692-41f5-b85b-8503703bcf0a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Y3U7jOBR+FStXu5qmctM0TbhDULRIQKEtzMXsEDm201pyfsZxBrqdSvsQ+4T7JHvc/LRTQDsw3IxULgD/nM/fOf6Oc3Q+rayUJNw6sjSJJA83g471lcjSTD6GDh54OAhCkbKy0CEO41LGQsqQcQobmShySZZ3P7o/JwpO0FxZRyuLLoRkiqfW0afPHUswAPB6HA+Cnkf7vX7fwdjx3V7k9aOew/qEcxcgJIm4hK0zQxjGz/HXy/zZuYtdW3RVLWSKGT64Y/FHzVPGgUhMZME7VkJSRnSmltaRViVMKE7YOJXLdsdCpBoAAWbBZV79l5DHQvwFBHxsLGIOPlJerbXDsA5dNR2fEk2mcAbVpaq30kUmKC+q6DAek1Lqk925asM41yJLK5ONw7V1JsskvaqCY7UAzU3BTFkACZ4bj40PtUPxdJE9TBqWZ3CPJjj1oswoke2IaK1EVGrDZ2VxyRMAChOS5yKdh7nKvoqNMXBJunMJg24sswc4tBDztEuoId6FAJPuGcyfbqbviBLGi0uAAeN1xyqWxYkkRbH1BYIYfikNk8qz2oewCoMxoUrk+hgO+MpruutOK/WNuosdmYM2RQFcQqORP0uM++x6Mj65nYwuR1ez8PhiNppcHc9G4cfjyeiP8e10FE5vr68vzkeT+0ITXRaVkeEBrt+TzcHVnNHNfUJA8oJIExQGd1wtrVZFGZmIdJv16bI4Z+v1PXgLoeAsfCCKLzK4qX0LiKEWKTER/NjsaayLrFQgsCe22GGOR3hgM4yJ7ZI4sklAsd2nwz52MPXjOOoKzRNAl+CAWm4xALbmbuK0SZl9Stv1sVlu2FB4B7KEq+eNmtXvTBT/UgoF7sMlp1ro5b5VMz+pNxqnF5nSZM5fZVPmuRRbUj8eoMZyBySU8DaEWiSQVWRZvB7ze3tA1oqkRfwismtwMMc2dqhvu7jn2gHHQ9sfOA7x48CPBqw74RTi/hS7vZU21pCHrVLIgPrDwIntuD/EtuvCL78X92zOiBe5ER70PaeBNgAgRoPQqMZAwRmlmsMb0l4EdR3iwetuO8MYIuFTzw6oN7ADz/OYh6N4gOMGNFciU3BZgNImJ7y9RZY+SU/Upidq0xM16Yn+/fsfdHwN2++OL9BkdHN7Phmdom/oss64I7RaeX3fi5wes12OPdv1giEE0nXseBBH/sD38NBviZknZL1Gv73Oaj//QwHy+x1o3OilYfCyRmHP6Wg6Owf/zsdXaDK+nY2O0HRPuAOXedxl1CaUBSCyIbP9wOvbNPAcFtAo4A5tuGyliy5AFWgGqngLzr6kkPkDdLfX8QLZt2TZU6pvz6uK6Ac0q9PrPfKpwqyQ0CzTRP48zw/vQekbOqkzHTWiMoJ7lwQH8Ov2zUencL4UKTfwr0p1SVLzqYNv5y5ulf+vBmvfDaNECVkH30iOGiEhUaCYgC+qi+4gI+MlgtokAtYMEaUEFATIcEAJ57pAzdtYzUU8zhRHUJeYyiadd9FVhjYfNQQ+UM6696ObpzXxobg4FBeH4uJQXByKi0NxcSguDsXFzxUX/9tAYxwHLzbQetFOA+1McMmKbQetbYs03TOewNGah1WbZK+DVi+iu3qx7qL13r+L1vPw5ucX6qVVbv7yrbSd/ukLTbXP/wGsf4a9QRYAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=76bb71e7169241f5b85b8503703bcf0a"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>a5c8792ff370447081f1eda6b4b05362</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>a5c8792f-f370-4470-81f1-eda6b4b05362</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY227bOBD9FUHPjlfyTXbeFgkMBOg2QJPNS7cgKJGKiaVJlaSSOIb/fYciJQu2asebGGjRJ1vDy9zOmdHo6zoUeEnDy1BLZZBZFTTshU+Yl40M6wxEhOmC49WDX8GBkcEryAus4LyhKrxch9mCcaKoCC+/fuuFjMDGMYlm+Ww2niZRNBxG0WQyzHCcpsNJlkZpGsMVHKeUw9Y70BbcOws6jKp+LkGHZFn9/MkfvaqFUhFryrAX0hdDBaFgQ465pr1wiQXBRqpVI1EUk1vBt4IFEwZug3sWlBfu3xK/aPYKmocDeyKn4F9G3VrziHx4nDi/xgbfGVVmplR+qzNbQ2TWjcNNEDvi7R2JNr3t/le7H+/uJ7R9IN5A5AnNccnN1f/TGZ+qc2B1OgdvC8Mk5D8c2gzhlNfuS14uxWeX1bCx8KEDaG7l+gd4KzUEmxY2tTZXPnH53UI+f6mzMWeisssvcplh3jxhYxRLS2Pjsg5zgnJGOUFMcCasJkibBRLldAka0BIXBROPqFDyiVW3gi/L/iOHh37O5bONBXsUfZxZz/sAMdyfg/y6Ej9gxWwU/oJr4HDPKlzAUa8P6UyxwqBnRh6p2WqvdxFpnjH/t2vdIw7ViarcCze9UK/0Fcdab4MNMEXfSxsDF3ofPVQlqjpSWfEnePBEfaAsBjwJMykIs87pNgxWGjHyTwmsJuu1LlMbi35WaiOXVN1aYNyt9A3ZbPaLx0lnjxUYMj5UYPCsVWCu2o50OVeXmF3Zp64LaracodSMoij6mGLTVQz2yXoSV/dJaEH5Dg6eh2qnM8GF4CgdENIiA2bCsRwzDmcRVUqqFjmifcw7eh6Hc0ZxOhrgSTKM4yiKI5JE0ySJp5M0n+BklLfgfC2F5dAgMYE1JJAiqA05bqqHeiolp1js4PweEvrH3FvscT4+C85/IZS/t9WU7H435k7UGfVz9Z+S/S3Y95LeWLBNaTSYxiS7mCZxcjHKyeRiRvD4As/ScTIkNBvl52kpLg9bwrygQTSeRLMZ9EUCfQBFyLYD5LC3R6Zj24/2jNnBnjFqkezeW7pjuKdP9YiqtR0G2YXgs1uo3+XOwKDp78Sgs72TMQ5YQS6ZWpaqCuUTyjiAyi4oLLS76yxsYDlaQuBYAeoVzQAuGmFFUS5LQZBXvCWLjWrOFODdbd7nxxcKORbQEPgqMAsaVLuDZvcxesQH6ZG2X6lu8qA23d+vAzA9qEwPGtNPc/SUSW/0E7el7RQ1t/3ZZgLwVLRSWXfjrmnvSBIPoOGNo+AbjYo/1Kj3z4pd8O+cGY/Y+ksUp3OUm2rYdkHeLx1vKQ8HP+lg0ioP1SwXpKudLzqNcs90N4J3tNG5Xdhpo4PfvY3+lONW70efUj54Dvv2H2EB+O+yFAAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=a5c8792ff370447081f1eda6b4b05362"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="">43400a1587003300663ca1bb36cb0b4b</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>10</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>c2e678b81180434185528037a54b4570</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>c2e678b8-1180-4341-8552-8037a54b4570</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VXW0/bMBT+K12eS5VeobxNICSkARIg9sDAOrHd1pqbZLZDKVX/+47tJA1tuG1Ugu2tOffv+DvH7vUiiGHKg/2AJjETRiSxDprBHcjMCqdguBIgSaoSllHzIwvDLlssdBaNZDJrFfqLuT5my+Ut41LccTUnM1B8kmSaf1l3YVwbEYPN9L0wKtyBGnT3HkZl/FZyYMSIKScM5top6GLR77EB7zG6A5QNd3qwy3b2hoPuDh0OOmxIoyHv0NY5p4lirccRlksEx4ROJcyv/mWMKSg8Viw82F8EdCIkUzwO9q9vmoFgCHpv1AtDaPf3djFdNwwHgy6FdhR1BzQKo36IISREXKLpQZUYdWQx87RW9q0uANZri2o3A35veMw4VjMCqXkTDyJmYBI1LyUKgZ3FciWYiNhgRIwz4TL1v6Zwr8UDVoCIQusz4oiVcq8tP0l+7F48OgQDF9h/ajKVm9JJIijXvkuMjyCT5qAq8wZnqcXiXQxEsvBOZDaNT31/gjJAwTKUIAkI46kFbVHYw8dCLibJ7Lwo8kjErj05XJlQkOUXGKNElBlbziLgkk8xDplCmop4bNl7J5wzljJtjSV+tCwbMacW47hliZfELWwxtI5QfujEV4DcRhAnGAadl81Az/WBBK1XULCH5FdmK/HAcgjEdcG3wPpRJVLz1dE7r3nZLNeLN1ttlnvSCfuDcDgkCDnThoREZ2lKSi5vDuprXP6O972owvvLvOI1ADnb3Sdxusdsd26NU6/I2R5uge17n4nrOaAPRnYsSEjkCvGHqZNMuVbeESqRX1ahINY+1h+MxstToRNliGPUajKcDDTdHABomKTx8AqWh89v92GF5ReYrXHpK6gpqtjtjg3re70Q5izvboHl3c77sHxRAi6bWNPvYlztCRX2D9Ye1u2RZhWH9rJuit6Us/3WnJ3l5pR23zSmVaJ5zeETfHvnaR4xMhJcMtzjUsRum+JdiHm2NuaMTNA1z0f8TJKZYGNuVtkLK5aYGcifdfqccaQ4KAdvK5sBJ4AorvFQqu/xTri5FZzspY3Qe3YjDNqVjXAC943zMnNtOflWwMHlY9fg6lo4LqU5U3tbeet92Nuvjc/QJ0eq3fTaT3E/bu3G8x3cpPIriEx3n73a+hUin1n6NaL52s1WJs9Z7FdRzUvuyCrWXnKd//0l9yH/tTSfulLe+e/MzW/Q7IWlLxEAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=c2e678b81180434185528037a54b4570"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>7</order>
+        <parent_ui_id>b5f019a2-bdd4-45e7-94fe-2d06a131c0d7</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>c31907bf8a87419aac968a40d71cce1e</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>c31907bf-8a87-419a-ac96-8a40d71cce1e</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VUUYsaMRD+K0uedXH17PV8O7QHBe8OarEPIjJmZzWQTbZJVs+K/72T3ah7PWkrtPShIIsz+WYy3+Sbme2ZghzZgEm9WkjcoGQttgFZet8WjCIzFbaQsJsG7xfyCrWigwIMBTs0bLBnfC1kalCxwWzeYiIlZH/JkyXn7/q9pNPp0W+ZJeld0rlD3n9/m95SCglLunLAxuHqC9W4XeFdfK0Fx2CPQ9jw6NQm9WV0WgxfHKoU6f4MpMUWy0Gl4LTZnTwGIX1W8uxYC+UoG+VZoyzqfzm8WPGNbr7p+IgMiRvH+uxkLkJvanc2AgcTZ0ruShOgddmWurI/kW23oyetMGq3G81ukDi0ztiPKtMNlKjNgEyayPO7/PB+Adxtgj8Yo00DisEO2N6B3jDFDErphtczSH6bQfcaBr0rGNx4BnXznwsnNOmSJV49sJTHp9GyzNVTrTh24jt9XWjwjl4PQSBVWpIAFl5wXkFBTtlkrbefjhp5EKqqKBxKzUGeLHDOiGXpfH/3DCXmlGiRQ1FQIxaF0RtRBVOxebySZMSZ1Fu61IqVioF7ajHpG+IH8o8q9xSM8DQfKQ0FH1rM7uxQgrVnsiThxdfSV1JTDxwWVaOqEG5E4e7pgg2Gcn37GwOao7WwwsYbzCZlUUiBJhrTiEWfRY7RUOe0J4TVak6aiewRIT3CeYRBTo8WZbpU/msiIueEAk8tIgXgWlOf42gISmkX8SohhWnftvjtgvpHVfxqG3Z7P9uG2G9sw8dTZy+2O2xES9KppqW5ESdH53EU/8JG7Pb7f2YlXloyb8f2qqn9/4Zy/h0rfEpJxQcAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=c31907bf8a87419aac968a40d71cce1e"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>c42a605927fa48c69c659666d60bf50f</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>c42a6059-27fa-48c6-9c65-9666d60bf50f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY227bOBD9FUHPjlfyTXbeFgkMBOg2QJPNS7cgKJGKiaVJlaSSOIb/fYciJQu2asebGGjRJ1u8zcyZc2ZEfV2HAi9peBlqqQwyq4KGvfAJ87IZwzqDIcJ0wfHqwc/gwMjgFcYLrGC/oSq8XIfZgnGiqAgvv37rhYzAwjGJZvlsNp4mUTQcRtFkMsxwnKbDSZZGaRrDERynlMPSO7AW3DsPOpyqfi7BhmRZ/fzJb72qB6Ui1pVhL6QvhgpCwYccc0174RILgo1Uq2ZEUUxuBd8OLJgwcBqcs6C8cP+W+EWzV7A8HNgdOYX4Murmmkfk4XHD+TU2+M6oMjOl8kud2xqQWTcBNyB24O0DiTa97fpXux7vrie0vSHeAPKE5rjk5ur/2YxPtTmwNl2At4VhEvIfDm2GcMrr8CUvl+Kzy2rYePjQQTQ3c/0DvpUawKaFTa3NlU9cfreQz1/qbMyZqPzyk1xmmDdP2BjF0tJYXNZhTlDOKCeICc6EtQRps0SinC7BAlriomDiERVKPrHqVIhl2X/k8NDPuXy2WLBH0ceZjbwPFMP9OYxfV8MPWDGLwl9wDGzuWYML2OrtIZ0pVhj0zMgjNVvr9SoizTPm/3bNe8ahOlFVeOGmF+qVvuJY6y3YQFP0vbQYOOg9eqhKVLWl8uJPiOCJeqAsB7wIMykIs8HpNg1WGjHyTwmqJuu1LlOLRR9QImUFxK2lxt1K35DNZr98nLj7WJEh40NFBs9aReaqHUxXgHWZ2R371HVArZgzlJtRFEUfU3C6CsK+YE/S674QLTHfocPzyO10NTgIjkoCIS0yUCdsyzHjsBdRpaRqCSTaZ72T6HE6ZxSnowGeJMM4jqI4Ikk0TZJ4OknzCU5GeYvO11JYFQ0SE1hHAimC2pHjrnqqp1JyisUOz+8hoX/Mvcee5+Oz8PwXYvl7203J7ncxd0OdqJ+rB5Xsb8G+l/TGkm1Ko8E0JtnFNImTi1FOJhczgscXeJaOkyGh2Sg/T1txedgK5gUNovEkms2gN5JSGxShbUNAjoF7knrbpqP9Y3awf4xagrv3Xu8E4aVUPaJqbkdNdiL47Cbqd7szqGn6O6npbO9ojANXkEumlqWqoHxCGQeG2QmFhXZnnUUZLEdLAI4VYF7RDOiiEVYU5bIUBHnDW+FYVHOmgPxu8b5KvlDIsYDmwFeBWdCgWh00q4/JIz4oj7T9enWTB7Xr/nwdgOtB5XrQuH5aoKfc/EY/cYva3qrmtlfbTACfilYq687cdfs7ksQDbHjj1fCNTsUf6tT7745d9O+8Qx7x9ZcoTucoN9Xl24G8XzreUh4OfuLBpFUeqntdkK52vvA0xr3S3ZW8o43O7cROGx387m30p7x69X70aeWD72Tf/gMDwTckwhQAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=c42a605927fa48c69c659666d60bf50f"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>ea3998c7da584c4cb1bf3c5d09be4342</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>ea3998c7-da58-4c4c-b1bf-3c5d09be4342</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VU32/aMBD+VyI/AyJQ1pW3ibZSpf6QytQ9tFV0SS7EkmOntgPNEP/7zsSBiKJtSNvDNIkH/OU733135+95zSQUyKZMqEUkcImC9dgSROUwLjNFx5SbUkD95NGbBi1BU6RFzaZrluRcpBolmz6/9hhPiTaJkzBOkk+TcTgcjukXZ2F6EQ4vMJl8Pk/P6QoBMeWbsluf90gpti4dlOSKJ+jPtz5s1oJKp66MYY/hu0WZIuXPQBjssQJkClbpeodohPRBij2Qc2npNronR1E2/wp4N/w7ZT4buogMSVuCzbfdMfKNaeDsEizMra4SW2lPbco21JX1Tmy/H9wriUG/3+l0R8Smt+f6Vh/MwzPDLvMbaMnlokNeEbInj7rkK62V7lDRnz13vKEZpphBJezsdAXhbysYnaJgfIKCM6egaf5DabmivWSh2x6IRTsaJapC3jcbx3Z6nw5Wv0Evj76AytAKYOkWzm2QX6dsnqvVY7sj11xuK/IfhUpA7E5greZxZV1/1wwFFnRRVEBZUiOiUqsl3wZTscVgIegwyIRaUVLDF3IAiZM2oP2GwTXhl1v4CTR3Mu/oGgre9JipzUyAMXuxtMLRW+UqaaR7DdG2UduQRPPSfqEES/TluvZ3HmiBxsACOzN4nldlKTjq4JaeWPCVFxjMVEE+wY2Sr8GVI4IlaUEB5BscxEtFvpCu16aKnbBBi89rc5NuNgEJtdEqP6Q5mEtw6mlrMFc0iTbkzdaHdFIqLbf1I75VXCOxPprav1X8r7x3NP6Z9+Kk4713uzkeHa73X0OLun2bXf+dt2D78P+C/44mkz9jwMcs7aNJnOQR/58FvP4ADl4UfjAIAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=ea3998c7da584c4cb1bf3c5d09be4342"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=5781daf9870b4031a81683b6d84a84d0^sys_idNOT IN02d26ae9d00a4afba9c03c73020c8ffb,061c9056696542f397eb2d2b959c413f,29ec315289b14cfc8dcb4a40d4b3e680,33667f1db2b547e7b2c354a99dc7945f,7b0525785d4d42d585a223aa6a3a7d45,7ba343dba9f642e082a81a8fe174aa1a,951e83b9eead4001be6046b486db649a,a313ac07f2f54247a540cc565cf50f19,b5f019a2bdd445e794fe2d06a131c0d7,ba201b9db5c84e9c91ab25e142b9aba0,c2f20d8648244aa28d4eb2cfddc16922,db110602f3af40b2ae9a40ac6edda24e"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">f2f1c3d393ef4310e61e3b277bba1071</block>
+        <comment>Evaluate each alternate warehouse supplier route</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="For Each">098e1dc5c3e232002841b63b12d3ae33</logic_definition>
+        <order>15</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:13</sys_created_on>
+        <sys_id>02d26ae9d00a4afba9c03c73020c8ffb</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/51Ty27bMBD8F55tQQ8/ZN+CBAECtA3gBLkUgbEiVzZRilRJyo4q+N+7NGUl6LEnc4c7uzMjemCm823n3au5c04eNNv+fJ8xqQNG54FJwbaMzZiGBukkPTaOyhOoLtTDwHNcrcuqnGdZmc4XxSKbl8tlPi/TYg3LRbVYrtNkh9xY4S4XogrpWgX92/9PaMGSGo+WbQfGj1IJizflQW62EfUmSze8yFdFnqZ5uciqVVFluSgAxYpGKKhQUevT6Ocfe75vQ2nj0hH4NnJ2E0o/QUSezhh+eNQCaX0NyuGMNaAFeGN7tvW2I8AiiGet+qnjKLWP4R5RtfHUwIeTf2h3lqaBUiNZ4xgvp3I/Zhjh+gE8vNAS7js7tvKjkRxdDEVgDZ3y91+x2PDceml0pHio1I1tVNfoHzETNg24fTJCOkcisA2Wg4nRUf1yNOfdTeWj1Nd4xktlOKipAu+trDof9AwMFTY0aN9A20p92LfWnOSVTFqa5KCoSGplzrQ0PNMEeBCeUMKQPBL+cIXfwMrg4juNIfJlxlzv7hU49+mFQtz/7oKS6Gz0sI8xBAq3svV3tOCEo9zLe3jxcfaUKZeOJLwG7On2fwkXPb0lyb9CZ2N/BfGf2OUv1v1ujXkDAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">47f1c3d393ef4310e61e3b277bba1099</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Assign Subflow Outputs">df4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>23</order>
+        <outputs_assigned>recommendationCreated</outputs_assigned>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:13</sys_created_on>
+        <sys_id>061c9056696542f397eb2d2b959c413f</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:48</sys_updated_on>
+        <ui_id>061c9056-6965-42f3-97eb-2d2b959c413f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/4VSTYvbMBD9K0VnQ+3UdFPfSkqgsHRhN/RSljCWxo1YWfJKo2TdkP++o8hxsqfeRm++3nuao3CRhkhh476HoP9a0fw5Cq1EI0QhLPTIkUfp+h6tAtLOrjwCoeL0HkxM+ZJjpcNgYPw9QR2YgAzLnTbKYxr7XIgBPE8k9KLhJZYDC+Ze25e87mPxmYRatAjtt65eLL/W3RdcygUs27asoC7rO6i4y0CLhksfP7D8dKX5HxU0DindOmcQ7ATcT0M3PuLn9STGeZWoV4XAN+JB3N6chRaihzTX+VE0xC0FbwP1YM04V+xYb5a5QzPkqIe3oP/x9rpMHR2yeIk5Nz+3k7UZ7n4AwRPvkBQ9XnxzWmLItinsIBpa3WK54GFIwnMLQWsu3c7E3v7KJol5wOUnGYmBSeCQFCcNk6DuaecOjxeWa23P5kxJ4ySY+QVEXreREp+jIN3j2rs+fwEfniS954iXVVVZluJUiDCGlYEQrrTYj+1rTEMzyYnONitKLdLrgc7DcNp8Smdk03lnH/bgdRI+WyV1YEs2Cft5U6dGvhktb6GD8y+dcYcrdnoHboHxfTwDAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">3af1c3d393ef4310e61e3b277bba1055</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Assign Subflow Outputs">df4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>8</order>
+        <outputs_assigned>recommendationCreated</outputs_assigned>
+        <parent_ui_id>b5f019a2-bdd4-45e7-94fe-2d06a131c0d7</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>29ec315289b14cfc8dcb4a40d4b3e680</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>29ec3152-89b1-4cfc-8dcb-4a40d4b3e680</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/4VSTYvbMBD9K0VnQ+3UdFPfSkqgsHRhN/RSljCWxo1YWfJKo2TdkP++o8hxsqfeRm++3nuao3CRhkhh476HoP9a0fw5Cq1EI0QhLPTIkUfp+h6tAtLOrjwCoeL0HkxM+ZJjpcNgYPw9QR2YgAzLnTbKYxr7XIgBPE8k9KLhJZYDC+Ze25e87mPxmYRatAjtt65eLL/W3RdcygUs27asoC7rO6i4y0CLhksfP7D8dKX5HxU0DindOmcQ7ATcT0M3PuLn9STGeZWoV4XAN+JB3N6chRaihzTX+VE0xC0FbwP1YM04V+xYb5a5QzPkqIe3oP/x9rpMHR2yeIk5Nz+3k7UZ7n4AwRPvkBQ9XnxzWmLItinsIBpa3WK54GFIwnMLQWsu3c7E3v7KJol5wOUnGYmBSeCQFCcNk6DuaecOjxeWa23P5kxJ4ySY+QVEXreREp+jIN3j2rs+fwEfniS954iXVVVZluJUiDCGlYEQrrTYj+1rTEMzyYnONitKLdLrgc7DcNp8Smdk03lnH/bgdRI+WyV1YEs2Cft5U6dGvhktb6GD8y+dcYcrdnoHboHxfTwDAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">f2f1c3d393ef4310e61e3b277bba1058</block>
+        <comment>No destination supplier baseline — cannot compare</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>9</order>
+        <outputs_assigned/>
+        <parent_ui_id>b5f019a2-bdd4-45e7-94fe-2d06a131c0d7</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>33667f1db2b547e7b2c354a99dc7945f</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>33667f1d-b2b5-47e7-b2c3-54a99dc7945f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">32f1c3d393ef4310e61e3b277bba106e</block>
+        <comment>No faster alternate suppliers found</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>14</order>
+        <outputs_assigned/>
+        <parent_ui_id>ba201b9d-b5c8-4e9c-91ab-25e142b9aba0</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:13</sys_created_on>
+        <sys_id>7b0525785d4d42d585a223aa6a3a7d45</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>7b052578-5d4d-42d5-85a2-23aa6a3a7d45</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">faf1c3d393ef4310e61e3b277bba106b</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Assign Subflow Outputs">df4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>13</order>
+        <outputs_assigned>recommendationCreated</outputs_assigned>
+        <parent_ui_id>ba201b9d-b5c8-4e9c-91ab-25e142b9aba0</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:13</sys_created_on>
+        <sys_id>7ba343dba9f642e082a81a8fe174aa1a</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>7ba343db-a9f6-42e0-82a8-1a8fe174aa1a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/4VSTYvbMBD9K0VnQ+3UdFPfSkqgsHRhN/RSljCWxo1YWfJKo2TdkP++o8hxsqfeRm++3nuao3CRhkhh476HoP9a0fw5Cq1EI0QhLPTIkUfp+h6tAtLOrjwCoeL0HkxM+ZJjpcNgYPw9QR2YgAzLnTbKYxr7XIgBPE8k9KLhJZYDC+Ze25e87mPxmYRatAjtt65eLL/W3RdcygUs27asoC7rO6i4y0CLhksfP7D8dKX5HxU0DindOmcQ7ATcT0M3PuLn9STGeZWoV4XAN+JB3N6chRaihzTX+VE0xC0FbwP1YM04V+xYb5a5QzPkqIe3oP/x9rpMHR2yeIk5Nz+3k7UZ7n4AwRPvkBQ9XnxzWmLItinsIBpa3WK54GFIwnMLQWsu3c7E3v7KJol5wOUnGYmBSeCQFCcNk6DuaecOjxeWa23P5kxJ4ySY+QVEXreREp+jIN3j2rs+fwEfniS954iXVVVZluJUiDCGlYEQrrTYj+1rTEMzyYnONitKLdLrgc7DcNp8Smdk03lnH/bgdRI+WyV1YEs2Cft5U6dGvhktb6GD8y+dcYcrdnoHboHxfTwDAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">03f1c3d393ef4310e61e3b277bba1097</block>
+        <comment>Faster alternate route found — recommendation created</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Exit Loop">7444b31c37063110ac85cdd734924bff</logic_definition>
+        <order>22</order>
+        <outputs_assigned/>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:13</sys_created_on>
+        <sys_id>951e83b9eead4001be6046b486db649a</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:48</sys_updated_on>
+        <ui_id>951e83b9-eead-4001-be60-46b486db649a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">03f1c3d393ef4310e61e3b277bba1090</block>
+        <comment>Skip — no transfer route configured between these warehouses</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Skip Iteration">48de1b5837063110ac85cdd734924b15</logic_definition>
+        <order>18</order>
+        <outputs_assigned/>
+        <parent_ui_id>c2f20d86-4824-4aa2-8d4e-b2cfddc16922</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:13</sys_created_on>
+        <sys_id>a313ac07f2f54247a540cc565cf50f19</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>a313ac07-f2f5-4247-a540-cc565cf50f19</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">bef1c3d393ef4310e61e3b277bba1051</block>
+        <comment>No supplier lead time record for destination warehouse</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>6</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>b5f019a2bdd445e794fe2d06a131c0d7</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>b5f019a2-bdd4-45e7-94fe-2d06a131c0d7</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K5Of2yjfkL4hGFIlGBNFk6YJRTe201pz4sx2gCzqf991krZodGJse9xbfOx7fc7JPUlPVGub1po7dWaMWNdk8eV+RkTtMHzuiWBkQciM1FBxfKKqZsIKVSP0ALJ1WN8nMUt5zOgcKMvmMZyw+WmWRnOapSHLaJHxkHq3nCrNPNOZXLDtdrl6f/3x7jP2YcI0ErpP/6gd3QjJNJ+kNKCRueWaLPqftgZpGSRlEvgJjcI0Cn0/PI2DIo2KIGQR8DjFhhIKLvHo+TPtR+ywXeMgY7Wo19P6aipd7UCk7KiE/ozwJ8trxpFECdLwGamgZmCV7sjC6hYBzYHd1LLbn9iI2o6vY8NlMz5V8GTEd+56+r6rKTkqpHzc3S/zyeURLi/AApJqqW31dJRulKDcjN4wXkIr7flzbDxw0wx6hxILhdxVK9lW9YfRFrJvsHupiLQGSfDGaXYqJknlaqMeb3csL0U9+DNtSkVB7ldg0cWitY5PT7jkFTbKK2ga9DZvtHoQQzFyqby1xIVXSvWIl7rJ9oA64h5aDN4l4hcD/Am0cCqusQ0W41SY3FAtmp224XKynRGctHMJxhw0orn5t9YxHBVP2vLRHlcyNDrDix/4JGM764ljdaXWgi5rYwFlrzqzdMNYJKUfZBAWjMVxwk+yuOQh81MIooD67IRMQ1v6UAYZDY4PLURHBjQfgENoX+aOvB6W37j3RVjejRn4NaO35CZ4JTcT8sbgJMn/3Px1bhzNAoyg+fD3wHbuI/aHwZlMvxRcsqPDdCxZ9266R1b7t0GFwbI7hy13PzW30eHwufwdoEelvzrZB2z7A1NucUAeBwAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">faf1c3d393ef4310e61e3b277bba1068</block>
+        <comment>No alternate suppliers with shorter lead time than destination</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>11</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>ba201b9db5c84e9c91ab25e142b9aba0</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>ba201b9d-b5c8-4e9c-91ab-25e142b9aba0</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K5Of28r5KmnfUFElJDakgXjZUHTtOK01x85iB8ii/vddJ2mLoBNjvO4tPva9PufknqQjpnFV4+ytObdWbjRZfrufEKk9hs8dkTlZEjIhGkqBT9zoXDppNEIPoBqPdR0PxfwsZek0CFI6jaM4mKZJEk5TGp1BErM4OaOzlWm02+2+N5RGOcX6XNpKQXv3wTZ8K1Vei5F6BTUydaImy+7FVi9lAUmRBDThUTiPQkrDNA7YPGJBmEcg4jk2VMCEwqOrZ1pPyHdt5SHraqk34/pqLL3Zg6bOPZWQToh4ckLnAkkUoKyYkBJ0Ds7ULVm6ukGgFpBfa9UeTmyldoP9W6Gq4amEJyt/Cd+TUl9TCFTIxbB7WGajuwNcXIADJNVw19TjUb41kgs7eJOLAhrlVs+x4cB11evtSxwwta82qin1l8EWcmiwf5mINBZJiMpr9ipGScXN1jx+3bNcS937M24qw0EdVuDQRdY4z6cjQokSG2UlVBV6m1W1eZB9MXIpZxuFi1mhzCNe6id5BtwTn6HFMFsjftHDd1BLr+IztsFinAqbWV7Laq+tv5zsJsS2dqXA2qNGNDf72XiGg+JRWzbY40v6Rud48YMYZewmHfGsrsxG8kttHaDsm9Ze+mFkENKALXKW8DQWC74IgIWJCOKQLYCBn+5+aAsKRbDgwemhhejEgGY9cAzp67yRt8PyF/e+CsunIQN/ZvSe3ARv5GZE3hmcJPmfmw/nxtNkYCXP+r8FtvMfsX8Mzmj6WgqVnxymU8m699M9sDq8DS4tlt167HL/E/MbLQ6fz98RejT1Dy/7iO1+A9EK9ooOBwAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">76f1c3d393ef4310e61e3b277bba108d</block>
+        <comment>No transfer lead time record for this warehouse pair</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>17</order>
+        <outputs_assigned/>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:13</sys_created_on>
+        <sys_id>c2f20d8648244aa28d4eb2cfddc16922</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>c2f20d86-4824-4aa2-8d4e-b2cfddc16922</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1V0W6bMBT9lcnPCTIOZCRvVbpKkdp1aqpK01Shi20SawYzbNqyKP++ayBJtWbquu1xb/jY9/qcwz2wJaZxVePsrTmzVq1LMv9yPyKq9Bg+b4kSZE7IiJRQSHziphTKKVMi9AC68dh2G8GMUyrpmDKejCMaRuOZpO/HScwYJPksyWIR3EhuahHY1qZK7HbL1YerT7efsY9QttLQ3v2jdnyjtKjlIKWCGpk7WZP59qetTtoM4jwOacwnbDphlLIkCrPpJAuZmICMpthQQyY1Hl08037CDtdWHrKuVuV6WF8Opas9iJQ9FUZHRD45WQqJJHLQVo5IAaUAZ+qWzF3dIFBLENelbg8nNqp0/evYSF31TwU8WfVd+p6U+ppcokIu+93DMh1c7uH8HBwgqYa7ph6O8o1RXNreGyFzaLRbPMf6A9dVp7crcZDpfbXRTVF+7G0hhwb7l4pIY5GErLxmr2KQlK825vFmz/JClZ0/w6Y2HPRhBQ5dzBrn+WyJ1LLARmkBVYXeplVtHlRXjFyKYK1xEeTaPOKlfrID4J54gBZDcIH4eQffQa28iitsg8U4FTa1vFbVXlt3OdmNCE7aQoO1R41obvqt8Qx7xYO2tLfHl3SNzvDiBznI2I22xLO6NGvFl6V1gLJXrV36YeQsZ1Qk0yhhUQTAEhHJjPFcCB5OZ4yRYWhzCnk44+HpoYXJiQFNO+AY2pe5I6+H5TfufRGWd30Gfs3oLbkJX8nNgLwxOHH8Pzd/nRtPMwOreNr9PbCd/4j9YXAG0y+U1OLkMJ1K1r2f7p7V4W1wZbHs1mPL/U/Nb7Q4fD5/R+jR1F+97CO2+wHgnEUtHgcAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">47f1c3d393ef4310e61e3b277bba1094</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Assign Subflow Outputs">df4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>21</order>
+        <outputs_assigned>recommendationCreated</outputs_assigned>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:13</sys_created_on>
+        <sys_id>db110602f3af40b2ae9a40ac6edda24e</sys_id>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:47</sys_updated_on>
+        <ui_id>db110602-f3af-40b2-ae9a-40ac6edda24e</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/4VSTYvbMBD9K0VnQ53UtKlvJSVQWLqwG3opJYylcSNWllxpnKwb8t87EzlO9tSTx/Px5r2nOakwUD9Q2oYvKdnfXtU/T8oaVStVKA8dchRRh65Db4Bs8OuIQGi4fAA3SH3BsbGpdzD+mFIU+VMovbfORBTUX4XqITIgYVQ17/AceHAP1r/kbW+bLxzMskFoPrfVcvWxaj/gSi9h1TTlAqqy+gSy2EGDjluf3pB8d2P5HxE09lJuQnAIfko8TKBblvF+Ay6JmBCNUF8UCl+JgXi8bqVWqA4EN8RR1aK84G1gHr0b5449680y9+j6HHXwmuxf3l6VMtEii9eYa/PvbnI2p9uvQPDMOzQNEa++BasxZdsMtjA4Wt/ncsNjL8LzCEHjrtPBDZ3/nk1SM8D1ITkzJCaBvSgWDZOg9nkfjk9XlhvrL+ZMRRc0uPkPiKJtBhI+J0W2w00MXX4CvjtN9sCRHNKiLEt1LlQa09pBSjda7MfuzyCgmeREZ5cVyYiOtqcLGE6bz3JGXq47+3CAaEX4bJW2iS3ZSu7bXZ8Z+Wasvk8dQ3xpXTjecud/v3Jp2jsDAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>quantityRequired</element>
+        <help/>
+        <hint/>
+        <label>Quantity Required</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0</name>
+        <plural>Quantity Required</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:11</sys_created_on>
+        <sys_id>1363c3cce709440bbb624fe716746671</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:11</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>productionOrderSysId</element>
+        <help/>
+        <hint/>
+        <label>Production Order sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0</name>
+        <plural>Production Order sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>47002974c12d4925bc6b53090a8f8b2f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:12</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>customerOrderSysId</element>
+        <help/>
+        <hint/>
+        <label>Customer Order sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0</name>
+        <plural>Customer Order sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>7631f8db4ed547849b008177a657a9a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:12</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>materialSysId</element>
+        <help/>
+        <hint/>
+        <label>Material sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0</name>
+        <plural>Material sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:11</sys_created_on>
+        <sys_id>a76bbf12686a4129ba6163a625a73dcb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:11</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>destinationWarehouseSysId</element>
+        <help/>
+        <hint/>
+        <label>Destination Warehouse sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0</name>
+        <plural>Destination Warehouse sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:11</sys_created_on>
+        <sys_id>c262f7aa8b724d8ca4496919906f3f60</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:11</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>recommendationCreated</element>
+        <help/>
+        <hint/>
+        <label>Recommendation Created</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_output_5781daf9870b4031a81683b6d84a84d0</name>
+        <plural>Recommendation Created</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:12</sys_created_on>
+        <sys_id>a3628315df9f4efb924da0af69e4191a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:12</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>false</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <authored_on_release_version>-1</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>Compares procurement routes by evaluating supplier lead times at the destination warehouse versus alternate warehouses plus inter-warehouse transfer time. Creates a PROCUREMENT_ALTERNATE_WAREHOUSE_SUPPLIER recommendation when an alternate route is faster. Never places orders automatically.</description>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>fd__material_fulfillment__supplier_lead_time_comparison</internal_name>
+        <label_cache>[{"name":"subflow.materialSysId","label":"Input➛Material sys_id","type":"string","base_type":"string","usedInstances":{"ea3998c7-da58-4c4c-b1bf-3c5d09be4342":["log_message"],"6386b21d-4e06-4697-9e42-f5fb8586078f":["conditions"],"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c":["conditions"],"c2e678b8-1180-4341-8552-8037a54b4570":["conditions"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"subflow.destinationWarehouseSysId","label":"Input➛Destination Warehouse sys_id","type":"string","base_type":"string","usedInstances":{"ea3998c7-da58-4c4c-b1bf-3c5d09be4342":["log_message"],"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c":["conditions"],"c2e678b8-1180-4341-8552-8037a54b4570":["conditions"],"4a9c00e0-02c8-4014-9e07-8522a8f98b5d":["conditions"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"subflow.quantityRequired","label":"Input➛Quantity Required","type":"decimal","base_type":"decimal","usedInstances":{"ea3998c7-da58-4c4c-b1bf-3c5d09be4342":["log_message"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"subflow.productionOrderSysId","label":"Input➛Production Order sys_id","type":"string","base_type":"string","usedInstances":{"c42a6059-27fa-48c6-9c65-9666d60bf50f":["conditions"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"subflow.customerOrderSysId","label":"Input➛Customer Order sys_id","type":"string","base_type":"string","usedInstances":{"a5c8792f-f370-4470-81f1-eda6b4b05362":["conditions"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c.Record.sys_id","label":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c➛Record➛sys_id","type":"string","base_type":"string","usedInstances":{"b5f019a2-bdd4-45e7-94fe-2d06a131c0d7":["condition"]},"attributes":{}},{"name":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c.Record.lead_time_days","label":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c➛Record➛lead_time_days","type":"decimal","base_type":"decimal","usedInstances":{"c2e678b8-1180-4341-8552-8037a54b4570":["conditions"],"5f5b16d1-afb3-4938-80df-401f8034811d":["log_message"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"],"54fe54dc-9dde-4d7c-996f-761bfce323eb":["log_message"]},"attributes":{}},{"name":"c2e678b8-1180-4341-8552-8037a54b4570.Count","label":"c2e678b8-1180-4341-8552-8037a54b4570➛Count","type":"integer","base_type":"integer","usedInstances":{"ba201b9d-b5c8-4e9c-91ab-25e142b9aba0":["condition"]},"attributes":{}},{"name":"c2e678b8-1180-4341-8552-8037a54b4570.Records","label":"c2e678b8-1180-4341-8552-8037a54b4570➛Records","type":"records","base_type":"records","column_name":"Records","usedInstances":{"02d26ae9-d00a-4afb-a9c0-3c73020c8ffb":["items"]},"attributes":{}},{"name":"02d26ae9-d00a-4afb-a9c0-3c73020c8ffb.item.delivery_warehouse","label":"15 - For Each - ➛item➛Delivery Warehouse","type":"string","base_type":"string","usedInstances":{"4a9c00e0-02c8-4014-9e07-8522a8f98b5d":["conditions"],"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"4a9c00e0-02c8-4014-9e07-8522a8f98b5d.Record.sys_id","label":"4a9c00e0-02c8-4014-9e07-8522a8f98b5d➛Record➛sys_id","type":"string","base_type":"string","usedInstances":{"c2f20d86-4824-4aa2-8d4e-b2cfddc16922":["condition"]},"attributes":{}},{"name":"02d26ae9-d00a-4afb-a9c0-3c73020c8ffb.item.supplier","label":"15 - For Each - ➛item➛Supplier","type":"reference","base_type":"reference","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"02d26ae9-d00a-4afb-a9c0-3c73020c8ffb.item.lead_time_days","label":"15 - For Each - ➛item➛Lead Time Days","type":"decimal","base_type":"decimal","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"],"54fe54dc-9dde-4d7c-996f-761bfce323eb":["log_message"]},"attributes":{}},{"name":"4a9c00e0-02c8-4014-9e07-8522a8f98b5d.Record.lead_time_days","label":"4a9c00e0-02c8-4014-9e07-8522a8f98b5d➛Record➛lead_time_days","type":"decimal","base_type":"decimal","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"],"54fe54dc-9dde-4d7c-996f-761bfce323eb":["log_message"]},"attributes":{}},{"name":"a5c8792f-f370-4470-81f1-eda6b4b05362.Record.requested_delivery_date","label":"a5c8792f-f370-4470-81f1-eda6b4b05362➛Record➛requested_delivery_date","type":"glide_date_time","base_type":"glide_date_time","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"c42a6059-27fa-48c6-9c65-9666d60bf50f.Record.priority","label":"c42a6059-27fa-48c6-9c65-9666d60bf50f➛Record➛priority","type":"string","base_type":"string","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"6386b21d-4e06-4697-9e42-f5fb8586078f.Record.name","label":"6386b21d-4e06-4697-9e42-f5fb8586078f➛Record➛name","type":"string","base_type":"string","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"6386b21d-4e06-4697-9e42-f5fb8586078f.Record.material_product_id","label":"6386b21d-4e06-4697-9e42-f5fb8586078f➛Record➛material_product_id","type":"string","base_type":"string","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c.Record.supplier","label":"54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c➛Record➛supplier","type":"reference","base_type":"reference","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}},{"name":"c42a6059-27fa-48c6-9c65-9666d60bf50f.Record.planned_end_date","label":"c42a6059-27fa-48c6-9c65-9666d60bf50f➛Record➛planned_end_date","type":"glide_date_time","base_type":"glide_date_time","usedInstances":{"76bb71e7-1692-41f5-b85b-8503703bcf0a":["values"]},"attributes":{}}]</label_cache>
+        <master>true</master>
+        <name>FD - Material Fulfillment - Supplier Lead Time Comparison</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</parent_flow>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>draft</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:54</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>080207d393ef4310e61e3b277bba1045</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:56</sys_updated_on>
+        <type>subflow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=080207d393ef4310e61e3b277bba1045"/>
+    <sys_variable_value action="delete_multiple" query="document_key=080207d393ef4310e61e3b277bba1045"/>
+    <sys_element_mapping action="delete_multiple" query="table=var__m_sys_hub_flow_output_080207d393ef4310e61e3b277bba1045^id=080207d393ef4310e61e3b277bba1045"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=080207d393ef4310e61e3b277bba1045"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=080207d393ef4310e61e3b277bba1045^sys_idNOT INc40207d393ef4310e61e3b277bba1078"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>080207d393ef4310e61e3b277bba1045</id>
+        <name>FD - Material Fulfillment - Supplier Lead Time Comparison</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:54</sys_created_on>
+        <sys_id>c40207d393ef4310e61e3b277bba1078</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:54</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=c40207d393ef4310e61e3b277bba1078"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=080207d393ef4310e61e3b277bba1045^sys_idNOT IN0c0207d393ef4310e61e3b277bba1079,100207d393ef4310e61e3b277bba108b,540207d393ef4310e61e3b277bba10d3,d80207d393ef4310e61e3b277bba10a2,d80207d393ef4310e61e3b277bba10de"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=string</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>materialSysId</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Material sys_id</label>
+        <mandatory>true</mandatory>
+        <max_length>40</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</model>
+        <model_id>080207d393ef4310e61e3b277bba1045</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045</name>
+        <next_element/>
+        <order>1</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:54</sys_created_on>
+        <sys_id>0c0207d393ef4310e61e3b277bba1079</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:52</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=0c0207d393ef4310e61e3b277bba1079"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=string</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>destinationWarehouseSysId</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Destination Warehouse sys_id</label>
+        <mandatory>true</mandatory>
+        <max_length>40</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</model>
+        <model_id>080207d393ef4310e61e3b277bba1045</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045</name>
+        <next_element/>
+        <order>2</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:55</sys_created_on>
+        <sys_id>100207d393ef4310e61e3b277bba108b</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:52</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=100207d393ef4310e61e3b277bba108b"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=string</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>productionOrderSysId</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Production Order sys_id</label>
+        <mandatory>false</mandatory>
+        <max_length>40</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</model>
+        <model_id>080207d393ef4310e61e3b277bba1045</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045</name>
+        <next_element/>
+        <order>4</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:56</sys_created_on>
+        <sys_id>540207d393ef4310e61e3b277bba10d3</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:52</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=540207d393ef4310e61e3b277bba10d3"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=decimal</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>quantityRequired</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="Decimal">decimal</internal_type>
+        <label>Quantity Required</label>
+        <mandatory>true</mandatory>
+        <max_length>20</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</model>
+        <model_id>080207d393ef4310e61e3b277bba1045</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045</name>
+        <next_element/>
+        <order>3</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:55</sys_created_on>
+        <sys_id>d80207d393ef4310e61e3b277bba10a2</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:52</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=d80207d393ef4310e61e3b277bba10a2"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=string</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>customerOrderSysId</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Customer Order sys_id</label>
+        <mandatory>false</mandatory>
+        <max_length>40</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</model>
+        <model_id>080207d393ef4310e61e3b277bba1045</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045</name>
+        <next_element/>
+        <order>5</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:56</sys_created_on>
+        <sys_id>d80207d393ef4310e61e3b277bba10de</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:53</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=d80207d393ef4310e61e3b277bba10de"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=080207d393ef4310e61e3b277bba1045^sys_idNOT INec0207d393ef4310e61e3b277bba10f9"/>
+    <sys_hub_flow_output action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=11000,uiType=boolean</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>recommendationCreated</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_link/>
+        <internal_type display_value="">boolean</internal_type>
+        <label>Recommendation Created</label>
+        <mandatory>true</mandatory>
+        <max_length>40</max_length>
+        <model display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</model>
+        <model_id>080207d393ef4310e61e3b277bba1045</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_output_080207d393ef4310e61e3b277bba1045</name>
+        <next_element/>
+        <order>1</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_output</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:56</sys_created_on>
+        <sys_id>ec0207d393ef4310e61e3b277bba10f9</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:53</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_output>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=ec0207d393ef4310e61e3b277bba10f9"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=080207d393ef4310e61e3b277bba1045"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=080207d393ef4310e61e3b277bba1045"/>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=080207d393ef4310e61e3b277bba1045^sys_idNOT IN300247d393ef4310e61e3b277bba107e,340247d393ef4310e61e3b277bba1077,340247d393ef4310e61e3b277bba107f,380247d393ef4310e61e3b277bba1080,3c0247d393ef4310e61e3b277bba107c,700247d393ef4310e61e3b277bba107a,740247d393ef4310e61e3b277bba107b,7c0247d393ef4310e61e3b277bba1078,b40247d393ef4310e61e3b277bba107d,bc0247d393ef4310e61e3b277bba107f,f40247d393ef4310e61e3b277bba1079,f80247d393ef4310e61e3b277bba107a"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="Look Up Record">b93f42810b30030085c083eb37673a63</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>16</order>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>300247d393ef4310e61e3b277bba107e</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:56</sys_updated_on>
+        <ui_id>4a9c00e0-02c8-4014-9e07-8522a8f98b5d</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY32/iOBD+V6I8A+cQINC3U6tKlfa20ra397C3Z01ip1hnnKzjtKWo//uOYwc4yJb2WqSt9gniXzPzzTffxPmyChUseHgSVoU21CxLHvbCW5D1egyqDIeYqEoJy89+BgJTBA84XoLG/Ybr8GQVZnMhmeYqPPnytRcKhgvHjMzy2Ww8TQiJY0ImkziDKE3jSZaSNI3wCAkpl7j0Cq0F186DDqeanxO0UYisff7gt562g4Vm1pW4F/J7wxXj6EMOsuK9cAGKgSn0cj2iObBLJTcDc6EMnobnzLks3b8F3FfiAS3HQ7sj5xhfxt3c+pF6eNxwfgYGroyuM1Nrv9S5XSEyq3XAaxA78PaBkMfeZv2DXQ+76xnf3hA9IvKM51BLc/r/bEYvtTm0Nl2Al6URBeY/jG2GIJVt+IWsF+qjy2q49vBzB9HczNkP+FZXCDYvbWptrnzi8qt5cfepzca5UI1fflIWGcj1ExijRVobi8sqzBnNBZeMCiWFspYwbZZIXPIFWqALKEuhbmipi1vRnIqxLAY3Eh8GuSzuLBbiRg0gs5EPkGIwOMfxs2b4M2hhUfgDj8HNPWtwjlu9PVplWpSG3gl2w83GeruKFeYO5L9d855xtE1UE1742AurZXUqoao2YCNN6bfaYuCg9+jRJlHNlsaL3zGCW+6BshzwRZgVigkbXPUfGtQaeX8Hms8LTMrfNdY3W63IkA0nwGd9Rgj0R5CnfZhlpB9nSUyGJJvmeToQhi8GjEs0p5ebMx4f/0EwjVBgre2fXdWpRXywteivds3VsrpgeAA0QbgdHqwd6XpHnh8SVzZ+SlxhtiWup9tJ7EpsK6+7Yx+6DmiV4ggyOyKEvI3QdgnhvlC9SKf2Bchm6hX6cxyZebkKOAgOSgGllcpQlXBbDkLiXsq1LvSWMJD9inPSdJjOGYd0NIRJEkcRIRFhCZkmSTSdpPkEklG+ReezQtlKGSYmsI4EhQpaRw676qmeFoXkoHZ4fo0J/e3ce+x5Pj4Kz98Ry1/bZmtxvYu5G+pE/Vi9txZ/KvGt5heWbFNOhtOIZf1pEiX9Uc4m/RmDMWp+Ok5ixrNRfpx26vKwKZh7OiTjCZnN8J2A1ZWhhBoNqkKUKWLFqBGLjjb23G0He8jsyR4y2iq6a+/5TiC+nJpH2sztVJSdCD66ifa99ggVNf2VKupo76dCIleoS6Z7VcIjb2kmkWN2wnLMnXWU6hA5XSBwokTzmmdIl4rimxLNi1ox6g1viseimguN9HeL9+vkE8ccK2wQchmYOQ+a1cF69aHyiJ4sj3T7FesiD1rX/flVgK4HjevB2vWXBfqSW+/oJ25Tmxvlue3XNhPIp3IrlW137rr5HkjiE2x45rX4mU5Fb+rU6+/NXfTvvD8f8PVdiNMx5Kb58OBA3peO58jDk5+3gG3Jw6VNepAud75urY37SnefIzra6Lmd2Gmjw1+9jf6U16/ejz4rvfG97Ot3JLQZIL4VAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=300247d393ef4310e61e3b277bba107e"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="Log">0e0ae8c2531003003bf1d9109ec587c8</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>5bc1bcc6531003003bf1d9109ec587d4</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>340247d393ef4310e61e3b277bba1077</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:58</sys_updated_on>
+        <ui_id>ea3998c7-da58-4c4c-b1bf-3c5d09be4342</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VU32/aMBD+VyI/AyJQ1pW3ibZSpf6QytQ9tFV0SS7EkmOntgPNEP/7zsSBiKJtSNvDNIkH/OU733135+95zSQUyKZMqEUkcImC9dgSROUwLjNFx5SbUkD95NGbBi1BU6RFzaZrluRcpBolmz6/9hhPiTaJkzBOkk+TcTgcjukXZ2F6EQ4vMJl8Pk/P6QoBMeWbsluf90gpti4dlOSKJ+jPtz5s1oJKp66MYY/hu0WZIuXPQBjssQJkClbpeodohPRBij2Qc2npNronR1E2/wp4N/w7ZT4buogMSVuCzbfdMfKNaeDsEizMra4SW2lPbco21JX1Tmy/H9wriUG/3+l0R8Smt+f6Vh/MwzPDLvMbaMnlokNeEbInj7rkK62V7lDRnz13vKEZpphBJezsdAXhbysYnaJgfIKCM6egaf5DabmivWSh2x6IRTsaJapC3jcbx3Z6nw5Wv0Evj76AytAKYOkWzm2QX6dsnqvVY7sj11xuK/IfhUpA7E5greZxZV1/1wwFFnRRVEBZUiOiUqsl3wZTscVgIegwyIRaUVLDF3IAiZM2oP2GwTXhl1v4CTR3Mu/oGgre9JipzUyAMXuxtMLRW+UqaaR7DdG2UduQRPPSfqEES/TluvZ3HmiBxsACOzN4nldlKTjq4JaeWPCVFxjMVEE+wY2Sr8GVI4IlaUEB5BscxEtFvpCu16aKnbBBi89rc5NuNgEJtdEqP6Q5mEtw6mlrMFc0iTbkzdaHdFIqLbf1I75VXCOxPprav1X8r7x3NP6Z9+Kk4713uzkeHa73X0OLun2bXf+dt2D78P+C/44mkz9jwMcs7aNJnOQR/58FvP4ADl4UfjAIAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=340247d393ef4310e61e3b277bba1077"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>19</order>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>340247d393ef4310e61e3b277bba107f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:58</sys_updated_on>
+        <ui_id>76bb71e7-1692-41f5-b85b-8503703bcf0a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Y3U7jOBR+FStXu5qmctM0TbhDULRIQKEtzMXsEDm201pyfsZxBrqdSvsQ+4T7JHvc/LRTQDsw3IxULgD/nM/fOf6Oc3Q+rayUJNw6sjSJJA83g471lcjSTD6GDh54OAhCkbKy0CEO41LGQsqQcQobmShySZZ3P7o/JwpO0FxZRyuLLoRkiqfW0afPHUswAPB6HA+Cnkf7vX7fwdjx3V7k9aOew/qEcxcgJIm4hK0zQxjGz/HXy/zZuYtdW3RVLWSKGT64Y/FHzVPGgUhMZME7VkJSRnSmltaRViVMKE7YOJXLdsdCpBoAAWbBZV79l5DHQvwFBHxsLGIOPlJerbXDsA5dNR2fEk2mcAbVpaq30kUmKC+q6DAek1Lqk925asM41yJLK5ONw7V1JsskvaqCY7UAzU3BTFkACZ4bj40PtUPxdJE9TBqWZ3CPJjj1oswoke2IaK1EVGrDZ2VxyRMAChOS5yKdh7nKvoqNMXBJunMJg24sswc4tBDztEuoId6FAJPuGcyfbqbviBLGi0uAAeN1xyqWxYkkRbH1BYIYfikNk8qz2oewCoMxoUrk+hgO+MpruutOK/WNuosdmYM2RQFcQqORP0uM++x6Mj65nYwuR1ez8PhiNppcHc9G4cfjyeiP8e10FE5vr68vzkeT+0ITXRaVkeEBrt+TzcHVnNHNfUJA8oJIExQGd1wtrVZFGZmIdJv16bI4Z+v1PXgLoeAsfCCKLzK4qX0LiKEWKTER/NjsaayLrFQgsCe22GGOR3hgM4yJ7ZI4sklAsd2nwz52MPXjOOoKzRNAl+CAWm4xALbmbuK0SZl9Stv1sVlu2FB4B7KEq+eNmtXvTBT/UgoF7sMlp1ro5b5VMz+pNxqnF5nSZM5fZVPmuRRbUj8eoMZyBySU8DaEWiSQVWRZvB7ze3tA1oqkRfwismtwMMc2dqhvu7jn2gHHQ9sfOA7x48CPBqw74RTi/hS7vZU21pCHrVLIgPrDwIntuD/EtuvCL78X92zOiBe5ER70PaeBNgAgRoPQqMZAwRmlmsMb0l4EdR3iwetuO8MYIuFTzw6oN7ADz/OYh6N4gOMGNFciU3BZgNImJ7y9RZY+SU/Upidq0xM16Yn+/fsfdHwN2++OL9BkdHN7Phmdom/oss64I7RaeX3fi5wes12OPdv1giEE0nXseBBH/sD38NBviZknZL1Gv73Oaj//QwHy+x1o3OilYfCyRmHP6Wg6Owf/zsdXaDK+nY2O0HRPuAOXedxl1CaUBSCyIbP9wOvbNPAcFtAo4A5tuGyliy5AFWgGqngLzr6kkPkDdLfX8QLZt2TZU6pvz6uK6Ac0q9PrPfKpwqyQ0CzTRP48zw/vQekbOqkzHTWiMoJ7lwQH8Ov2zUencL4UKTfwr0p1SVLzqYNv5y5ulf+vBmvfDaNECVkH30iOGiEhUaCYgC+qi+4gI+MlgtokAtYMEaUEFATIcEAJ57pAzdtYzUU8zhRHUJeYyiadd9FVhjYfNQQ+UM6696ObpzXxobg4FBeH4uJQXByKi0NxcSguDsXFzxUX/9tAYxwHLzbQetFOA+1McMmKbQetbYs03TOewNGah1WbZK+DVi+iu3qx7qL13r+L1vPw5ucX6qVVbv7yrbSd/ukLTbXP/wGsf4a9QRYAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=340247d393ef4310e61e3b277bba107f"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="Log">0e0ae8c2531003003bf1d9109ec587c8</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>5bc1bcc6531003003bf1d9109ec587d4</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>24</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>380247d393ef4310e61e3b277bba1080</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:58</sys_updated_on>
+        <ui_id>25ecbc5f-8510-4127-b362-69d1aa518f02</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VUUYsaMRD+KyFPLeji6tnr+Va0BwXvDmqxD8chY3ZWA9lkm2S9s3L/vZPdqMudtBVaKBR8MN/OTOb78s3c77iGAvmIK7NaKNyg4h2+AVUFTOrc0DGTrlSwnUf0U4OWYCnTo+WjHRdrqTKLmo/uHzpcZhQ2XIp0KcS74SDt9Qb0W+ZpdpX2rlAM319ml1RCwZLuG/FpvPdEK35bBkisjRQYz9OYNt6DxmahjV6H45NHnSHdn4Ny2OEF6Ay8sdsDYhGyO62OwFpqT9WozhpV2fwr4MnJ73TzRS9k5EjcBDbfDsdFFKaB8wl4mHlbCV/ZGNq07UiV3YFst8tujUbW7baUbpF47hxjo9Qv3iNGpu3Ir2C11KtW8CMhx+B+O/ijtca2QjGeY+zgmd4wwxwq5cfnM0h/m0H/HAaDMxhcBAaN+Hell4Z8ydPgHliq/dMYVRX6tnEcP/Cdv7B+g05OTkDlyAJYBsMFB0U75bO1efy898i11HVH8aMyAtThBN5buax80HfHUWFBhRYFlCUJsSit2cg6mZotkpWiQ5Ir80iXOrnSCYhALSF/Q3JN+KSG52BloHlDZSj5ucPd1o0VOHckSxZefKtCJw31yGFRC1WnCCtL/4Eu2GBsN8jfGtACnYMVtt7gflaVpZJo2ZRGjH2RBbKxKWhPSGf0A3mGberOGChaGxo8MuIoaFoCb2YNKcFyU+mMvSmkcyQC8xa0Iy2br+5tEspYJEEoh5iTAEzQSHvMkter6l9o6Vd7sj/42Z7EYWtP3hw0P/kQcVc6MlU9R+1dOduD+yH9C7uyPxz+mWV5av28Huiz5vn/G9eHH6xJIiHcBwAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=380247d393ef4310e61e3b277bba1080"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="Look Up Records">d1c56ec50b30030085c083eb37673a50</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>43400a1587003300663ca1bb36cb0b4b</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>10</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>3c0247d393ef4310e61e3b277bba107c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:58</sys_updated_on>
+        <ui_id>c2e678b8-1180-4341-8552-8037a54b4570</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VXW0/bMBT+K12eS5VeobxNICSkARIg9sDAOrHd1pqbZLZDKVX/+47tJA1tuG1Ugu2tOffv+DvH7vUiiGHKg/2AJjETRiSxDprBHcjMCqdguBIgSaoSllHzIwvDLlssdBaNZDJrFfqLuT5my+Ut41LccTUnM1B8kmSaf1l3YVwbEYPN9L0wKtyBGnT3HkZl/FZyYMSIKScM5top6GLR77EB7zG6A5QNd3qwy3b2hoPuDh0OOmxIoyHv0NY5p4lirccRlksEx4ROJcyv/mWMKSg8Viw82F8EdCIkUzwO9q9vmoFgCHpv1AtDaPf3djFdNwwHgy6FdhR1BzQKo36IISREXKLpQZUYdWQx87RW9q0uANZri2o3A35veMw4VjMCqXkTDyJmYBI1LyUKgZ3FciWYiNhgRIwz4TL1v6Zwr8UDVoCIQusz4oiVcq8tP0l+7F48OgQDF9h/ajKVm9JJIijXvkuMjyCT5qAq8wZnqcXiXQxEsvBOZDaNT31/gjJAwTKUIAkI46kFbVHYw8dCLibJ7Lwo8kjErj05XJlQkOUXGKNElBlbziLgkk8xDplCmop4bNl7J5wzljJtjSV+tCwbMacW47hliZfELWwxtI5QfujEV4DcRhAnGAadl81Az/WBBK1XULCH5FdmK/HAcgjEdcG3wPpRJVLz1dE7r3nZLNeLN1ttlnvSCfuDcDgkCDnThoREZ2lKSi5vDuprXP6O972owvvLvOI1ADnb3Sdxusdsd26NU6/I2R5uge17n4nrOaAPRnYsSEjkCvGHqZNMuVbeESqRX1ahINY+1h+MxstToRNliGPUajKcDDTdHABomKTx8AqWh89v92GF5ReYrXHpK6gpqtjtjg3re70Q5izvboHl3c77sHxRAi6bWNPvYlztCRX2D9Ye1u2RZhWH9rJuit6Us/3WnJ3l5pR23zSmVaJ5zeETfHvnaR4xMhJcMtzjUsRum+JdiHm2NuaMTNA1z0f8TJKZYGNuVtkLK5aYGcifdfqccaQ4KAdvK5sBJ4AorvFQqu/xTri5FZzspY3Qe3YjDNqVjXAC943zMnNtOflWwMHlY9fg6lo4LqU5U3tbeet92Nuvjc/QJ0eq3fTaT3E/bu3G8x3cpPIriEx3n73a+hUin1n6NaL52s1WJs9Z7FdRzUvuyCrWXnKd//0l9yH/tTSfulLe+e/MzW/Q7IWlLxEAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=3c0247d393ef4310e61e3b277bba107c"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="Look Up Record">b93f42810b30030085c083eb37673a63</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>700247d393ef4310e61e3b277bba107a</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:55</sys_updated_on>
+        <ui_id>a5c8792f-f370-4470-81f1-eda6b4b05362</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY227bOBD9FUHPjlfyTXbeFgkMBOg2QJPNS7cgKJGKiaVJlaSSOIb/fYciJQu2asebGGjRJ1vDy9zOmdHo6zoUeEnDy1BLZZBZFTTshU+Yl40M6wxEhOmC49WDX8GBkcEryAus4LyhKrxch9mCcaKoCC+/fuuFjMDGMYlm+Ww2niZRNBxG0WQyzHCcpsNJlkZpGsMVHKeUw9Y70BbcOws6jKp+LkGHZFn9/MkfvaqFUhFryrAX0hdDBaFgQ465pr1wiQXBRqpVI1EUk1vBt4IFEwZug3sWlBfu3xK/aPYKmocDeyKn4F9G3VrziHx4nDi/xgbfGVVmplR+qzNbQ2TWjcNNEDvi7R2JNr3t/le7H+/uJ7R9IN5A5AnNccnN1f/TGZ+qc2B1OgdvC8Mk5D8c2gzhlNfuS14uxWeX1bCx8KEDaG7l+gd4KzUEmxY2tTZXPnH53UI+f6mzMWeisssvcplh3jxhYxRLS2Pjsg5zgnJGOUFMcCasJkibBRLldAka0BIXBROPqFDyiVW3gi/L/iOHh37O5bONBXsUfZxZz/sAMdyfg/y6Ej9gxWwU/oJr4HDPKlzAUa8P6UyxwqBnRh6p2WqvdxFpnjH/t2vdIw7ViarcCze9UK/0Fcdab4MNMEXfSxsDF3ofPVQlqjpSWfEnePBEfaAsBjwJMykIs87pNgxWGjHyTwmsJuu1LlMbi35WaiOXVN1aYNyt9A3ZbPaLx0lnjxUYMj5UYPCsVWCu2o50OVeXmF3Zp64LaracodSMoij6mGLTVQz2yXoSV/dJaEH5Dg6eh2qnM8GF4CgdENIiA2bCsRwzDmcRVUqqFjmifcw7eh6Hc0ZxOhrgSTKM4yiKI5JE0ySJp5M0n+BklLfgfC2F5dAgMYE1JJAiqA05bqqHeiolp1js4PweEvrH3FvscT4+C85/IZS/t9WU7H435k7UGfVz9Z+S/S3Y95LeWLBNaTSYxiS7mCZxcjHKyeRiRvD4As/ScTIkNBvl52kpLg9bwrygQTSeRLMZ9EUCfQBFyLYD5LC3R6Zj24/2jNnBnjFqkezeW7pjuKdP9YiqtR0G2YXgs1uo3+XOwKDp78Sgs72TMQ5YQS6ZWpaqCuUTyjiAyi4oLLS76yxsYDlaQuBYAeoVzQAuGmFFUS5LQZBXvCWLjWrOFODdbd7nxxcKORbQEPgqMAsaVLuDZvcxesQH6ZG2X6lu8qA23d+vAzA9qEwPGtNPc/SUSW/0E7el7RQ1t/3ZZgLwVLRSWXfjrmnvSBIPoOGNo+AbjYo/1Kj3z4pd8O+cGY/Y+ksUp3OUm2rYdkHeLx1vKQ8HP+lg0ioP1SwXpKudLzqNcs90N4J3tNG5Xdhpo4PfvY3+lONW70efUj54Dvv2H2EB+O+yFAAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=700247d393ef4310e61e3b277bba107a"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="Log">0e0ae8c2531003003bf1d9109ec587c8</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>5bc1bcc6531003003bf1d9109ec587d4</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>7</order>
+        <parent_ui_id>b5f019a2-bdd4-45e7-94fe-2d06a131c0d7</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>740247d393ef4310e61e3b277bba107b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:58</sys_updated_on>
+        <ui_id>c31907bf-8a87-419a-ac96-8a40d71cce1e</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VUUYsaMRD+K0uedXH17PV8O7QHBe8OarEPIjJmZzWQTbZJVs+K/72T3ah7PWkrtPShIIsz+WYy3+Sbme2ZghzZgEm9WkjcoGQttgFZet8WjCIzFbaQsJsG7xfyCrWigwIMBTs0bLBnfC1kalCxwWzeYiIlZH/JkyXn7/q9pNPp0W+ZJeld0rlD3n9/m95SCglLunLAxuHqC9W4XeFdfK0Fx2CPQ9jw6NQm9WV0WgxfHKoU6f4MpMUWy0Gl4LTZnTwGIX1W8uxYC+UoG+VZoyzqfzm8WPGNbr7p+IgMiRvH+uxkLkJvanc2AgcTZ0ruShOgddmWurI/kW23oyetMGq3G81ukDi0ztiPKtMNlKjNgEyayPO7/PB+Adxtgj8Yo00DisEO2N6B3jDFDErphtczSH6bQfcaBr0rGNx4BnXznwsnNOmSJV49sJTHp9GyzNVTrTh24jt9XWjwjl4PQSBVWpIAFl5wXkFBTtlkrbefjhp5EKqqKBxKzUGeLHDOiGXpfH/3DCXmlGiRQ1FQIxaF0RtRBVOxebySZMSZ1Fu61IqVioF7ajHpG+IH8o8q9xSM8DQfKQ0FH1rM7uxQgrVnsiThxdfSV1JTDxwWVaOqEG5E4e7pgg2Gcn37GwOao7WwwsYbzCZlUUiBJhrTiEWfRY7RUOe0J4TVak6aiewRIT3CeYRBTo8WZbpU/msiIueEAk8tIgXgWlOf42gISmkX8SohhWnftvjtgvpHVfxqG3Z7P9uG2G9sw8dTZy+2O2xES9KppqW5ESdH53EU/8JG7Pb7f2YlXloyb8f2qqn9/4Zy/h0rfEpJxQcAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=740247d393ef4310e61e3b277bba107b"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="Look Up Record">b93f42810b30030085c083eb37673a63</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>7c0247d393ef4310e61e3b277bba1078</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:55</sys_updated_on>
+        <ui_id>6386b21d-4e06-4697-9e42-f5fb8586078f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY227bOBD9FUHPjlfyTXbeFgkMBOg2QJPNS7cgKJGKiaVJlaSSOIb/fYciJQu2asebGGjRJ1u8zZmZc2ZEfV2HAi9peBlqqQwyq4KGvfAJ87IZwzqDIcJ0wfHqwc/gwMjgFcYLrGC/oSq8XIfZgnGiqAgvv37rhYzAwjGJZvlsNp4mUTQcRtFkMsxwnKbDSZZGaRrDERynlMPSO7AW3DsEHaCqn0uwIVlWP3/yW6/qQamIhTLshfTFUEEoYMgx17QXLrEg2Ei1akYUxeRW8O3AggkDp8E5C8oL92+JXzR7BcvDgd2RU/Avo26ueUQ+PG44v8YG3xlVZqZUfqmDrSEy68bhJogd8faORJvedv2rXY931xPa3hBvIPKE5rjk5ur/2YxPtTmwNp2Dt4VhEvIfDm2GcMpr9yUvl+Kzy2rYIHzoIJqbuf4B30oNwaaFTa3NlU9cfreQz1/qbMyZqHD5SS4zzJsnbIxiaWlsXNZhTlDOKCeICc6EtQRps0SinC7BAlriomDiERVKPrHqVPBl2X/k8NDPuXy2sWCPoo8z63kfKIb7cxi/roYfsGI2Cn/BMbC5Zw0uYKu3h3SmWGHQMyOP1Gyt16uINM+Y/9s17xmH6kRV7oWbXqhX+opjrbfBBpqi76WNgQu9jx6qElVtqVD8CR48UR8oywEvwkwKwqxzuk2DlUaM/FOCqsl6rcvUxqK/xFAJGOZ3K31DNpv9uvHWbcfKChkfKit41iorV234XS7VhWV37FPXAbVGzlBgRlEUfUyJ6SoB+xI9SaH70rNUfIfyziOw0/nvQnBUBAhpkYEeYVuOGYe9iColVUsS0T7dnSiP0zmjOB0N8CQZxnEUxRFJommSxNNJmk9wMspbdL6WwspnkJjAAgmkCGogx6F6qqdScorFDs/vIaF/zD1iz/PxWXj+C7H8vQ2mZPe7MXdDnVE/V9cp2d+CfS/pjSXblEaDaUyyi2kSJxejnEwuZgSPL/AsHSdDQrNRfp5G4vKwFcwLGkTjSTSbQTckpTYoAset89pUqHfEdGz50Z4xO9gzRi2R3XukO8C9fKpHVM3tKMhOBJ/dRP0GdwYFTX8nBZ3tTYxx4ApyydSyVFUon1DGS11NKCy0O+ssamA5WkLgWAHmFc2ALhphRVEuS0GQN7wVi41qzhTQ3i3e18cXCjkW0BD4KjALGlSrg2b1MXnEB+WRtl+pbvKghu7P1wFADyroQQP9NEdPud+NfuK2tL07zW1/tpkAPhWtVNbduOuOdySJB9jwxgvgG0HFHwrq/TfELvp33hSPYP0litM5yk11xXZB3i8dbykPBz/kYNIqD7c26UG62vmO0xj3SncX7442OrcTO2108Lu30Z/yutX70QeUD76HffsPqWq6vKgUAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=7c0247d393ef4310e61e3b277bba1078"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="Log">0e0ae8c2531003003bf1d9109ec587c8</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>5bc1bcc6531003003bf1d9109ec587d4</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>12</order>
+        <parent_ui_id>ba201b9d-b5c8-4e9c-91ab-25e142b9aba0</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>b40247d393ef4310e61e3b277bba107d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:58</sys_updated_on>
+        <ui_id>5f5b16d1-afb3-4938-80df-401f8034811d</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VU24rbMBD9FaOnFmKT+27yVrJdKOwFmrJ9WBYzlsaJQJZdSc5uGvLvHcVKYnZD20D7UAoBR0cjzZyZo/O4YRoKZFOmykWqcIWKddgKVO0xqfOSlkLaSsH6IaCfGrQCQycdGjbdML6UShjUbPr41GFSUNgo472M8/Fo0Ot2B/TL8p6Y9LoT5KPLC3FBVyjIKN+U3YS8J0px68pDfFlKjmF9E47N9mBphC+j22H44lALpPw5KIsdVoAW4EqzPiAGQdxrdQSWUju6je5ZoqqafwW8WPmdMg+7/kSOxI1js3dYpqExDZxfgYO5MzV3tQmhTdmWurI5kI3j6K7UGMVxq9MtEtvOMTa0+tU8QmSvHfkVjJZ60Qp+JuQY3G8HfzSmNK1QDOsQO9jSDAXmUCs3O59B77cZ9M9hMDiDwdAzaJp/XzlZki5Zz6sHMrUfTanqQt81imMHvg+vpN+gVydfQG1JAlh5wXkFBTnl82X5/HmvkWupdxWFTVVyUIcVOGdkVjvf3w1DhQVdlBZQVdSItDLlSu4OU7FFslC0SHJVPlNSKxc6Ae6pJaRvSK4Jv9rBD2Ckp3lL19DhbYfZtZ0psPZIliScfqt9JQ31wCHdNWp3hBtZuQ+UYIWhXN/+1gMt0FpYYGsGj/O6qpREE93QE4u+yAKjWVmQT0hb6ifSTASK/EKDw8iGWBvlYAmM3BJ0RMScpH2iFb3bbEZDMcah4DFwMYmHcCHiy8l4EPPJuC8mPJtgnyefkdPUE0U5U0c5UwFru91G/vM+8VkNRRTUWrG7OHnraP9Q5b9y3f7gZ66Lo5br3h4meHKswXktSXT3KtvOO9+D+yf/F5y3Pxr9Ges9ZWZv7eEsd/j/Hv/TD5JGUz0qCAAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=b40247d393ef4310e61e3b277bba107d"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="Log">0e0ae8c2531003003bf1d9109ec587c8</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>5bc1bcc6531003003bf1d9109ec587d4</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>20</order>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>bc0247d393ef4310e61e3b277bba107f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:58</sys_updated_on>
+        <ui_id>54fe54dc-9dde-4d7c-996f-761bfce323eb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Vy27aQBT9FcvbYss2GDA7RIgaiZAISLJII2s8cw0jjR+dGZNSxL/3GhuwEvpAalatxII5vq9zn89bMyUJmANTZMtQwBqE2TLXRBQlxtM4wyfjKhdk81ijNxWaE4maGqQ52Jp0xQWTkJqD55eWyRmK+RF1I0q7ftt1nDb+othlgesEQP1+j/XQhCAR+huYk9rvmVD0Ji8huso4hfo9qdVGBzCTrAzDaZnwTUPKAP3HRChomQlJGdGZ3BwRCYTdpeIErHiq0RraWYHIq38J+ab4d/TccUqNGJAbherb8RnWiang+IpoMteyoLqQtWgVtsKsbI9kLcuYZikYltXIdIPErnWSrVP9ph61pNuUfCIy5emyIfyKyEnYawqPpcxkQxTqdy3b3mENGcSkEHp0OQP3jxl4lzBoX8CgUzKokn+Xa55hX5pu2T0kEofSZKJI0mnVceaR7+Ob1q/Qq7MTUChsAcjLhis7qG6neL7KXmeHHrnm6T6i+qPIKBHHF9Fa8qjQZX63JghI0FCYkDzHRIS5zNZ8r4zBJvZS4MOORfaKThVfpjahJTUb+5vY14hf7eFHInlJ8xbNoPKuZaqNGgmi1IkstnD4tSgjqajXHMJ9ovYqVPJcD9HBGupwy/Q3BjQBpcgSGjV4nhd5LjhIY4IjZix4AsYoS3BPcJWlL8b97G70MBvfjqeLcDhZjGfT4WIcPg1n4893D/NxOH+4v5/cjGeGBOSLqUBiyM+gOLEamG0MhTbUwYdAH18KXCtsu3U85nUJBBZzHGJ1SBxZJKCO1aa9tuM5tB/Hkc01JHapFWqMLGRko3Y7ZnwytCSpwnIdrHVKXQccy/Fo3+o4bscKwOlZfd/zSD8O+pHP7BnGKNkZe2tlYHn0wZjfYV3oMGoRygIMrcesftBtWzToeiygUQAe/amx97v3f44/IMe/u2Re+1eXDPzGJbs9TsXZUamvmcKx32+65jWbH8DDGv2Aa+b5/t85Z+cOxPuVe9HG/fcW6ssPv/Kx6H4JAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=bc0247d393ef4310e61e3b277bba107f"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="Look Up Record">b93f42810b30030085c083eb37673a63</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>f40247d393ef4310e61e3b277bba1079</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:55</sys_updated_on>
+        <ui_id>c42a6059-27fa-48c6-9c65-9666d60bf50f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY227bOBD9FUHPjlfyTXbeFgkMBOg2QJPNS7cgKJGKiaVJlaSSOIb/fYciJQu2asebGGjRJ1u8zcyZc2ZEfV2HAi9peBlqqQwyq4KGvfAJ87IZwzqDIcJ0wfHqwc/gwMjgFcYLrGC/oSq8XIfZgnGiqAgvv37rhYzAwjGJZvlsNp4mUTQcRtFkMsxwnKbDSZZGaRrDERynlMPSO7AW3DsPOpyqfi7BhmRZ/fzJb72qB6Ui1pVhL6QvhgpCwYccc0174RILgo1Uq2ZEUUxuBd8OLJgwcBqcs6C8cP+W+EWzV7A8HNgdOYX4Murmmkfk4XHD+TU2+M6oMjOl8kud2xqQWTcBNyB24O0DiTa97fpXux7vrie0vSHeAPKE5rjk5ur/2YxPtTmwNl2At4VhEvIfDm2GcMrr8CUvl+Kzy2rYePjQQTQ3c/0DvpUawKaFTa3NlU9cfreQz1/qbMyZqPzyk1xmmDdP2BjF0tJYXNZhTlDOKCeICc6EtQRps0SinC7BAlriomDiERVKPrHqVIhl2X/k8NDPuXy2WLBH0ceZjbwPFMP9OYxfV8MPWDGLwl9wDGzuWYML2OrtIZ0pVhj0zMgjNVvr9SoizTPm/3bNe8ahOlFVeOGmF+qVvuJY6y3YQFP0vbQYOOg9eqhKVLWl8uJPiOCJeqAsB7wIMykIs8HpNg1WGjHyTwmqJuu1LlOLRR9QImUFxK2lxt1K35DNZr98nLj7WJEh40NFBs9aReaqHUxXgHWZ2R371HVArZgzlJtRFEUfU3C6CsK+YE/S674QLTHfocPzyO10NTgIjkoCIS0yUCdsyzHjsBdRpaRqCSTaZ72T6HE6ZxSnowGeJMM4jqI4Ikk0TZJ4OknzCU5GeYvO11JYFQ0SE1hHAimC2pHjrnqqp1JyisUOz+8hoX/Mvcee5+Oz8PwXYvl7203J7ncxd0OdqJ+rB5Xsb8G+l/TGkm1Ko8E0JtnFNImTi1FOJhczgscXeJaOkyGh2Sg/T1txedgK5gUNovEkms2gN5JSGxShbUNAjoF7knrbpqP9Y3awf4xagrv3Xu8E4aVUPaJqbkdNdiL47Cbqd7szqGn6O6npbO9ojANXkEumlqWqoHxCGQeG2QmFhXZnnUUZLEdLAI4VYF7RDOiiEVYU5bIUBHnDW+FYVHOmgPxu8b5KvlDIsYDmwFeBWdCgWh00q4/JIz4oj7T9enWTB7Xr/nwdgOtB5XrQuH5aoKfc/EY/cYva3qrmtlfbTACfilYq687cdfs7ksQDbHjj1fCNTsUf6tT7745d9O+8Qx7x9ZcoTucoN9Xl24G8XzreUh4OfuLBpFUeqntdkK52vvA0xr3S3ZW8o43O7cROGx387m30p7x69X70aeWD72Tf/gMDwTckwhQAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=f40247d393ef4310e61e3b277bba1079"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="Look Up Record">b93f42810b30030085c083eb37673a63</action_type_parent>
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <comment/>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <generation_source/>
+        <order>5</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>f80247d393ef4310e61e3b277bba107a</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:55</sys_updated_on>
+        <ui_id>54d6e4dc-acd9-4a7d-8963-c962d9cb9e2c</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY32/bOAz+Vww/pzk7v9O3Q4sABXYrsPZ6D7udQFtyI5wieZLcNA3yv4+y5SRIvKS5NrgNe0pMiSL58SNp+fMylDBj4WVolLbELnIWtsInEMVaBiZFEeUmF7B48CsQWBW8oDwHjfqW6fByGaZTLqhmMrz8/KUVcoob+zQaZ+NxfzSMom43igaDbgpxknQHaRIlSYxHCEiYwK13aC24rzxocKr8uUQbiqf18wevelULlabOlW4rZM+WScrQhwyEYa1wBpKCVXqxlmgG9FaKjWDKpcXT8JwpE3n1bwbPhr+g5W7HaWQM40tZtbZ+JB6eSpxdg4U7q4vUFtpvrdw2iMxyHfAaxAa8fSDRqrXZ/+L2w+5+yrYV4hUiT1kGhbBX/81mfKrNjrNZBXibW64w/2HXZQgSUYevRDGTH6ushmsPHxqIVq1cf4dvhUGwWe5S63LlE5fdTdX8U52NCZelX35RqBTE+gms1TwprMNlGWaUZJwJSrgUXDpLmDZHJCbYDC2QGeQ5l48k1+qJl6diLLP2o8CHdibU3GHBH2UbUhd5GykG7QnKr0vxA2juUPgDj0HlljM4RVVvj5hU89ySOaePzG6s17uosnMQ/zate8aROlFleOGqFZqFuRJgzAZspCn5WjgMKug9eqRMVKlSevE7RvDEPFCOA74IUyUpd8GZLRrMAGueg3DAUCT63wXWN10uTZE4VNr1+t3C3NDV6h/KBB6uF2QOmk0VpnFXA3G0XIIz9Fe9p9aG0rVKw0Ow05D+d3+ONULaP9QIYbzVCK+2AW9KQt0Kd2Ufmg6oq/oMLbEXRdH7NMWmprXfVE7qKfvNwmXqDb3iPC3h9IqtIDhatoQYmWIHQbUMuEBdwrRWequIo/06qtrIcTqnDJJeBwbDbhxHURzRYTQaDuPRIMkGMOxlW3S+VtJVSmdoA+dIoGRQO3LcVU/1RCnBQO7w/B4T+tvEe+x53j8Lz38ilr91JBb8fhfzStSI+rnmZMH/lPxrwW4c2UYs6oximl6MhvHwopfRwcWYQv8Cxkl/2KUs7WXnGX1VHjYF80w6UX8Qjcc4v2lhLImIKfKcIE6UWD5rGEyvUTk6O8YHZ0dvq9juvcc7AfgyKh9JubZTSW4h+Fgt1O+eZ6ik0a9USWd7h+QCuUKqZBpV6BLKJ5IK5Jdb0CBNddZZqoJnZIbA8RzNa5YiXQzBNySSqUJS4g1visahmnGN1K8279fIJ4Y5ljgYxCKwUxaUu4P17mPlER8sj2T71eomC2rX/fkmQNeD0vVg7fppgZ5yM+39wONpc+ubuDntMoF8yrdSWU/lptvpkSQeYMMrr66vdCp+V6fefrdton/jHfeIrz9FczpHuyk/DlQg77eO17SHg5+ggG61h1uX9CBZ7HyBWhv3lV59MmgYoxO3sDNGO7/6GP0hr12t7336eef72Jdv2/IVxmIVAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=f80247d393ef4310e61e3b277bba107a"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=080207d393ef4310e61e3b277bba1045"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=080207d393ef4310e61e3b277bba1045^sys_idNOT IN380247d393ef4310e61e3b277bba1050,680247d393ef4310e61e3b277bba1023,7c0247d393ef4310e61e3b277bba104e,7c0247d393ef4310e61e3b277bba1075,b00247d393ef4310e61e3b277bba1026,b00247d393ef4310e61e3b277bba104d,b00247d393ef4310e61e3b277bba1074,bc0247d393ef4310e61e3b277bba1053,bc0247d393ef4310e61e3b277bba1057,f00247d393ef4310e61e3b277bba1052,f00247d393ef4310e61e3b277bba1056,f40247d393ef4310e61e3b277bba1072"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">faf1c3d393ef4310e61e3b277bba106b</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Assign Subflow Outputs">df4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>13</order>
+        <outputs_assigned>recommendationCreated</outputs_assigned>
+        <parent_ui_id>ba201b9d-b5c8-4e9c-91ab-25e142b9aba0</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:57</sys_created_on>
+        <sys_id>380247d393ef4310e61e3b277bba1050</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:55</sys_updated_on>
+        <ui_id>7ba343db-a9f6-42e0-82a8-1a8fe174aa1a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/4VTTYvbMBD9K0Vn4zqpaVPfliyBwrYLu2EvpZixNE7EypIqycm6If+9I8txsvTQ2/jN13tv5BMzfbB98Ftz573caVb9PDEpWMVYxjR0SJFDbroOtYAgjV47hICC0gdQfcwXFAvprYLhZYJaUB4J5nuphMM49lfGLDiaGNCxipZoCjSoB6lf07r3xSMJsWwQmq9tuVx9LttPuOJLWDVNsYCyKL/AgroUNKio9Okdyw9Xmv9REQYb040xCkFPwMM0dOt6/LiZxBgnIvVFxvAt0CBqr0ahGesgzjVuYFWgloy2gXjUapgr9qQ3ydyjsinq4M3LP7S9LGJHiySeY8rNn/VkbYLbewjwTDt46B1efDOSo0+2CWyhV2F9i6WCRxuFp5YAjbp0G9V3+kcyic0DLpckpPdEAm1UHDVMgtrnvTk+XVhupB7NmZLKcFDzF4TgZNOHyOfEUCGdIdQdWCv1rrbOHOTYTFy6fKfoI2+VOdLS+CRz4JF4TgZDviH8foRfwMmo4juNoWaiKbf/nFJ2uHGmS9emN06TDhRR0WJRFAU7Z8wPfq3A+6sDZH39u4/8kx+T8jqZF1u4kzaMw3ASeY4vVsc/KVl+mNjNV+HSk4htxL7d1ImBnqfkt9DRuNco/4qd/wJC2IRFpwMAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">bef1c3d393ef4310e61e3b277bba1051</block>
+        <comment>No supplier lead time record for destination warehouse</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>6</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:57</sys_created_on>
+        <sys_id>680247d393ef4310e61e3b277bba1023</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:55</sys_updated_on>
+        <ui_id>b5f019a2-bdd4-45e7-94fe-2d06a131c0d7</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K5Of2yjfkL4hGFIlGBNFk6YJRTe201pz4sx2gCzqf991krZodGJse9xbfOx7fc7JPUlPVGub1po7dWaMWNdk8eV+RkTtMHzuiWBkQciM1FBxfKKqZsIKVSP0ALJ1WN8nMUt5zOgcKMvmMZyw+WmWRnOapSHLaJHxkHq3nCrNPNOZXLDtdrl6f/3x7jP2YcI0ErpP/6gd3QjJNJ+kNKCRueWaLPqftgZpGSRlEvgJjcI0Cn0/PI2DIo2KIGQR8DjFhhIKLvHo+TPtR+ywXeMgY7Wo19P6aipd7UCk7KiE/ozwJ8trxpFECdLwGamgZmCV7sjC6hYBzYHd1LLbn9iI2o6vY8NlMz5V8GTEd+56+r6rKTkqpHzc3S/zyeURLi/AApJqqW31dJRulKDcjN4wXkIr7flzbDxw0wx6hxILhdxVK9lW9YfRFrJvsHupiLQGSfDGaXYqJknlaqMeb3csL0U9+DNtSkVB7ldg0cWitY5PT7jkFTbKK2ga9DZvtHoQQzFyqby1xIVXSvWIl7rJ9oA64h5aDN4l4hcD/Am0cCqusQ0W41SY3FAtmp224XKynRGctHMJxhw0orn5t9YxHBVP2vLRHlcyNDrDix/4JGM764ljdaXWgi5rYwFlrzqzdMNYJKUfZBAWjMVxwk+yuOQh81MIooD67IRMQ1v6UAYZDY4PLURHBjQfgENoX+aOvB6W37j3RVjejRn4NaO35CZ4JTcT8sbgJMn/3Px1bhzNAoyg+fD3wHbuI/aHwZlMvxRcsqPDdCxZ9266R1b7t0GFwbI7hy13PzW30eHwufwdoEelvzrZB2z7A1NucUAeBwAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">faf1c3d393ef4310e61e3b277bba1068</block>
+        <comment>No alternate suppliers with shorter lead time than destination</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>11</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:57</sys_created_on>
+        <sys_id>7c0247d393ef4310e61e3b277bba104e</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:55</sys_updated_on>
+        <ui_id>ba201b9d-b5c8-4e9c-91ab-25e142b9aba0</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K5Of28r5KmnfUFElJDakgXjZUHTtOK01x85iB8ii/vddJ2mLoBNjvO4tPva9PufknqQjpnFV4+ytObdWbjRZfrufEKk9hs8dkTlZEjIhGkqBT9zoXDppNEIPoBqPdR0PxfwsZek0CFI6jaM4mKZJEk5TGp1BErM4OaOzlWm02+2+N5RGOcX6XNpKQXv3wTZ8K1Vei5F6BTUydaImy+7FVi9lAUmRBDThUTiPQkrDNA7YPGJBmEcg4jk2VMCEwqOrZ1pPyHdt5SHraqk34/pqLL3Zg6bOPZWQToh4ckLnAkkUoKyYkBJ0Ds7ULVm6ukGgFpBfa9UeTmyldoP9W6Gq4amEJyt/Cd+TUl9TCFTIxbB7WGajuwNcXIADJNVw19TjUb41kgs7eJOLAhrlVs+x4cB11evtSxwwta82qin1l8EWcmiwf5mINBZJiMpr9ipGScXN1jx+3bNcS937M24qw0EdVuDQRdY4z6cjQokSG2UlVBV6m1W1eZB9MXIpZxuFi1mhzCNe6id5BtwTn6HFMFsjftHDd1BLr+IztsFinAqbWV7Laq+tv5zsJsS2dqXA2qNGNDf72XiGg+JRWzbY40v6Rud48YMYZewmHfGsrsxG8kttHaDsm9Ze+mFkENKALXKW8DQWC74IgIWJCOKQLYCBn+5+aAsKRbDgwemhhejEgGY9cAzp67yRt8PyF/e+CsunIQN/ZvSe3ARv5GZE3hmcJPmfmw/nxtNkYCXP+r8FtvMfsX8Mzmj6WgqVnxymU8m699M9sDq8DS4tlt167HL/E/MbLQ6fz98RejT1Dy/7iO1+A9EK9ooOBwAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">47f1c3d393ef4310e61e3b277bba1099</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Assign Subflow Outputs">df4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>23</order>
+        <outputs_assigned>recommendationCreated</outputs_assigned>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>7c0247d393ef4310e61e3b277bba1075</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:56</sys_updated_on>
+        <ui_id>061c9056-6965-42f3-97eb-2d2b959c413f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/4VTTYvbMBD9K0Vn4zqpaVPfliyBwrYLu2EvpZixNE7EypIqycm6If+9I8txsvTQ2/jN13tv5BMzfbB98Ftz573caVb9PDEpWMVYxjR0SJFDbroOtYAgjV47hICC0gdQfcwXFAvprYLhZYJaUB4J5nuphMM49lfGLDiaGNCxipZoCjSoB6lf07r3xSMJsWwQmq9tuVx9LttPuOJLWDVNsYCyKL/AgroUNKio9Okdyw9Xmv9REQYb040xCkFPwMM0dOt6/LiZxBgnIvVFxvAt0CBqr0ahGesgzjVuYFWgloy2gXjUapgr9qQ3ydyjsinq4M3LP7S9LGJHiySeY8rNn/VkbYLbewjwTDt46B1efDOSo0+2CWyhV2F9i6WCRxuFp5YAjbp0G9V3+kcyic0DLpckpPdEAm1UHDVMgtrnvTk+XVhupB7NmZLKcFDzF4TgZNOHyOfEUCGdIdQdWCv1rrbOHOTYTFy6fKfoI2+VOdLS+CRz4JF4TgZDviH8foRfwMmo4juNoWaiKbf/nFJ2uHGmS9emN06TDhRR0WJRFAU7Z8wPfq3A+6sDZH39u4/8kx+T8jqZF1u4kzaMw3ASeY4vVsc/KVl+mNjNV+HSk4htxL7d1ImBnqfkt9DRuNco/4qd/wJC2IRFpwMAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">3af1c3d393ef4310e61e3b277bba1055</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Assign Subflow Outputs">df4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>8</order>
+        <outputs_assigned>recommendationCreated</outputs_assigned>
+        <parent_ui_id>b5f019a2-bdd4-45e7-94fe-2d06a131c0d7</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:57</sys_created_on>
+        <sys_id>b00247d393ef4310e61e3b277bba1026</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:55</sys_updated_on>
+        <ui_id>29ec3152-89b1-4cfc-8dcb-4a40d4b3e680</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/4VTTYvbMBD9K0Vn4zqpaVPfliyBwrYLu2EvpZixNE7EypIqycm6If+9I8txsvTQ2/jN13tv5BMzfbB98Ftz573caVb9PDEpWMVYxjR0SJFDbroOtYAgjV47hICC0gdQfcwXFAvprYLhZYJaUB4J5nuphMM49lfGLDiaGNCxipZoCjSoB6lf07r3xSMJsWwQmq9tuVx9LttPuOJLWDVNsYCyKL/AgroUNKio9Okdyw9Xmv9REQYb040xCkFPwMM0dOt6/LiZxBgnIvVFxvAt0CBqr0ahGesgzjVuYFWgloy2gXjUapgr9qQ3ydyjsinq4M3LP7S9LGJHiySeY8rNn/VkbYLbewjwTDt46B1efDOSo0+2CWyhV2F9i6WCRxuFp5YAjbp0G9V3+kcyic0DLpckpPdEAm1UHDVMgtrnvTk+XVhupB7NmZLKcFDzF4TgZNOHyOfEUCGdIdQdWCv1rrbOHOTYTFy6fKfoI2+VOdLS+CRz4JF4TgZDviH8foRfwMmo4juNoWaiKbf/nFJ2uHGmS9emN06TDhRR0WJRFAU7Z8wPfq3A+6sDZH39u4/8kx+T8jqZF1u4kzaMw3ASeY4vVsc/KVl+mNjNV+HSk4htxL7d1ImBnqfkt9DRuNco/4qd/wJC2IRFpwMAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">f2f1c3d393ef4310e61e3b277bba1058</block>
+        <comment>No destination supplier baseline — cannot compare</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>9</order>
+        <outputs_assigned/>
+        <parent_ui_id>b5f019a2-bdd4-45e7-94fe-2d06a131c0d7</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:57</sys_created_on>
+        <sys_id>b00247d393ef4310e61e3b277bba104d</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:55</sys_updated_on>
+        <ui_id>33667f1d-b2b5-47e7-b2c3-54a99dc7945f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">03f1c3d393ef4310e61e3b277bba1097</block>
+        <comment>Faster alternate route found — recommendation created</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Exit Loop">7444b31c37063110ac85cdd734924bff</logic_definition>
+        <order>22</order>
+        <outputs_assigned/>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>b00247d393ef4310e61e3b277bba1074</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:56</sys_updated_on>
+        <ui_id>951e83b9-eead-4001-be60-46b486db649a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">f2f1c3d393ef4310e61e3b277bba1071</block>
+        <comment>Evaluate each alternate warehouse supplier route</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="For Each">098e1dc5c3e232002841b63b12d3ae33</logic_definition>
+        <order>15</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:57</sys_created_on>
+        <sys_id>bc0247d393ef4310e61e3b277bba1053</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:56</sys_updated_on>
+        <ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/51Ty27bMBD8F55tQQ8/ZN+CBAECtA3gBLkUgbEiVzZRilRJyo4q+N+7NGUl6LEnc4c7uzMjemCm823n3au5c04eNNv+fJ8xqQNG54FJwbaMzZiGBukkPTaOyhOoLtTDwHNcrcuqnGdZmc4XxSKbl8tlPi/TYg3LRbVYrtNkh9xY4S4XogrpWgX92/9PaMGSGo+WbQfGj1IJizflQW62EfUmSze8yFdFnqZ5uciqVVFluSgAxYpGKKhQUevT6Ocfe75vQ2nj0hH4NnJ2E0o/QUSezhh+eNQCaX0NyuGMNaAFeGN7tvW2I8AiiGet+qnjKLWP4R5RtfHUwIeTf2h3lqaBUiNZ4xgvp3I/Zhjh+gE8vNAS7js7tvKjkRxdDEVgDZ3y91+x2PDceml0pHio1I1tVNfoHzETNg24fTJCOkcisA2Wg4nRUf1yNOfdTeWj1Nd4xktlOKipAu+trDof9AwMFTY0aN9A20p92LfWnOSVTFqa5KCoSGplzrQ0PNMEeBCeUMKQPBL+cIXfwMrg4juNIfJlxlzv7hU49+mFQtz/7oKS6Gz0sI8xBAq3svV3tOCEo9zLe3jxcfaUKZeOJLwG7On2fwkXPb0lyb9CZ2N/BfGf2OUv1v1ujXkDAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">03f1c3d393ef4310e61e3b277bba1090</block>
+        <comment>Skip — no transfer route configured between these warehouses</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Skip Iteration">48de1b5837063110ac85cdd734924b15</logic_definition>
+        <order>18</order>
+        <outputs_assigned/>
+        <parent_ui_id>c2f20d86-4824-4aa2-8d4e-b2cfddc16922</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>bc0247d393ef4310e61e3b277bba1057</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:56</sys_updated_on>
+        <ui_id>a313ac07-f2f5-4247-a540-cc565cf50f19</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">32f1c3d393ef4310e61e3b277bba106e</block>
+        <comment>No faster alternate suppliers found</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>14</order>
+        <outputs_assigned/>
+        <parent_ui_id>ba201b9d-b5c8-4e9c-91ab-25e142b9aba0</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:57</sys_created_on>
+        <sys_id>f00247d393ef4310e61e3b277bba1052</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:55</sys_updated_on>
+        <ui_id>7b052578-5d4d-42d5-85a2-23aa6a3a7d45</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">76f1c3d393ef4310e61e3b277bba108d</block>
+        <comment>No transfer lead time record for this warehouse pair</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>17</order>
+        <outputs_assigned/>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:57</sys_created_on>
+        <sys_id>f00247d393ef4310e61e3b277bba1056</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:56</sys_updated_on>
+        <ui_id>c2f20d86-4824-4aa2-8d4e-b2cfddc16922</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1V0W6bMBT9lcnPCTIOZCRvVbpKkdp1aqpK01Shi20SawYzbNqyKP++ayBJtWbquu1xb/jY9/qcwz2wJaZxVePsrTmzVq1LMv9yPyKq9Bg+b4kSZE7IiJRQSHziphTKKVMi9AC68dh2G8GMUyrpmDKejCMaRuOZpO/HScwYJPksyWIR3EhuahHY1qZK7HbL1YerT7efsY9QttLQ3v2jdnyjtKjlIKWCGpk7WZP59qetTtoM4jwOacwnbDphlLIkCrPpJAuZmICMpthQQyY1Hl08037CDtdWHrKuVuV6WF8Opas9iJQ9FUZHRD45WQqJJHLQVo5IAaUAZ+qWzF3dIFBLENelbg8nNqp0/evYSF31TwU8WfVd+p6U+ppcokIu+93DMh1c7uH8HBwgqYa7ph6O8o1RXNreGyFzaLRbPMf6A9dVp7crcZDpfbXRTVF+7G0hhwb7l4pIY5GErLxmr2KQlK825vFmz/JClZ0/w6Y2HPRhBQ5dzBrn+WyJ1LLARmkBVYXeplVtHlRXjFyKYK1xEeTaPOKlfrID4J54gBZDcIH4eQffQa28iitsg8U4FTa1vFbVXlt3OdmNCE7aQoO1R41obvqt8Qx7xYO2tLfHl3SNzvDiBznI2I22xLO6NGvFl6V1gLJXrV36YeQsZ1Qk0yhhUQTAEhHJjPFcCB5OZ4yRYWhzCnk44+HpoYXJiQFNO+AY2pe5I6+H5TfufRGWd30Gfs3oLbkJX8nNgLwxOHH8Pzd/nRtPMwOreNr9PbCd/4j9YXAG0y+U1OLkMJ1K1r2f7p7V4W1wZbHs1mPL/U/Nb7Q4fD5/R+jR1F+97CO2+wHgnEUtHgcAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes>timeFromCreateToActivate=11000</attributes>
+        <block display_value="">47f1c3d393ef4310e61e3b277bba1094</block>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">080207d393ef4310e61e3b277bba1045</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Assign Subflow Outputs">df4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>21</order>
+        <outputs_assigned>recommendationCreated</outputs_assigned>
+        <parent_ui_id>02d26ae9-d00a-4afb-a9c0-3c73020c8ffb</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:58</sys_created_on>
+        <sys_id>f40247d393ef4310e61e3b277bba1072</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:56</sys_updated_on>
+        <ui_id>db110602-f3af-40b2-ae9a-40ac6edda24e</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/4VTTW/bMAz9K4POhudkxpblVqQIMKBbgTboZRgCWqITobKkSXJSL8h/Hxk5H8UOO5ni53uP9EG4Pvk+xZW7i1FvrJj/PAitxFyIQljokKyA0nUdWgVJO7sICAkVhXdgeo5PyFY6egPDy+hKgT6FkFttVEDu+qsQHgI1TBjEnGZYMiyYB21f87T3yScMatogNF/bejr7XLefcCanMGuaagJ1VX8BHmygQUOpT+9Afrii/A+JNHgON84ZBDs6HsamK6LxcQkmMhkXFEOfFALfEjWi8nnLsUJ0wH1dGMScmRc0DdSjNcMlY0t8M80tGp+tDt6i/kPT64orWiTyEnPs8lyPymZ3ew8JnmmGTH3As25OS4xZNoUt9CYtbn054dEz8VySoDHnamf6zv7IIolLg/MiydNHAoGeGTOHkVD7vHX7pzPKpbYnccagcRLM5QUpBd30ifEcBBqkNaR1B95ru1n74Hb6VExYunJj6FG2xu1pKF9kCZKBlyQwlEvy35/cLxA0s/hObaiYYOrVP6vUHS6D6/K26cSp044svtlJVVXiWIg4xIWBGK8KkPTr3z3jz3qMzNdZPC6RQft0aoYjySNfrOUfKUu+G9FdtiJ1JBIr9n27yVMDnaeWt669C69M/+o7/gXq3Pm+pgMAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=080207d393ef4310e61e3b277bba1045"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=080207d393ef4310e61e3b277bba1045"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_080207d393ef4310e61e3b277bba1045"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>materialSysId</element>
+        <help/>
+        <hint/>
+        <label>Material sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045</name>
+        <plural>Material sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:55</sys_created_on>
+        <sys_id>080207d393ef4310e61e3b277bba1086</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:55</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>quantityRequired</element>
+        <help/>
+        <hint/>
+        <label>Quantity Required</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045</name>
+        <plural>Quantity Required</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:56</sys_created_on>
+        <sys_id>180207d393ef4310e61e3b277bba10a9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:56</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>customerOrderSysId</element>
+        <help/>
+        <hint/>
+        <label>Customer Order sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045</name>
+        <plural>Customer Order sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:56</sys_created_on>
+        <sys_id>a80207d393ef4310e61e3b277bba10e5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:56</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>destinationWarehouseSysId</element>
+        <help/>
+        <hint/>
+        <label>Destination Warehouse sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045</name>
+        <plural>Destination Warehouse sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:55</sys_created_on>
+        <sys_id>d00207d393ef4310e61e3b277bba109e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:55</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>productionOrderSysId</element>
+        <help/>
+        <hint/>
+        <label>Production Order sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045</name>
+        <plural>Production Order sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:56</sys_created_on>
+        <sys_id>d00207d393ef4310e61e3b277bba10da</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:56</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_080207d393ef4310e61e3b277bba1045"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>recommendationCreated</element>
+        <help/>
+        <hint/>
+        <label>Recommendation Created</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_output_080207d393ef4310e61e3b277bba1045</name>
+        <plural>Recommendation Created</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:19:57</sys_created_on>
+        <sys_id>600247d393ef4310e61e3b277bba101a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:19:57</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_080207d393ef4310e61e3b277bba1045"/>
+    <sys_hub_flow action="UPDATE">
+        <sys_id>5781daf9870b4031a81683b6d84a84d0</sys_id>
+        <latest_snapshot>080207d393ef4310e61e3b277bba1045</latest_snapshot>
+        <compiler_build/>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=5781daf9870b4031a81683b6d84a84d0"/>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=5781daf9870b4031a81683b6d84a84d0^sys_idNOT INf10287d393ef4310e61e3b277bba1039"/>
+    <sys_flow_subflow_plan action="INSERT_OR_UPDATE">
+        <plan>com.snc.process_flow.engine.ProcessPlan@6330e4e5</plan>
+        <plan_id display_value="FD - Material Fulfillment - Supplier Lead Time Comparison">5781daf9870b4031a81683b6d84a84d0</plan_id>
+        <snapshot>080207d393ef4310e61e3b277bba1045</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:20:01</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>f10287d393ef4310e61e3b277bba1039</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:48:59</sys_updated_on>
+    </sys_flow_subflow_plan>
+</record_update>

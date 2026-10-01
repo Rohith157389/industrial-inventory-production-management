@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sysauto_script">
+    <sysauto_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <advanced>false</advanced>
+        <business_calendar/>
+        <condition/>
+        <conditional>false</conditional>
+        <entered_run_end/>
+        <entered_run_start/>
+        <entered_time>1970-01-01 02:00:00</entered_time>
+        <max_drift/>
+        <name>Monthly Warehouse Demand Forecast</name>
+        <offset/>
+        <offset_type>0</offset_type>
+        <repeat_every/>
+        <run_as/>
+        <run_as_tz/>
+        <run_dayofmonth>1</run_dayofmonth>
+        <run_dayofweek>1</run_dayofweek>
+        <run_daysofweek/>
+        <run_end/>
+        <run_month/>
+        <run_period/>
+        <run_start/>
+        <run_time>1970-01-01 02:00:00</run_time>
+        <run_type>monthly</run_type>
+        <run_weekinmonth/>
+        <script><![CDATA[/**
+ * Monthly Warehouse Demand Forecast Generator
+ *
+ * Runs on the 1st of every month at 2:00 AM.
+ * Generates warehouse-aware demand forecasts for ALL active material+warehouse
+ * combinations using the DemandForecastEngine.
+ *
+ * Each material at each warehouse gets its own independent forecast.
+ * Demand from Hyderabad, Chennai, and Bangalore is NEVER mixed.
+ *
+ * Creates:
+ *   - Forecast records in x_2056099_indust_0_demand_forecast
+ *   - Inventory alerts for projected shortages (reorder_required)
+ *   - Inventory alerts for safety stock review signals (below_safety_stock)
+ *
+ * SAFETY: This script NEVER modifies safety stock levels or inventory.
+ * It only creates forecast records and alerts.
+ */
+(function () {
+    try {
+        gs.info('[DemandForecast] Monthly warehouse demand forecast generation starting...');
+
+        var engine = new DemandForecastEngine();
+        var summary = engine.generateAllForecasts();
+
+        gs.info('[DemandForecast] Forecast generation complete. ' +
+            'Total: ' + summary.total +
+            ', Success: ' + summary.success +
+            ', Failed: ' + summary.failed);
+
+        if (summary.failed > 0) {
+            gs.warn('[DemandForecast] ' + summary.failed + ' forecasts failed. Errors: ' +
+                summary.errors.slice(0, 5).join('; '));
+        }
+
+    } catch (e) {
+        gs.error('[DemandForecast] Monthly forecast generation failed: ' + e.message);
+    }
+})();
+]]></script>
+        <sys_class_name>sysauto_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:34:43</sys_created_on>
+        <sys_id>292ec8bcd68d48599868df8480598511</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Monthly Warehouse Demand Forecast</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sysauto_script_292ec8bcd68d48599868df8480598511</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:34:43</sys_updated_on>
+        <time_zone/>
+        <upgrade_safe>false</upgrade_safe>
+    </sysauto_script>
+</record_update>

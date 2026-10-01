@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.FulfillmentSimulationEngine</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>READ-ONLY simulation engine evaluating 7 fulfillment strategies with full metrics. Does NOT modify inventory.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>FulfillmentSimulationEngine</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * FulfillmentSimulationEngine
+ *
+ * READ-ONLY simulation engine that evaluates 7 fulfillment strategies
+ * for a material requirement and creates strategy result records.
+ *
+ * DOES NOT:
+ *   - Update Inventory Stock
+ *   - Update reserved quantity
+ *   - Create actual Inventory Transactions
+ *   - Place supplier orders
+ *   - Execute transfers
+ *
+ * Only reads from tables and writes to sim_strat.
+ *
+ * Workflow: SIMULATE → REVIEW → APPROVE → EXECUTE
+ * This engine handles SIMULATE only.
+ *
+ * Usage:
+ *   var engine = new x_2056099_indust_0.FulfillmentSimulationEngine();
+ *   var result = engine.simulate(simulationSysId);
+ */
+var FulfillmentSimulationEngine = Class.create();
+FulfillmentSimulationEngine.prototype = {
+    initialize: function () {
+        this.SIM = 'x_2056099_indust_0_fulfill_sim';
+        this.STRAT = 'x_2056099_indust_0_sim_strat';
+        this.STOCK = 'x_2056099_indust_0_inv_stock';
+        this.MAT = 'x_2056099_indust_0_mat_master';
+        this.LOC = 'x_2056099_indust_0_inv_loc';
+        this.LEAD = 'x_2056099_indust_0_transfer_lead_time';
+        this.SUPP_LEAD = 'x_2056099_indust_0_supp_lead_time';
+        this.INV_REQ = 'x_2056099_indust_0_inv_req';
+        this.PROD_ORD = 'x_2056099_indust_0_production_order';
+        this.PROD_MAT = 'x_2056099_indust_0_production_material';
+    },
+
+    /**
+     * Main entry point. Runs the full simulation for a fulfill_sim record.
+     * @param {string} simSysId - sys_id of the Fulfillment Simulation record
+     * @returns {object} { success, message, strategiesCreated, bestStrategy }
+     */
+    simulate: function (simSysId) {
+        if (!simSysId) return this._fail('Simulation sys_id required');
+
+        // Load simulation record
+        var sim = new GlideRecord(this.SIM);
+        if (!sim.get(simSysId)) return this._fail('Simulation not found');
+
+        var matId = sim.getValue('material_product');
+        var qtyRequired = parseFloat(sim.getValue('quantity')) || 0;
+        var destWhId = sim.getValue('destination_warehouse');
+        var reqDate = sim.getValue('required_delivery_date');
+        var urgency = sim.getValue('urgency');
+        var coId = sim.getValue('customer_order');
+        var poId = sim.getValue('production_order');
+
+        if (!matId) return this._failSim(sim, 'Material is required');
+        if (qtyRequired <= 0) return this._failSim(sim, 'Quantity must be positive');
+        if (!destWhId) return this._failSim(sim, 'Destination warehouse is required');
+
+        // Clear any existing strategy records for this simulation
+        this._clearExistingStrategies(simSysId);
+
+        // Gather base data
+        var localStock = this._getLocalStock(matId, destWhId);
+        var now = new GlideDateTime();
+
+        // Run all 7 strategies
+        var strategies = [];
+        strategies.push(this._strategy1_localAvailable(simSysId, matId, qtyRequired, destWhId, reqDate, localStock, now));
+        strategies.push(this._strategy2_safetyStockConsumption(simSysId, matId, qtyRequired, destWhId, reqDate, localStock, now));
+        strategies.push(this._strategy3_altWarehouseAvailable(simSysId, matId, qtyRequired, destWhId, reqDate, now));
+        strategies.push(this._strategy4_altWarehouseTransfer(simSysId, matId, qtyRequired, destWhId, reqDate, now));
+        strategies.push(this._strategy5_altSupplierProcurement(simSysId, matId, qtyRequired, destWhId, reqDate, now));
+        strategies.push(this._strategy6_reservedReallocation(simSysId, matId, qtyRequired, destWhId, reqDate, localStock, now));
+        strategies.push(this._strategy7_localSupplierProcurement(simSysId, matId, qtyRequired, destWhId, reqDate, now));
+
+        // Count results
+        var totalCreated = 0;
+        var feasibleCount = 0;
+        var bestStrategy = '';
+        var bestReason = '';
+
+        for (var i = 0; i < strategies.length; i++) {
+            if (strategies[i].created) totalCreated++;
+            if (strategies[i].feasible) feasibleCount++;
+        }
+
+        // Find best strategy (lowest rank among feasible)
+        var bestRank = 999;
+        for (var j = 0; j < strategies.length; j++) {
+            if (strategies[j].feasible && strategies[j].rank < bestRank) {
+                bestRank = strategies[j].rank;
+                bestStrategy = strategies[j].name;
+                bestReason = strategies[j].notes;
+            }
+        }
+
+        // Update simulation record with results
+        sim.setValue('total_strategies_evaluated', totalCreated);
+        sim.setValue('feasible_strategies_count', feasibleCount);
+        sim.setValue('best_strategy', bestStrategy);
+        sim.setValue('best_strategy_reason', bestReason
+            ? 'Rank ' + bestRank + ' — ' + bestStrategy + ': ' + bestReason
+            : 'No feasible strategy found');
+        sim.setValue('simulated_on', now.getValue());
+        sim.setValue('status', 'completed');
+        sim.update();
+
+        return {
+            success: true,
+            message: 'Simulation completed. ' + totalCreated + ' strategies evaluated, ' + feasibleCount + ' feasible.',
+            strategiesCreated: totalCreated,
+            bestStrategy: bestStrategy
+        };
+    },
+
+    // ═══════════════════════════════════════════════════
+    // STRATEGY 1: Local Available Stock
+    // ═══════════════════════════════════════════════════
+    _strategy1_localAvailable: function (simId, matId, qtyReq, destWhId, reqDate, localStock, now) {
+        var avail = localStock.available;
+        var consumed = Math.min(qtyReq, avail);
+        var remaining = avail - consumed;
+        var feasible = avail >= qtyReq;
+        var impact = this._calcDeliveryImpact(now.getValue(), reqDate);
+
+        var notes = 'Local stock at destination: ' + avail + ' available. ';
+        notes += feasible
+            ? 'Fully covers requirement of ' + qtyReq + '. Immediate fulfillment.'
+            : 'Only ' + avail + ' of ' + qtyReq + ' available (shortage: ' + (qtyReq - avail) + ').';
+
+        var stratId = this._createStrategy({
+            simulation: simId,
+            strategy_name: 'local_available_stock',
+            strategy_rank: 1,
+            source_warehouse: destWhId,
+            quantity_available: avail,
+            stock_consumed: consumed,
+            stock_remaining: remaining,
+            safety_stock_impact: 0,
+            transfer_lead_time_days: 0,
+            supplier_lead_time_days: 0,
+            expected_fulfillment_date: now.getDate().getValue(),
+            customer_delivery_impact: impact,
+            feasible: feasible,
+            affected_prod_orders: '',
+            procurement_required: false,
+            procurement_quantity: 0,
+            strategy_notes: notes
+        });
+
+        return { created: !!stratId, feasible: feasible, rank: 1, name: 'local_available_stock', notes: notes };
+    },
+
+    // ═══════════════════════════════════════════════════
+    // STRATEGY 2: Safety Stock Consumption
+    // ═══════════════════════════════════════════════════
+    _strategy2_safetyStockConsumption: function (simId, matId, qtyReq, destWhId, reqDate, localStock, now) {
+        var avail = localStock.available;
+        var safety = localStock.safety_stock;
+        var totalAvail = avail + safety;
+        var consumed = Math.min(qtyReq, totalAvail);
+        var remaining = totalAvail - consumed;
+        var safetyImpact = Math.max(0, Math.min(qtyReq - avail, safety));
+        var feasible = totalAvail >= qtyReq;
+        var impact = this._calcDeliveryImpact(now.getValue(), reqDate);
+
+        var notes = 'Available: ' + avail + ', Safety stock: ' + safety + ', Total: ' + totalAvail + '. ';
+        if (safetyImpact > 0) {
+            notes += 'Would consume ' + safetyImpact + ' from safety stock. ';
+        }
+        notes += feasible
+            ? 'Covers requirement of ' + qtyReq + '. Immediate but depletes safety buffer.'
+            : 'Even with safety stock, only ' + totalAvail + ' of ' + qtyReq + ' available.';
+
+        var stratId = this._createStrategy({
+            simulation: simId,
+            strategy_name: 'safety_stock_consumption',
+            strategy_rank: 2,
+            source_warehouse: destWhId,
+            quantity_available: totalAvail,
+            stock_consumed: consumed,
+            stock_remaining: remaining,
+            safety_stock_impact: safetyImpact,
+            transfer_lead_time_days: 0,
+            supplier_lead_time_days: 0,
+            expected_fulfillment_date: now.getDate().getValue(),
+            customer_delivery_impact: impact,
+            feasible: feasible,
+            affected_prod_orders: '',
+            procurement_required: false,
+            procurement_quantity: 0,
+            strategy_notes: notes
+        });
+
+        return { created: !!stratId, feasible: feasible, rank: 2, name: 'safety_stock_consumption', notes: notes };
+    },
+
+    // ═══════════════════════════════════════════════════
+    // STRATEGY 3: Alternate Warehouse Available Stock
+    // ═══════════════════════════════════════════════════
+    _strategy3_altWarehouseAvailable: function (simId, matId, qtyReq, destWhId, reqDate, now) {
+        var best = this._findBestAltWarehouse(matId, destWhId);
+        if (!best) {
+            var stratId = this._createStrategy({
+                simulation: simId,
+                strategy_name: 'alt_warehouse_available',
+                strategy_rank: 3,
+                source_warehouse: '',
+                quantity_available: 0,
+                stock_consumed: 0,
+                stock_remaining: 0,
+                safety_stock_impact: 0,
+                transfer_lead_time_days: 0,
+                supplier_lead_time_days: 0,
+                expected_fulfillment_date: '',
+                customer_delivery_impact: 'unknown',
+                feasible: false,
+                affected_prod_orders: '',
+                procurement_required: false,
+                procurement_quantity: 0,
+                strategy_notes: 'No alternate warehouse has available stock for this material.'
+            });
+            return { created: !!stratId, feasible: false, rank: 3, name: 'alt_warehouse_available', notes: 'No alternate warehouse stock' };
+        }
+
+        var leadDays = this._getTransferLeadTime(best.warehouse_id, destWhId);
+        var arrivalDate = new GlideDateTime(now);
+        arrivalDate.addDaysLocalTime(leadDays);
+        var consumed = Math.min(qtyReq, best.available);
+        var remaining = best.available - consumed;
+        var feasible = best.available >= qtyReq;
+        var impact = this._calcDeliveryImpact(arrivalDate.getValue(), reqDate);
+
+        // Check for affected production orders at the source warehouse
+        var affectedPOs = this._findAffectedProdOrders(matId, best.warehouse_id);
+
+        var notes = 'Best alternate: ' + best.warehouse_name + '. Available: ' + best.available + '. ';
+        notes += 'Transfer lead time: ' + leadDays + ' day(s). ';
+        notes += feasible
+            ? 'Covers requirement of ' + qtyReq + '.'
+            : 'Only ' + best.available + ' of ' + qtyReq + ' available.';
+        if (affectedPOs) notes += ' Affected POs: ' + affectedPOs;
+
+        var stratId2 = this._createStrategy({
+            simulation: simId,
+            strategy_name: 'alt_warehouse_available',
+            strategy_rank: 3,
+            source_warehouse: best.warehouse_id,
+            quantity_available: best.available,
+            stock_consumed: consumed,
+            stock_remaining: remaining,
+            safety_stock_impact: 0,
+            transfer_lead_time_days: leadDays,
+            supplier_lead_time_days: 0,
+            expected_fulfillment_date: arrivalDate.getDate().getValue(),
+            customer_delivery_impact: impact,
+            feasible: feasible,
+            affected_prod_orders: affectedPOs,
+            procurement_required: false,
+            procurement_quantity: 0,
+            strategy_notes: notes
+        });
+
+        return { created: !!stratId2, feasible: feasible, rank: 3, name: 'alt_warehouse_available', notes: notes };
+    },
+
+    // ═══════════════════════════════════════════════════
+    // STRATEGY 4: Alternate Warehouse Transfer (aggregate)
+    // ═══════════════════════════════════════════════════
+    _strategy4_altWarehouseTransfer: function (simId, matId, qtyReq, destWhId, reqDate, now) {
+        var allAlt = this._findAllAltWarehouses(matId, destWhId);
+        var totalTransferable = 0;
+        var maxLeadDays = 0;
+        var sourceDetails = [];
+
+        for (var i = 0; i < allAlt.length; i++) {
+            totalTransferable += allAlt[i].available;
+            var ld = this._getTransferLeadTime(allAlt[i].warehouse_id, destWhId);
+            if (ld > maxLeadDays) maxLeadDays = ld;
+            sourceDetails.push(allAlt[i].warehouse_name + ': ' + allAlt[i].available + ' (' + ld + 'd)');
+        }
+
+        var arrivalDate = new GlideDateTime(now);
+        arrivalDate.addDaysLocalTime(maxLeadDays);
+        var consumed = Math.min(qtyReq, totalTransferable);
+        var feasible = totalTransferable >= qtyReq;
+        var impact = this._calcDeliveryImpact(arrivalDate.getValue(), reqDate);
+
+        var notes = allAlt.length + ' alternate warehouse(s) evaluated. ';
+        notes += 'Total transferable: ' + totalTransferable + '. ';
+        notes += 'Max lead time (conservative): ' + maxLeadDays + ' day(s). ';
+        notes += feasible
+            ? 'Aggregate covers requirement of ' + qtyReq + '.'
+            : 'Aggregate ' + totalTransferable + ' < required ' + qtyReq + '.';
+        if (sourceDetails.length > 0) notes += ' Sources: ' + sourceDetails.join('; ');
+
+        // Use the first warehouse as source for the record (represents primary source)
+        var primarySource = allAlt.length > 0 ? allAlt[0].warehouse_id : '';
+
+        var stratId = this._createStrategy({
+            simulation: simId,
+            strategy_name: 'alt_warehouse_transfer',
+            strategy_rank: 4,
+            source_warehouse: primarySource,
+            quantity_available: totalTransferable,
+            stock_consumed: consumed,
+            stock_remaining: Math.max(0, totalTransferable - consumed),
+            safety_stock_impact: 0,
+            transfer_lead_time_days: maxLeadDays,
+            supplier_lead_time_days: 0,
+            expected_fulfillment_date: arrivalDate.getDate().getValue(),
+            customer_delivery_impact: impact,
+            feasible: feasible,
+            affected_prod_orders: '',
+            procurement_required: false,
+            procurement_quantity: 0,
+            strategy_notes: notes
+        });
+
+        return { created: !!stratId, feasible: feasible, rank: 4, name: 'alt_warehouse_transfer', notes: notes };
+    },
+
+    // ═══════════════════════════════════════════════════
+    // STRATEGY 5: Alternate Supplier Procurement
+    // ═══════════════════════════════════════════════════
+    _strategy5_altSupplierProcurement: function (simId, matId, qtyReq, destWhId, reqDate, now) {
+        // Find supplier delivering to a warehouse OTHER than the destination
+        var slt = new GlideRecord(this.SUPP_LEAD);
+        slt.addQuery('material_product', matId);
+        slt.addQuery('delivery_warehouse', '!=', destWhId);
+        slt.addQuery('active', true);
+        slt.orderBy('lead_time_days');
+        slt.setLimit(1);
+        slt.query();
+
+        if (!slt.next()) {
+            var stratId = this._createStrategy({
+                simulation: simId,
+                strategy_name: 'alt_supplier_procurement',
+                strategy_rank: 5,
+                source_warehouse: '',
+                quantity_available: 0,
+                stock_consumed: 0,
+                stock_remaining: 0,
+                safety_stock_impact: 0,
+                transfer_lead_time_days: 0,
+                supplier_lead_time_days: 0,
+                expected_fulfillment_date: '',
+                customer_delivery_impact: 'unknown',
+                feasible: false,
+                affected_prod_orders: '',
+                procurement_required: true,
+                procurement_quantity: qtyReq,
+                strategy_notes: 'No alternate supplier route available for this material.'
+            });
+            return { created: !!stratId, feasible: false, rank: 5, name: 'alt_supplier_procurement', notes: 'No alternate supplier' };
+        }
+
+        var supplierLeadDays = parseFloat(slt.getValue('lead_time_days')) || 0;
+        var supplierId = slt.getValue('supplier');
+        var altWhId = slt.getValue('delivery_warehouse');
+        var transferLeadDays = this._getTransferLeadTime(altWhId, destWhId);
+        var totalLead = supplierLeadDays + transferLeadDays;
+
+        var arrivalDate = new GlideDateTime(now);
+        arrivalDate.addDaysLocalTime(totalLead);
+        var impact = this._calcDeliveryImpact(arrivalDate.getValue(), reqDate);
+        var feasible = (impact === 'on_time');
+
+        var altWhName = this._getWarehouseName(altWhId);
+        var notes = 'Supplier → ' + altWhName + ' (' + supplierLeadDays + 'd) → transfer to destination (' + transferLeadDays + 'd). ';
+        notes += 'Total lead: ' + totalLead + ' day(s). ';
+        notes += feasible ? 'Meets delivery deadline.' : 'WARNING: May miss delivery deadline.';
+
+        var stratId2 = this._createStrategy({
+            simulation: simId,
+            strategy_name: 'alt_supplier_procurement',
+            strategy_rank: 5,
+            source_warehouse: altWhId,
+            quantity_available: 0,
+            stock_consumed: 0,
+            stock_remaining: 0,
+            safety_stock_impact: 0,
+            transfer_lead_time_days: transferLeadDays,
+            supplier_lead_time_days: supplierLeadDays,
+            supplier: supplierId,
+            expected_fulfillment_date: arrivalDate.getDate().getValue(),
+            customer_delivery_impact: impact,
+            feasible: feasible,
+            affected_prod_orders: '',
+            procurement_required: true,
+            procurement_quantity: qtyReq,
+            strategy_notes: notes
+        });
+
+        return { created: !!stratId2, feasible: feasible, rank: 5, name: 'alt_supplier_procurement', notes: notes };
+    },
+
+    // ═══════════════════════════════════════════════════
+    // STRATEGY 6: Reserved Stock Reallocation
+    // ═══════════════════════════════════════════════════
+    _strategy6_reservedReallocation: function (simId, matId, qtyReq, destWhId, reqDate, localStock, now) {
+        var reserved = localStock.reserved;
+        var consumed = Math.min(qtyReq, reserved);
+        var remaining = reserved - consumed;
+        var feasible = reserved >= qtyReq;
+        var impact = this._calcDeliveryImpact(now.getValue(), reqDate);
+
+        // Find affected production orders with active reservations
+        var affectedPOs = this._findAffectedReservationPOs(matId, destWhId);
+
+        var notes = 'Reserved stock at destination: ' + reserved + '. ';
+        notes += feasible
+            ? 'Covers requirement of ' + qtyReq + '. '
+            : 'Only ' + reserved + ' of ' + qtyReq + ' reserved. ';
+        notes += 'WARNING: Reallocation impacts other production orders. ';
+        if (affectedPOs) notes += 'Affected: ' + affectedPOs;
+
+        var stratId = this._createStrategy({
+            simulation: simId,
+            strategy_name: 'reserved_reallocation',
+            strategy_rank: 6,
+            source_warehouse: destWhId,
+            quantity_available: reserved,
+            stock_consumed: consumed,
+            stock_remaining: remaining,
+            safety_stock_impact: 0,
+            transfer_lead_time_days: 0,
+            supplier_lead_time_days: 0,
+            expected_fulfillment_date: now.getDate().getValue(),
+            customer_delivery_impact: impact,
+            feasible: feasible,
+            affected_prod_orders: affectedPOs,
+            procurement_required: false,
+            procurement_quantity: 0,
+            strategy_notes: notes
+        });
+
+        return { created: !!stratId, feasible: feasible, rank: 6, name: 'reserved_reallocation', notes: notes };
+    },
+
+    // ═══════════════════════════════════════════════════
+    // STRATEGY 7: Local Supplier Procurement
+    // ═══════════════════════════════════════════════════
+    _strategy7_localSupplierProcurement: function (simId, matId, qtyReq, destWhId, reqDate, now) {
+        var slt = new GlideRecord(this.SUPP_LEAD);
+        slt.addQuery('material_product', matId);
+        slt.addQuery('delivery_warehouse', destWhId);
+        slt.addQuery('active', true);
+        slt.orderBy('lead_time_days');
+        slt.setLimit(1);
+        slt.query();
+
+        if (!slt.next()) {
+            var stratId = this._createStrategy({
+                simulation: simId,
+                strategy_name: 'local_supplier_procurement',
+                strategy_rank: 7,
+                source_warehouse: destWhId,
+                quantity_available: 0,
+                stock_consumed: 0,
+                stock_remaining: 0,
+                safety_stock_impact: 0,
+                transfer_lead_time_days: 0,
+                supplier_lead_time_days: 0,
+                expected_fulfillment_date: '',
+                customer_delivery_impact: 'unknown',
+                feasible: false,
+                affected_prod_orders: '',
+                procurement_required: true,
+                procurement_quantity: qtyReq,
+                strategy_notes: 'No local supplier configured for delivery to destination warehouse.'
+            });
+            return { created: !!stratId, feasible: false, rank: 7, name: 'local_supplier_procurement', notes: 'No local supplier' };
+        }
+
+        var supplierLeadDays = parseFloat(slt.getValue('lead_time_days')) || 0;
+        var supplierId = slt.getValue('supplier');
+
+        var arrivalDate = new GlideDateTime(now);
+        arrivalDate.addDaysLocalTime(supplierLeadDays);
+        var impact = this._calcDeliveryImpact(arrivalDate.getValue(), reqDate);
+        var feasible = (impact === 'on_time');
+
+        var notes = 'Local supplier delivers directly to destination. ';
+        notes += 'Supplier lead time: ' + supplierLeadDays + ' day(s). ';
+        notes += feasible ? 'Meets delivery deadline.' : 'WARNING: May miss delivery deadline.';
+
+        var stratId2 = this._createStrategy({
+            simulation: simId,
+            strategy_name: 'local_supplier_procurement',
+            strategy_rank: 7,
+            source_warehouse: destWhId,
+            quantity_available: 0,
+            stock_consumed: 0,
+            stock_remaining: 0,
+            safety_stock_impact: 0,
+            transfer_lead_time_days: 0,
+            supplier_lead_time_days: supplierLeadDays,
+            supplier: supplierId,
+            expected_fulfillment_date: arrivalDate.getDate().getValue(),
+            customer_delivery_impact: impact,
+            feasible: feasible,
+            affected_prod_orders: '',
+            procurement_required: true,
+            procurement_quantity: qtyReq,
+            strategy_notes: notes
+        });
+
+        return { created: !!stratId2, feasible: feasible, rank: 7, name: 'local_supplier_procurement', notes: notes };
+    },
+
+    // ═══════════════════════════════════════════════════
+    // HELPER METHODS
+    // ═══════════════════════════════════════════════════
+
+    /** Get local stock data at the destination warehouse. READ-ONLY. */
+    _getLocalStock: function (matId, whId) {
+        var result = { available: 0, safety_stock: 0, reserved: 0, total: 0 };
+        var ga = new GlideAggregate(this.STOCK);
+        ga.addQuery('material_product', matId);
+        ga.addQuery('location', whId);
+        ga.addQuery('active', true);
+        ga.addQuery('status', 'available');
+        ga.addAggregate('SUM', 'available_quantity');
+        ga.addAggregate('SUM', 'safety_stock');
+        ga.addAggregate('SUM', 'reserved_quantity');
+        ga.addAggregate('SUM', 'total_quantity');
+        ga.query();
+        if (ga.next()) {
+            result.available = parseFloat(ga.getAggregate('SUM', 'available_quantity')) || 0;
+            result.safety_stock = parseFloat(ga.getAggregate('SUM', 'safety_stock')) || 0;
+            result.reserved = parseFloat(ga.getAggregate('SUM', 'reserved_quantity')) || 0;
+            result.total = parseFloat(ga.getAggregate('SUM', 'total_quantity')) || 0;
+        }
+        return result;
+    },
+
+    /** Find the best alternate warehouse with the most available stock. */
+    _findBestAltWarehouse: function (matId, excludeWhId) {
+        var gr = new GlideRecord(this.STOCK);
+        gr.addQuery('material_product', matId);
+        gr.addQuery('location', '!=', excludeWhId);
+        gr.addQuery('active', true);
+        gr.addQuery('status', 'available');
+        gr.addQuery('available_quantity', '>', 0);
+        gr.orderByDesc('available_quantity');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) {
+            return {
+                warehouse_id: gr.getValue('location'),
+                warehouse_name: gr.getDisplayValue('location'),
+                available: parseFloat(gr.getValue('available_quantity')) || 0
+            };
+        }
+        return null;
+    },
+
+    /** Find all alternate warehouses with available stock. */
+    _findAllAltWarehouses: function (matId, excludeWhId) {
+        var results = [];
+        var gr = new GlideRecord(this.STOCK);
+        gr.addQuery('material_product', matId);
+        gr.addQuery('location', '!=', excludeWhId);
+        gr.addQuery('active', true);
+        gr.addQuery('status', 'available');
+        gr.addQuery('available_quantity', '>', 0);
+        gr.orderByDesc('available_quantity');
+        gr.query();
+        while (gr.next()) {
+            results.push({
+                warehouse_id: gr.getValue('location'),
+                warehouse_name: gr.getDisplayValue('location'),
+                available: parseFloat(gr.getValue('available_quantity')) || 0
+            });
+        }
+        return results;
+    },
+
+    /** Get directional transfer lead time. */
+    _getTransferLeadTime: function (srcId, dstId) {
+        var lt = new GlideRecord(this.LEAD);
+        lt.addQuery('source_warehouse', srcId);
+        lt.addQuery('destination_warehouse', dstId);
+        lt.addQuery('active', true);
+        lt.setLimit(1);
+        lt.query();
+        if (lt.next()) return parseFloat(lt.getValue('lead_time_days')) || 0;
+        return 0;
+    },
+
+    /** Get warehouse display name. */
+    _getWarehouseName: function (whId) {
+        var gr = new GlideRecord(this.LOC);
+        if (gr.get(whId)) return gr.getValue('location_name') || whId;
+        return whId;
+    },
+
+    /** Calculate delivery impact: compare expected date vs required date. */
+    _calcDeliveryImpact: function (expectedDateStr, requiredDateStr) {
+        if (!requiredDateStr || !expectedDateStr) return 'unknown';
+        try {
+            var expected = new GlideDateTime(expectedDateStr);
+            var required = new GlideDateTime(requiredDateStr);
+            return expected.compareTo(required) <= 0 ? 'on_time' : 'delayed';
+        } catch (e) {
+            return 'unknown';
+        }
+    },
+
+    /** Find production orders affected by stock removal at a warehouse. */
+    _findAffectedProdOrders: function (matId, whId) {
+        var affected = [];
+        var pm = new GlideRecord(this.PROD_MAT);
+        pm.addQuery('material_product', matId);
+        pm.addQuery('source_location', whId);
+        pm.addQuery('active', true);
+        pm.query();
+        while (pm.next()) {
+            var poId = pm.getValue('production_order');
+            if (poId && affected.indexOf(poId) === -1) {
+                var po = new GlideRecord(this.PROD_ORD);
+                if (po.get(poId) && po.getValue('active') == '1') {
+                    var status = po.getValue('status');
+                    if (status !== 'completed' && status !== 'cancelled') {
+                        affected.push(po.getValue('number') || poId);
+                    }
+                }
+            }
+        }
+        return affected.length > 0 ? affected.join(', ') + ' (' + affected.length + ' order(s))' : '';
+    },
+
+    /** Find production orders with active material reservations at destination. */
+    _findAffectedReservationPOs: function (matId, whId) {
+        var affected = [];
+        var req = new GlideRecord(this.INV_REQ);
+        req.addQuery('material_product', matId);
+        req.addQuery('destination_location', whId);
+        req.addQuery('request_type', 'material_reservation');
+        req.addQuery('status', 'IN', 'open,approved,in_progress');
+        req.query();
+        while (req.next()) {
+            var poId = req.getValue('related_production_order');
+            if (poId && affected.indexOf(poId) === -1) {
+                var po = new GlideRecord(this.PROD_ORD);
+                if (po.get(poId)) {
+                    affected.push(po.getValue('number') || poId);
+                }
+            }
+        }
+        return affected.length > 0 ? affected.join(', ') + ' (' + affected.length + ' reservation(s))' : '';
+    },
+
+    /** Clear existing strategy records for a simulation. */
+    _clearExistingStrategies: function (simId) {
+        var gr = new GlideRecord(this.STRAT);
+        gr.addQuery('simulation', simId);
+        gr.deleteMultiple();
+    },
+
+    /** Create a strategy record. */
+    _createStrategy: function (data) {
+        var gr = new GlideRecord(this.STRAT);
+        gr.initialize();
+        for (var key in data) {
+            if (data.hasOwnProperty(key) && data[key] !== '' && data[key] !== null && data[key] !== undefined) {
+                gr.setValue(key, data[key].toString());
+            }
+        }
+        return gr.insert() || '';
+    },
+
+    /** Mark simulation as failed. */
+    _failSim: function (simGr, reason) {
+        simGr.setValue('status', 'completed');
+        simGr.setValue('best_strategy_reason', 'SIMULATION FAILED: ' + reason);
+        simGr.setValue('simulated_on', new GlideDateTime().getValue());
+        simGr.update();
+        return this._fail(reason);
+    },
+
+    _fail: function (reason) {
+        return { success: false, error: reason };
+    },
+
+    type: 'FulfillmentSimulationEngine'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 07:50:08</sys_created_on>
+        <sys_id>4c8fda66127b40c9ac53c6c84a62d59b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>FulfillmentSimulationEngine</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_4c8fda66127b40c9ac53c6c84a62d59b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 07:50:08</sys_updated_on>
+    </sys_script_include>
+</record_update>

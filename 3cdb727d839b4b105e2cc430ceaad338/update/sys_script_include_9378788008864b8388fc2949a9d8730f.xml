@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.MultiMaterialFulfillmentCoordinator</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Coordination engine that evaluates fulfillment decisions for every material required by a production order. Collects results, calculates material readiness dates, and flags orders requiring review. Does NOT execute transfers or procurement.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>MultiMaterialFulfillmentCoordinator</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * MultiMaterialFulfillmentCoordinator
+ *
+ * Coordination engine that evaluates fulfillment decisions for every material
+ * required by a production order. Collects results, calculates material readiness
+ * dates, and flags orders requiring review.
+ *
+ * Does NOT execute transfers, procurement, or modify inventory.
+ *
+ * Usage:
+ *   var engine = new x_2056099_indust_0.MultiMaterialFulfillmentCoordinator();
+ *   var result = engine.coordinate(productionOrderSysId);
+ *   // Or with an existing coordination run:
+ *   var result = engine.coordinate(productionOrderSysId, runSysId);
+ */
+var MultiMaterialFulfillmentCoordinator = Class.create();
+MultiMaterialFulfillmentCoordinator.prototype = {
+    initialize: function () {
+        this.COORD_RUN = 'x_2056099_indust_0_mcoord_run';
+        this.COORD_RES = 'x_2056099_indust_0_mcoord_res';
+        this.PROD_ORD = 'x_2056099_indust_0_production_order';
+        this.PROD_MAT = 'x_2056099_indust_0_production_material';
+        this.CUST_ORD = 'x_2056099_indust_0_cust_order';
+        this.FULFILL_DEC = 'x_2056099_indust_0_fulfill_dec';
+    },
+
+    /**
+     * Main entry point. Evaluates fulfillment for all materials in a production order.
+     * @param {string} productionOrderSysId - sys_id of the production order
+     * @param {string} [runSysId] - optional sys_id of an existing coordination run
+     * @returns {object} { success, runSysId, totalMaterials, feasibleMaterials, blockedMaterials, materialReadyDate, requiresReview, reviewReason }
+     */
+    coordinate: function (productionOrderSysId, runSysId) {
+        if (!productionOrderSysId) {
+            return this._fail('Production order sys_id is required');
+        }
+
+        // 1. Load production order
+        var po = new GlideRecord(this.PROD_ORD);
+        if (!po.get(productionOrderSysId)) {
+            return this._fail('Production order not found: ' + productionOrderSysId);
+        }
+
+        // 2. Load customer order
+        var coSysId = po.getValue('customer_order') || '';
+        var customerRequiredDate = '';
+        var preferredLocation = '';
+
+        if (coSysId) {
+            var co = new GlideRecord(this.CUST_ORD);
+            if (co.get(coSysId)) {
+                customerRequiredDate = co.getValue('requested_delivery_date') || '';
+                preferredLocation = co.getValue('preferred_delivery_location') || '';
+            }
+        }
+
+        // 3. Resolve destination warehouse
+        var warehouseSysId = po.getValue('production_location') || preferredLocation || '';
+        if (!warehouseSysId) {
+            return this._fail('No destination warehouse could be resolved');
+        }
+
+        // Fall back to planned_end_date if no customer required date
+        if (!customerRequiredDate) {
+            customerRequiredDate = po.getValue('planned_end_date') || '';
+        }
+
+        // 4. Create or use existing coordination run
+        var run;
+        if (runSysId) {
+            run = new GlideRecord(this.COORD_RUN);
+            if (!run.get(runSysId)) {
+                return this._fail('Coordination run not found: ' + runSysId);
+            }
+        } else {
+            run = new GlideRecord(this.COORD_RUN);
+            run.initialize();
+            run.setValue('production_order', productionOrderSysId);
+            run.setValue('customer_order', coSysId);
+            run.setValue('destination_warehouse', warehouseSysId);
+            run.setValue('status', 'coordinating');
+            runSysId = run.insert();
+            if (!runSysId) {
+                return this._fail('Failed to create coordination run');
+            }
+        }
+
+        // Ensure run has resolved info
+        if (!run.getValue('customer_order') && coSysId) {
+            run.setValue('customer_order', coSysId);
+        }
+        if (!run.getValue('destination_warehouse') && warehouseSysId) {
+            run.setValue('destination_warehouse', warehouseSysId);
+        }
+
+        // 5. Query all production_material records for this production order
+        var pm = new GlideRecord(this.PROD_MAT);
+        pm.addQuery('production_order', productionOrderSysId);
+        pm.addQuery('active', true);
+        pm.query();
+
+        var totalMaterials = 0;
+        var feasibleCount = 0;
+        var blockedCount = 0;
+        var unfulfillableCount = 0;
+        var maxExpectedDate = '';
+        var reviewReasons = [];
+
+        // 6. For each material, evaluate fulfillment decision
+        while (pm.next()) {
+            totalMaterials++;
+
+            var matSysId = pm.getValue('material_product');
+            var qtyRequired = parseFloat(pm.getValue('remaining_quantity')) || parseFloat(pm.getValue('required_quantity')) || 0;
+
+            // 6a. Call MaterialFulfillmentDecision.evaluate()
+            var decisionEngine = new x_2056099_indust_0.MaterialFulfillmentDecision();
+            var decResult;
+            try {
+                decResult = decisionEngine.evaluate({
+                    materialSysId: matSysId,
+                    quantityRequired: qtyRequired,
+                    warehouseSysId: warehouseSysId,
+                    customerRequiredDate: customerRequiredDate,
+                    customerOrderSysId: coSysId,
+                    productionOrderSysId: productionOrderSysId,
+                });
+            } catch (e) {
+                decResult = { success: false, reason: 'Exception: ' + e.message };
+            }
+
+            // 6b. Read result and fulfill_dec record for detailed data
+            var decisionType = '';
+            var decisionSysId = '';
+            var expectedFulfillmentDate = '';
+            var sourceWarehouse = '';
+            var supplierSysId = '';
+            var transferLeadTimeDays = 0;
+            var supplierLeadTimeDays = 0;
+            var decisionReason = '';
+            var isFeasible = false;
+            var procurementRequired = false;
+            var resultStatus = 'pending';
+
+            if (decResult && decResult.success) {
+                decisionType = decResult.decision_type || '';
+                decisionSysId = decResult.decision_sys_id || '';
+
+                // Read the fulfill_dec record for additional fields
+                if (decisionSysId) {
+                    var dec = new GlideRecord(this.FULFILL_DEC);
+                    if (dec.get(decisionSysId)) {
+                        expectedFulfillmentDate = dec.getValue('expected_fulfillment_date') || '';
+                        sourceWarehouse = dec.getValue('source_warehouse') || '';
+                        supplierSysId = dec.getValue('supplier') || '';
+                        transferLeadTimeDays = parseInt(dec.getValue('transfer_lead_time_days'), 10) || 0;
+                        supplierLeadTimeDays = parseInt(dec.getValue('supplier_lead_time_days'), 10) || 0;
+                        decisionReason = dec.getValue('decision_reason') || '';
+                    }
+                }
+
+                // Determine feasibility based on decision type
+                if (decisionType === 'MANUAL_REVIEW' || decisionType === 'UNFULFILLABLE') {
+                    isFeasible = false;
+                    if (decisionType === 'UNFULFILLABLE') {
+                        resultStatus = 'unfulfillable';
+                        unfulfillableCount++;
+                    } else {
+                        resultStatus = 'blocked';
+                        blockedCount++;
+                    }
+                    reviewReasons.push(
+                        pm.getDisplayValue('material_product') + ': ' + decisionType + ' - ' + decisionReason
+                    );
+                } else {
+                    isFeasible = true;
+                    feasibleCount++;
+                    resultStatus = 'fulfilled';
+                }
+
+                // Check if procurement is needed
+                if (
+                    decisionType === 'PROCUREMENT_LOCAL_SUPPLIER' ||
+                    decisionType === 'PROCUREMENT_ALTERNATE_WAREHOUSE_SUPPLIER'
+                ) {
+                    procurementRequired = true;
+                }
+
+                // Track max expected date for material readiness calculation
+                if (expectedFulfillmentDate && isFeasible) {
+                    if (!maxExpectedDate || expectedFulfillmentDate > maxExpectedDate) {
+                        maxExpectedDate = expectedFulfillmentDate;
+                    }
+                }
+            } else {
+                // Decision engine failed for this material
+                blockedCount++;
+                resultStatus = 'blocked';
+                decisionReason =
+                    decResult && decResult.reason ? decResult.reason : 'Decision engine returned failure';
+                reviewReasons.push(
+                    pm.getDisplayValue('material_product') + ': EVALUATION_FAILED - ' + decisionReason
+                );
+            }
+
+            // 6c. Create coordination result record
+            var res = new GlideRecord(this.COORD_RES);
+            res.initialize();
+            res.setValue('coordination_run', runSysId);
+            res.setValue('material_product', matSysId);
+            res.setValue('required_quantity', qtyRequired);
+            res.setValue('fulfillment_warehouse', warehouseSysId);
+            if (sourceWarehouse) {
+                res.setValue('source_warehouse', sourceWarehouse);
+            }
+            res.setValue('fulfillment_strategy', decisionType);
+            if (expectedFulfillmentDate) {
+                res.setValue('expected_arrival', expectedFulfillmentDate);
+            }
+            if (supplierSysId) {
+                res.setValue('supplier', supplierSysId);
+            }
+            res.setValue('transfer_lead_time_days', transferLeadTimeDays);
+            res.setValue('supplier_lead_time_days', supplierLeadTimeDays);
+            res.setValue('procurement_required', procurementRequired);
+            res.setValue('feasible', isFeasible);
+            if (decisionReason) {
+                res.setValue('blocker_notes', decisionReason);
+            }
+            if (decisionSysId) {
+                res.setValue('decision_sys_id', decisionSysId);
+            }
+            res.setValue('status', resultStatus);
+            res.insert();
+        }
+
+        // 7. Calculate overall results
+        var requiresReview = blockedCount > 0 || unfulfillableCount > 0;
+        var reviewReason = reviewReasons.length > 0 ? reviewReasons.join('; ') : '';
+        var finalStatus = requiresReview ? 'requires_review' : 'completed';
+
+        // 8. Update coordination run with final totals and status
+        run.setValue('total_materials', totalMaterials);
+        run.setValue('feasible_materials', feasibleCount);
+        run.setValue('blocked_materials', blockedCount + unfulfillableCount);
+        if (maxExpectedDate) {
+            run.setValue('material_ready_date', maxExpectedDate);
+        }
+        run.setValue('requires_review', requiresReview);
+        if (reviewReason) {
+            run.setValue('review_reason', reviewReason);
+        }
+        run.setValue('coordinated_on', new GlideDateTime().getValue());
+        run.setValue('coordinated_by', gs.getUserID());
+        run.setValue('status', finalStatus);
+        run.update();
+
+        // 9. Return summary
+        return {
+            success: true,
+            runSysId: runSysId,
+            totalMaterials: totalMaterials,
+            feasibleMaterials: feasibleCount,
+            blockedMaterials: blockedCount + unfulfillableCount,
+            materialReadyDate: maxExpectedDate,
+            requiresReview: requiresReview,
+            reviewReason: reviewReason,
+        };
+    },
+
+    _fail: function (reason) {
+        gs.error('MultiMaterialFulfillmentCoordinator: ' + reason);
+        return {
+            success: false,
+            error: reason,
+            runSysId: '',
+            totalMaterials: 0,
+            feasibleMaterials: 0,
+            blockedMaterials: 0,
+            materialReadyDate: '',
+            requiresReview: false,
+            reviewReason: '',
+        };
+    },
+
+    type: 'MultiMaterialFulfillmentCoordinator',
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 08:29:29</sys_created_on>
+        <sys_id>9378788008864b8388fc2949a9d8730f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>MultiMaterialFulfillmentCoordinator</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_9378788008864b8388fc2949a9d8730f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 08:29:29</sys_updated_on>
+    </sys_script_include>
+</record_update>

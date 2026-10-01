@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="903c3add715f4e7da9b195aca5d0662f" label="Material Coordination Result" name="x_2056099_indust_0_mcoord_res" type="collection">
+        <element label="Supplier" name="supplier" reference="core_company" type="reference"/>
+        <element label="Source Warehouse" name="source_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Procurement Required" name="procurement_required" type="boolean"/>
+        <element label="Transfer Lead Time (Days)" name="transfer_lead_time_days" type="integer"/>
+        <element label="Required Quantity" mandatory="true" name="required_quantity" type="decimal"/>
+        <element label="Expected Arrival" name="expected_arrival" type="glide_date_time"/>
+        <element label="Blocker Notes" max_length="4000" name="blocker_notes" type="string"/>
+        <element label="Supplier Lead Time (Days)" name="supplier_lead_time_days" type="integer"/>
+        <element label="Fulfillment Strategy" max_length="100" name="fulfillment_strategy" type="string"/>
+        <element default="pending" label="Status" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Blocked" sequence="3" value="blocked"/>
+                <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
+                <element inactive_on_update="false" label="Unfulfillable" sequence="4" value="unfulfillable"/>
+                <element inactive_on_update="false" label="Fulfilled" sequence="2" value="fulfilled"/>
+            </choice>
+        </element>
+        <element label="Decision Sys ID" max_length="32" name="decision_sys_id" type="string"/>
+        <element label="Feasible" name="feasible" type="boolean"/>
+        <element label="Coordination Run" mandatory="true" name="coordination_run" reference="x_2056099_indust_0_mcoord_run" type="reference"/>
+        <element label="Destination Warehouse" name="fulfillment_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Material Product" mandatory="true" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <index name="index">
+            <element name="coordination_run"/>
+        </index>
+        <index name="index2">
+            <element name="fulfillment_warehouse"/>
+        </index>
+        <index name="index3">
+            <element name="material_product"/>
+        </index>
+        <index name="index4">
+            <element name="source_warehouse"/>
+        </index>
+        <index name="index5">
+            <element name="supplier"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="1b49ab45878c4708bed02100fc0bed3a" label="Warehouse Demand Forecast" name="x_2056099_indust_0_demand_forecast" type="collection">
+        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
+        <element label="Warehouse" mandatory="true" max_length="32" name="warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Material / Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="Recommended Reorder Date" max_length="40" name="recommended_reorder_date" type="glide_date_time"/>
+        <element label="Historical Demand" max_length="15" name="historical_demand" type="decimal"/>
+        <element default="weighted_moving_average" label="Forecast Method" max_length="100" name="forecast_method" type="string"/>
+        <element label="Forecast Demand" max_length="15" name="forecast_demand" type="decimal"/>
+        <element label="Forecast Generated On" max_length="40" name="forecast_generated_on" type="glide_date_time"/>
+        <element label="Customer Order Demand" max_length="15" name="customer_order_demand" type="decimal"/>
+        <element label="Current Stock (at Forecast Time)" max_length="15" name="current_stock" type="decimal"/>
+        <element default="active" label="Status" mandatory="true" max_length="40" name="status" type="string"/>
+        <element label="Replenishment Lead Time (Days)" max_length="15" name="replenishment_lead_time_days" type="decimal"/>
+        <element label="Supplier Lead Time (Days)" max_length="15" name="supplier_lead_time_days" type="decimal"/>
+        <element label="Forecast Period (Month Start)" mandatory="true" max_length="40" name="forecast_period" type="glide_date"/>
+        <element label="Projected Stock" max_length="15" name="projected_stock" type="decimal"/>
+        <element label="Inventory Request Demand" max_length="15" name="inventory_request_demand" type="decimal"/>
+        <element label="Trend Factor" max_length="15" name="trend_factor" type="decimal"/>
+        <element label="Production Demand" max_length="15" name="production_demand" type="decimal"/>
+        <element label="Safety Stock Consumption" max_length="15" name="safety_stock_consumption" type="decimal"/>
+        <element label="Projected Shortage" max_length="15" name="projected_shortage" type="decimal"/>
+        <element label="Safety Stock Consumption Count (6mo)" max_length="40" name="safety_stock_consumption_count" type="integer"/>
+        <element label="Recommended Replenishment Qty" max_length="15" name="recommended_replenishment_qty" type="decimal"/>
+        <element label="Safety Stock Review Recommended" max_length="40" name="safety_stock_review_recommended" type="boolean"/>
+        <index name="index">
+            <element name="material_product"/>
+        </index>
+        <index name="index2">
+            <element name="warehouse"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.DemandForecastEngine</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Warehouse-aware demand forecasting engine. Calculates historical demand from customer orders, production requirements, inventory requests, and safety stock consumption — per Material + Warehouse. Generates weighted moving average forecasts with trend detection, projects stock levels, and creates replenishment recommendations. Detects repeated safety stock consumption as a signal for review (never auto-modifies safety stock).</description>
+        <mobile_callable>false</mobile_callable>
+        <name>DemandForecastEngine</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * DemandForecastEngine
+ *
+ * Warehouse-aware demand forecasting engine. Calculates historical demand
+ * and generates forecasts per Material + Warehouse.
+ *
+ * CRITICAL: Demand is NEVER aggregated across warehouses. Each warehouse
+ * (Hyderabad, Chennai, Bangalore, etc.) gets its own independent forecast.
+ *
+ * Data Sources for Historical Demand:
+ *   1. Customer Order Items → quantity_ordered where customer_order.preferred_delivery_location = warehouse
+ *   2. Production Material Requirements → required_quantity where source_location = warehouse
+ *   3. Completed Inventory Requests → quantity_requested where destination_location = warehouse
+ *   4. Safety Stock Consumption → safety_stock_consumed from fulfill_dec where assigned_warehouse = warehouse
+ *
+ * Forecast Method: Weighted Moving Average (6 months) with trend adjustment
+ *   - Recent months weighted more heavily (weights: 6,5,4,3,2,1 for months 1-6 back)
+ *   - Trend factor: ratio of recent 3-month avg to older 3-month avg
+ *   - Safety stock consumption pattern detection for review signals
+ *
+ * SAFETY: This engine NEVER modifies safety stock levels. It only recommends review.
+ */
+var DemandForecastEngine = Class.create();
+
+DemandForecastEngine.prototype = {
+    initialize: function () {
+        this.HISTORY_MONTHS = 6;
+        this.WEIGHTS = [6, 5, 4, 3, 2, 1]; // most recent first
+        this.SAFETY_STOCK_THRESHOLD = 3; // consumption count triggering review
+    },
+
+    /**
+     * Main entry point: generate forecast for a specific material at a specific warehouse
+     * @param {string} materialSysId - sys_id of the material
+     * @param {string} warehouseSysId - sys_id of the warehouse/location
+     * @returns {object} forecast result
+     */
+    generateForecast: function (materialSysId, warehouseSysId) {
+        var result = {
+            success: false,
+            materialSysId: materialSysId,
+            warehouseSysId: warehouseSysId,
+            forecastSysId: '',
+            message: ''
+        };
+
+        try {
+            // Collect historical demand per month from all sources
+            var monthlyDemand = this._collectMonthlyDemand(materialSysId, warehouseSysId);
+
+            // Calculate weighted moving average forecast
+            var forecast = this._calculateForecast(monthlyDemand);
+
+            // Get current stock at this warehouse
+            var stockInfo = this._getCurrentStock(materialSysId, warehouseSysId);
+
+            // Get supplier and replenishment lead times
+            var leadTimes = this._getLeadTimes(materialSysId, warehouseSysId);
+
+            // Detect safety stock consumption patterns
+            var ssConsumption = this._getSafetyStockConsumption(materialSysId, warehouseSysId);
+
+            // Calculate recommendations
+            var recommendations = this._calculateRecommendations(
+                forecast, stockInfo, leadTimes, ssConsumption
+            );
+
+            // Aggregate last month's component totals for the historical_demand field
+            var latestMonth = monthlyDemand.length > 0 ? monthlyDemand[0] : null;
+            var totalHistorical = latestMonth
+                ? (latestMonth.customerOrder + latestMonth.production +
+                   latestMonth.inventoryRequest + latestMonth.safetyStock)
+                : 0;
+
+            // Write the forecast record
+            var forecastSysId = this._writeForecastRecord(
+                materialSysId, warehouseSysId, forecast, stockInfo,
+                leadTimes, ssConsumption, recommendations, monthlyDemand, totalHistorical
+            );
+
+            result.success = true;
+            result.forecastSysId = forecastSysId;
+            result.message = 'Forecast generated successfully';
+
+            // Create alerts if needed
+            this._createAlertsIfNeeded(
+                materialSysId, warehouseSysId, recommendations, ssConsumption, stockInfo
+            );
+
+        } catch (e) {
+            result.message = 'Forecast generation failed: ' + e.message;
+            gs.error('[DemandForecastEngine] ' + result.message);
+        }
+
+        return result;
+    },
+
+    /**
+     * Generate forecasts for ALL active material+warehouse combinations
+     * @returns {object} summary of results
+     */
+    generateAllForecasts: function () {
+        var summary = { total: 0, success: 0, failed: 0, errors: [] };
+
+        // Archive previous active forecasts
+        this._archivePreviousForecasts();
+
+        // Find all active inventory stock records (each = unique material+warehouse)
+        var gr = new GlideRecord('x_2056099_indust_0_inv_stock');
+        gr.addQuery('active', true);
+        gr.query();
+
+        while (gr.next()) {
+            summary.total++;
+            var materialId = gr.getValue('material_product');
+            var warehouseId = gr.getValue('location');
+
+            var result = this.generateForecast(materialId, warehouseId);
+            if (result.success) {
+                summary.success++;
+            } else {
+                summary.failed++;
+                summary.errors.push(result.message);
+            }
+        }
+
+        gs.info('[DemandForecastEngine] Forecast generation complete: ' +
+            summary.success + '/' + summary.total + ' succeeded, ' +
+            summary.failed + ' failed');
+
+        return summary;
+    },
+
+    // ─────────────────────────────────────────────────
+    // HISTORICAL DEMAND COLLECTION
+    // ─────────────────────────────────────────────────
+
+    /**
+     * Collect monthly demand from all 4 data sources for the past N months
+     * Each month's demand is broken down by source and kept per-warehouse
+     */
+    _collectMonthlyDemand: function (materialSysId, warehouseSysId) {
+        var months = [];
+        var now = new GlideDateTime();
+
+        for (var i = 0; i < this.HISTORY_MONTHS; i++) {
+            var periodStart = this._getMonthStart(now, i + 1);
+            var periodEnd = this._getMonthEnd(now, i + 1);
+
+            var monthData = {
+                periodStart: periodStart,
+                periodEnd: periodEnd,
+                customerOrder: this._getCustomerOrderDemand(
+                    materialSysId, warehouseSysId, periodStart, periodEnd
+                ),
+                production: this._getProductionDemand(
+                    materialSysId, warehouseSysId, periodStart, periodEnd
+                ),
+                inventoryRequest: this._getInventoryRequestDemand(
+                    materialSysId, warehouseSysId, periodStart, periodEnd
+                ),
+                safetyStock: this._getSafetyStockDemand(
+                    materialSysId, warehouseSysId, periodStart, periodEnd
+                ),
+                total: 0
+            };
+
+            monthData.total = monthData.customerOrder + monthData.production +
+                monthData.inventoryRequest + monthData.safetyStock;
+
+            months.push(monthData);
+        }
+
+        return months; // index 0 = most recent month
+    },
+
+    /**
+     * Source 1: Customer Order Items delivered to this warehouse
+     * Links: cust_ord_item → customer_order.preferred_delivery_location = warehouse
+     */
+    _getCustomerOrderDemand: function (materialSysId, warehouseSysId, start, end) {
+        var ga = new GlideAggregate('x_2056099_indust_0_cust_ord_item');
+        ga.addQuery('material_product', materialSysId);
+        ga.addQuery('customer_order.preferred_delivery_location', warehouseSysId);
+        ga.addQuery('customer_order.order_date', '>=', start);
+        ga.addQuery('customer_order.order_date', '<', end);
+        ga.addAggregate('SUM', 'quantity_ordered');
+        ga.query();
+
+        if (ga.next()) {
+            return parseFloat(ga.getAggregate('SUM', 'quantity_ordered')) || 0;
+        }
+        return 0;
+    },
+
+    /**
+     * Source 2: Production Material Requirements sourced from this warehouse
+     * Links: production_material.source_location = warehouse
+     */
+    _getProductionDemand: function (materialSysId, warehouseSysId, start, end) {
+        var ga = new GlideAggregate('x_2056099_indust_0_production_material');
+        ga.addQuery('material_product', materialSysId);
+        ga.addQuery('source_location', warehouseSysId);
+        ga.addQuery('production_order.planned_start_date', '>=', start);
+        ga.addQuery('production_order.planned_start_date', '<', end);
+        ga.addAggregate('SUM', 'required_quantity');
+        ga.query();
+
+        if (ga.next()) {
+            return parseFloat(ga.getAggregate('SUM', 'required_quantity')) || 0;
+        }
+        return 0;
+    },
+
+    /**
+     * Source 3: Completed Inventory Requests to this warehouse
+     * Includes: material_issue, inventory_transfer (where destination = this warehouse)
+     */
+    _getInventoryRequestDemand: function (materialSysId, warehouseSysId, start, end) {
+        var ga = new GlideAggregate('x_2056099_indust_0_inv_req');
+        ga.addQuery('material_product', materialSysId);
+        ga.addQuery('destination_location', warehouseSysId);
+        ga.addQuery('status', 'completed');
+        ga.addQuery('sys_created_on', '>=', start);
+        ga.addQuery('sys_created_on', '<', end);
+        ga.addQuery('request_type', 'IN', 'material_issue,inventory_transfer,mro_issue');
+        ga.addAggregate('SUM', 'quantity_requested');
+        ga.query();
+
+        if (ga.next()) {
+            return parseFloat(ga.getAggregate('SUM', 'quantity_requested')) || 0;
+        }
+        return 0;
+    },
+
+    /**
+     * Source 4: Safety Stock Consumption at this warehouse
+     * From: fulfill_dec records where safety_stock_consumed > 0
+     */
+    _getSafetyStockDemand: function (materialSysId, warehouseSysId, start, end) {
+        var ga = new GlideAggregate('x_2056099_indust_0_fulfill_dec');
+        ga.addQuery('material_product', materialSysId);
+        ga.addQuery('assigned_warehouse', warehouseSysId);
+        ga.addQuery('safety_stock_consumed', '>', 0);
+        ga.addQuery('sys_created_on', '>=', start);
+        ga.addQuery('sys_created_on', '<', end);
+        ga.addAggregate('SUM', 'safety_stock_consumed');
+        ga.query();
+
+        if (ga.next()) {
+            return parseFloat(ga.getAggregate('SUM', 'safety_stock_consumed')) || 0;
+        }
+        return 0;
+    },
+
+    // ─────────────────────────────────────────────────
+    // FORECAST CALCULATION
+    // ─────────────────────────────────────────────────
+
+    /**
+     * Weighted Moving Average with trend adjustment
+     * Weights: [6,5,4,3,2,1] for months 1-6 back (most recent = highest)
+     * Trend: compare avg of recent 3 months vs older 3 months
+     */
+    _calculateForecast: function (monthlyDemand) {
+        var result = {
+            forecastDemand: 0,
+            trendFactor: 1.0,
+            hasData: false
+        };
+
+        if (!monthlyDemand || monthlyDemand.length === 0) {
+            return result;
+        }
+
+        // Calculate weighted average
+        var weightedSum = 0;
+        var totalWeight = 0;
+        var count = Math.min(monthlyDemand.length, this.WEIGHTS.length);
+
+        for (var i = 0; i < count; i++) {
+            weightedSum += monthlyDemand[i].total * this.WEIGHTS[i];
+            totalWeight += this.WEIGHTS[i];
+        }
+
+        if (totalWeight === 0) {
+            return result;
+        }
+
+        var weightedAvg = weightedSum / totalWeight;
+        result.hasData = true;
+
+        // Calculate trend factor (recent 3 months vs older 3 months)
+        if (monthlyDemand.length >= 6) {
+            var recent3Avg = 0;
+            var older3Avg = 0;
+
+            for (var r = 0; r < 3; r++) {
+                recent3Avg += monthlyDemand[r].total;
+            }
+            recent3Avg = recent3Avg / 3;
+
+            for (var o = 3; o < 6; o++) {
+                older3Avg += monthlyDemand[o].total;
+            }
+            older3Avg = older3Avg / 3;
+
+            if (older3Avg > 0) {
+                result.trendFactor = recent3Avg / older3Avg;
+                // Cap trend factor to avoid wild extrapolation
+                result.trendFactor = Math.max(0.5, Math.min(2.0, result.trendFactor));
+            }
+        }
+
+        // Apply trend to weighted average
+        result.forecastDemand = Math.round(weightedAvg * result.trendFactor * 100) / 100;
+
+        return result;
+    },
+
+    // ─────────────────────────────────────────────────
+    // CURRENT STATE LOOKUPS
+    // ─────────────────────────────────────────────────
+
+    _getCurrentStock: function (materialSysId, warehouseSysId) {
+        var result = {
+            availableQuantity: 0,
+            safetyStock: 0,
+            reorderLevel: 0,
+            totalQuantity: 0,
+            reservedQuantity: 0,
+            stockSysId: ''
+        };
+
+        var gr = new GlideRecord('x_2056099_indust_0_inv_stock');
+        gr.addQuery('material_product', materialSysId);
+        gr.addQuery('location', warehouseSysId);
+        gr.addQuery('active', true);
+        gr.setLimit(1);
+        gr.query();
+
+        if (gr.next()) {
+            result.availableQuantity = parseFloat(gr.getValue('available_quantity')) || 0;
+            result.safetyStock = parseFloat(gr.getValue('safety_stock')) || 0;
+            result.reorderLevel = parseFloat(gr.getValue('reorder_level')) || 0;
+            result.totalQuantity = parseFloat(gr.getValue('total_quantity')) || 0;
+            result.reservedQuantity = parseFloat(gr.getValue('reserved_quantity')) || 0;
+            result.stockSysId = gr.getUniqueValue();
+        }
+
+        return result;
+    },
+
+    _getLeadTimes: function (materialSysId, warehouseSysId) {
+        var result = {
+            supplierLeadTimeDays: 0,
+            replenishmentLeadTimeDays: 0
+        };
+
+        // Supplier lead time from supp_lead_time table
+        var slt = new GlideRecord('x_2056099_indust_0_supp_lead_time');
+        slt.addQuery('material_product', materialSysId);
+        slt.addQuery('delivery_warehouse', warehouseSysId);
+        slt.addQuery('active', true);
+        slt.orderBy('lead_time_days'); // shortest first
+        slt.setLimit(1);
+        slt.query();
+
+        if (slt.next()) {
+            result.supplierLeadTimeDays = parseFloat(slt.getValue('lead_time_days')) || 0;
+        }
+
+        // Replenishment lead time: shortest transfer time from any other warehouse
+        var tlt = new GlideRecord('x_2056099_indust_0_transfer_lead_time');
+        tlt.addQuery('destination_warehouse', warehouseSysId);
+        tlt.addQuery('active', true);
+        tlt.orderBy('lead_time_days');
+        tlt.setLimit(1);
+        tlt.query();
+
+        if (tlt.next()) {
+            result.replenishmentLeadTimeDays = parseFloat(tlt.getValue('lead_time_days')) || 0;
+        }
+
+        return result;
+    },
+
+    /**
+     * Count how many times safety stock was consumed in the last 6 months
+     * at this specific warehouse. Used as a signal for safety stock review.
+     */
+    _getSafetyStockConsumption: function (materialSysId, warehouseSysId) {
+        var result = {
+            count: 0,
+            totalConsumed: 0,
+            reviewRecommended: false
+        };
+
+        var sixMonthsAgo = new GlideDateTime();
+        sixMonthsAgo.addMonthsLocalTime(-6);
+
+        var ga = new GlideAggregate('x_2056099_indust_0_fulfill_dec');
+        ga.addQuery('material_product', materialSysId);
+        ga.addQuery('assigned_warehouse', warehouseSysId);
+        ga.addQuery('safety_stock_consumed', '>', 0);
+        ga.addQuery('sys_created_on', '>=', sixMonthsAgo.getValue());
+        ga.addAggregate('COUNT');
+        ga.addAggregate('SUM', 'safety_stock_consumed');
+        ga.query();
+
+        if (ga.next()) {
+            result.count = parseInt(ga.getAggregate('COUNT'), 10) || 0;
+            result.totalConsumed = parseFloat(ga.getAggregate('SUM', 'safety_stock_consumed')) || 0;
+        }
+
+        // Recommend review if consumed >= threshold times in 6 months
+        result.reviewRecommended = (result.count >= this.SAFETY_STOCK_THRESHOLD);
+
+        return result;
+    },
+
+    // ─────────────────────────────────────────────────
+    // RECOMMENDATION CALCULATION
+    // ─────────────────────────────────────────────────
+
+    _calculateRecommendations: function (forecast, stockInfo, leadTimes, ssConsumption) {
+        var result = {
+            projectedStock: 0,
+            projectedShortage: 0,
+            recommendedReplenishmentQty: 0,
+            recommendedReorderDate: null
+        };
+
+        if (!forecast.hasData) {
+            return result;
+        }
+
+        // Projected stock = current available - forecast demand
+        result.projectedStock = stockInfo.availableQuantity - forecast.forecastDemand;
+
+        // Projected shortage = how much we'll be short (0 if no shortage)
+        result.projectedShortage = Math.max(0, -result.projectedStock);
+
+        // Recommended replenishment qty: enough to cover demand + maintain safety stock
+        if (result.projectedStock < stockInfo.safetyStock) {
+            result.recommendedReplenishmentQty =
+                forecast.forecastDemand + stockInfo.safetyStock - stockInfo.availableQuantity;
+            result.recommendedReplenishmentQty = Math.max(0, result.recommendedReplenishmentQty);
+
+            // Round up to reasonable order quantity
+            result.recommendedReplenishmentQty =
+                Math.ceil(result.recommendedReplenishmentQty);
+        }
+
+        // Recommended reorder date: account for lead time
+        // If we'll be short, reorder NOW (or lead time days before shortage)
+        if (result.recommendedReplenishmentQty > 0) {
+            var longestLead = Math.max(
+                leadTimes.supplierLeadTimeDays,
+                leadTimes.replenishmentLeadTimeDays
+            );
+            var reorderDate = new GlideDateTime();
+            // If shortage is imminent, reorder immediately
+            // Otherwise, schedule reorder accounting for lead time
+            if (result.projectedShortage > 0) {
+                // Already short or will be — reorder now
+                result.recommendedReorderDate = reorderDate.getValue();
+            } else {
+                // Calculate how many days of stock we have above safety
+                var daysOfBuffer = 0;
+                if (forecast.forecastDemand > 0) {
+                    var dailyDemand = forecast.forecastDemand / 30;
+                    var bufferStock = stockInfo.availableQuantity - stockInfo.safetyStock;
+                    if (dailyDemand > 0 && bufferStock > 0) {
+                        daysOfBuffer = bufferStock / dailyDemand;
+                    }
+                }
+                // Reorder when buffer will be consumed minus lead time
+                var daysUntilReorder = Math.max(0, daysOfBuffer - longestLead);
+                reorderDate.addDaysLocalTime(Math.floor(daysUntilReorder));
+                result.recommendedReorderDate = reorderDate.getValue();
+            }
+        }
+
+        return result;
+    },
+
+    // ─────────────────────────────────────────────────
+    // RECORD WRITING
+    // ─────────────────────────────────────────────────
+
+    _writeForecastRecord: function (
+        materialSysId, warehouseSysId, forecast, stockInfo,
+        leadTimes, ssConsumption, recommendations, monthlyDemand, totalHistorical
+    ) {
+        // Determine the forecast period (next month start)
+        var now = new GlideDateTime();
+        var nextMonth = new GlideDateTime();
+        nextMonth.addMonthsLocalTime(1);
+        var periodStr = nextMonth.getYearLocalTime() + '-' +
+            this._padZero(nextMonth.getMonthLocalTime()) + '-01';
+
+        var gr = new GlideRecord('x_2056099_indust_0_demand_forecast');
+        gr.initialize();
+        gr.setValue('material_product', materialSysId);
+        gr.setValue('warehouse', warehouseSysId);
+        gr.setValue('forecast_period', periodStr);
+        gr.setValue('historical_demand', totalHistorical);
+
+        // Per-source breakdown (most recent month)
+        if (monthlyDemand.length > 0) {
+            var latest = monthlyDemand[0];
+            gr.setValue('customer_order_demand', latest.customerOrder);
+            gr.setValue('production_demand', latest.production);
+            gr.setValue('inventory_request_demand', latest.inventoryRequest);
+            gr.setValue('safety_stock_consumption', latest.safetyStock);
+        }
+
+        gr.setValue('forecast_demand', forecast.forecastDemand);
+        gr.setValue('trend_factor', forecast.trendFactor);
+        gr.setValue('current_stock', stockInfo.availableQuantity);
+        gr.setValue('projected_stock', recommendations.projectedStock);
+        gr.setValue('projected_shortage', recommendations.projectedShortage);
+        gr.setValue('recommended_replenishment_qty', recommendations.recommendedReplenishmentQty);
+
+        if (recommendations.recommendedReorderDate) {
+            gr.setValue('recommended_reorder_date', recommendations.recommendedReorderDate);
+        }
+
+        gr.setValue('supplier_lead_time_days', leadTimes.supplierLeadTimeDays);
+        gr.setValue('replenishment_lead_time_days', leadTimes.replenishmentLeadTimeDays);
+        gr.setValue('safety_stock_consumption_count', ssConsumption.count);
+        gr.setValue('safety_stock_review_recommended', ssConsumption.reviewRecommended);
+        gr.setValue('forecast_method', 'weighted_moving_average');
+        gr.setValue('forecast_generated_on', now.getValue());
+        gr.setValue('status', 'active');
+        gr.setValue('active', true);
+
+        return gr.insert();
+    },
+
+    // ─────────────────────────────────────────────────
+    // ALERTING
+    // ─────────────────────────────────────────────────
+
+    _createAlertsIfNeeded: function (
+        materialSysId, warehouseSysId, recommendations, ssConsumption, stockInfo
+    ) {
+        // Alert 1: Projected shortage → reorder_required alert
+        if (recommendations.projectedShortage > 0) {
+            this._createAlertIfNotExists(
+                materialSysId, warehouseSysId, stockInfo.stockSysId,
+                'reorder_required', 'high',
+                'Demand forecast projects a shortage of ' +
+                    recommendations.projectedShortage +
+                    ' units. Recommended replenishment: ' +
+                    recommendations.recommendedReplenishmentQty + ' units.',
+                stockInfo.availableQuantity,
+                stockInfo.reorderLevel
+            );
+        }
+
+        // Alert 2: Safety stock review signal
+        if (ssConsumption.reviewRecommended) {
+            this._createAlertIfNotExists(
+                materialSysId, warehouseSysId, stockInfo.stockSysId,
+                'below_safety_stock', 'medium',
+                'Safety stock consumed ' + ssConsumption.count +
+                    ' times in 6 months (total: ' + ssConsumption.totalConsumed +
+                    ' units). Review safety stock level recommended. ' +
+                    'Current safety stock: ' + stockInfo.safetyStock +
+                    '. DO NOT auto-adjust — requires approved business rule.',
+                stockInfo.availableQuantity,
+                stockInfo.safetyStock
+            );
+        }
+    },
+
+    _createAlertIfNotExists: function (
+        materialSysId, warehouseSysId, stockSysId,
+        alertType, severity, message, currentQty, thresholdQty
+    ) {
+        // Check for existing open alert of same type for same material+warehouse
+        var check = new GlideRecord('x_2056099_indust_0_inv_alert');
+        check.addQuery('material_product', materialSysId);
+        check.addQuery('alert_type', alertType);
+        check.addQuery('status', 'IN', 'new,acknowledged,in_progress');
+        if (stockSysId) {
+            check.addQuery('inventory_stock', stockSysId);
+        }
+        check.setLimit(1);
+        check.query();
+
+        if (check.hasNext()) {
+            return; // Alert already exists
+        }
+
+        var gr = new GlideRecord('x_2056099_indust_0_inv_alert');
+        gr.initialize();
+        gr.setValue('material_product', materialSysId);
+        gr.setValue('alert_type', alertType);
+        gr.setValue('severity', severity);
+        gr.setValue('alert_message', message);
+        gr.setValue('current_quantity', currentQty);
+        gr.setValue('threshold_quantity', thresholdQty);
+        gr.setValue('alert_date', new GlideDateTime().getValue());
+        gr.setValue('status', 'new');
+
+        if (stockSysId) {
+            gr.setValue('inventory_stock', stockSysId);
+        }
+
+        gr.insert();
+    },
+
+    // ─────────────────────────────────────────────────
+    // UTILITIES
+    // ─────────────────────────────────────────────────
+
+    _archivePreviousForecasts: function () {
+        var gr = new GlideRecord('x_2056099_indust_0_demand_forecast');
+        gr.addQuery('status', 'active');
+        gr.query();
+
+        while (gr.next()) {
+            gr.setValue('status', 'archived');
+            gr.update();
+        }
+    },
+
+    /**
+     * Get the start of a month N months ago
+     * @param {GlideDateTime} reference - reference date
+     * @param {number} monthsBack - how many months back
+     * @returns {string} date-time string for start of that month
+     */
+    _getMonthStart: function (reference, monthsBack) {
+        var dt = new GlideDateTime(reference);
+        dt.addMonthsLocalTime(-monthsBack);
+        var year = dt.getYearLocalTime();
+        var month = this._padZero(dt.getMonthLocalTime());
+        return year + '-' + month + '-01 00:00:00';
+    },
+
+    _getMonthEnd: function (reference, monthsBack) {
+        // End of month = start of next month
+        return this._getMonthStart(reference, monthsBack - 1);
+    },
+
+    _padZero: function (num) {
+        return num < 10 ? '0' + num : '' + num;
+    },
+
+    type: 'DemandForecastEngine'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 05:34:42</sys_created_on>
+        <sys_id>41f6a7224b254975acec2509d14a6764</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>DemandForecastEngine</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_41f6a7224b254975acec2509d14a6764</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 05:34:42</sys_updated_on>
+    </sys_script_include>
+</record_update>
