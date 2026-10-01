@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>Record Insert</display_name>
+        <inputs/>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>3</order>
+        <step_config display_value="Record Insert">14872288df60220062fe6c7a4df26319</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:23</sys_created_on>
+        <sys_id>048a3af8c998450185d7f1abbc2da6b5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record Insert</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_048a3af8c998450185d7f1abbc2da6b5</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:23</sys_updated_on>
+        <table>x_2056099_indust_0_mat_rcpt</table>
+        <test display_value="Procurement E2E Lifecycle Test">b201fd33cd5245f5b0bdc4e236114815</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=048a3af8c998450185d7f1abbc2da6b5"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>048a3af8c998450185d7f1abbc2da6b5</document_key>
+        <order>400</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:23</sys_created_on>
+        <sys_id>08880cbbff714be598d4774a06e81573</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:23</sys_updated_on>
+        <value>procurement_order={{step['6973ecd68bc94eed93569a417e637bd9'].record_id}}^supplier={{step['886fc26f3b424bb287068128ed40251c'].record_id}}^received_date=2026-10-05 10:00:00^quantity_received=95^quantity_accepted=90^quantity_rejected=5^status=passed^EQ</value>
+        <variable display_value="Field values">dd54cf535320220002c6435723dc34fd</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>048a3af8c998450185d7f1abbc2da6b5</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:23</sys_created_on>
+        <sys_id>a6b895703a54458998f7579c05d8d033</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:23</sys_updated_on>
+        <value>1</value>
+        <variable display_value="Enforce security">e6e3c7535320220002c6435723dc3496</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>048a3af8c998450185d7f1abbc2da6b5</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:23</sys_created_on>
+        <sys_id>c04170659df941d3a6c540b37ad27995</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:23</sys_updated_on>
+        <value>record_successfully_inserted</value>
+        <variable display_value="Assert type">9024a37f671003007ba405225685efe5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>048a3af8c998450185d7f1abbc2da6b5</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:23</sys_created_on>
+        <sys_id>ca3ebf21a7ec4d4aa33958af4ffaf8f1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:23</sys_updated_on>
+        <value>x_2056099_indust_0_mat_rcpt</value>
+        <variable display_value="Table">90144b535320220002c6435723dc3488</variable>
+    </sys_variable_value>
+    <sys_element_mapping action="delete_multiple" query="id=048a3af8c998450185d7f1abbc2da6b5"/>
+    <sys_element_mapping action="INSERT_OR_UPDATE">
+        <field>field_values</field>
+        <id>048a3af8c998450185d7f1abbc2da6b5</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:23</sys_created_on>
+        <sys_id>c6a633d8761d46d8803d05a2e8a8be17</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:23</sys_updated_on>
+        <table>var__m_atf_input_variable_14872288df60220062fe6c7a4df26319</table>
+        <value>procurement_order={{step['6973ecd68bc94eed93569a417e637bd9'].record_id}}^supplier={{step['886fc26f3b424bb287068128ed40251c'].record_id}}^received_date=2026-10-05 10:00:00^quantity_received=95^quantity_accepted=90^quantity_rejected=5^status=passed^EQ</value>
+    </sys_element_mapping>
+</record_update>

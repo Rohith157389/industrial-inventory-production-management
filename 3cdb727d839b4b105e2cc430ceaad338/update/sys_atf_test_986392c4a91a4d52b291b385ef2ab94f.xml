@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_test">
+    <sys_atf_test action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <copied_from/>
+        <description>Tests that the auto-select-supplier before-insert business rule on proc_ord auto-populates the supplier field with the highest cumulative_score active and available supplier when the supplier field is left empty. Creates three suppliers with cumulative_scores of 60, 90, and 80, then inserts a procurement order without specifying a supplier. Validates that the supplier field was auto-populated by the business rule. Cleans up all records.</description>
+        <enable_parameterized_testing>false</enable_parameterized_testing>
+        <fail_on_server_error>true</fail_on_server_error>
+        <name>Auto-Select Best Supplier Test</name>
+        <parameters/>
+        <remember/>
+        <sn_atf_tg_generated>false</sn_atf_tg_generated>
+        <sys_class_name>sys_atf_test</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:04</sys_created_on>
+        <sys_id>986392c4a91a4d52b291b385ef2ab94f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Auto-Select Best Supplier Test</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_test_986392c4a91a4d52b291b385ef2ab94f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:04</sys_updated_on>
+        <test_origin>manual</test_origin>
+    </sys_atf_test>
+    <sys_variable_value action="delete_multiple" query="document_key=986392c4a91a4d52b291b385ef2ab94f"/>
+</record_update>

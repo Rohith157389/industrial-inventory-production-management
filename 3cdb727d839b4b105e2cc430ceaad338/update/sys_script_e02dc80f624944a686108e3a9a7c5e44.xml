@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_supp_score</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition table="x_2056099_indust_0_supp_score">overall_score_pctVALCHANGES<item endquery="false" field="overall_score_pct" goto="false" newquery="false" operator="VALCHANGES" or="false" value=""/>
+        </filter_condition>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Supplier Performance Threshold Check</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous) {
+    var PROP_NAME = 'x_2056099_indust_0.supplier.performance_threshold';
+    var DEFAULT_THRESHOLD = '75';
+    var TABLE = 'x_2056099_indust_0_supp_score';
+    var EVENT_NAME = 'x_2056099_indust_0.perf_below_threshold';
+
+    var threshold = parseInt(gs.getProperty(PROP_NAME, DEFAULT_THRESHOLD), 10);
+    var newScore = parseFloat(current.getValue('overall_score_pct') || '0');
+    var previousScore = previous
+        ? parseFloat(previous.getValue('overall_score_pct') || '0')
+        : 0;
+    var currentSupplierStatus = current.getValue('supplier_status') || '';
+
+    gs.info(
+        'Supplier Threshold Check: Supplier=' +
+            current.supplier.getDisplayValue() +
+            ', NewScore=' + newScore +
+            ', PreviousScore=' + previousScore +
+            ', Threshold=' + threshold
+    );
+
+    if (newScore < threshold) {
+        // Score is below threshold — flag for procurement review
+        var gr = new GlideRecord(TABLE);
+        if (gr.get(current.getUniqueValue())) {
+            gr.setWorkflow(false); // Prevent recursive business rule firing
+            gr.setValue('supplier_status', 'performance_review_required');
+            gr.setValue('procurement_review_required', true);
+            gr.update();
+        }
+
+        // Fire event so email notification is sent to procurement group
+        gs.eventQueue(EVENT_NAME, current, previousScore + '', newScore + '');
+
+        gs.info(
+            'Supplier ' + current.supplier.getDisplayValue() +
+            ' flagged for procurement review. Score ' + newScore +
+            '% is below threshold ' + threshold + '%.'
+        );
+    } else if (
+        newScore >= threshold &&
+        currentSupplierStatus == 'performance_review_required'
+    ) {
+        // Score recovered above threshold while still flagged — clear review flag only
+        // Do NOT automatically change supplier_status; procurement makes that decision
+        var grClear = new GlideRecord(TABLE);
+        if (grClear.get(current.getUniqueValue())) {
+            grClear.setWorkflow(false);
+            grClear.setValue('procurement_review_required', false);
+            grClear.update();
+        }
+
+        gs.info(
+            'Supplier ' + current.supplier.getDisplayValue() +
+            ' score recovered to ' + newScore +
+            '%. Procurement review flag cleared. Supplier status unchanged.'
+        );
+    }
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 14:27:19</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>e02dc80f624944a686108e3a9a7c5e44</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Supplier Performance Threshold Check</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_e02dc80f624944a686108e3a9a7c5e44</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 14:27:19</sys_updated_on>
+        <template/>
+        <when>after</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=e02dc80f624944a686108e3a9a7c5e44"/>
+</record_update>

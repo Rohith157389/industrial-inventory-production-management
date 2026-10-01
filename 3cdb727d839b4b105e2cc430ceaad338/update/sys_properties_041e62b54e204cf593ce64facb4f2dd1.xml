@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_properties">
+    <sys_properties action="INSERT_OR_UPDATE">
+        <choices/>
+        <description>Minimum overall supplier performance score (0-100) below which a supplier is automatically flagged for procurement review. A value of 75 is equivalent to 7.5 on a 10-point scale. When a supplier scorecard overall_score_pct drops below this threshold, the supplier_status is set to performance_review_required and the procurement team is notified.</description>
+        <ignore_cache>false</ignore_cache>
+        <is_private>false</is_private>
+        <name>x_2056099_indust_0.supplier.performance_threshold</name>
+        <read_roles>admin</read_roles>
+        <suffix>supplier.performance_threshold</suffix>
+        <sys_class_name>sys_properties</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 14:27:19</sys_created_on>
+        <sys_id>041e62b54e204cf593ce64facb4f2dd1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_2056099_indust_0.supplier.performance_threshold</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_properties_041e62b54e204cf593ce64facb4f2dd1</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 14:27:19</sys_updated_on>
+        <type>integer</type>
+        <value>75</value>
+        <write_roles>admin</write_roles>
+    </sys_properties>
+    <sys_translated_text action="delete_multiple" query="documentkey=041e62b54e204cf593ce64facb4f2dd1"/>
+</record_update>

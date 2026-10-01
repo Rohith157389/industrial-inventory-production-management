@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script_client">
+    <sys_script_client action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <applies_extended>false</applies_extended>
+        <condition/>
+        <description/>
+        <field/>
+        <global>true</global>
+        <isolate_script>false</isolate_script>
+        <messages/>
+        <name>Validate Score Reasons on Submit</name>
+        <order/>
+        <script><![CDATA[function onSubmit() {
+    var pairs = [
+        { score: 'quality_score', reason: 'quality_reason', label: 'Quality' },
+        { score: 'delivery_score', reason: 'delivery_reason', label: 'Delivery' },
+        { score: 'quantity_score', reason: 'quantity_reason', label: 'Quantity' },
+        { score: 'cost_score', reason: 'cost_reason', label: 'Cost' },
+        { score: 'documentation_score', reason: 'documentation_reason', label: 'Documentation' },
+        { score: 'overall_score', reason: 'overall_reason', label: 'Overall' }
+    ];
+
+    var errors = [];
+
+    for (var i = 0; i < pairs.length; i++) {
+        var scoreVal = g_form.getValue(pairs[i].score);
+        if (scoreVal !== '' && scoreVal !== null && scoreVal !== undefined) {
+            var reasonVal = g_form.getValue(pairs[i].reason);
+            if (reasonVal === '' || reasonVal === null || reasonVal === undefined || reasonVal.trim() === '') {
+                errors.push(pairs[i].label + ' rating reason is required.');
+            }
+        }
+    }
+
+    if (errors.length > 0) {
+        for (var j = 0; j < errors.length; j++) {
+            g_form.addErrorMessage(errors[j]);
+        }
+        g_form.addErrorMessage('Please explain why this supplier received the selected score.');
+        return false;
+    }
+
+    return true;
+}
+]]></script>
+        <sys_class_name>sys_script_client</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 13:52:16</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>238e9bd46d6745c8aac2ef3a2c607bb3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Validate Score Reasons on Submit</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_client_238e9bd46d6745c8aac2ef3a2c607bb3</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 13:52:16</sys_updated_on>
+        <table>x_2056099_indust_0_supp_perf</table>
+        <type>onSubmit</type>
+        <ui_type>10</ui_type>
+        <view/>
+    </sys_script_client>
+</record_update>

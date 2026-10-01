@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>Record Insert</display_name>
+        <inputs/>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>5</order>
+        <step_config display_value="Record Insert">14872288df60220062fe6c7a4df26319</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:28</sys_created_on>
+        <sys_id>5fe5666a36b845148120d3d5625d3b56</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record Insert</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_5fe5666a36b845148120d3d5625d3b56</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:28</sys_updated_on>
+        <table>x_2056099_indust_0_proc_rpt</table>
+        <test display_value="Supplier Threshold Alert Test">a4e70ef75bed4a558798efcc6886a482</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=5fe5666a36b845148120d3d5625d3b56"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>5fe5666a36b845148120d3d5625d3b56</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:28</sys_created_on>
+        <sys_id>6d49d24535d042d4b08b6f5891767d21</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:28</sys_updated_on>
+        <value>x_2056099_indust_0_proc_rpt</value>
+        <variable display_value="Table">90144b535320220002c6435723dc3488</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>5fe5666a36b845148120d3d5625d3b56</document_key>
+        <order>400</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:28</sys_created_on>
+        <sys_id>8ce0f46d0a594340807cf2a4cd827ced</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:28</sys_updated_on>
+        <value>procurement_order={{step['f16e161480bd497dae45bd2a8f994182'].record_id}}^material_receipt={{step['67a1c8a272c94718b3ee15fe36b3ee49'].record_id}}^quality_check={{step['da8dc649e7344f0c80ade99d8c3de29b'].record_id}}^supplier={{step['6d459fce931d45c98168c17c036a015a'].record_id}}^quality_score=30^delivery_score=40^quantity_accuracy=35^materials_summary=Threshold Test - 50 received^amount_summary=Total: $1000^report_date=2026-12-06 10:00:00^status=draft^EQ</value>
+        <variable display_value="Field values">dd54cf535320220002c6435723dc34fd</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>5fe5666a36b845148120d3d5625d3b56</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:28</sys_created_on>
+        <sys_id>ba97a08325174c98be480366243c1712</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:28</sys_updated_on>
+        <value>record_successfully_inserted</value>
+        <variable display_value="Assert type">9024a37f671003007ba405225685efe5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>5fe5666a36b845148120d3d5625d3b56</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:28</sys_created_on>
+        <sys_id>f3a293a8a5f5479f90e443515eb01cb5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:28</sys_updated_on>
+        <value>1</value>
+        <variable display_value="Enforce security">e6e3c7535320220002c6435723dc3496</variable>
+    </sys_variable_value>
+    <sys_element_mapping action="delete_multiple" query="id=5fe5666a36b845148120d3d5625d3b56"/>
+    <sys_element_mapping action="INSERT_OR_UPDATE">
+        <field>field_values</field>
+        <id>5fe5666a36b845148120d3d5625d3b56</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:28</sys_created_on>
+        <sys_id>a387c3a6f39446f989b7905d747df011</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:28</sys_updated_on>
+        <table>var__m_atf_input_variable_14872288df60220062fe6c7a4df26319</table>
+        <value>procurement_order={{step['f16e161480bd497dae45bd2a8f994182'].record_id}}^material_receipt={{step['67a1c8a272c94718b3ee15fe36b3ee49'].record_id}}^quality_check={{step['da8dc649e7344f0c80ade99d8c3de29b'].record_id}}^supplier={{step['6d459fce931d45c98168c17c036a015a'].record_id}}^quality_score=30^delivery_score=40^quantity_accuracy=35^materials_summary=Threshold Test - 50 received^amount_summary=Total: $1000^report_date=2026-12-06 10:00:00^status=draft^EQ</value>
+    </sys_element_mapping>
+</record_update>

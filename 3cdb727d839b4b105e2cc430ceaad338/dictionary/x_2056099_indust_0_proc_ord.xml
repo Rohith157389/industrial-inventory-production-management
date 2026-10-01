@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="b26c0b015c4741c38387ddc0da0c3d0d" label="Procurement Order" name="x_2056099_indust_0_proc_ord" type="collection">
+        <element label="Expected Delivery Date" name="expected_delivery" type="glide_date"/>
+        <element label="Quantity" mandatory="true" name="quantity" type="integer"/>
+        <element default="medium" label="Urgency" name="urgency" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Critical" sequence="4" value="critical"/>
+                <element inactive_on_update="false" label="Medium" sequence="2" value="medium"/>
+                <element inactive_on_update="false" label="High" sequence="3" value="high"/>
+                <element inactive_on_update="false" label="Low" sequence="1" value="low"/>
+            </choice>
+        </element>
+        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
+        <element label="Supplier" mandatory="true" name="supplier" reference="x_2056099_indust_0_supplier" type="reference"/>
+        <element display="true" label="Order Number" max_length="20" name="order_number" type="string"/>
+        <element label="Materials Ordered" mandatory="true" max_length="500" name="materials_ordered" type="string"/>
+        <element label="Total Amount" name="total_amount" type="decimal"/>
+        <element label="Order Date" mandatory="true" name="order_date" type="glide_date_time"/>
+        <element label="Unit Price" name="unit_price" type="decimal"/>
+        <element default="draft" label="Status" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Cancelled" sequence="5" value="cancelled"/>
+                <element inactive_on_update="false" label="Ordered" sequence="2" value="ordered"/>
+                <element inactive_on_update="false" label="Delivered" sequence="4" value="delivered"/>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="In Transit" sequence="3" value="in_transit"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="supplier"/>
+        </index>
+    </element>
+</database>

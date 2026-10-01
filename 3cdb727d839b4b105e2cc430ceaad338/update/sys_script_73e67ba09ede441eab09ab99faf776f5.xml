@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>false</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_qc_check</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Auto-Generate Procurement Report from QC</name>
+        <order>200</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function () {
+    var receiptSysId = current.getValue('material_receipt');
+    var complianceScore = parseInt(current.getValue('compliance_score')) || 0;
+    var qcResult = current.getValue('result');
+    if (!receiptSysId) return;
+
+    // Look up the material receipt
+    var receiptGr = new GlideRecord('x_2056099_indust_0_mat_rcpt');
+    if (!receiptGr.get(receiptSysId)) return;
+
+    var orderSysId = receiptGr.getValue('procurement_order');
+    var supplierSysId = receiptGr.getValue('supplier');
+    if (!orderSysId || !supplierSysId) return;
+
+    // Look up procurement order for delivery and quantity data
+    var orderGr = new GlideRecord('x_2056099_indust_0_proc_ord');
+    if (!orderGr.get(orderSysId)) return;
+
+    // Calculate quality_score from QC compliance_score (0-100)
+    // If compliance_score is 0, derive from result: pass=85, conditional_pass=60, fail=25
+    var qualityScore = complianceScore;
+    if (qualityScore === 0) {
+        if (qcResult === 'pass') qualityScore = 85;
+        else if (qcResult === 'conditional_pass') qualityScore = 60;
+        else qualityScore = 25;
+    }
+
+    // Calculate delivery_score based on on-time delivery
+    var deliveryScore = 75; // default
+    var expectedDelivery = orderGr.getValue('expected_delivery');
+    var receivedDateStr = receiptGr.getValue('received_date');
+    if (expectedDelivery && receivedDateStr) {
+        // expected_delivery is a Date field (YYYY-MM-DD), received_date is DateTime
+        var expected = new GlideDateTime();
+        expected.setValue(expectedDelivery + ' 23:59:59');
+        var received = new GlideDateTime();
+        received.setValue(receivedDateStr);
+
+        var diffMs = received.getNumericValue() - expected.getNumericValue();
+        if (diffMs <= 0) {
+            deliveryScore = 95; // On time or early
+        } else {
+            var daysLate = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+            deliveryScore = Math.max(20, 95 - (daysLate * 5));
+        }
+    }
+
+    // Calculate quantity_accuracy from ordered vs received
+    var orderedQty = parseInt(orderGr.getValue('quantity')) || 0;
+    var receivedQty = parseInt(receiptGr.getValue('quantity_received')) || 0;
+    var quantityAccuracy = 75; // default
+    if (orderedQty > 0) {
+        quantityAccuracy = Math.round((Math.min(receivedQty, orderedQty) / orderedQty) * 100);
+    }
+
+    // Build materials summary
+    var materialsOrdered = orderGr.getValue('materials_ordered') || '';
+    var materialsSummary = materialsOrdered + ' - ' + receivedQty + ' received of ' + orderedQty + ' ordered';
+
+    // Build amount summary
+    var totalAmount = orderGr.getValue('total_amount') || '0';
+    var amountSummary = 'Order Total: $' + totalAmount;
+
+    // Build recommendations
+    var recommendations = '';
+    if (qcResult === 'pass') {
+        recommendations = 'Quality check passed. Materials meet all specifications.';
+    } else if (qcResult === 'conditional_pass') {
+        recommendations = 'Conditional pass. Some materials require attention. Review defect details.';
+    } else {
+        recommendations = 'Quality check failed. Materials do not meet specifications. Consider returning shipment.';
+    }
+    if (deliveryScore < 70) {
+        recommendations += ' Delivery was late - discuss delivery timelines with supplier.';
+    }
+    if (quantityAccuracy < 90) {
+        recommendations += ' Quantity shortfall detected - follow up with supplier.';
+    }
+
+    // Create the procurement report with status "draft" first
+    var reportGr = new GlideRecord('x_2056099_indust_0_proc_rpt');
+    reportGr.initialize();
+    reportGr.setValue('procurement_order', orderSysId);
+    reportGr.setValue('material_receipt', receiptSysId);
+    reportGr.setValue('quality_check', current.getUniqueValue());
+    reportGr.setValue('supplier', supplierSysId);
+    reportGr.setValue('quality_score', String(qualityScore));
+    reportGr.setValue('delivery_score', String(deliveryScore));
+    reportGr.setValue('quantity_accuracy', String(quantityAccuracy));
+    reportGr.setValue('materials_summary', materialsSummary);
+    reportGr.setValue('amount_summary', amountSummary);
+    reportGr.setValue('recommendations', recommendations);
+    reportGr.setValue('report_number', 'RPT-' + current.getValue('check_number'));
+    reportGr.setValue('report_date', new GlideDateTime().getValue());
+    reportGr.setValue('status', 'draft');
+    var reportSysId = reportGr.insert();
+
+    // Now update the report status to "submitted" to trigger the report-submission-rating flow
+    // The flow triggers on record.updated where status VALCHANGES and status=submitted
+    if (reportSysId) {
+        var reportUpdate = new GlideRecord('x_2056099_indust_0_proc_rpt');
+        if (reportUpdate.get(reportSysId)) {
+            reportUpdate.setValue('status', 'submitted');
+            reportUpdate.update();
+        }
+    }
+})();
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 17:27:39</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>73e67ba09ede441eab09ab99faf776f5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Auto-Generate Procurement Report from QC</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_73e67ba09ede441eab09ab99faf776f5</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:39</sys_updated_on>
+        <template/>
+        <when>after</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=73e67ba09ede441eab09ab99faf776f5"/>
+</record_update>

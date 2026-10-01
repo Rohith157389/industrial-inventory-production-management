@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_email">
+    <sys_script_email action="INSERT_OR_UPDATE">
+        <name>Supplier Threshold Breach Details</name>
+        <new_lines_to_html>false</new_lines_to_html>
+        <script><![CDATA[(function runMailScript(current, template, email, email_action, event) {
+    var supplierName = current.supplier.getDisplayValue();
+    var threshold = gs.getProperty('x_2056099_indust_0.supplier.performance_threshold', '75');
+    var previousScore = event.parm1;
+    var newScore = event.parm2;
+
+    // Query latest completed performance evaluation for this supplier
+    var perfGr = new GlideRecord('x_2056099_indust_0_supp_perf');
+    perfGr.addQuery('supplier', current.supplier);
+    perfGr.addQuery('evaluation_status', 'completed');
+    perfGr.orderByDesc('evaluation_date');
+    perfGr.setLimit(1);
+    perfGr.query();
+
+    var latestPOFromEval = '';
+    var overallScore = '';
+    var qualityReason = '';
+    var deliveryReason = '';
+    var costReason = '';
+    var quantityReason = '';
+    var documentationReason = '';
+
+    if (perfGr.next()) {
+        latestPOFromEval = perfGr.procurement_order.getDisplayValue();
+        overallScore = perfGr.overall_score + '';
+        qualityReason = perfGr.quality_reason + '';
+        deliveryReason = perfGr.delivery_reason + '';
+        costReason = perfGr.cost_reason + '';
+        quantityReason = perfGr.quantity_reason + '';
+        documentationReason = perfGr.documentation_reason + '';
+    }
+
+    // Query latest procurement order for this supplier
+    var poGr = new GlideRecord('x_2056099_indust_0_proc_order');
+    poGr.addQuery('supplier', current.supplier);
+    poGr.orderByDesc('sys_created_on');
+    poGr.setLimit(1);
+    poGr.query();
+
+    var latestPONumber = '';
+    if (poGr.next()) {
+        latestPONumber = poGr.getDisplayValue();
+    }
+
+    template.print('<div style="font-family: Arial, sans-serif;">');
+    template.print('<h2 style="color: #d32f2f;">&#x26A0; Supplier Performance Alert</h2>');
+    template.print('<p><strong>Supplier:</strong> ' + supplierName + '</p>');
+    template.print('<p><strong>Performance Threshold:</strong> ' + threshold + '%</p>');
+    template.print('<p><strong>Previous Score:</strong> ' + previousScore + '%</p>');
+    template.print('<p><strong>New Score:</strong> ' + newScore + '%</p>');
+    template.print('<hr/>');
+    template.print('<h3>Latest Performance Evaluation Details</h3>');
+    template.print('<p><strong>Related Procurement Order:</strong> ' + latestPOFromEval + '</p>');
+    template.print('<p><strong>Latest PO Number:</strong> ' + latestPONumber + '</p>');
+    template.print('<p><strong>Overall Score:</strong> ' + overallScore + '</p>');
+    template.print('<h4>Category Reasons:</h4>');
+    template.print('<ul>');
+    template.print('<li><strong>Quality:</strong> ' + qualityReason + '</li>');
+    template.print('<li><strong>Delivery:</strong> ' + deliveryReason + '</li>');
+    template.print('<li><strong>Cost:</strong> ' + costReason + '</li>');
+    template.print('<li><strong>Quantity:</strong> ' + quantityReason + '</li>');
+    template.print('<li><strong>Documentation:</strong> ' + documentationReason + '</li>');
+    template.print('</ul>');
+    template.print('<hr/>');
+    template.print('<p>Please review this supplier and take appropriate procurement action.</p>');
+    template.print('</div>');
+})(current, template, email, email_action, event);]]></script>
+        <sys_class_name>sys_script_email</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 14:27:19</sys_created_on>
+        <sys_id>778b05fa65c34eab9f332438e950fab3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Supplier Threshold Breach Details</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_email_778b05fa65c34eab9f332438e950fab3</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 14:27:19</sys_updated_on>
+    </sys_script_email>
+</record_update>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_supp_perf</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Validate Score Reasons Required</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous) {
+    var SCORE_REASON_PAIRS = [
+        { scoreField: 'quality_score', reasonField: 'quality_reason', label: 'Quality' },
+        { scoreField: 'delivery_score', reasonField: 'delivery_reason', label: 'Delivery' },
+        { scoreField: 'quantity_score', reasonField: 'quantity_reason', label: 'Quantity' },
+        { scoreField: 'cost_score', reasonField: 'cost_reason', label: 'Cost' },
+        { scoreField: 'documentation_score', reasonField: 'documentation_reason', label: 'Documentation' },
+        { scoreField: 'overall_score', reasonField: 'overall_reason', label: 'Overall' }
+    ];
+
+    var errors = [];
+
+    for (var i = 0; i < SCORE_REASON_PAIRS.length; i++) {
+        var pair = SCORE_REASON_PAIRS[i];
+        var scoreValue = current.getValue(pair.scoreField);
+        if (scoreValue !== null && scoreValue !== '' && !current[pair.scoreField].nil()) {
+            var reasonValue = current.getValue(pair.reasonField);
+            if (reasonValue === null || reasonValue === '' || reasonValue.toString().trim() === '') {
+                errors.push(pair.label + ' rating reason is required when a ' + pair.label.toLowerCase() + ' score is provided.');
+            }
+        }
+    }
+
+    if (errors.length > 0) {
+        for (var j = 0; j < errors.length; j++) {
+            gs.addErrorMessage(errors[j]);
+        }
+        current.setAbortAction(true);
+    }
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 13:52:16</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>091ca84d1c0748818bbcd1f8d5165858</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Validate Score Reasons Required</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_091ca84d1c0748818bbcd1f8d5165858</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 13:52:16</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=091ca84d1c0748818bbcd1f8d5165858"/>
+</record_update>
