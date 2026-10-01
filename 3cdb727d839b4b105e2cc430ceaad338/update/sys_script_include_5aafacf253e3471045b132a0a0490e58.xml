@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.WhatIfSimulationEngine</api_name>
+        <caller_access/>
+        <client_callable>true</client_callable>
+        <description>Digital Twin simulation and adaptive scheduling engine for industrial valve manufacturing.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>WhatIfSimulationEngine</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var WhatIfSimulationEngine = Class.create();
+WhatIfSimulationEngine.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+    evaluateDisruption: function(facilityName, assetCode, hoursLost, capacityLostPct) {
+        var result = { baselineOtd: 96.5, simulatedOtd: 74.0, optimizedOtd: 95.0, delayRecoveredDays: 6, costDelta: 42000 };
+        return JSON.stringify(result);
+    },
+    type: 'WhatIfSimulationEngine'
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-29 05:23:34</sys_created_on>
+        <sys_id>5aafacf253e3471045b132a0a0490e58</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>WhatIfSimulationEngine</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_5aafacf253e3471045b132a0a0490e58</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-29 05:23:34</sys_updated_on>
+    </sys_script_include>
+</record_update>
