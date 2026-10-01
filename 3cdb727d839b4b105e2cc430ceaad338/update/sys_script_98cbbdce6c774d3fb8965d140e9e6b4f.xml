@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_supp_perf</collection>
+        <condition/>
+        <description>Validates all scores are 0-10 and every score has a corresponding reason when evaluation_status is completed. Prevents completed evaluations with missing justifications.</description>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Validate Supplier Performance Evaluation</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous) {
+
+    // ─────────────────────────────────────────────
+    // Score-Reason pairs to validate.
+    // Each entry: [scoreField, reasonField, categoryLabel]
+    // ─────────────────────────────────────────────
+    var pairs = [
+        ['quality_score',       'quality_reason',       'Quality'],
+        ['delivery_score',      'delivery_reason',      'Delivery'],
+        ['quantity_score',      'quantity_reason',       'Quantity'],
+        ['cost_score',          'cost_reason',           'Cost'],
+        ['documentation_score', 'documentation_reason',  'Documentation'],
+        ['overall_score',       'overall_reason',        'Overall']
+    ];
+
+    var status = current.getValue('evaluation_status');
+    var errors = [];
+
+    for (var i = 0; i < pairs.length; i++) {
+        var scoreField  = pairs[i][0];
+        var reasonField = pairs[i][1];
+        var label       = pairs[i][2];
+
+        var scoreVal = current.getValue(scoreField);
+        var reasonVal = (current.getValue(reasonField) || '').trim();
+
+        // ───────────────────────────────────
+        // RULE 1: Scores must be 0–10
+        // (applies regardless of status)
+        // ───────────────────────────────────
+        if (scoreVal !== null && scoreVal !== '') {
+            var num = parseFloat(scoreVal);
+            if (isNaN(num) || num < 0 || num > 10) {
+                errors.push(label + ' Score must be between 0 and 10 (got ' + scoreVal + ').');
+            }
+        }
+
+        // ───────────────────────────────────
+        // RULE 2: Completed evaluations MUST have
+        // both a score AND a reason for every category.
+        // ───────────────────────────────────
+        if (status === 'completed') {
+            if (scoreVal === null || scoreVal === '') {
+                errors.push(label + ' Score is required for a completed evaluation.');
+            }
+            if (!reasonVal) {
+                errors.push(label + ' Rating Reason is required for a completed evaluation.');
+            }
+        }
+
+        // ───────────────────────────────────
+        // RULE 3: If a score is provided,
+        // the reason must also be provided
+        // (even in draft status).
+        // ───────────────────────────────────
+        if (scoreVal !== null && scoreVal !== '' && !reasonVal) {
+            errors.push(label + ' Score is ' + scoreVal + ' but no ' + label + ' Rating Reason was provided. Every score must have a justification.');
+        }
+    }
+
+    // ───────────────────────────────────
+    // Abort if any errors
+    // ───────────────────────────────────
+    if (errors.length > 0) {
+        for (var e = 0; e < errors.length; e++) {
+            gs.addErrorMessage(errors[e]);
+        }
+        current.setAbortAction(true);
+    }
+
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 11:48:01</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>98cbbdce6c774d3fb8965d140e9e6b4f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Validate Supplier Performance Evaluation</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_98cbbdce6c774d3fb8965d140e9e6b4f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 11:48:01</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=98cbbdce6c774d3fb8965d140e9e6b4f"/>
+</record_update>

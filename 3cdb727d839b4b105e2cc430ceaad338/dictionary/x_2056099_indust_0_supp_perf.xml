@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="25299baf202040a483da719bda876f3f" label="Supplier Performance History" name="x_2056099_indust_0_supp_perf" type="collection">
+        <element label="Delivery Score (0-10)" mandatory="true" name="delivery_score" type="integer"/>
+        <element label="Related Quality Inspection" name="related_inspection" reference="x_2056099_indust_0_qc_insp" type="reference"/>
+        <element label="Quality Score (0-10)" mandatory="true" name="quality_score" type="integer"/>
+        <element label="Actual Delivery Date" name="actual_delivery_date" type="glide_date"/>
+        <element label="Overall Rating Reason" mandatory="true" max_length="4000" name="overall_reason" type="string"/>
+        <element label="Agreed Unit Price" name="agreed_unit_price" type="decimal"/>
+        <element label="Quantity Score (0-10)" mandatory="true" name="quantity_score" type="integer"/>
+        <element label="Supplier" mandatory="true" name="supplier" reference="core_company" type="reference"/>
+        <element default="0" label="Rejected Quantity" name="rejected_quantity" type="decimal"/>
+        <element label="Ordered Quantity" name="ordered_quantity" type="decimal"/>
+        <element label="Quality Rating Reason" mandatory="true" max_length="4000" name="quality_reason" type="string"/>
+        <element label="Material / Product" mandatory="true" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="QC Result" name="qc_result" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Conditional Approval" sequence="3" value="conditional"/>
+                <element inactive_on_update="false" label="Passed" sequence="1" value="passed"/>
+                <element inactive_on_update="false" label="Failed" sequence="2" value="failed"/>
+                <element inactive_on_update="false" label="Not Inspected" sequence="4" value="not_inspected"/>
+            </choice>
+        </element>
+        <element label="Overall Order Score (0-10)" mandatory="true" name="overall_score" type="decimal"/>
+        <element label="Evaluation Date" mandatory="true" name="evaluation_date" type="glide_date_time"/>
+        <element label="Ordered Unit Price" name="ordered_unit_price" type="decimal"/>
+        <element label="Procurement Order Line" name="procurement_order_line" reference="x_2056099_indust_0_po_line" type="reference"/>
+        <element default="draft" label="Evaluation Status" mandatory="true" name="evaluation_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="Completed" sequence="2" value="completed"/>
+                <element inactive_on_update="false" label="Disputed" sequence="3" value="disputed"/>
+            </choice>
+        </element>
+        <element label="Delivery Rating Reason" mandatory="true" max_length="4000" name="delivery_reason" type="string"/>
+        <element label="Quantity Rating Reason" mandatory="true" max_length="4000" name="quantity_reason" type="string"/>
+        <element label="Evaluated By" name="evaluated_by" reference="sys_user" type="reference"/>
+        <element label="Procurement Order" mandatory="true" name="procurement_order" reference="x_2056099_indust_0_proc_order" type="reference"/>
+        <element label="Documentation Score (0-10)" mandatory="true" name="documentation_score" type="integer"/>
+        <element label="Procurement Comments" max_length="4000" name="procurement_comments" type="string"/>
+        <element default="0" label="Accepted Quantity" name="accepted_quantity" type="decimal"/>
+        <element label="Rejected Quantity" name="qty_rejected" type="decimal"/>
+        <element default="0" label="Delivery Delay (Days)" name="delivery_delay_days" type="integer"/>
+        <element label="Cost Rating Reason" mandatory="true" max_length="4000" name="cost_reason" type="string"/>
+        <element label="Received Quantity" name="received_quantity" type="decimal"/>
+        <element label="Cost Score (0-10)" mandatory="true" name="cost_score" type="integer"/>
+        <element label="Documentation Rating Reason" mandatory="true" max_length="4000" name="documentation_reason" type="string"/>
+        <element label="Promised Delivery Date" name="promised_delivery_date" type="glide_date"/>
+        <element default="0" label="Defect Quantity" name="defect_quantity" type="decimal"/>
+        <element label="Actual Unit Price" name="actual_unit_price" type="decimal"/>
+        <index name="index">
+            <element name="evaluated_by"/>
+        </index>
+        <index name="index2">
+            <element name="material_product"/>
+        </index>
+        <index name="index3">
+            <element name="procurement_order"/>
+        </index>
+        <index name="index4">
+            <element name="procurement_order_line"/>
+        </index>
+        <index name="index5">
+            <element name="related_inspection"/>
+        </index>
+        <index name="index6">
+            <element name="supplier"/>
+            <element name="material_product"/>
+        </index>
+    </element>
+</database>

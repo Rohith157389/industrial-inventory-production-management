@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.SupplierScoringEngine</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Calculates aggregate supplier scorecard from completed Supplier Performance History records. Weights: Quality 40%, Delivery 30%, Quantity 15%, Cost 10%, Documentation 5%. Creates or updates one supp_score record per supplier. Does not modify historical evaluation records.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>SupplierScoringEngine</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * SupplierScoringEngine
+ *
+ * Calculates the aggregate supplier scorecard from completed
+ * Supplier Performance History (supp_perf) records.
+ *
+ * SCORING FORMULA:
+ *
+ *   For each completed evaluation, the category scores are on a 0-10 scale.
+ *   The engine computes the AVERAGE of each category across all completed evaluations.
+ *
+ *   Category averages (0-10) are then normalized to 0-100:
+ *     category_100 = category_avg_10 * 10
+ *
+ *   Weighted Overall Score (0-100):
+ *     = Quality_100   × 0.40
+ *     + Delivery_100  × 0.30
+ *     + Quantity_100   × 0.15
+ *     + Cost_100       × 0.10
+ *     + Documentation_100 × 0.05
+ *
+ *   Overall Rating (0-10):
+ *     = Overall Score / 10
+ *
+ *   Performance Status:
+ *     90-100  = excellent
+ *     75-89   = good
+ *     60-74   = satisfactory
+ *     40-59   = needs_improvement
+ *     0-39    = poor
+ *     No evals = not_rated
+ *
+ * DESIGN RULES:
+ *   - NEVER modifies Supplier Performance History records.
+ *   - Creates or updates ONE supp_score record per supplier.
+ *   - Fully deterministic: same inputs always produce same outputs.
+ *   - All intermediate values are auditable via the formula above.
+ *
+ * Usage:
+ *   var engine = new x_2056099_indust_0.SupplierScoringEngine();
+ *   var result = engine.recalculate(supplierSysId);
+ */
+var SupplierScoringEngine = Class.create();
+SupplierScoringEngine.prototype = {
+    initialize: function () {
+        this.PERF = 'x_2056099_indust_0_supp_perf';
+        this.SCORE = 'x_2056099_indust_0_supp_score';
+
+        // Scoring weights — must sum to 1.0
+        this.WEIGHTS = {
+            quality: 0.40,
+            delivery: 0.30,
+            quantity: 0.15,
+            cost: 0.10,
+            documentation: 0.05
+        };
+    },
+
+    /**
+     * Recalculate the scorecard for a specific supplier.
+     *
+     * @param {string} supplierSysId - sys_id of the core_company record
+     * @returns {object} { success, supplierSysId, overallScorePct, overallRating,
+     *                      completedEvaluations, performanceStatus, categoryAverages }
+     */
+    recalculate: function (supplierSysId) {
+        if (!supplierSysId) {
+            return { success: false, error: 'Supplier sys_id is required' };
+        }
+
+        // ─────────────────────────────────────────
+        // STEP 1: Count total evaluations (all statuses)
+        // ─────────────────────────────────────────
+        var totalCount = this._countEvaluations(supplierSysId, '');
+
+        // ─────────────────────────────────────────
+        // STEP 2: Aggregate completed evaluations using GlideAggregate
+        //
+        // This is a single query that computes:
+        //   COUNT(*)
+        //   AVG(quality_score)
+        //   AVG(delivery_score)
+        //   AVG(quantity_score)
+        //   AVG(cost_score)
+        //   AVG(documentation_score)
+        //   MAX(evaluation_date)
+        // ─────────────────────────────────────────
+        var ga = new GlideAggregate(this.PERF);
+        ga.addQuery('supplier', supplierSysId);
+        ga.addQuery('evaluation_status', 'completed');
+        ga.addAggregate('COUNT');
+        ga.addAggregate('AVG', 'quality_score');
+        ga.addAggregate('AVG', 'delivery_score');
+        ga.addAggregate('AVG', 'quantity_score');
+        ga.addAggregate('AVG', 'cost_score');
+        ga.addAggregate('AVG', 'documentation_score');
+        ga.addAggregate('MAX', 'evaluation_date');
+        ga.query();
+
+        var completedCount = 0;
+        var avgQuality = 0;
+        var avgDelivery = 0;
+        var avgQuantity = 0;
+        var avgCost = 0;
+        var avgDocumentation = 0;
+        var lastEvalDate = '';
+
+        if (ga.next()) {
+            completedCount = parseInt(ga.getAggregate('COUNT'), 10) || 0;
+            avgQuality = parseFloat(ga.getAggregate('AVG', 'quality_score')) || 0;
+            avgDelivery = parseFloat(ga.getAggregate('AVG', 'delivery_score')) || 0;
+            avgQuantity = parseFloat(ga.getAggregate('AVG', 'quantity_score')) || 0;
+            avgCost = parseFloat(ga.getAggregate('AVG', 'cost_score')) || 0;
+            avgDocumentation = parseFloat(ga.getAggregate('AVG', 'documentation_score')) || 0;
+            lastEvalDate = ga.getAggregate('MAX', 'evaluation_date') || '';
+        }
+
+        // ─────────────────────────────────────────
+        // STEP 3: Calculate weighted overall score
+        //
+        // Category averages are 0-10. Normalize to 0-100 (* 10),
+        // then apply weights.
+        // ─────────────────────────────────────────
+        var overallScorePct = 0;
+        var overallRating = 0;
+        var performanceStatus = 'not_rated';
+
+        if (completedCount > 0) {
+            overallScorePct =
+                (avgQuality * 10) * this.WEIGHTS.quality +
+                (avgDelivery * 10) * this.WEIGHTS.delivery +
+                (avgQuantity * 10) * this.WEIGHTS.quantity +
+                (avgCost * 10) * this.WEIGHTS.cost +
+                (avgDocumentation * 10) * this.WEIGHTS.documentation;
+
+            // Round to 2 decimal places
+            overallScorePct = Math.round(overallScorePct * 100) / 100;
+            overallRating = Math.round((overallScorePct / 10) * 100) / 100;
+
+            performanceStatus = this._deriveStatus(overallScorePct);
+        }
+
+        // Round category averages to 2 decimal places for storage
+        avgQuality = Math.round(avgQuality * 100) / 100;
+        avgDelivery = Math.round(avgDelivery * 100) / 100;
+        avgQuantity = Math.round(avgQuantity * 100) / 100;
+        avgCost = Math.round(avgCost * 100) / 100;
+        avgDocumentation = Math.round(avgDocumentation * 100) / 100;
+
+        // ─────────────────────────────────────────
+        // STEP 4: Upsert the scorecard record
+        // ─────────────────────────────────────────
+        var scoreGr = new GlideRecord(this.SCORE);
+        scoreGr.addQuery('supplier', supplierSysId);
+        scoreGr.setLimit(1);
+        scoreGr.query();
+
+        var isNew = false;
+        if (!scoreGr.next()) {
+            scoreGr.initialize();
+            scoreGr.setValue('supplier', supplierSysId);
+            isNew = true;
+        }
+
+        scoreGr.setValue('overall_score_pct', overallScorePct.toString());
+        scoreGr.setValue('overall_rating', overallRating.toString());
+        scoreGr.setValue('total_evaluated_orders', totalCount);
+        scoreGr.setValue('completed_evaluations', completedCount);
+        scoreGr.setValue('avg_quality_score', avgQuality.toString());
+        scoreGr.setValue('avg_delivery_score', avgDelivery.toString());
+        scoreGr.setValue('avg_quantity_score', avgQuantity.toString());
+        scoreGr.setValue('avg_cost_score', avgCost.toString());
+        scoreGr.setValue('avg_documentation_score', avgDocumentation.toString());
+        scoreGr.setValue('performance_status', performanceStatus);
+        scoreGr.setValue('last_calculated_on', new GlideDateTime().getValue());
+
+        if (lastEvalDate) {
+            scoreGr.setValue('last_evaluation_date', lastEvalDate);
+        }
+
+        if (isNew) {
+            scoreGr.insert();
+        } else {
+            scoreGr.update();
+        }
+
+        gs.info('SupplierScoringEngine: Recalculated scorecard for supplier ' +
+            supplierSysId + ': ' + overallScorePct + '/100 (' +
+            overallRating + '/10), status=' + performanceStatus +
+            ', based on ' + completedCount + ' completed evaluation(s).');
+
+        return {
+            success: true,
+            supplierSysId: supplierSysId,
+            overallScorePct: overallScorePct,
+            overallRating: overallRating,
+            totalEvaluatedOrders: totalCount,
+            completedEvaluations: completedCount,
+            performanceStatus: performanceStatus,
+            categoryAverages: {
+                quality: avgQuality,
+                delivery: avgDelivery,
+                quantity: avgQuantity,
+                cost: avgCost,
+                documentation: avgDocumentation
+            },
+            lastEvaluationDate: lastEvalDate,
+            formula: 'Quality(' + avgQuality + '*10*0.40=' +
+                Math.round(avgQuality * 10 * 0.40 * 100) / 100 +
+                ') + Delivery(' + avgDelivery + '*10*0.30=' +
+                Math.round(avgDelivery * 10 * 0.30 * 100) / 100 +
+                ') + Quantity(' + avgQuantity + '*10*0.15=' +
+                Math.round(avgQuantity * 10 * 0.15 * 100) / 100 +
+                ') + Cost(' + avgCost + '*10*0.10=' +
+                Math.round(avgCost * 10 * 0.10 * 100) / 100 +
+                ') + Documentation(' + avgDocumentation + '*10*0.05=' +
+                Math.round(avgDocumentation * 10 * 0.05 * 100) / 100 +
+                ') = ' + overallScorePct + '/100'
+        };
+    },
+
+    /**
+     * Count evaluations for a supplier, optionally filtered by status.
+     */
+    _countEvaluations: function (supplierSysId, status) {
+        var ga = new GlideAggregate(this.PERF);
+        ga.addQuery('supplier', supplierSysId);
+        if (status) {
+            ga.addQuery('evaluation_status', status);
+        }
+        ga.addAggregate('COUNT');
+        ga.query();
+        if (ga.next()) {
+            return parseInt(ga.getAggregate('COUNT'), 10) || 0;
+        }
+        return 0;
+    },
+
+    /**
+     * Derive performance status from overall score percentage.
+     */
+    _deriveStatus: function (scorePct) {
+        if (scorePct >= 90) return 'excellent';
+        if (scorePct >= 75) return 'good';
+        if (scorePct >= 60) return 'satisfactory';
+        if (scorePct >= 40) return 'needs_improvement';
+        return 'poor';
+    },
+
+    type: 'SupplierScoringEngine'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 11:54:40</sys_created_on>
+        <sys_id>3030cedaeda84b119fd9ee965093e893</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>SupplierScoringEngine</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_3030cedaeda84b119fd9ee965093e893</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 11:54:40</sys_updated_on>
+    </sys_script_include>
+</record_update>
