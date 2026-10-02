@@ -15,8 +15,7 @@
         <condition/>
         <description/>
         <execute_function>false</execute_function>
-        <filter_condition table="x_2056099_indust_0_prod_sched">input_batchISNOTEMPTY^statusINmachine_assigned,machine_processing<item endquery="false" field="input_batch" goto="false" newquery="false" operator="ISNOTEMPTY" or="false" value=""/>
-            <item endquery="false" field="status" goto="false" newquery="false" operator="IN" or="false" value="machine_assigned,machine_processing"/>
+        <filter_condition table="x_2056099_indust_0_prod_sched">input_batchISNOTEMPTY^statusINmachine_assigned,machine_processing<item endquery="false" field="status" goto="false" newquery="false" operator="IN" or="false" value="machine_assigned,machine_processing"/>
         </filter_condition>
         <is_rest>false</is_rest>
         <message/>

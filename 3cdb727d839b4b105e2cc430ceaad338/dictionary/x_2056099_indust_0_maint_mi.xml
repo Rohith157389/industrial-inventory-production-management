@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="d9dc02c0725e4133b66934ac8ee7d8c1" label="Maintenance Material / Tool Issue" name="x_2056099_indust_0_maint_mi" type="collection">
-        <element label="Quantity Returned" max_length="15" name="quantity_returned" type="decimal"/>
+        <element label="Cost" max_length="15" name="cost" type="decimal"/>
+        <element label="Return Required" max_length="40" name="return_required" type="boolean"/>
+        <element label="Production Order" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
+        <element label="Issue Type" max_length="40" name="issue_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Return" sequence="2" value="return_type"/>
+                <element inactive_on_update="false" label="Adjustment" sequence="3" value="adjustment"/>
+                <element inactive_on_update="false" label="Issue" sequence="1" value="issue"/>
+            </choice>
+        </element>
+        <element label="Notes" max_length="4000" name="notes" type="string"/>
+        <element label="Material / Tool" mandatory="true" max_length="32" name="material_tool" reference="x_2056099_indust_0_mat_master" type="reference"/>
         <element default="requested" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Returned" sequence="6" value="returned"/>
+                <element inactive_on_update="false" label="Issued" sequence="3" value="issued"/>
                 <element inactive_on_update="false" label="Consumed" sequence="5" value="consumed"/>
-                <element inactive_on_update="false" label="Requested" sequence="1" value="requested"/>
+                <element inactive_on_update="false" label="Approved" sequence="2" value="approved"/>
                 <element inactive_on_update="false" label="Cancelled" sequence="9" value="cancelled"/>
                 <element inactive_on_update="false" label="Closed" sequence="8" value="closed"/>
                 <element inactive_on_update="false" label="Partially Consumed" sequence="4" value="partially_consumed"/>
-                <element inactive_on_update="false" label="Issued" sequence="3" value="issued"/>
+                <element inactive_on_update="false" label="Requested" sequence="1" value="requested"/>
                 <element inactive_on_update="false" label="Partially Returned" sequence="7" value="partially_returned"/>
-                <element inactive_on_update="false" label="Returned" sequence="6" value="returned"/>
-                <element inactive_on_update="false" label="Approved" sequence="2" value="approved"/>
+            </choice>
+        </element>
+        <element label="Issued By" max_length="32" name="issued_by" reference="sys_user" type="reference"/>
+        <element label="Material Type" mandatory="true" max_length="40" name="material_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Other" sequence="5" value="other"/>
+                <element inactive_on_update="false" label="Lubricant" sequence="4" value="lubricant"/>
+                <element inactive_on_update="false" label="Consumable" sequence="1" value="consumable"/>
+                <element inactive_on_update="false" label="Spare Part" sequence="3" value="spare_part"/>
+                <element inactive_on_update="false" label="Returnable Tool" sequence="2" value="returnable_tool"/>
+            </choice>
+        </element>
+        <element label="Issued To" max_length="32" name="issued_to" reference="sys_user" type="reference"/>
+        <element label="Issue Date" max_length="40" name="issue_date" type="glide_date_time"/>
+        <element display="true" label="Issue ID" mandatory="true" max_length="40" name="number" type="string"/>
+        <element label="Quantity Consumed" max_length="15" name="quantity_consumed" type="decimal"/>
+        <element label="Quantity Returned" max_length="15" name="quantity_returned" type="decimal"/>
+        <element label="Unit of Measure" max_length="40" name="unit_of_measure" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Pairs" sequence="6" value="pairs"/>
+                <element inactive_on_update="false" label="Other" sequence="9" value="other"/>
+                <element inactive_on_update="false" label="Sets" sequence="5" value="sets"/>
+                <element inactive_on_update="false" label="Kg" sequence="2" value="kg"/>
+                <element inactive_on_update="false" label="Metres" sequence="4" value="metres"/>
+                <element inactive_on_update="false" label="Nos" sequence="1" value="nos"/>
+                <element inactive_on_update="false" label="Boxes" sequence="8" value="boxes"/>
+                <element inactive_on_update="false" label="Rolls" sequence="7" value="rolls"/>
+                <element inactive_on_update="false" label="Litres" sequence="3" value="litres"/>
             </choice>
         </element>
         <element label="Return Date" max_length="40" name="return_date" type="glide_date_time"/>
+        <element label="Inventory Transaction" max_length="32" name="inventory_txn" reference="x_2056099_indust_0_inv_txn" type="reference"/>
+        <element label="Maintenance" mandatory="true" max_length="32" name="maintenance" reference="x_2056099_indust_0_mach_maint" type="reference"/>
+        <element label="Quantity Variance" max_length="15" name="quantity_variance" type="decimal"/>
+        <element label="MRO Inventory Location" max_length="32" name="mro_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Actual Return Pending" max_length="40" name="actual_return_pending" type="boolean"/>
         <element label="Condition After Return" max_length="40" name="condition_after" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Good" sequence="1" value="good"/>
-                <element inactive_on_update="false" label="Unusable" sequence="4" value="unusable"/>
                 <element inactive_on_update="false" label="Damaged" sequence="3" value="damaged"/>
                 <element inactive_on_update="false" label="Used" sequence="2" value="used"/>
+                <element inactive_on_update="false" label="Good" sequence="1" value="good"/>
+                <element inactive_on_update="false" label="Unusable" sequence="4" value="unusable"/>
             </choice>
         </element>
-        <element label="Cost" max_length="15" name="cost" type="decimal"/>
-        <element label="Issued By" max_length="32" name="issued_by" reference="sys_user" type="reference"/>
-        <element label="Maintenance" mandatory="true" max_length="32" name="maintenance" reference="x_2056099_indust_0_mach_maint" type="reference"/>
-        <element label="Inventory Transaction" max_length="32" name="inventory_txn" reference="x_2056099_indust_0_inv_txn" type="reference"/>
         <element label="Condition Before Issue" max_length="40" name="condition_before" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Used" sequence="3" value="used"/>
                 <element inactive_on_update="false" label="Good" sequence="2" value="good"/>
-                <element inactive_on_update="false" label="Damaged" sequence="4" value="damaged"/>
                 <element inactive_on_update="false" label="New" sequence="1" value="new_cond"/>
-            </choice>
-        </element>
-        <element label="Return Required" max_length="40" name="return_required" type="boolean"/>
-        <element label="Material Type" mandatory="true" max_length="40" name="material_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Lubricant" sequence="4" value="lubricant"/>
-                <element inactive_on_update="false" label="Spare Part" sequence="3" value="spare_part"/>
-                <element inactive_on_update="false" label="Returnable Tool" sequence="2" value="returnable_tool"/>
-                <element inactive_on_update="false" label="Other" sequence="5" value="other"/>
-                <element inactive_on_update="false" label="Consumable" sequence="1" value="consumable"/>
-            </choice>
-        </element>
-        <element label="Quantity Variance" max_length="15" name="quantity_variance" type="decimal"/>
-        <element label="Production Order" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
-        <element label="Issued To" max_length="32" name="issued_to" reference="sys_user" type="reference"/>
-        <element label="Quantity Consumed" max_length="15" name="quantity_consumed" type="decimal"/>
-        <element label="Actual Return Pending" max_length="40" name="actual_return_pending" type="boolean"/>
-        <element label="Issue Type" max_length="40" name="issue_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Issue" sequence="1" value="issue"/>
-                <element inactive_on_update="false" label="Adjustment" sequence="3" value="adjustment"/>
-                <element inactive_on_update="false" label="Return" sequence="2" value="return_type"/>
-            </choice>
-        </element>
-        <element label="Unit of Measure" max_length="40" name="unit_of_measure" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Nos" sequence="1" value="nos"/>
-                <element inactive_on_update="false" label="Boxes" sequence="8" value="boxes"/>
-                <element inactive_on_update="false" label="Rolls" sequence="7" value="rolls"/>
-                <element inactive_on_update="false" label="Metres" sequence="4" value="metres"/>
-                <element inactive_on_update="false" label="Pairs" sequence="6" value="pairs"/>
-                <element inactive_on_update="false" label="Litres" sequence="3" value="litres"/>
-                <element inactive_on_update="false" label="Sets" sequence="5" value="sets"/>
-                <element inactive_on_update="false" label="Kg" sequence="2" value="kg"/>
-                <element inactive_on_update="false" label="Other" sequence="9" value="other"/>
+                <element inactive_on_update="false" label="Damaged" sequence="4" value="damaged"/>
             </choice>
         </element>
         <element label="Quantity Issued" mandatory="true" max_length="15" name="quantity_issued" type="decimal"/>
-        <element label="Notes" max_length="4000" name="notes" type="string"/>
-        <element label="Issue Date" max_length="40" name="issue_date" type="glide_date_time"/>
-        <element label="MRO Inventory Location" max_length="32" name="mro_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
         <element label="Machine" max_length="32" name="machine" reference="x_2056099_indust_0_machine" type="reference"/>
-        <element label="Material / Tool" mandatory="true" max_length="32" name="material_tool" reference="x_2056099_indust_0_mat_master" type="reference"/>
-        <element display="true" label="Issue ID" mandatory="true" max_length="40" name="number" type="string"/>
         <index name="index">
             <element name="inventory_txn"/>
         </index>
