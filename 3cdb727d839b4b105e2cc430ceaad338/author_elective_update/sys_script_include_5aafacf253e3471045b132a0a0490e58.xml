@@ -1,0 +1,1383 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="DELETE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.WhatIfSimulationEngine</api_name>
+        <caller_access/>
+        <client_callable>true</client_callable>
+        <description>Digital Twin simulation and adaptive scheduling engine for industrial valve manufacturing.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>WhatIfSimulationEngine</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * WhatIfSimulationEngine
+ *
+ * Non-destructive simulation engine for production What-If analysis.
+ * Reads live production data (orders, schedules, resources, materials)
+ * and calculates simulated alternatives WITHOUT modifying any records.
+ *
+ * Supported scenario types:
+ *   resource_down        – resource unavailable + adaptive rescheduling
+ *   capacity_reduction   – resource capacity drops by X%
+ *   quantity_change      – production order planned quantity changes
+ *   material_shortage    – available stock drops by X%
+ *   schedule_shift       – schedule start date shifts by N days
+ */
+var WhatIfSimulationEngine = Class.create();
+WhatIfSimulationEngine.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+
+    PO_TABLE: 'x_2056099_indust_0_production_order',
+    SCHED_TABLE: 'x_2056099_indust_0_prod_sched',
+    RES_TABLE: 'x_2056099_indust_0_prod_res',
+    MAT_TABLE: 'x_2056099_indust_0_production_material',
+    STOCK_TABLE: 'x_2056099_indust_0_inv_stock',
+    PRIORITY_RANK: { critical: 0, high: 1, medium: 2, low: 3 },
+
+    simulate: function(params) {
+        var type = params.scenario_type || '';
+        if (!type) return { success: false, error: 'scenario_type is required' };
+
+        var state = this._loadCurrentState();
+        if (state.resources.length === 0 && state.schedules.length === 0) {
+            return {
+                success: true, empty: true,
+                message: 'No active production resources or schedules found. Create production data to run simulations.',
+                current: state.summary, simulated: state.summary,
+                affectedOrders: [], affectedSchedules: [],
+                impact: { totalDelayDays: 0, affectedOrderCount: 0, capacityImpactPct: 0 }
+            };
+        }
+
+        var result;
+        switch (type) {
+            case 'resource_down': result = this._simulateResourceDown(state, params); break;
+            case 'capacity_reduction': result = this._simulateCapacityReduction(state, params); break;
+            case 'quantity_change': result = this._simulateQuantityChange(state, params); break;
+            case 'material_shortage': result = this._simulateMaterialShortage(state, params); break;
+            case 'schedule_shift': result = this._simulateScheduleShift(state, params); break;
+            default: return { success: false, error: 'Unknown scenario_type: ' + type };
+        }
+
+        result.success = true;
+        result.scenario = params;
+        result.timestamp = new GlideDateTime().getDisplayValue();
+        result.current = state.summary;
+        return result;
+    },
+
+    /* ════════════════════ State Loader ════════════════════ */
+
+    _loadCurrentState: function() {
+        var resources = [];
+        var gr = new GlideRecord(this.RES_TABLE);
+        gr.addQuery('active', true);
+        gr.query();
+        while (gr.next()) {
+            resources.push({
+                sys_id: gr.getValue('sys_id'),
+                name: gr.getValue('resource_name'),
+                status: gr.getValue('status'),
+                statusDisplay: gr.getDisplayValue('status'),
+                capacity_per_day: parseFloat(gr.getValue('capacity_per_day')) || 0,
+                efficiency: parseFloat(gr.getValue('efficiency_percentage')) || 100,
+                maintenance_required: gr.getValue('maintenance_required') == '1',
+                resource_type: gr.getDisplayValue('resource_type')
+            });
+        }
+
+        var schedules = [];
+        gr = new GlideRecord(this.SCHED_TABLE);
+        gr.addQuery('active', true);
+        gr.addQuery('status', 'IN', 'draft,scheduled,confirmed,in_progress');
+        gr.query();
+        while (gr.next()) {
+            var start = new GlideDateTime(gr.getValue('planned_start'));
+            var end = new GlideDateTime(gr.getValue('planned_end'));
+            var durationMs = GlideDateTime.subtract(start, end).getNumericValue();
+            var durationDays = Math.max(1, Math.ceil(durationMs / (1000 * 60 * 60 * 24)));
+            schedules.push({
+                sys_id: gr.getValue('sys_id'),
+                number: gr.getValue('number'),
+                production_order: gr.getValue('production_order'),
+                production_order_display: gr.getDisplayValue('production_order'),
+                resource_id: gr.getValue('production_resource'),
+                resource_display: gr.getDisplayValue('production_resource'),
+                planned_start: gr.getDisplayValue('planned_start'),
+                planned_end: gr.getDisplayValue('planned_end'),
+                planned_start_val: gr.getValue('planned_start'),
+                planned_end_val: gr.getValue('planned_end'),
+                planned_quantity: parseFloat(gr.getValue('planned_quantity')) || 0,
+                status: gr.getValue('status'),
+                statusDisplay: gr.getDisplayValue('status'),
+                priority: gr.getValue('priority'),
+                duration_days: durationDays
+            });
+        }
+
+        var orders = [];
+        gr = new GlideRecord(this.PO_TABLE);
+        gr.addQuery('active', true);
+        gr.addQuery('status', 'NOT IN', 'completed,cancelled');
+        gr.query();
+        while (gr.next()) {
+            orders.push({
+                sys_id: gr.getValue('sys_id'),
+                number: gr.getValue('number'),
+                status: gr.getValue('status'),
+                statusDisplay: gr.getDisplayValue('status'),
+                quantity_planned: parseFloat(gr.getValue('quantity_planned')) || 0,
+                quantity_produced: parseFloat(gr.getValue('quantity_produced')) || 0,
+                quantity_remaining: parseFloat(gr.getValue('quantity_remaining')) || 0,
+                finished_product: gr.getDisplayValue('finished_product'),
+                priority: gr.getValue('priority'),
+                assigned_resource: gr.getValue('assigned_resource'),
+                assigned_resource_display: gr.getDisplayValue('assigned_resource')
+            });
+        }
+
+        return {
+            resources: resources, schedules: schedules, orders: orders,
+            summary: {
+                totalResources: resources.length,
+                availableResources: resources.filter(function(r) { return r.status === 'available'; }).length,
+                activeSchedules: schedules.length,
+                activeOrders: orders.length
+            }
+        };
+    },
+
+    /* ════════════════ Resource Down + Adaptive Rescheduling ════════════════ */
+
+    _simulateResourceDown: function(state, params) {
+        var resId = params.target_resource_id;
+        var days = parseInt(params.duration_days) || 1;
+        if (!resId) return { success: false, error: 'target_resource_id is required' };
+
+        var resource = null;
+        for (var i = 0; i < state.resources.length; i++) {
+            if (state.resources[i].sys_id === resId) { resource = state.resources[i]; break; }
+        }
+        if (!resource) return { success: false, error: 'Resource not found' };
+
+        var now = new GlideDateTime();
+        var downEnd = new GlideDateTime(now);
+        downEnd.addDaysLocalTime(days);
+
+        // ── 1. Identify affected schedules ──
+        var affectedRaw = [];
+        for (var j = 0; j < state.schedules.length; j++) {
+            var sched = state.schedules[j];
+            if (sched.resource_id !== resId) continue;
+            var schedStart = new GlideDateTime(sched.planned_start_val);
+            var schedEnd = new GlideDateTime(sched.planned_end_val);
+            if (schedStart.compareTo(downEnd) < 0 && schedEnd.compareTo(now) > 0) {
+                affectedRaw.push(sched);
+            }
+        }
+
+        if (affectedRaw.length === 0) {
+            return {
+                simulated: {
+                    totalResources: state.summary.totalResources,
+                    availableResources: state.summary.availableResources - 1,
+                    activeSchedules: state.summary.activeSchedules,
+                    activeOrders: state.summary.activeOrders
+                },
+                affectedSchedules: [],
+                affectedOrders: [],
+                adaptiveProposals: [],
+                impact: { affectedOrderCount: 0, totalDelayDays: 0, capacityImpactPct: 0,
+                    resourceName: resource.name, downtimeDays: days,
+                    reassignedCount: 0, unrecoverableCount: 0 }
+            };
+        }
+
+        // ── 2. Sort affected by priority (reuse ProductionScheduler pattern) ──
+        var self = this;
+        affectedRaw.sort(function(a, b) {
+            var ra = self._getPriorityRank(a.priority);
+            var rb = self._getPriorityRank(b.priority);
+            if (ra !== rb) return ra - rb;
+            var sa = new GlideDateTime(a.planned_start_val);
+            var sb = new GlideDateTime(b.planned_start_val);
+            return sa.compareTo(sb);
+        });
+
+        // ── 3. Build virtual schedule map (in-memory) ──
+        // Maps resource_id → array of { start_val, end_val } representing occupied slots.
+        // Initialized from ALL live schedules (excluding those on the failed resource).
+        var virtualSlots = {};
+        for (var s = 0; s < state.schedules.length; s++) {
+            var sc = state.schedules[s];
+            if (sc.resource_id === resId) continue; // skip failed resource
+            if (!virtualSlots[sc.resource_id]) virtualSlots[sc.resource_id] = [];
+            virtualSlots[sc.resource_id].push({
+                start_val: sc.planned_start_val,
+                end_val: sc.planned_end_val
+            });
+        }
+
+        // ── 4. Find candidate resources (reuse ProductionScheduler feasibility rules) ──
+        var candidateResources = [];
+        for (var c = 0; c < state.resources.length; c++) {
+            var cr = state.resources[c];
+            if (cr.sys_id === resId) continue;  // exclude failed resource
+            if (cr.status !== 'available') continue;
+            if (cr.maintenance_required) continue;
+            if (cr.capacity_per_day <= 0) continue;
+            candidateResources.push(cr);
+        }
+
+        // ── 5. Adaptive rescheduling: process each affected schedule in priority order ──
+        var proposals = [];
+        var affectedSchedules = [];
+        var reassignedCount = 0;
+        var unrecoverableCount = 0;
+        var totalDelayBefore = 0;
+        var totalDelayAfter = 0;
+
+        for (var a = 0; a < affectedRaw.length; a++) {
+            var aff = affectedRaw[a];
+            var poId = aff.production_order;
+
+            // Find the production order for this schedule
+            var order = null;
+            for (var o = 0; o < state.orders.length; o++) {
+                if (state.orders[o].sys_id === poId) { order = state.orders[o]; break; }
+            }
+
+            var delayBefore = days;
+            totalDelayBefore += delayBefore;
+
+            var delayedEnd = new GlideDateTime(aff.planned_end_val);
+            delayedEnd.addDaysLocalTime(days);
+
+            // Record the basic affected schedule info
+            var affEntry = {
+                schedule_number: aff.number,
+                order_display: aff.production_order_display,
+                resource_display: aff.resource_display,
+                current_start: aff.planned_start,
+                current_end: aff.planned_end,
+                simulated_end: delayedEnd.getDisplayValue(),
+                delay_days: days,
+                status: aff.statusDisplay,
+                priority: aff.priority
+            };
+            affectedSchedules.push(affEntry);
+
+            // Try to find an alternative resource
+            var bestCandidate = null;
+            var bestStart = null;
+            var bestEnd = null;
+            var bestDays = 0;
+
+            for (var r = 0; r < candidateResources.length; r++) {
+                var cand = candidateResources[r];
+                var effectiveCapacity = cand.capacity_per_day * (cand.efficiency / 100);
+                if (effectiveCapacity <= 0) continue;
+
+                var daysNeeded = Math.ceil(aff.planned_quantity / effectiveCapacity);
+                if (daysNeeded < 1) daysNeeded = 1;
+
+                // Find earliest slot on this candidate using virtual schedule
+                var slot = this._findEarliestVirtualSlot(
+                    cand.sys_id, daysNeeded, now, virtualSlots
+                );
+
+                if (!slot) continue;
+
+                // Pick the candidate with the earliest start, then highest capacity
+                if (!bestCandidate ||
+                    slot.start.compareTo(bestStart) < 0 ||
+                    (slot.start.compareTo(bestStart) === 0 && effectiveCapacity > bestCandidate.effectiveCapacity)) {
+                    bestCandidate = {
+                        sys_id: cand.sys_id,
+                        name: cand.name,
+                        capacity_per_day: cand.capacity_per_day,
+                        efficiency: cand.efficiency,
+                        effectiveCapacity: effectiveCapacity,
+                        resource_type: cand.resource_type
+                    };
+                    bestStart = slot.start;
+                    bestEnd = slot.end;
+                    bestDays = daysNeeded;
+                }
+            }
+
+            if (bestCandidate) {
+                // Register this assignment in the virtual schedule to prevent overlaps
+                if (!virtualSlots[bestCandidate.sys_id]) virtualSlots[bestCandidate.sys_id] = [];
+                virtualSlots[bestCandidate.sys_id].push({
+                    start_val: bestStart.getValue(),
+                    end_val: bestEnd.getValue()
+                });
+
+                var adaptiveDelay = 0;
+                var origStart = new GlideDateTime(aff.planned_start_val);
+                if (bestStart.compareTo(origStart) > 0) {
+                    var delayMs = GlideDateTime.subtract(origStart, bestStart).getNumericValue();
+                    adaptiveDelay = Math.ceil(delayMs / (1000 * 60 * 60 * 24));
+                }
+                totalDelayAfter += adaptiveDelay;
+
+                proposals.push({
+                    schedule_number: aff.number,
+                    order_display: aff.production_order_display,
+                    priority: aff.priority,
+                    original_resource: aff.resource_display,
+                    proposed_resource: bestCandidate.name,
+                    proposed_resource_type: bestCandidate.resource_type,
+                    proposed_capacity: bestCandidate.capacity_per_day,
+                    proposed_efficiency: bestCandidate.efficiency,
+                    current_start: aff.planned_start,
+                    current_end: aff.planned_end,
+                    proposed_start: bestStart.getDisplayValue(),
+                    proposed_end: bestEnd.getDisplayValue(),
+                    proposed_duration_days: bestDays,
+                    delay_before_adaptation: delayBefore,
+                    delay_after_adaptation: adaptiveDelay,
+                    delay_recovered: delayBefore - adaptiveDelay,
+                    feasible: true,
+                    reassigned: true,
+                    reason: 'Reassigned from ' + resource.name + ' to ' + bestCandidate.name
+                });
+                reassignedCount++;
+            } else {
+                totalDelayAfter += delayBefore;
+                var reasons = [];
+                if (candidateResources.length === 0) {
+                    reasons.push('No alternative resources are active, available, and have capacity');
+                } else {
+                    reasons.push('All ' + candidateResources.length + ' candidate resource(s) have scheduling conflicts or insufficient slots');
+                }
+
+                proposals.push({
+                    schedule_number: aff.number,
+                    order_display: aff.production_order_display,
+                    priority: aff.priority,
+                    original_resource: aff.resource_display,
+                    proposed_resource: null,
+                    current_start: aff.planned_start,
+                    current_end: aff.planned_end,
+                    proposed_start: aff.planned_start,
+                    proposed_end: delayedEnd.getDisplayValue(),
+                    delay_before_adaptation: delayBefore,
+                    delay_after_adaptation: delayBefore,
+                    delay_recovered: 0,
+                    feasible: false,
+                    reassigned: false,
+                    reason: reasons.join('. ')
+                });
+                unrecoverableCount++;
+            }
+        }
+
+        return {
+            simulated: {
+                totalResources: state.summary.totalResources,
+                availableResources: state.summary.availableResources - 1,
+                activeSchedules: state.summary.activeSchedules,
+                activeOrders: state.summary.activeOrders
+            },
+            affectedSchedules: affectedSchedules,
+            affectedOrders: affectedSchedules.map(function(a) { return a.order_display; }),
+            adaptiveProposals: proposals,
+            impact: {
+                affectedOrderCount: affectedRaw.length,
+                totalDelayDays: totalDelayBefore,
+                adaptiveDelayDays: totalDelayAfter,
+                delayRecoveredDays: totalDelayBefore - totalDelayAfter,
+                capacityImpactPct: state.resources.length > 0 ? Math.round((1 / state.resources.length) * 100) : 0,
+                resourceName: resource.name,
+                downtimeDays: days,
+                reassignedCount: reassignedCount,
+                unrecoverableCount: unrecoverableCount,
+                candidateResourcesEvaluated: candidateResources.length
+            }
+        };
+    },
+
+    /* ════════════════ In-Memory Slot Finder ════════════════ */
+
+    /**
+     * Finds the earliest conflict-free slot on a resource using the
+     * in-memory virtual schedule (no DB writes). Mirrors ProductionScheduler._findEarliestSlot.
+     */
+    _findEarliestVirtualSlot: function(resourceId, daysNeeded, startFrom, virtualSlots) {
+        var candidateStart = new GlideDateTime(startFrom);
+        var slots = virtualSlots[resourceId] || [];
+        var MAX_ITER = 50;
+
+        for (var i = 0; i < MAX_ITER; i++) {
+            var candidateEnd = new GlideDateTime(candidateStart);
+            candidateEnd.addDaysLocalTime(daysNeeded);
+
+            var conflict = false;
+            var latestConflictEnd = null;
+
+            for (var s = 0; s < slots.length; s++) {
+                var slotStart = new GlideDateTime(slots[s].start_val);
+                var slotEnd = new GlideDateTime(slots[s].end_val);
+
+                if (candidateStart.compareTo(slotEnd) < 0 && candidateEnd.compareTo(slotStart) > 0) {
+                    conflict = true;
+                    if (!latestConflictEnd || slotEnd.compareTo(latestConflictEnd) > 0) {
+                        latestConflictEnd = slotEnd;
+                    }
+                }
+            }
+
+            if (!conflict) {
+                return { start: candidateStart, end: candidateEnd };
+            }
+
+            candidateStart = new GlideDateTime(latestConflictEnd);
+        }
+
+        return null;
+    },
+
+    _getPriorityRank: function(priority) {
+        var rank = this.PRIORITY_RANK[priority];
+        return (rank !== undefined) ? rank : 99;
+    },
+
+    /* ════════════════ Capacity Reduction ════════════════ */
+
+    _simulateCapacityReduction: function(state, params) {
+        var resId = params.target_resource_id;
+        var reductionPct = parseFloat(params.capacity_reduction_pct) || 0;
+        if (!resId) return { success: false, error: 'target_resource_id is required' };
+        if (reductionPct <= 0 || reductionPct >= 100) return { success: false, error: 'capacity_reduction_pct must be between 1 and 99' };
+
+        var resource = null;
+        for (var i = 0; i < state.resources.length; i++) {
+            if (state.resources[i].sys_id === resId) { resource = state.resources[i]; break; }
+        }
+        if (!resource) return { success: false, error: 'Resource not found' };
+
+        var factor = 1 / (1 - reductionPct / 100);
+        var affected = [];
+        for (var j = 0; j < state.schedules.length; j++) {
+            var sched = state.schedules[j];
+            if (sched.resource_id !== resId) continue;
+            var newDuration = Math.ceil(sched.duration_days * factor);
+            var extraDays = newDuration - sched.duration_days;
+            if (extraDays > 0) {
+                var simEnd = new GlideDateTime(sched.planned_start_val);
+                simEnd.addDaysLocalTime(newDuration);
+                affected.push({
+                    schedule_number: sched.number, order_display: sched.production_order_display,
+                    resource_display: sched.resource_display,
+                    current_start: sched.planned_start, current_end: sched.planned_end,
+                    simulated_end: simEnd.getDisplayValue(), delay_days: extraDays,
+                    original_duration: sched.duration_days, simulated_duration: newDuration,
+                    status: sched.statusDisplay
+                });
+            }
+        }
+        var totalDelay = 0;
+        for (var k = 0; k < affected.length; k++) totalDelay += affected[k].delay_days;
+
+        return {
+            simulated: { totalResources: state.summary.totalResources, availableResources: state.summary.availableResources, activeSchedules: state.summary.activeSchedules, activeOrders: state.summary.activeOrders },
+            affectedSchedules: affected,
+            affectedOrders: affected.map(function(a) { return a.order_display; }),
+            impact: { affectedOrderCount: affected.length, totalDelayDays: totalDelay, capacityImpactPct: Math.round(reductionPct), resourceName: resource.name, originalCapacity: resource.capacity_per_day, simulatedCapacity: Math.round(resource.capacity_per_day * (1 - reductionPct / 100) * 100) / 100 }
+        };
+    },
+
+    /* ════════════════ Quantity Change ════════════════ */
+
+    _simulateQuantityChange: function(state, params) {
+        var orderId = params.target_order_id;
+        var newQty = parseFloat(params.new_quantity);
+        if (!orderId) return { success: false, error: 'target_order_id is required' };
+        if (isNaN(newQty) || newQty <= 0) return { success: false, error: 'new_quantity must be positive' };
+
+        var order = null;
+        for (var i = 0; i < state.orders.length; i++) {
+            if (state.orders[i].sys_id === orderId) { order = state.orders[i]; break; }
+        }
+        if (!order) return { success: false, error: 'Production Order not found' };
+
+        var affected = [];
+        for (var j = 0; j < state.schedules.length; j++) {
+            var sched = state.schedules[j];
+            if (sched.production_order !== orderId) continue;
+            var resObj = null;
+            for (var k = 0; k < state.resources.length; k++) {
+                if (state.resources[k].sys_id === sched.resource_id) { resObj = state.resources[k]; break; }
+            }
+            var cap = resObj ? resObj.capacity_per_day : 0;
+            var newDays = cap > 0 ? Math.ceil(newQty / cap) : sched.duration_days;
+            var extraDays = newDays - sched.duration_days;
+            var simEnd = new GlideDateTime(sched.planned_start_val);
+            simEnd.addDaysLocalTime(newDays);
+            affected.push({
+                schedule_number: sched.number, order_display: sched.production_order_display,
+                resource_display: sched.resource_display,
+                current_start: sched.planned_start, current_end: sched.planned_end,
+                simulated_end: simEnd.getDisplayValue(),
+                delay_days: extraDays > 0 ? extraDays : 0, gained_days: extraDays < 0 ? Math.abs(extraDays) : 0,
+                original_quantity: order.quantity_planned, simulated_quantity: newQty, status: sched.statusDisplay
+            });
+        }
+        return {
+            simulated: state.summary, affectedSchedules: affected, affectedOrders: [order.number],
+            impact: { affectedOrderCount: 1, totalDelayDays: affected.reduce(function(sum, a) { return sum + a.delay_days; }, 0), quantityDelta: newQty - order.quantity_planned, orderNumber: order.number }
+        };
+    },
+
+    /* ════════════════ Material Shortage ════════════════ */
+
+    _simulateMaterialShortage: function(state, params) {
+        var materialId = params.material_product_id;
+        var shortagePct = parseFloat(params.shortage_pct) || 0;
+        if (!materialId) return { success: false, error: 'material_product_id is required' };
+        if (shortagePct <= 0 || shortagePct > 100) return { success: false, error: 'shortage_pct must be between 1 and 100' };
+
+        var stockGa = new GlideAggregate(this.STOCK_TABLE);
+        stockGa.addQuery('material_product', materialId);
+        stockGa.addQuery('active', true);
+        stockGa.addAggregate('SUM', 'available_quantity');
+        stockGa.query();
+        var currentStock = 0;
+        if (stockGa.next()) currentStock = parseFloat(stockGa.getAggregate('SUM', 'available_quantity')) || 0;
+        var simulatedStock = Math.round(currentStock * (1 - shortagePct / 100) * 100) / 100;
+
+        var matGr = new GlideRecord(this.MAT_TABLE);
+        matGr.addQuery('material_product', materialId);
+        matGr.addQuery('active', true);
+        matGr.addQuery('status', 'NOT IN', 'fully_issued,cancelled');
+        matGr.query();
+
+        var affectedOrders = [];
+        while (matGr.next()) {
+            var remaining = parseFloat(matGr.getValue('remaining_quantity')) || 0;
+            if (remaining > 0) {
+                var canFulfill = simulatedStock >= remaining;
+                affectedOrders.push({
+                    order_display: matGr.getDisplayValue('production_order'),
+                    material_display: matGr.getDisplayValue('material_product'),
+                    required_remaining: remaining, simulated_available: simulatedStock,
+                    shortfall: canFulfill ? 0 : remaining - simulatedStock,
+                    can_fulfill: canFulfill, material_status: matGr.getDisplayValue('status')
+                });
+            }
+        }
+
+        var matName = '';
+        var matMaster = new GlideRecord('x_2056099_indust_0_mat_master');
+        if (matMaster.get(materialId)) matName = matMaster.getValue('material_name');
+
+        return {
+            simulated: state.summary, affectedSchedules: [], affectedOrders: affectedOrders,
+            impact: { affectedOrderCount: affectedOrders.length, totalDelayDays: 0, materialName: matName,
+                currentStock: currentStock, simulatedStock: simulatedStock, shortagePct: shortagePct,
+                ordersWithShortfall: affectedOrders.filter(function(o) { return !o.can_fulfill; }).length }
+        };
+    },
+
+    /* ════════════════ Schedule Shift ════════════════ */
+
+    _simulateScheduleShift: function(state, params) {
+        var schedId = params.target_schedule_id;
+        var shiftDays = parseInt(params.shift_days) || 0;
+        if (!schedId) return { success: false, error: 'target_schedule_id is required' };
+        if (shiftDays === 0) return { success: false, error: 'shift_days must be non-zero' };
+
+        var sched = null;
+        for (var i = 0; i < state.schedules.length; i++) {
+            if (state.schedules[i].sys_id === schedId) { sched = state.schedules[i]; break; }
+        }
+        if (!sched) return { success: false, error: 'Schedule not found' };
+
+        var simStart = new GlideDateTime(sched.planned_start_val);
+        simStart.addDaysLocalTime(shiftDays);
+        var simEnd = new GlideDateTime(sched.planned_end_val);
+        simEnd.addDaysLocalTime(shiftDays);
+
+        var conflicts = [];
+        for (var j = 0; j < state.schedules.length; j++) {
+            var other = state.schedules[j];
+            if (other.sys_id === schedId || other.resource_id !== sched.resource_id) continue;
+            var otherStart = new GlideDateTime(other.planned_start_val);
+            var otherEnd = new GlideDateTime(other.planned_end_val);
+            if (simStart.compareTo(otherEnd) < 0 && simEnd.compareTo(otherStart) > 0) {
+                conflicts.push({
+                    schedule_number: other.number, order_display: other.production_order_display,
+                    overlap_start: simStart.compareTo(otherStart) > 0 ? simStart.getDisplayValue() : otherStart.getDisplayValue(),
+                    overlap_end: simEnd.compareTo(otherEnd) < 0 ? simEnd.getDisplayValue() : otherEnd.getDisplayValue()
+                });
+            }
+        }
+
+        return {
+            simulated: state.summary,
+            affectedSchedules: [{
+                schedule_number: sched.number, order_display: sched.production_order_display,
+                resource_display: sched.resource_display,
+                current_start: sched.planned_start, current_end: sched.planned_end,
+                simulated_start: simStart.getDisplayValue(), simulated_end: simEnd.getDisplayValue(),
+                shift_days: shiftDays, status: sched.statusDisplay, conflicts: conflicts
+            }],
+            affectedOrders: [sched.production_order_display],
+            impact: { affectedOrderCount: 1, totalDelayDays: shiftDays > 0 ? shiftDays : 0, shiftDays: shiftDays, conflictCount: conflicts.length, scheduleNumber: sched.number }
+        };
+    },
+
+    /** Legacy GlideAjax entry point. */
+    evaluateDisruption: function() {
+        var asset = this.getParameter('sysparm_asset') || '';
+        var hours = parseInt(this.getParameter('sysparm_hours') || '0');
+        var days = Math.max(1, Math.ceil(hours / 24));
+
+        var gr = new GlideRecord(this.RES_TABLE);
+        gr.addQuery('active', true);
+        if (asset) gr.addQuery('resource_name', 'CONTAINS', asset);
+        gr.setLimit(1);
+        gr.query();
+
+        if (gr.next()) {
+            return JSON.stringify(this.simulate({
+                scenario_type: 'resource_down',
+                target_resource_id: gr.getValue('sys_id'),
+                duration_days: days
+            }));
+        }
+        return JSON.stringify({ success: false, error: 'No matching resource found' });
+    },
+
+    type: 'WhatIfSimulationEngine'
+});
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-29 05:23:34</sys_created_on>
+        <sys_id>5aafacf253e3471045b132a0a0490e58</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>WhatIfSimulationEngine</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_5aafacf253e3471045b132a0a0490e58</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-29 05:23:34</sys_updated_on>
+    </sys_script_include>
+<sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</application>
+        <file_path/>
+        <instance_id>d54cbdd33b670f50677f04e0b5e45a3f</instance_id>
+        <instance_name>dev449829</instance_name>
+        <merge_base/>
+        <name>sys_script_include_5aafacf253e3471045b132a0a0490e58</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_script_include"&gt;
+    &lt;sys_script_include action="INSERT_OR_UPDATE"&gt;
+        &lt;access&gt;public&lt;/access&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;api_name&gt;x_2056099_indust_0.WhatIfSimulationEngine&lt;/api_name&gt;
+        &lt;caller_access/&gt;
+        &lt;client_callable&gt;true&lt;/client_callable&gt;
+        &lt;description&gt;Digital Twin simulation and adaptive scheduling engine for industrial valve manufacturing.&lt;/description&gt;
+        &lt;mobile_callable&gt;false&lt;/mobile_callable&gt;
+        &lt;name&gt;WhatIfSimulationEngine&lt;/name&gt;
+        &lt;sandbox_callable&gt;false&lt;/sandbox_callable&gt;
+        &lt;script&gt;&lt;![CDATA[/**
+ * WhatIfSimulationEngine
+ *
+ * Non-destructive simulation engine for production What-If analysis.
+ * Reads live production data (orders, schedules, resources, materials)
+ * and calculates simulated alternatives WITHOUT modifying any records.
+ *
+ * Supported scenario types:
+ *   resource_down        – resource unavailable + adaptive rescheduling
+ *   capacity_reduction   – resource capacity drops by X%
+ *   quantity_change      – production order planned quantity changes
+ *   material_shortage    – available stock drops by X%
+ *   schedule_shift       – schedule start date shifts by N days
+ */
+var WhatIfSimulationEngine = Class.create();
+WhatIfSimulationEngine.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+
+    PO_TABLE: 'x_2056099_indust_0_production_order',
+    SCHED_TABLE: 'x_2056099_indust_0_prod_sched',
+    RES_TABLE: 'x_2056099_indust_0_prod_res',
+    MAT_TABLE: 'x_2056099_indust_0_production_material',
+    STOCK_TABLE: 'x_2056099_indust_0_inv_stock',
+    PRIORITY_RANK: { critical: 0, high: 1, medium: 2, low: 3 },
+
+    simulate: function(params) {
+        var type = params.scenario_type || '';
+        if (!type) return { success: false, error: 'scenario_type is required' };
+
+        var state = this._loadCurrentState();
+        if (state.resources.length === 0 &amp;&amp; state.schedules.length === 0) {
+            return {
+                success: true, empty: true,
+                message: 'No active production resources or schedules found. Create production data to run simulations.',
+                current: state.summary, simulated: state.summary,
+                affectedOrders: [], affectedSchedules: [],
+                impact: { totalDelayDays: 0, affectedOrderCount: 0, capacityImpactPct: 0 }
+            };
+        }
+
+        var result;
+        switch (type) {
+            case 'resource_down': result = this._simulateResourceDown(state, params); break;
+            case 'capacity_reduction': result = this._simulateCapacityReduction(state, params); break;
+            case 'quantity_change': result = this._simulateQuantityChange(state, params); break;
+            case 'material_shortage': result = this._simulateMaterialShortage(state, params); break;
+            case 'schedule_shift': result = this._simulateScheduleShift(state, params); break;
+            default: return { success: false, error: 'Unknown scenario_type: ' + type };
+        }
+
+        result.success = true;
+        result.scenario = params;
+        result.timestamp = new GlideDateTime().getDisplayValue();
+        result.current = state.summary;
+        return result;
+    },
+
+    /* ════════════════════ State Loader ════════════════════ */
+
+    _loadCurrentState: function() {
+        var resources = [];
+        var gr = new GlideRecord(this.RES_TABLE);
+        gr.addQuery('active', true);
+        gr.query();
+        while (gr.next()) {
+            resources.push({
+                sys_id: gr.getValue('sys_id'),
+                name: gr.getValue('resource_name'),
+                status: gr.getValue('status'),
+                statusDisplay: gr.getDisplayValue('status'),
+                capacity_per_day: parseFloat(gr.getValue('capacity_per_day')) || 0,
+                efficiency: parseFloat(gr.getValue('efficiency_percentage')) || 100,
+                maintenance_required: gr.getValue('maintenance_required') == '1',
+                resource_type: gr.getDisplayValue('resource_type')
+            });
+        }
+
+        var schedules = [];
+        gr = new GlideRecord(this.SCHED_TABLE);
+        gr.addQuery('active', true);
+        gr.addQuery('status', 'IN', 'draft,scheduled,confirmed,in_progress');
+        gr.query();
+        while (gr.next()) {
+            var start = new GlideDateTime(gr.getValue('planned_start'));
+            var end = new GlideDateTime(gr.getValue('planned_end'));
+            var durationMs = GlideDateTime.subtract(start, end).getNumericValue();
+            var durationDays = Math.max(1, Math.ceil(durationMs / (1000 * 60 * 60 * 24)));
+            schedules.push({
+                sys_id: gr.getValue('sys_id'),
+                number: gr.getValue('number'),
+                production_order: gr.getValue('production_order'),
+                production_order_display: gr.getDisplayValue('production_order'),
+                resource_id: gr.getValue('production_resource'),
+                resource_display: gr.getDisplayValue('production_resource'),
+                planned_start: gr.getDisplayValue('planned_start'),
+                planned_end: gr.getDisplayValue('planned_end'),
+                planned_start_val: gr.getValue('planned_start'),
+                planned_end_val: gr.getValue('planned_end'),
+                planned_quantity: parseFloat(gr.getValue('planned_quantity')) || 0,
+                status: gr.getValue('status'),
+                statusDisplay: gr.getDisplayValue('status'),
+                priority: gr.getValue('priority'),
+                duration_days: durationDays
+            });
+        }
+
+        var orders = [];
+        gr = new GlideRecord(this.PO_TABLE);
+        gr.addQuery('active', true);
+        gr.addQuery('status', 'NOT IN', 'completed,cancelled');
+        gr.query();
+        while (gr.next()) {
+            orders.push({
+                sys_id: gr.getValue('sys_id'),
+                number: gr.getValue('number'),
+                status: gr.getValue('status'),
+                statusDisplay: gr.getDisplayValue('status'),
+                quantity_planned: parseFloat(gr.getValue('quantity_planned')) || 0,
+                quantity_produced: parseFloat(gr.getValue('quantity_produced')) || 0,
+                quantity_remaining: parseFloat(gr.getValue('quantity_remaining')) || 0,
+                finished_product: gr.getDisplayValue('finished_product'),
+                priority: gr.getValue('priority'),
+                assigned_resource: gr.getValue('assigned_resource'),
+                assigned_resource_display: gr.getDisplayValue('assigned_resource')
+            });
+        }
+
+        return {
+            resources: resources, schedules: schedules, orders: orders,
+            summary: {
+                totalResources: resources.length,
+                availableResources: resources.filter(function(r) { return r.status === 'available'; }).length,
+                activeSchedules: schedules.length,
+                activeOrders: orders.length
+            }
+        };
+    },
+
+    /* ════════════════ Resource Down + Adaptive Rescheduling ════════════════ */
+
+    _simulateResourceDown: function(state, params) {
+        var resId = params.target_resource_id;
+        var days = parseInt(params.duration_days) || 1;
+        if (!resId) return { success: false, error: 'target_resource_id is required' };
+
+        var resource = null;
+        for (var i = 0; i &lt; state.resources.length; i++) {
+            if (state.resources[i].sys_id === resId) { resource = state.resources[i]; break; }
+        }
+        if (!resource) return { success: false, error: 'Resource not found' };
+
+        var now = new GlideDateTime();
+        var downEnd = new GlideDateTime(now);
+        downEnd.addDaysLocalTime(days);
+
+        // ── 1. Identify affected schedules ──
+        var affectedRaw = [];
+        for (var j = 0; j &lt; state.schedules.length; j++) {
+            var sched = state.schedules[j];
+            if (sched.resource_id !== resId) continue;
+            var schedStart = new GlideDateTime(sched.planned_start_val);
+            var schedEnd = new GlideDateTime(sched.planned_end_val);
+            if (schedStart.compareTo(downEnd) &lt; 0 &amp;&amp; schedEnd.compareTo(now) &gt; 0) {
+                affectedRaw.push(sched);
+            }
+        }
+
+        if (affectedRaw.length === 0) {
+            return {
+                simulated: {
+                    totalResources: state.summary.totalResources,
+                    availableResources: state.summary.availableResources - 1,
+                    activeSchedules: state.summary.activeSchedules,
+                    activeOrders: state.summary.activeOrders
+                },
+                affectedSchedules: [],
+                affectedOrders: [],
+                adaptiveProposals: [],
+                impact: { affectedOrderCount: 0, totalDelayDays: 0, capacityImpactPct: 0,
+                    resourceName: resource.name, downtimeDays: days,
+                    reassignedCount: 0, unrecoverableCount: 0 }
+            };
+        }
+
+        // ── 2. Sort affected by priority (reuse ProductionScheduler pattern) ──
+        var self = this;
+        affectedRaw.sort(function(a, b) {
+            var ra = self._getPriorityRank(a.priority);
+            var rb = self._getPriorityRank(b.priority);
+            if (ra !== rb) return ra - rb;
+            var sa = new GlideDateTime(a.planned_start_val);
+            var sb = new GlideDateTime(b.planned_start_val);
+            return sa.compareTo(sb);
+        });
+
+        // ── 3. Build virtual schedule map (in-memory) ──
+        // Maps resource_id → array of { start_val, end_val } representing occupied slots.
+        // Initialized from ALL live schedules (excluding those on the failed resource).
+        var virtualSlots = {};
+        for (var s = 0; s &lt; state.schedules.length; s++) {
+            var sc = state.schedules[s];
+            if (sc.resource_id === resId) continue; // skip failed resource
+            if (!virtualSlots[sc.resource_id]) virtualSlots[sc.resource_id] = [];
+            virtualSlots[sc.resource_id].push({
+                start_val: sc.planned_start_val,
+                end_val: sc.planned_end_val
+            });
+        }
+
+        // ── 4. Find candidate resources (reuse ProductionScheduler feasibility rules) ──
+        var candidateResources = [];
+        for (var c = 0; c &lt; state.resources.length; c++) {
+            var cr = state.resources[c];
+            if (cr.sys_id === resId) continue;  // exclude failed resource
+            if (cr.status !== 'available') continue;
+            if (cr.maintenance_required) continue;
+            if (cr.capacity_per_day &lt;= 0) continue;
+            candidateResources.push(cr);
+        }
+
+        // ── 5. Adaptive rescheduling: process each affected schedule in priority order ──
+        var proposals = [];
+        var affectedSchedules = [];
+        var reassignedCount = 0;
+        var unrecoverableCount = 0;
+        var totalDelayBefore = 0;
+        var totalDelayAfter = 0;
+
+        for (var a = 0; a &lt; affectedRaw.length; a++) {
+            var aff = affectedRaw[a];
+            var poId = aff.production_order;
+
+            // Find the production order for this schedule
+            var order = null;
+            for (var o = 0; o &lt; state.orders.length; o++) {
+                if (state.orders[o].sys_id === poId) { order = state.orders[o]; break; }
+            }
+
+            var delayBefore = days;
+            totalDelayBefore += delayBefore;
+
+            var delayedEnd = new GlideDateTime(aff.planned_end_val);
+            delayedEnd.addDaysLocalTime(days);
+
+            // Record the basic affected schedule info
+            var affEntry = {
+                schedule_number: aff.number,
+                order_display: aff.production_order_display,
+                resource_display: aff.resource_display,
+                current_start: aff.planned_start,
+                current_end: aff.planned_end,
+                simulated_end: delayedEnd.getDisplayValue(),
+                delay_days: days,
+                status: aff.statusDisplay,
+                priority: aff.priority
+            };
+            affectedSchedules.push(affEntry);
+
+            // Try to find an alternative resource
+            var bestCandidate = null;
+            var bestStart = null;
+            var bestEnd = null;
+            var bestDays = 0;
+
+            for (var r = 0; r &lt; candidateResources.length; r++) {
+                var cand = candidateResources[r];
+                var effectiveCapacity = cand.capacity_per_day * (cand.efficiency / 100);
+                if (effectiveCapacity &lt;= 0) continue;
+
+                var daysNeeded = Math.ceil(aff.planned_quantity / effectiveCapacity);
+                if (daysNeeded &lt; 1) daysNeeded = 1;
+
+                // Find earliest slot on this candidate using virtual schedule
+                var slot = this._findEarliestVirtualSlot(
+                    cand.sys_id, daysNeeded, now, virtualSlots
+                );
+
+                if (!slot) continue;
+
+                // Pick the candidate with the earliest start, then highest capacity
+                if (!bestCandidate ||
+                    slot.start.compareTo(bestStart) &lt; 0 ||
+                    (slot.start.compareTo(bestStart) === 0 &amp;&amp; effectiveCapacity &gt; bestCandidate.effectiveCapacity)) {
+                    bestCandidate = {
+                        sys_id: cand.sys_id,
+                        name: cand.name,
+                        capacity_per_day: cand.capacity_per_day,
+                        efficiency: cand.efficiency,
+                        effectiveCapacity: effectiveCapacity,
+                        resource_type: cand.resource_type
+                    };
+                    bestStart = slot.start;
+                    bestEnd = slot.end;
+                    bestDays = daysNeeded;
+                }
+            }
+
+            if (bestCandidate) {
+                // Register this assignment in the virtual schedule to prevent overlaps
+                if (!virtualSlots[bestCandidate.sys_id]) virtualSlots[bestCandidate.sys_id] = [];
+                virtualSlots[bestCandidate.sys_id].push({
+                    start_val: bestStart.getValue(),
+                    end_val: bestEnd.getValue()
+                });
+
+                var adaptiveDelay = 0;
+                var origStart = new GlideDateTime(aff.planned_start_val);
+                if (bestStart.compareTo(origStart) &gt; 0) {
+                    var delayMs = GlideDateTime.subtract(origStart, bestStart).getNumericValue();
+                    adaptiveDelay = Math.ceil(delayMs / (1000 * 60 * 60 * 24));
+                }
+                totalDelayAfter += adaptiveDelay;
+
+                proposals.push({
+                    schedule_number: aff.number,
+                    order_display: aff.production_order_display,
+                    priority: aff.priority,
+                    original_resource: aff.resource_display,
+                    proposed_resource: bestCandidate.name,
+                    proposed_resource_type: bestCandidate.resource_type,
+                    proposed_capacity: bestCandidate.capacity_per_day,
+                    proposed_efficiency: bestCandidate.efficiency,
+                    current_start: aff.planned_start,
+                    current_end: aff.planned_end,
+                    proposed_start: bestStart.getDisplayValue(),
+                    proposed_end: bestEnd.getDisplayValue(),
+                    proposed_duration_days: bestDays,
+                    delay_before_adaptation: delayBefore,
+                    delay_after_adaptation: adaptiveDelay,
+                    delay_recovered: delayBefore - adaptiveDelay,
+                    feasible: true,
+                    reassigned: true,
+                    reason: 'Reassigned from ' + resource.name + ' to ' + bestCandidate.name
+                });
+                reassignedCount++;
+            } else {
+                totalDelayAfter += delayBefore;
+                var reasons = [];
+                if (candidateResources.length === 0) {
+                    reasons.push('No alternative resources are active, available, and have capacity');
+                } else {
+                    reasons.push('All ' + candidateResources.length + ' candidate resource(s) have scheduling conflicts or insufficient slots');
+                }
+
+                proposals.push({
+                    schedule_number: aff.number,
+                    order_display: aff.production_order_display,
+                    priority: aff.priority,
+                    original_resource: aff.resource_display,
+                    proposed_resource: null,
+                    current_start: aff.planned_start,
+                    current_end: aff.planned_end,
+                    proposed_start: aff.planned_start,
+                    proposed_end: delayedEnd.getDisplayValue(),
+                    delay_before_adaptation: delayBefore,
+                    delay_after_adaptation: delayBefore,
+                    delay_recovered: 0,
+                    feasible: false,
+                    reassigned: false,
+                    reason: reasons.join('. ')
+                });
+                unrecoverableCount++;
+            }
+        }
+
+        return {
+            simulated: {
+                totalResources: state.summary.totalResources,
+                availableResources: state.summary.availableResources - 1,
+                activeSchedules: state.summary.activeSchedules,
+                activeOrders: state.summary.activeOrders
+            },
+            affectedSchedules: affectedSchedules,
+            affectedOrders: affectedSchedules.map(function(a) { return a.order_display; }),
+            adaptiveProposals: proposals,
+            impact: {
+                affectedOrderCount: affectedRaw.length,
+                totalDelayDays: totalDelayBefore,
+                adaptiveDelayDays: totalDelayAfter,
+                delayRecoveredDays: totalDelayBefore - totalDelayAfter,
+                capacityImpactPct: state.resources.length &gt; 0 ? Math.round((1 / state.resources.length) * 100) : 0,
+                resourceName: resource.name,
+                downtimeDays: days,
+                reassignedCount: reassignedCount,
+                unrecoverableCount: unrecoverableCount,
+                candidateResourcesEvaluated: candidateResources.length
+            }
+        };
+    },
+
+    /* ════════════════ In-Memory Slot Finder ════════════════ */
+
+    /**
+     * Finds the earliest conflict-free slot on a resource using the
+     * in-memory virtual schedule (no DB writes). Mirrors ProductionScheduler._findEarliestSlot.
+     */
+    _findEarliestVirtualSlot: function(resourceId, daysNeeded, startFrom, virtualSlots) {
+        var candidateStart = new GlideDateTime(startFrom);
+        var slots = virtualSlots[resourceId] || [];
+        var MAX_ITER = 50;
+
+        for (var i = 0; i &lt; MAX_ITER; i++) {
+            var candidateEnd = new GlideDateTime(candidateStart);
+            candidateEnd.addDaysLocalTime(daysNeeded);
+
+            var conflict = false;
+            var latestConflictEnd = null;
+
+            for (var s = 0; s &lt; slots.length; s++) {
+                var slotStart = new GlideDateTime(slots[s].start_val);
+                var slotEnd = new GlideDateTime(slots[s].end_val);
+
+                if (candidateStart.compareTo(slotEnd) &lt; 0 &amp;&amp; candidateEnd.compareTo(slotStart) &gt; 0) {
+                    conflict = true;
+                    if (!latestConflictEnd || slotEnd.compareTo(latestConflictEnd) &gt; 0) {
+                        latestConflictEnd = slotEnd;
+                    }
+                }
+            }
+
+            if (!conflict) {
+                return { start: candidateStart, end: candidateEnd };
+            }
+
+            candidateStart = new GlideDateTime(latestConflictEnd);
+        }
+
+        return null;
+    },
+
+    _getPriorityRank: function(priority) {
+        var rank = this.PRIORITY_RANK[priority];
+        return (rank !== undefined) ? rank : 99;
+    },
+
+    /* ════════════════ Capacity Reduction ════════════════ */
+
+    _simulateCapacityReduction: function(state, params) {
+        var resId = params.target_resource_id;
+        var reductionPct = parseFloat(params.capacity_reduction_pct) || 0;
+        if (!resId) return { success: false, error: 'target_resource_id is required' };
+        if (reductionPct &lt;= 0 || reductionPct &gt;= 100) return { success: false, error: 'capacity_reduction_pct must be between 1 and 99' };
+
+        var resource = null;
+        for (var i = 0; i &lt; state.resources.length; i++) {
+            if (state.resources[i].sys_id === resId) { resource = state.resources[i]; break; }
+        }
+        if (!resource) return { success: false, error: 'Resource not found' };
+
+        var factor = 1 / (1 - reductionPct / 100);
+        var affected = [];
+        for (var j = 0; j &lt; state.schedules.length; j++) {
+            var sched = state.schedules[j];
+            if (sched.resource_id !== resId) continue;
+            var newDuration = Math.ceil(sched.duration_days * factor);
+            var extraDays = newDuration - sched.duration_days;
+            if (extraDays &gt; 0) {
+                var simEnd = new GlideDateTime(sched.planned_start_val);
+                simEnd.addDaysLocalTime(newDuration);
+                affected.push({
+                    schedule_number: sched.number, order_display: sched.production_order_display,
+                    resource_display: sched.resource_display,
+                    current_start: sched.planned_start, current_end: sched.planned_end,
+                    simulated_end: simEnd.getDisplayValue(), delay_days: extraDays,
+                    original_duration: sched.duration_days, simulated_duration: newDuration,
+                    status: sched.statusDisplay
+                });
+            }
+        }
+        var totalDelay = 0;
+        for (var k = 0; k &lt; affected.length; k++) totalDelay += affected[k].delay_days;
+
+        return {
+            simulated: { totalResources: state.summary.totalResources, availableResources: state.summary.availableResources, activeSchedules: state.summary.activeSchedules, activeOrders: state.summary.activeOrders },
+            affectedSchedules: affected,
+            affectedOrders: affected.map(function(a) { return a.order_display; }),
+            impact: { affectedOrderCount: affected.length, totalDelayDays: totalDelay, capacityImpactPct: Math.round(reductionPct), resourceName: resource.name, originalCapacity: resource.capacity_per_day, simulatedCapacity: Math.round(resource.capacity_per_day * (1 - reductionPct / 100) * 100) / 100 }
+        };
+    },
+
+    /* ════════════════ Quantity Change ════════════════ */
+
+    _simulateQuantityChange: function(state, params) {
+        var orderId = params.target_order_id;
+        var newQty = parseFloat(params.new_quantity);
+        if (!orderId) return { success: false, error: 'target_order_id is required' };
+        if (isNaN(newQty) || newQty &lt;= 0) return { success: false, error: 'new_quantity must be positive' };
+
+        var order = null;
+        for (var i = 0; i &lt; state.orders.length; i++) {
+            if (state.orders[i].sys_id === orderId) { order = state.orders[i]; break; }
+        }
+        if (!order) return { success: false, error: 'Production Order not found' };
+
+        var affected = [];
+        for (var j = 0; j &lt; state.schedules.length; j++) {
+            var sched = state.schedules[j];
+            if (sched.production_order !== orderId) continue;
+            var resObj = null;
+            for (var k = 0; k &lt; state.resources.length; k++) {
+                if (state.resources[k].sys_id === sched.resource_id) { resObj = state.resources[k]; break; }
+            }
+            var cap = resObj ? resObj.capacity_per_day : 0;
+            var newDays = cap &gt; 0 ? Math.ceil(newQty / cap) : sched.duration_days;
+            var extraDays = newDays - sched.duration_days;
+            var simEnd = new GlideDateTime(sched.planned_start_val);
+            simEnd.addDaysLocalTime(newDays);
+            affected.push({
+                schedule_number: sched.number, order_display: sched.production_order_display,
+                resource_display: sched.resource_display,
+                current_start: sched.planned_start, current_end: sched.planned_end,
+                simulated_end: simEnd.getDisplayValue(),
+                delay_days: extraDays &gt; 0 ? extraDays : 0, gained_days: extraDays &lt; 0 ? Math.abs(extraDays) : 0,
+                original_quantity: order.quantity_planned, simulated_quantity: newQty, status: sched.statusDisplay
+            });
+        }
+        return {
+            simulated: state.summary, affectedSchedules: affected, affectedOrders: [order.number],
+            impact: { affectedOrderCount: 1, totalDelayDays: affected.reduce(function(sum, a) { return sum + a.delay_days; }, 0), quantityDelta: newQty - order.quantity_planned, orderNumber: order.number }
+        };
+    },
+
+    /* ════════════════ Material Shortage ════════════════ */
+
+    _simulateMaterialShortage: function(state, params) {
+        var materialId = params.material_product_id;
+        var shortagePct = parseFloat(params.shortage_pct) || 0;
+        if (!materialId) return { success: false, error: 'material_product_id is required' };
+        if (shortagePct &lt;= 0 || shortagePct &gt; 100) return { success: false, error: 'shortage_pct must be between 1 and 100' };
+
+        var stockGa = new GlideAggregate(this.STOCK_TABLE);
+        stockGa.addQuery('material_product', materialId);
+        stockGa.addQuery('active', true);
+        stockGa.addAggregate('SUM', 'available_quantity');
+        stockGa.query();
+        var currentStock = 0;
+        if (stockGa.next()) currentStock = parseFloat(stockGa.getAggregate('SUM', 'available_quantity')) || 0;
+        var simulatedStock = Math.round(currentStock * (1 - shortagePct / 100) * 100) / 100;
+
+        var matGr = new GlideRecord(this.MAT_TABLE);
+        matGr.addQuery('material_product', materialId);
+        matGr.addQuery('active', true);
+        matGr.addQuery('status', 'NOT IN', 'fully_issued,cancelled');
+        matGr.query();
+
+        var affectedOrders = [];
+        while (matGr.next()) {
+            var remaining = parseFloat(matGr.getValue('remaining_quantity')) || 0;
+            if (remaining &gt; 0) {
+                var canFulfill = simulatedStock &gt;= remaining;
+                affectedOrders.push({
+                    order_display: matGr.getDisplayValue('production_order'),
+                    material_display: matGr.getDisplayValue('material_product'),
+                    required_remaining: remaining, simulated_available: simulatedStock,
+                    shortfall: canFulfill ? 0 : remaining - simulatedStock,
+                    can_fulfill: canFulfill, material_status: matGr.getDisplayValue('status')
+                });
+            }
+        }
+
+        var matName = '';
+        var matMaster = new GlideRecord('x_2056099_indust_0_mat_master');
+        if (matMaster.get(materialId)) matName = matMaster.getValue('material_name');
+
+        return {
+            simulated: state.summary, affectedSchedules: [], affectedOrders: affectedOrders,
+            impact: { affectedOrderCount: affectedOrders.length, totalDelayDays: 0, materialName: matName,
+                currentStock: currentStock, simulatedStock: simulatedStock, shortagePct: shortagePct,
+                ordersWithShortfall: affectedOrders.filter(function(o) { return !o.can_fulfill; }).length }
+        };
+    },
+
+    /* ════════════════ Schedule Shift ════════════════ */
+
+    _simulateScheduleShift: function(state, params) {
+        var schedId = params.target_schedule_id;
+        var shiftDays = parseInt(params.shift_days) || 0;
+        if (!schedId) return { success: false, error: 'target_schedule_id is required' };
+        if (shiftDays === 0) return { success: false, error: 'shift_days must be non-zero' };
+
+        var sched = null;
+        for (var i = 0; i &lt; state.schedules.length; i++) {
+            if (state.schedules[i].sys_id === schedId) { sched = state.schedules[i]; break; }
+        }
+        if (!sched) return { success: false, error: 'Schedule not found' };
+
+        var simStart = new GlideDateTime(sched.planned_start_val);
+        simStart.addDaysLocalTime(shiftDays);
+        var simEnd = new GlideDateTime(sched.planned_end_val);
+        simEnd.addDaysLocalTime(shiftDays);
+
+        var conflicts = [];
+        for (var j = 0; j &lt; state.schedules.length; j++) {
+            var other = state.schedules[j];
+            if (other.sys_id === schedId || other.resource_id !== sched.resource_id) continue;
+            var otherStart = new GlideDateTime(other.planned_start_val);
+            var otherEnd = new GlideDateTime(other.planned_end_val);
+            if (simStart.compareTo(otherEnd) &lt; 0 &amp;&amp; simEnd.compareTo(otherStart) &gt; 0) {
+                conflicts.push({
+                    schedule_number: other.number, order_display: other.production_order_display,
+                    overlap_start: simStart.compareTo(otherStart) &gt; 0 ? simStart.getDisplayValue() : otherStart.getDisplayValue(),
+                    overlap_end: simEnd.compareTo(otherEnd) &lt; 0 ? simEnd.getDisplayValue() : otherEnd.getDisplayValue()
+                });
+            }
+        }
+
+        return {
+            simulated: state.summary,
+            affectedSchedules: [{
+                schedule_number: sched.number, order_display: sched.production_order_display,
+                resource_display: sched.resource_display,
+                current_start: sched.planned_start, current_end: sched.planned_end,
+                simulated_start: simStart.getDisplayValue(), simulated_end: simEnd.getDisplayValue(),
+                shift_days: shiftDays, status: sched.statusDisplay, conflicts: conflicts
+            }],
+            affectedOrders: [sched.production_order_display],
+            impact: { affectedOrderCount: 1, totalDelayDays: shiftDays &gt; 0 ? shiftDays : 0, shiftDays: shiftDays, conflictCount: conflicts.length, scheduleNumber: sched.number }
+        };
+    },
+
+    /** Legacy GlideAjax entry point. */
+    evaluateDisruption: function() {
+        var asset = this.getParameter('sysparm_asset') || '';
+        var hours = parseInt(this.getParameter('sysparm_hours') || '0');
+        var days = Math.max(1, Math.ceil(hours / 24));
+
+        var gr = new GlideRecord(this.RES_TABLE);
+        gr.addQuery('active', true);
+        if (asset) gr.addQuery('resource_name', 'CONTAINS', asset);
+        gr.setLimit(1);
+        gr.query();
+
+        if (gr.next()) {
+            return JSON.stringify(this.simulate({
+                scenario_type: 'resource_down',
+                target_resource_id: gr.getValue('sys_id'),
+                duration_days: days
+            }));
+        }
+        return JSON.stringify({ success: false, error: 'No matching resource found' });
+    },
+
+    type: 'WhatIfSimulationEngine'
+});
+]]&gt;&lt;/script&gt;
+        &lt;sys_class_name&gt;sys_script_include&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-09-29 05:23:34&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;5aafacf253e3471045b132a0a0490e58&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;WhatIfSimulationEngine&lt;/sys_name&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_script_include_5aafacf253e3471045b132a0a0490e58&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-09-29 05:23:34&lt;/sys_updated_on&gt;
+    &lt;/sys_script_include&gt;
+&lt;/record_update&gt;</payload>
+        <payload_hash>1766877017</payload_hash>
+        <record_name>WhatIfSimulationEngine</record_name>
+        <reverted_from/>
+        <source>76317bf747ab0710527276a4416d436b</source>
+        <source_table>sys_upgrade_history</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 22:07:52</sys_created_on>
+        <sys_id>76427bb347eb0710527276a4416d436b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a0fea8d5a00000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 22:07:52</sys_updated_on>
+        <type>Script Include</type>
+        <update_guid>36427bb3bbeb0710a5974290ebe2666b</update_guid>
+        <update_guid_history>36427bb3bbeb0710a5974290ebe2666b:1766877017</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 22:19:40</sys_created_on>
+        <sys_db_object display_value="" name="sys_script_include">sys_script_include</sys_db_object>
+        <sys_id>9a85b52ec10548eca7e95b239ef066e9</sys_id>
+        <sys_metadata>5aafacf253e3471045b132a0a0490e58</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>WhatIfSimulationEngine</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_scope_delete display_value="">3325c354032d4b36a9e117288ded1fc4</sys_scope_delete>
+        <sys_update_name>sys_script_include_5aafacf253e3471045b132a0a0490e58</sys_update_name>
+        <sys_update_version display_value="sys_script_include_5aafacf253e3471045b132a0a0490e58">76427bb347eb0710527276a4416d436b</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 22:19:40</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

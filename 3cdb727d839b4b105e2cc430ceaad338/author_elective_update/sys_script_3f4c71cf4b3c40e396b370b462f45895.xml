@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="DELETE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>false</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_inv_req</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition table="x_2056099_indust_0_inv_req">request_type=inventory_transfer^statusCHANGESTOin_progress<item display_value="Inventory Transfer" endquery="false" field="request_type" goto="false" newquery="false" operator="=" or="false" value="inventory_transfer"/>
+            <item display_value="In Progress" endquery="false" field="status" goto="false" newquery="false" operator="CHANGESTO" or="false" value="in_progress"/>
+        </filter_condition>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Process Inter-Warehouse Stock Transfer</name>
+        <order>200</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[/**
+ * Inter-Warehouse Stock Transfer Processor
+ *
+ * IIFE script for the async Business Rule on inv_req.
+ * Triggered when request_type=inventory_transfer and status changes to in_progress.
+ *
+ * - Does NOT modify available_quantity directly; modifies total_quantity
+ *   and lets the existing "Calculate Available Qty" BR recalculate it.
+ * - Scoped to inventory_transfer only.
+ * - Enforces safety-stock-aware fulfillment: medium/low priority transfers
+ *   that would breach safety_stock are rejected BEFORE source stock is modified.
+ */
+(function executeRule(current, previous) {
+    var reqSysId = current.getUniqueValue();
+    var materialProduct = current.getValue('material_product');
+    var sourceLocation = current.getValue('source_location');
+    var destinationLocation = current.getValue('destination_location');
+    var quantityRequested = parseFloat(current.getValue('quantity_requested')) || 0;
+    var requestedBy = current.getValue('requested_by');
+    var inventoryType = current.getValue('inventory_type');
+    var requestPriority = current.getValue('priority');
+
+    function rejectRequest(reason) {
+        var req = new GlideRecord('x_2056099_indust_0_inv_req');
+        if (req.get(reqSysId)) {
+            req.setValue('status', 'rejected');
+            req.setValue('reason', reason);
+            req.update();
+        }
+        gs.warn('Stock transfer rejected [' + reqSysId + ']: ' + reason);
+    }
+
+    // === VALIDATION ===
+
+    if (!sourceLocation || !destinationLocation) {
+        rejectRequest('Both source and destination locations must be specified.');
+        return;
+    }
+    if (sourceLocation === destinationLocation) {
+        rejectRequest('Source and destination locations must be different.');
+        return;
+    }
+    if (quantityRequested <= 0) {
+        rejectRequest('Transfer quantity must be greater than zero.');
+        return;
+    }
+    if (!materialProduct) {
+        rejectRequest('Material/Product must be specified.');
+        return;
+    }
+
+    // === FIND SOURCE STOCK ===
+    var sourceStock = new GlideRecord('x_2056099_indust_0_inv_stock');
+    sourceStock.addQuery('material_product', materialProduct);
+    sourceStock.addQuery('location', sourceLocation);
+    sourceStock.addQuery('active', true);
+    sourceStock.query();
+
+    if (!sourceStock.next()) {
+        rejectRequest('No active inventory stock found at the source location for the requested material.');
+        return;
+    }
+
+    var sourceAvailable = parseFloat(sourceStock.getValue('available_quantity')) || 0;
+    if (sourceAvailable < quantityRequested) {
+        rejectRequest('Insufficient available stock at source. Available: ' + sourceAvailable + ', Requested: ' + quantityRequested);
+        return;
+    }
+
+    // === SAFETY STOCK CHECK (pre-deduction) ===
+    var sourceSafetyStock = parseFloat(sourceStock.getValue('safety_stock')) || 0;
+    if (sourceSafetyStock > 0) {
+        var projectedAvailable = sourceAvailable - quantityRequested;
+        if (projectedAvailable < sourceSafetyStock) {
+            // Safety stock would be breached — check request priority
+            if (requestPriority !== 'critical' && requestPriority !== 'high') {
+                rejectRequest(
+                    'Transfer would reduce source stock below safety level. ' +
+                    'Projected available: ' + projectedAvailable.toFixed(2) +
+                    ', Safety stock: ' + sourceSafetyStock.toFixed(2) +
+                    '. Request priority is "' + requestPriority +
+                    '". Only critical or high priority transfers can override. ' +
+                    'Escalate priority or replenish source stock first.'
+                );
+                return;
+            }
+            // critical/high — allow; Safety Stock Monitoring flow will alert
+            gs.info('Transfer [' + reqSysId + ']: Allowing safety-stock override for ' + requestPriority + ' priority request.');
+        }
+    }
+
+    // === EXECUTE TRANSFER ===
+
+    // Step A: Deduct from source total_quantity (BR recalculates available)
+    var sourceTotal = parseFloat(sourceStock.getValue('total_quantity')) || 0;
+    sourceStock.setValue('total_quantity', (sourceTotal - quantityRequested).toString());
+    sourceStock.update();
+
+    // Step B: Find or create destination stock
+    var destStock = new GlideRecord('x_2056099_indust_0_inv_stock');
+    destStock.addQuery('material_product', materialProduct);
+    destStock.addQuery('location', destinationLocation);
+    destStock.addQuery('active', true);
+    destStock.query();
+
+    if (destStock.next()) {
+        var destTotal = parseFloat(destStock.getValue('total_quantity')) || 0;
+        destStock.setValue('total_quantity', (destTotal + quantityRequested).toString());
+        destStock.update();
+    } else {
+        var newStock = new GlideRecord('x_2056099_indust_0_inv_stock');
+        newStock.initialize();
+        newStock.setValue('material_product', materialProduct);
+        newStock.setValue('location', destinationLocation);
+        newStock.setValue('inventory_type', inventoryType || 'raw_materials');
+        newStock.setValue('total_quantity', quantityRequested.toString());
+        newStock.setValue('reserved_quantity', '0');
+        newStock.setValue('safety_stock', sourceStock.getValue('safety_stock') || '0');
+        newStock.setValue('reorder_level', sourceStock.getValue('reorder_level') || '0');
+        newStock.setValue('status', 'available');
+        newStock.setValue('active', 'true');
+        var batchLot = current.getValue('related_batch_lot');
+        if (batchLot) {
+            newStock.setValue('batch_lot', batchLot);
+        }
+        newStock.insert();
+    }
+
+    // Step C: Create transfer transaction
+    var txn = new GlideRecord('x_2056099_indust_0_inv_txn');
+    txn.initialize();
+    txn.setValue('transaction_type', 'transfer');
+    txn.setValue('material_product', materialProduct);
+    txn.setValue('inventory_stock', sourceStock.getUniqueValue());
+    txn.setValue('quantity', quantityRequested.toString());
+    txn.setValue('source_location', sourceLocation);
+    txn.setValue('destination_location', destinationLocation);
+    txn.setValue('requested_by', requestedBy);
+    txn.setValue('status', 'completed');
+    txn.setValue('transaction_date', new GlideDateTime().getValue());
+    var reqBatchLot = current.getValue('related_batch_lot');
+    if (reqBatchLot) {
+        txn.setValue('batch_lot', reqBatchLot);
+    }
+    var reason = current.getValue('reason');
+    if (reason) {
+        txn.setValue('reason', reason);
+    }
+    txn.insert();
+
+    // Step D: Complete the request
+    var reqComplete = new GlideRecord('x_2056099_indust_0_inv_req');
+    if (reqComplete.get(reqSysId)) {
+        reqComplete.setValue('status', 'completed');
+        reqComplete.setValue('completed_date', new GlideDateTime().getValue());
+        reqComplete.update();
+    }
+
+    gs.info('Stock transfer completed [' + reqSysId + ']: ' + quantityRequested + ' units from ' + sourceLocation + ' to ' + destinationLocation);
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-28 11:23:43</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>3f4c71cf4b3c40e396b370b462f45895</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Process Inter-Warehouse Stock Transfer</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_3f4c71cf4b3c40e396b370b462f45895</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-28 11:23:43</sys_updated_on>
+        <template/>
+        <when>async_always</when>
+    </sys_script>
+    <sys_translated_text action="DELETE" query="documentkey=3f4c71cf4b3c40e396b370b462f45895"/>
+<sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</application>
+        <file_path/>
+        <instance_id>d54cbdd33b670f50677f04e0b5e45a3f</instance_id>
+        <instance_name>dev449829</instance_name>
+        <merge_base/>
+        <name>sys_script_3f4c71cf4b3c40e396b370b462f45895</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update sys_domain="global" table="sys_script"&gt;
+    &lt;sys_script action="INSERT_OR_UPDATE"&gt;
+        &lt;abort_action&gt;false&lt;/abort_action&gt;
+        &lt;access&gt;package_private&lt;/access&gt;
+        &lt;action_delete&gt;false&lt;/action_delete&gt;
+        &lt;action_insert&gt;false&lt;/action_insert&gt;
+        &lt;action_query&gt;false&lt;/action_query&gt;
+        &lt;action_update&gt;true&lt;/action_update&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;add_message&gt;false&lt;/add_message&gt;
+        &lt;advanced&gt;true&lt;/advanced&gt;
+        &lt;change_fields&gt;false&lt;/change_fields&gt;
+        &lt;client_callable&gt;false&lt;/client_callable&gt;
+        &lt;collection&gt;x_2056099_indust_0_inv_req&lt;/collection&gt;
+        &lt;condition/&gt;
+        &lt;description/&gt;
+        &lt;execute_function&gt;false&lt;/execute_function&gt;
+        &lt;filter_condition table="x_2056099_indust_0_inv_req"&gt;request_type=inventory_transfer^statusCHANGESTOin_progress&lt;item display_value="Inventory Transfer" endquery="false" field="request_type" goto="false" newquery="false" operator="=" or="false" value="inventory_transfer"/&gt;
+            &lt;item display_value="In Progress" endquery="false" field="status" goto="false" newquery="false" operator="CHANGESTO" or="false" value="in_progress"/&gt;
+        &lt;/filter_condition&gt;
+        &lt;is_rest&gt;false&lt;/is_rest&gt;
+        &lt;message/&gt;
+        &lt;name&gt;Process Inter-Warehouse Stock Transfer&lt;/name&gt;
+        &lt;order&gt;200&lt;/order&gt;
+        &lt;priority&gt;100&lt;/priority&gt;
+        &lt;rest_method/&gt;
+        &lt;rest_method_text/&gt;
+        &lt;rest_service/&gt;
+        &lt;rest_service_text/&gt;
+        &lt;rest_variables/&gt;
+        &lt;role_conditions/&gt;
+        &lt;script&gt;&lt;![CDATA[/**
+ * Inter-Warehouse Stock Transfer Processor
+ *
+ * IIFE script for the async Business Rule on inv_req.
+ * Triggered when request_type=inventory_transfer and status changes to in_progress.
+ *
+ * - Does NOT modify available_quantity directly; modifies total_quantity
+ *   and lets the existing "Calculate Available Qty" BR recalculate it.
+ * - Scoped to inventory_transfer only.
+ * - Enforces safety-stock-aware fulfillment: medium/low priority transfers
+ *   that would breach safety_stock are rejected BEFORE source stock is modified.
+ */
+(function executeRule(current, previous) {
+    var reqSysId = current.getUniqueValue();
+    var materialProduct = current.getValue('material_product');
+    var sourceLocation = current.getValue('source_location');
+    var destinationLocation = current.getValue('destination_location');
+    var quantityRequested = parseFloat(current.getValue('quantity_requested')) || 0;
+    var requestedBy = current.getValue('requested_by');
+    var inventoryType = current.getValue('inventory_type');
+    var requestPriority = current.getValue('priority');
+
+    function rejectRequest(reason) {
+        var req = new GlideRecord('x_2056099_indust_0_inv_req');
+        if (req.get(reqSysId)) {
+            req.setValue('status', 'rejected');
+            req.setValue('reason', reason);
+            req.update();
+        }
+        gs.warn('Stock transfer rejected [' + reqSysId + ']: ' + reason);
+    }
+
+    // === VALIDATION ===
+
+    if (!sourceLocation || !destinationLocation) {
+        rejectRequest('Both source and destination locations must be specified.');
+        return;
+    }
+    if (sourceLocation === destinationLocation) {
+        rejectRequest('Source and destination locations must be different.');
+        return;
+    }
+    if (quantityRequested &lt;= 0) {
+        rejectRequest('Transfer quantity must be greater than zero.');
+        return;
+    }
+    if (!materialProduct) {
+        rejectRequest('Material/Product must be specified.');
+        return;
+    }
+
+    // === FIND SOURCE STOCK ===
+    var sourceStock = new GlideRecord('x_2056099_indust_0_inv_stock');
+    sourceStock.addQuery('material_product', materialProduct);
+    sourceStock.addQuery('location', sourceLocation);
+    sourceStock.addQuery('active', true);
+    sourceStock.query();
+
+    if (!sourceStock.next()) {
+        rejectRequest('No active inventory stock found at the source location for the requested material.');
+        return;
+    }
+
+    var sourceAvailable = parseFloat(sourceStock.getValue('available_quantity')) || 0;
+    if (sourceAvailable &lt; quantityRequested) {
+        rejectRequest('Insufficient available stock at source. Available: ' + sourceAvailable + ', Requested: ' + quantityRequested);
+        return;
+    }
+
+    // === SAFETY STOCK CHECK (pre-deduction) ===
+    var sourceSafetyStock = parseFloat(sourceStock.getValue('safety_stock')) || 0;
+    if (sourceSafetyStock &gt; 0) {
+        var projectedAvailable = sourceAvailable - quantityRequested;
+        if (projectedAvailable &lt; sourceSafetyStock) {
+            // Safety stock would be breached — check request priority
+            if (requestPriority !== 'critical' &amp;&amp; requestPriority !== 'high') {
+                rejectRequest(
+                    'Transfer would reduce source stock below safety level. ' +
+                    'Projected available: ' + projectedAvailable.toFixed(2) +
+                    ', Safety stock: ' + sourceSafetyStock.toFixed(2) +
+                    '. Request priority is "' + requestPriority +
+                    '". Only critical or high priority transfers can override. ' +
+                    'Escalate priority or replenish source stock first.'
+                );
+                return;
+            }
+            // critical/high — allow; Safety Stock Monitoring flow will alert
+            gs.info('Transfer [' + reqSysId + ']: Allowing safety-stock override for ' + requestPriority + ' priority request.');
+        }
+    }
+
+    // === EXECUTE TRANSFER ===
+
+    // Step A: Deduct from source total_quantity (BR recalculates available)
+    var sourceTotal = parseFloat(sourceStock.getValue('total_quantity')) || 0;
+    sourceStock.setValue('total_quantity', (sourceTotal - quantityRequested).toString());
+    sourceStock.update();
+
+    // Step B: Find or create destination stock
+    var destStock = new GlideRecord('x_2056099_indust_0_inv_stock');
+    destStock.addQuery('material_product', materialProduct);
+    destStock.addQuery('location', destinationLocation);
+    destStock.addQuery('active', true);
+    destStock.query();
+
+    if (destStock.next()) {
+        var destTotal = parseFloat(destStock.getValue('total_quantity')) || 0;
+        destStock.setValue('total_quantity', (destTotal + quantityRequested).toString());
+        destStock.update();
+    } else {
+        var newStock = new GlideRecord('x_2056099_indust_0_inv_stock');
+        newStock.initialize();
+        newStock.setValue('material_product', materialProduct);
+        newStock.setValue('location', destinationLocation);
+        newStock.setValue('inventory_type', inventoryType || 'raw_materials');
+        newStock.setValue('total_quantity', quantityRequested.toString());
+        newStock.setValue('reserved_quantity', '0');
+        newStock.setValue('safety_stock', sourceStock.getValue('safety_stock') || '0');
+        newStock.setValue('reorder_level', sourceStock.getValue('reorder_level') || '0');
+        newStock.setValue('status', 'available');
+        newStock.setValue('active', 'true');
+        var batchLot = current.getValue('related_batch_lot');
+        if (batchLot) {
+            newStock.setValue('batch_lot', batchLot);
+        }
+        newStock.insert();
+    }
+
+    // Step C: Create transfer transaction
+    var txn = new GlideRecord('x_2056099_indust_0_inv_txn');
+    txn.initialize();
+    txn.setValue('transaction_type', 'transfer');
+    txn.setValue('material_product', materialProduct);
+    txn.setValue('inventory_stock', sourceStock.getUniqueValue());
+    txn.setValue('quantity', quantityRequested.toString());
+    txn.setValue('source_location', sourceLocation);
+    txn.setValue('destination_location', destinationLocation);
+    txn.setValue('requested_by', requestedBy);
+    txn.setValue('status', 'completed');
+    txn.setValue('transaction_date', new GlideDateTime().getValue());
+    var reqBatchLot = current.getValue('related_batch_lot');
+    if (reqBatchLot) {
+        txn.setValue('batch_lot', reqBatchLot);
+    }
+    var reason = current.getValue('reason');
+    if (reason) {
+        txn.setValue('reason', reason);
+    }
+    txn.insert();
+
+    // Step D: Complete the request
+    var reqComplete = new GlideRecord('x_2056099_indust_0_inv_req');
+    if (reqComplete.get(reqSysId)) {
+        reqComplete.setValue('status', 'completed');
+        reqComplete.setValue('completed_date', new GlideDateTime().getValue());
+        reqComplete.update();
+    }
+
+    gs.info('Stock transfer completed [' + reqSysId + ']: ' + quantityRequested + ' units from ' + sourceLocation + ' to ' + destinationLocation);
+})(current, previous);
+]]&gt;&lt;/script&gt;
+        &lt;sys_class_name&gt;sys_script&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-09-28 11:23:43&lt;/sys_created_on&gt;
+        &lt;sys_domain&gt;global&lt;/sys_domain&gt;
+        &lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;
+        &lt;sys_id&gt;3f4c71cf4b3c40e396b370b462f45895&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;Process Inter-Warehouse Stock Transfer&lt;/sys_name&gt;
+        &lt;sys_overrides/&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_script_3f4c71cf4b3c40e396b370b462f45895&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-09-28 11:23:43&lt;/sys_updated_on&gt;
+        &lt;template/&gt;
+        &lt;when&gt;async_always&lt;/when&gt;
+    &lt;/sys_script&gt;
+    &lt;sys_translated_text action="delete_multiple" query="documentkey=3f4c71cf4b3c40e396b370b462f45895"/&gt;
+&lt;/record_update&gt;</payload>
+        <payload_hash>-1070679827</payload_hash>
+        <record_name>Process Inter-Warehouse Stock Transfer</record_name>
+        <reverted_from/>
+        <source>76317bf747ab0710527276a4416d436b</source>
+        <source_table>sys_upgrade_history</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 22:07:52</sys_created_on>
+        <sys_id>b2427bb347eb0710527276a4416d435c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a0fea8d4d90000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 22:07:52</sys_updated_on>
+        <type>Business Rule</type>
+        <update_guid>72427bb30aeb0710ca66ec3d254bd95c</update_guid>
+        <update_guid_history>72427bb30aeb0710ca66ec3d254bd95c:-1070679827</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 22:19:39</sys_created_on>
+        <sys_db_object display_value="" name="sys_script">sys_script</sys_db_object>
+        <sys_id>49653044632649ec80aef5844fc60590</sys_id>
+        <sys_metadata>3f4c71cf4b3c40e396b370b462f45895</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Process Inter-Warehouse Stock Transfer</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_parent display_value="Inventory Request">44c43c7dae0346848816f13228410a4a</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_scope_delete display_value="">3325c354032d4b36a9e117288ded1fc4</sys_scope_delete>
+        <sys_update_name>sys_script_3f4c71cf4b3c40e396b370b462f45895</sys_update_name>
+        <sys_update_version display_value="sys_script_3f4c71cf4b3c40e396b370b462f45895">b2427bb347eb0710527276a4416d435c</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 22:19:39</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

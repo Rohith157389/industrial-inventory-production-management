@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="DELETE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>false</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_inv_stock</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Reorder Level Monitor</name>
+        <order>200</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[/**
+ * Reorder Level Monitor — Async BR on Inventory Stock
+ *
+ * Creates a reorder_required inventory alert when available_quantity
+ * reaches or falls below reorder_level. Purely INFORMATIONAL —
+ * never blocks or aborts any stock update.
+ *
+ * Duplicate prevention: checks for existing OPEN alert where
+ * inventory_stock = this stock AND alert_type = reorder_required.
+ * Does NOT suppress reorder alerts because a below_safety_stock
+ * alert exists — both types may coexist.
+ *
+ * Severity:
+ *   medium — available <= reorder_level AND available > safety_stock
+ *   high   — available <= reorder_level AND available <= safety_stock
+ *
+ * Uses ONLY inv_stock.reorder_level (not mat_master.reorder_level).
+ */
+(function executeRule(current, previous) {
+    var reorderLevel = parseFloat(current.getValue('reorder_level')) || 0;
+
+    // If reorder_level is zero or not set, nothing to monitor
+    if (reorderLevel <= 0) {
+        return;
+    }
+
+    var availableQty = parseFloat(current.getValue('available_quantity')) || 0;
+
+    // If available is above reorder level, no alert needed
+    if (availableQty > reorderLevel) {
+        return;
+    }
+
+    // --- available_quantity <= reorder_level ---
+
+    // Check for existing OPEN reorder_required alert for this stock
+    var stockSysId = current.getUniqueValue();
+    var existingAlert = new GlideRecord('x_2056099_indust_0_inv_alert');
+    existingAlert.addQuery('inventory_stock', stockSysId);
+    existingAlert.addQuery('alert_type', 'reorder_required');
+    existingAlert.addQuery('status', 'open');
+    existingAlert.setLimit(1);
+    existingAlert.query();
+
+    if (existingAlert.next()) {
+        // An open reorder_required alert already exists for this stock.
+        // Do not create a duplicate.
+        return;
+    }
+
+    // Determine severity
+    var safetyStock = parseFloat(current.getValue('safety_stock')) || 0;
+    var severity;
+    if (safetyStock > 0 && availableQty <= safetyStock) {
+        severity = 'high';
+    } else {
+        severity = 'medium';
+    }
+
+    // Build alert message
+    var materialRef = current.getDisplayValue('material_product');
+    var locationRef = current.getDisplayValue('location');
+    var alertMessage =
+        'Reorder required: Available stock for ' + materialRef +
+        ' at ' + locationRef +
+        ' has reached ' + availableQty +
+        ', which is at or below the reorder level of ' + reorderLevel + '.';
+    if (severity === 'high') {
+        alertMessage += ' Stock is also at or below the safety stock threshold (' + safetyStock + ').';
+    }
+
+    // Create the reorder_required alert
+    var alert = new GlideRecord('x_2056099_indust_0_inv_alert');
+    alert.initialize();
+    alert.setValue('alert_type', 'reorder_required');
+    alert.setValue('severity', severity);
+    alert.setValue('status', 'open');
+    alert.setValue('alert_message', alertMessage);
+    alert.setValue('alert_date', new GlideDateTime().getValue());
+    alert.setValue('material_product', current.getValue('material_product'));
+    alert.setValue('inventory_stock', stockSysId);
+    alert.setValue('current_quantity', availableQty.toString());
+    alert.setValue('threshold_quantity', reorderLevel.toString());
+    alert.insert();
+
+    gs.info(
+        'Reorder alert created for stock [' + stockSysId + ']: ' +
+        'available=' + availableQty + ', reorder_level=' + reorderLevel +
+        ', severity=' + severity
+    );
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-28 11:50:33</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>7772708395024043a4a47b38fbed8f9c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Reorder Level Monitor</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_7772708395024043a4a47b38fbed8f9c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-28 11:50:33</sys_updated_on>
+        <template/>
+        <when>async_always</when>
+    </sys_script>
+    <sys_translated_text action="DELETE" query="documentkey=7772708395024043a4a47b38fbed8f9c"/>
+<sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</application>
+        <file_path/>
+        <instance_id>d54cbdd33b670f50677f04e0b5e45a3f</instance_id>
+        <instance_name>dev449829</instance_name>
+        <merge_base/>
+        <name>sys_script_7772708395024043a4a47b38fbed8f9c</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update sys_domain="global" table="sys_script"&gt;
+    &lt;sys_script action="INSERT_OR_UPDATE"&gt;
+        &lt;abort_action&gt;false&lt;/abort_action&gt;
+        &lt;access&gt;package_private&lt;/access&gt;
+        &lt;action_delete&gt;false&lt;/action_delete&gt;
+        &lt;action_insert&gt;false&lt;/action_insert&gt;
+        &lt;action_query&gt;false&lt;/action_query&gt;
+        &lt;action_update&gt;true&lt;/action_update&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;add_message&gt;false&lt;/add_message&gt;
+        &lt;advanced&gt;true&lt;/advanced&gt;
+        &lt;change_fields&gt;false&lt;/change_fields&gt;
+        &lt;client_callable&gt;false&lt;/client_callable&gt;
+        &lt;collection&gt;x_2056099_indust_0_inv_stock&lt;/collection&gt;
+        &lt;condition/&gt;
+        &lt;description/&gt;
+        &lt;execute_function&gt;false&lt;/execute_function&gt;
+        &lt;filter_condition/&gt;
+        &lt;is_rest&gt;false&lt;/is_rest&gt;
+        &lt;message/&gt;
+        &lt;name&gt;Reorder Level Monitor&lt;/name&gt;
+        &lt;order&gt;200&lt;/order&gt;
+        &lt;priority&gt;100&lt;/priority&gt;
+        &lt;rest_method/&gt;
+        &lt;rest_method_text/&gt;
+        &lt;rest_service/&gt;
+        &lt;rest_service_text/&gt;
+        &lt;rest_variables/&gt;
+        &lt;role_conditions/&gt;
+        &lt;script&gt;&lt;![CDATA[/**
+ * Reorder Level Monitor — Async BR on Inventory Stock
+ *
+ * Creates a reorder_required inventory alert when available_quantity
+ * reaches or falls below reorder_level. Purely INFORMATIONAL —
+ * never blocks or aborts any stock update.
+ *
+ * Duplicate prevention: checks for existing OPEN alert where
+ * inventory_stock = this stock AND alert_type = reorder_required.
+ * Does NOT suppress reorder alerts because a below_safety_stock
+ * alert exists — both types may coexist.
+ *
+ * Severity:
+ *   medium — available &lt;= reorder_level AND available &gt; safety_stock
+ *   high   — available &lt;= reorder_level AND available &lt;= safety_stock
+ *
+ * Uses ONLY inv_stock.reorder_level (not mat_master.reorder_level).
+ */
+(function executeRule(current, previous) {
+    var reorderLevel = parseFloat(current.getValue('reorder_level')) || 0;
+
+    // If reorder_level is zero or not set, nothing to monitor
+    if (reorderLevel &lt;= 0) {
+        return;
+    }
+
+    var availableQty = parseFloat(current.getValue('available_quantity')) || 0;
+
+    // If available is above reorder level, no alert needed
+    if (availableQty &gt; reorderLevel) {
+        return;
+    }
+
+    // --- available_quantity &lt;= reorder_level ---
+
+    // Check for existing OPEN reorder_required alert for this stock
+    var stockSysId = current.getUniqueValue();
+    var existingAlert = new GlideRecord('x_2056099_indust_0_inv_alert');
+    existingAlert.addQuery('inventory_stock', stockSysId);
+    existingAlert.addQuery('alert_type', 'reorder_required');
+    existingAlert.addQuery('status', 'open');
+    existingAlert.setLimit(1);
+    existingAlert.query();
+
+    if (existingAlert.next()) {
+        // An open reorder_required alert already exists for this stock.
+        // Do not create a duplicate.
+        return;
+    }
+
+    // Determine severity
+    var safetyStock = parseFloat(current.getValue('safety_stock')) || 0;
+    var severity;
+    if (safetyStock &gt; 0 &amp;&amp; availableQty &lt;= safetyStock) {
+        severity = 'high';
+    } else {
+        severity = 'medium';
+    }
+
+    // Build alert message
+    var materialRef = current.getDisplayValue('material_product');
+    var locationRef = current.getDisplayValue('location');
+    var alertMessage =
+        'Reorder required: Available stock for ' + materialRef +
+        ' at ' + locationRef +
+        ' has reached ' + availableQty +
+        ', which is at or below the reorder level of ' + reorderLevel + '.';
+    if (severity === 'high') {
+        alertMessage += ' Stock is also at or below the safety stock threshold (' + safetyStock + ').';
+    }
+
+    // Create the reorder_required alert
+    var alert = new GlideRecord('x_2056099_indust_0_inv_alert');
+    alert.initialize();
+    alert.setValue('alert_type', 'reorder_required');
+    alert.setValue('severity', severity);
+    alert.setValue('status', 'open');
+    alert.setValue('alert_message', alertMessage);
+    alert.setValue('alert_date', new GlideDateTime().getValue());
+    alert.setValue('material_product', current.getValue('material_product'));
+    alert.setValue('inventory_stock', stockSysId);
+    alert.setValue('current_quantity', availableQty.toString());
+    alert.setValue('threshold_quantity', reorderLevel.toString());
+    alert.insert();
+
+    gs.info(
+        'Reorder alert created for stock [' + stockSysId + ']: ' +
+        'available=' + availableQty + ', reorder_level=' + reorderLevel +
+        ', severity=' + severity
+    );
+})(current, previous);
+]]&gt;&lt;/script&gt;
+        &lt;sys_class_name&gt;sys_script&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-09-28 11:50:33&lt;/sys_created_on&gt;
+        &lt;sys_domain&gt;global&lt;/sys_domain&gt;
+        &lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;
+        &lt;sys_id&gt;7772708395024043a4a47b38fbed8f9c&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;Reorder Level Monitor&lt;/sys_name&gt;
+        &lt;sys_overrides/&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_script_7772708395024043a4a47b38fbed8f9c&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-09-28 11:50:33&lt;/sys_updated_on&gt;
+        &lt;template/&gt;
+        &lt;when&gt;async_always&lt;/when&gt;
+    &lt;/sys_script&gt;
+    &lt;sys_translated_text action="delete_multiple" query="documentkey=7772708395024043a4a47b38fbed8f9c"/&gt;
+&lt;/record_update&gt;</payload>
+        <payload_hash>-33646356</payload_hash>
+        <record_name>Reorder Level Monitor</record_name>
+        <reverted_from/>
+        <source>76317bf747ab0710527276a4416d436b</source>
+        <source_table>sys_upgrade_history</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 22:07:52</sys_created_on>
+        <sys_id>32427bb347eb0710527276a4416d4361</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a0fea8d5150000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 22:07:52</sys_updated_on>
+        <type>Business Rule</type>
+        <update_guid>fe427bb3f0eb0710c96beaef7390db60</update_guid>
+        <update_guid_history>fe427bb3f0eb0710c96beaef7390db60:-33646356</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 22:19:39</sys_created_on>
+        <sys_db_object display_value="" name="sys_script">sys_script</sys_db_object>
+        <sys_id>5c2ac346b5614f1e808a2f5bfd7893b9</sys_id>
+        <sys_metadata>7772708395024043a4a47b38fbed8f9c</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Reorder Level Monitor</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_parent display_value="Inventory Stock">7f007360755c44f7b847c13b0eb462d9</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_scope_delete display_value="">3325c354032d4b36a9e117288ded1fc4</sys_scope_delete>
+        <sys_update_name>sys_script_7772708395024043a4a47b38fbed8f9c</sys_update_name>
+        <sys_update_version display_value="sys_script_7772708395024043a4a47b38fbed8f9c">32427bb347eb0710527276a4416d4361</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 22:19:39</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>
