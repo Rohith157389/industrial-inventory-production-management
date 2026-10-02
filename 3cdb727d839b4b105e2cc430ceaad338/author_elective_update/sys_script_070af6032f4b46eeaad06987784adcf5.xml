@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="DELETE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_inv_stock</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Calculate Available Qty and Validate Sto</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[/**
+ * Before-save logic for Inventory Stock records.
+ *
+ * 1. Validates that Reserved Quantity never exceeds Total Quantity.
+ * 2. Calculates Available Quantity = Total Quantity - Reserved Quantity.
+ * 3. Sets Last Updated to the current date/time.
+ */
+(function executeRule(current, previous) {
+    var totalQty = parseFloat(current.getValue('total_quantity')) || 0;
+    var reservedQty = parseFloat(current.getValue('reserved_quantity')) || 0;
+
+    // Validate: Reserved Quantity must never exceed Total Quantity
+    if (reservedQty > totalQty) {
+        gs.addErrorMessage(
+            'Reserved Quantity (' + reservedQty +
+            ') cannot be greater than Total Quantity (' + totalQty + ').'
+        );
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Calculate Available Quantity
+    var availableQty = totalQty - reservedQty;
+    current.setValue('available_quantity', availableQty.toString());
+
+    // Set Last Updated to current date/time
+    var now = new GlideDateTime();
+    current.setValue('last_updated', now.getValue());
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-14 03:11:04</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>070af6032f4b46eeaad06987784adcf5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Calculate Available Qty and Validate Sto</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_070af6032f4b46eeaad06987784adcf5</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-14 03:11:04</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="DELETE" query="documentkey=070af6032f4b46eeaad06987784adcf5"/>
+<sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</application>
+        <file_path/>
+        <instance_id>d54cbdd33b670f50677f04e0b5e45a3f</instance_id>
+        <instance_name>dev449829</instance_name>
+        <merge_base display_value="sys_script_070af6032f4b46eeaad06987784adcf5">6505716b47234310527276a4416d4335</merge_base>
+        <name>sys_script_070af6032f4b46eeaad06987784adcf5</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update sys_domain="global" table="sys_script"&gt;
+    &lt;sys_script action="INSERT_OR_UPDATE"&gt;
+        &lt;abort_action&gt;false&lt;/abort_action&gt;
+        &lt;access&gt;package_private&lt;/access&gt;
+        &lt;action_delete&gt;false&lt;/action_delete&gt;
+        &lt;action_insert&gt;true&lt;/action_insert&gt;
+        &lt;action_query&gt;false&lt;/action_query&gt;
+        &lt;action_update&gt;true&lt;/action_update&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;add_message&gt;false&lt;/add_message&gt;
+        &lt;advanced&gt;true&lt;/advanced&gt;
+        &lt;change_fields&gt;false&lt;/change_fields&gt;
+        &lt;client_callable&gt;false&lt;/client_callable&gt;
+        &lt;collection&gt;x_2056099_indust_0_inv_stock&lt;/collection&gt;
+        &lt;condition/&gt;
+        &lt;description/&gt;
+        &lt;execute_function&gt;false&lt;/execute_function&gt;
+        &lt;filter_condition/&gt;
+        &lt;is_rest&gt;false&lt;/is_rest&gt;
+        &lt;message/&gt;
+        &lt;name&gt;Calculate Available Qty and Validate Sto&lt;/name&gt;
+        &lt;order&gt;100&lt;/order&gt;
+        &lt;priority&gt;100&lt;/priority&gt;
+        &lt;rest_method/&gt;
+        &lt;rest_method_text/&gt;
+        &lt;rest_service/&gt;
+        &lt;rest_service_text/&gt;
+        &lt;rest_variables/&gt;
+        &lt;role_conditions/&gt;
+        &lt;script&gt;&lt;![CDATA[/**
+ * Before-save logic for Inventory Stock records.
+ *
+ * 1. Validates that Reserved Quantity never exceeds Total Quantity.
+ * 2. Calculates Available Quantity = Total Quantity - Reserved Quantity.
+ * 3. Sets Last Updated to the current date/time.
+ */
+(function executeRule(current, previous) {
+    var totalQty = parseFloat(current.getValue('total_quantity')) || 0;
+    var reservedQty = parseFloat(current.getValue('reserved_quantity')) || 0;
+
+    // Validate: Reserved Quantity must never exceed Total Quantity
+    if (reservedQty &gt; totalQty) {
+        gs.addErrorMessage(
+            'Reserved Quantity (' + reservedQty +
+            ') cannot be greater than Total Quantity (' + totalQty + ').'
+        );
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Calculate Available Quantity
+    var availableQty = totalQty - reservedQty;
+    current.setValue('available_quantity', availableQty.toString());
+
+    // Set Last Updated to current date/time
+    var now = new GlideDateTime();
+    current.setValue('last_updated', now.getValue());
+})(current, previous);
+]]&gt;&lt;/script&gt;
+        &lt;sys_class_name&gt;sys_script&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-09-14 03:11:04&lt;/sys_created_on&gt;
+        &lt;sys_domain&gt;global&lt;/sys_domain&gt;
+        &lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;
+        &lt;sys_id&gt;070af6032f4b46eeaad06987784adcf5&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;Calculate Available Qty and Validate Sto&lt;/sys_name&gt;
+        &lt;sys_overrides/&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_script_070af6032f4b46eeaad06987784adcf5&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-09-14 03:11:04&lt;/sys_updated_on&gt;
+        &lt;template/&gt;
+        &lt;when&gt;before&lt;/when&gt;
+    &lt;/sys_script&gt;
+    &lt;sys_translated_text action="delete_multiple" query="documentkey=070af6032f4b46eeaad06987784adcf5"/&gt;
+&lt;/record_update&gt;</payload>
+        <payload_hash>1504051996</payload_hash>
+        <record_name>Calculate Available Qty and Validate Sto</record_name>
+        <reverted_from/>
+        <source>76317bf747ab0710527276a4416d436b</source>
+        <source_table>sys_upgrade_history</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 22:07:52</sys_created_on>
+        <sys_id>b2427bb347eb0710527276a4416d434a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a0fea8d4840000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 22:07:52</sys_updated_on>
+        <type>Business Rule</type>
+        <update_guid>7a427bb35aeb0710b59c716837a43749</update_guid>
+        <update_guid_history>7a427bb35aeb0710b59c716837a43749:0,116eef7fa12b0710e1d57eee7b027602:-308025173,9b9cb2b7b3230710e2d33bdfab1242bc:0,1c27b23fc86fc31008f97938db06a901:-1099698619,2505716bda234310f70ef4e5fe5ff535:1504051996</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 22:19:38</sys_created_on>
+        <sys_db_object display_value="" name="sys_script">sys_script</sys_db_object>
+        <sys_id>29e979d90fec4009bc16ebd5c04725d1</sys_id>
+        <sys_metadata>070af6032f4b46eeaad06987784adcf5</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Calculate Available Qty and Validate Sto</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_parent display_value="Inventory Stock">7f007360755c44f7b847c13b0eb462d9</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_scope_delete display_value="">3325c354032d4b36a9e117288ded1fc4</sys_scope_delete>
+        <sys_update_name>sys_script_070af6032f4b46eeaad06987784adcf5</sys_update_name>
+        <sys_update_version display_value="sys_script_070af6032f4b46eeaad06987784adcf5">b2427bb347eb0710527276a4416d434a</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 22:19:38</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

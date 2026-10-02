@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>POST</http_method>
+        <name>Simulate What-If</name>
+        <operation_script><![CDATA[// RBAC Authorization Check
+(function() {
+  if (gs.hasRole("admin")) return;
+  var roles = "x_2056099_indust_0.production_planner,x_2056099_indust_0.production_manager,x_2056099_indust_0.plant_manager,x_2056099_indust_0.operations_manager".split(",");
+  for (var _i = 0; _i < roles.length; _i++) {
+    if (gs.hasRole(roles[_i])) return;
+  }
+  response.setStatus(403);
+  response.setBody({error:"Unauthorized",message:"Insufficient role for this operation"});
+})();
+if (response.getStatus() == 403) { /* early exit */ }
+else
+(function process(request, response) {
+  var body = {};
+  try { body = JSON.parse(request.body.dataString); } catch (e) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "Invalid request body" } });
+    return;
+  }
+
+  if (!body.scenario_type) {
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: "scenario_type is required. Supported: resource_down, capacity_reduction, quantity_change, material_shortage, schedule_shift" } });
+    return;
+  }
+
+  var engine = new x_2056099_indust_0.WhatIfSimulationEngine();
+  var result = engine.simulate(body);
+
+  if (!result.success) {
+    response.setStatus(400);
+  }
+  response.setBody({ result: result });
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/operator_api/simulate-whatif</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/simulate-whatif</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description>Runs a non-destructive What-If simulation using WhatIfSimulationEngine</short_description>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 07:58:56</sys_created_on>
+        <sys_id>f7f503e34c844b90ae6f003206edace6</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Simulate What-If</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_f7f503e34c844b90ae6f003206edace6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 12:32:56</sys_updated_on>
+        <web_service_definition display_value="Operator API">7acd7c17725147d9a550963b7da0fe53</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>
