@@ -55,6 +55,16 @@ DemandForecastEngine.prototype = {
             message: ''
         };
 
+        // Input validation
+        if (!materialSysId) {
+            result.message = 'Material sys_id is required';
+            return result;
+        }
+        if (!warehouseSysId) {
+            result.message = 'Warehouse sys_id is required';
+            return result;
+        }
+
         try {
             // Collect historical demand per month from all sources
             var monthlyDemand = this._collectMonthlyDemand(materialSysId, warehouseSysId);
@@ -669,13 +679,13 @@ DemandForecastEngine.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 05:34:42</sys_created_on>
         <sys_id>41f6a7224b254975acec2509d14a6764</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>1</sys_mod_count>
         <sys_name>DemandForecastEngine</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_script_include_41f6a7224b254975acec2509d14a6764</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 05:34:42</sys_updated_on>
+        <sys_updated_on>2026-10-02 16:46:45</sys_updated_on>
     </sys_script_include>
 </record_update>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="786b5ecde4ee40449fa90ff3fb30bb6b" label="Weekly Workforce Performance Report" name="x_2056099_indust_0_wk_report" type="collection">
+        <element label="Report Notes" max_length="4000" name="report_notes" type="multi_two_lines"/>
+        <element label="Week End Date" mandatory="true" name="week_end_date" type="glide_date"/>
+        <element label="Total Workers Rated" name="total_workers_rated" type="integer"/>
+        <element label="Reporting Week" mandatory="true" max_length="10" name="reporting_week" type="string"/>
+        <element label="Ratings Maintained" name="maintained_count" type="integer"/>
+        <element label="HR Reviews Required" name="hr_reviews_required" type="integer"/>
+        <element label="Ratings Decreased" name="decreased_count" type="integer"/>
+        <element label="Ratings Increased" name="increased_count" type="integer"/>
+        <element display="true" label="Report ID" mandatory="true" max_length="20" name="report_id" read_only="true" read_only_option="instance_configured" type="string"/>
+        <element label="Week Start Date" mandatory="true" name="week_start_date" type="glide_date"/>
+        <element label="Department" name="department" reference="cmn_department" type="reference"/>
+        <element choice="3" default="draft" label="Report Status" name="report_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="Generated" sequence="2" value="generated"/>
+                <element inactive_on_update="false" label="Finalized" sequence="3" value="finalized"/>
+            </choice>
+        </element>
+        <element label="Average Rating" name="average_rating" type="decimal"/>
+        <element label="Generated On" name="generated_on" type="glide_date_time"/>
+        <index name="index">
+            <element name="department"/>
+        </index>
+    </element>
+</database>

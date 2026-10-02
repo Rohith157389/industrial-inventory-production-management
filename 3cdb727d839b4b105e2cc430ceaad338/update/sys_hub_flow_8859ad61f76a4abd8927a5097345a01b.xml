@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>false</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes/>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <compiler_build/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name/>
+        <label_cache>[{"name":"Updated_1.current.material_tool","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Material Tool","type":"string","base_type":"string","usedInstances":{"7db8d7bd-caf9-4d05-b258-85b68e46f554":["conditions"],"4e8eef8f-fbea-41c3-a8ad-4550672568da":["values"]},"attributes":{}},{"name":"7db8d7bd-caf9-4d05-b258-85b68e46f554.status","label":"7db8d7bd-caf9-4d05-b258-85b68e46f554➛status","type":"string","base_type":"string","usedInstances":{"38a8c3b9-5fe3-4221-a91d-c90d75fba45b":["condition"]},"attributes":{}},{"name":"Updated_1.current.quantity_returned","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Quantity Returned","type":"decimal","base_type":"decimal","usedInstances":{"4e8eef8f-fbea-41c3-a8ad-4550672568da":["values"]},"attributes":{}},{"name":"7db8d7bd-caf9-4d05-b258-85b68e46f554.Record","label":"7db8d7bd-caf9-4d05-b258-85b68e46f554➛Record","type":"reference","base_type":"reference","usedInstances":{"4e8eef8f-fbea-41c3-a8ad-4550672568da":["values"],"2d6b327e-f520-41d0-832f-08ae011dc269":["record"]},"attributes":{}},{"name":"Updated_1.current.mro_location","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Mro Location","type":"reference","base_type":"reference","usedInstances":{"4e8eef8f-fbea-41c3-a8ad-4550672568da":["values"]},"attributes":{}},{"name":"7db8d7bd-caf9-4d05-b258-85b68e46f554.Record.total_quantity","label":"7db8d7bd-caf9-4d05-b258-85b68e46f554➛Record➛total_quantity","type":"decimal","base_type":"decimal","usedInstances":{"2d6b327e-f520-41d0-832f-08ae011dc269":["values"]},"attributes":{}},{"name":"Updated_1.current.number","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Number","type":"string","base_type":"string","usedInstances":{"4f73a9a8-086c-4b2d-bc00-24f9f2480d52":["log_message"]},"attributes":{}}]</label_cache>
+        <latest_snapshot/>
+        <master_snapshot/>
+        <master_snapshot_digest/>
+        <name>FD - Maintenance - Return MRO Material / Tool</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>draft</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>8859ad61f76a4abd8927a5097345a01b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>FD - Maintenance - Return MRO Material / Tool</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_8859ad61f76a4abd8927a5097345a01b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_variable_value action="delete_multiple" query="document_key=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=8859ad61f76a4abd8927a5097345a01b^sys_idNOT IN7969f83fccc9454cadd870b0d86b90e2"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Return MRO Material / Tool">8859ad61f76a4abd8927a5097345a01b</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>7969f83fccc9454cadd870b0d86b90e2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAAA71X22obMRD9FaGnFlxwCy3U0IdewdA2kEv7EFIhr2bXovLIlUZ2luB/L9pLsrckTrzJk/FImjlz5ow0e37FyeksAzdHTxITOMn9XPEZ5xNu5AIMn/FTuTDAJ1wjgUNpTvM18BmnaBYoV3FNwRpQAVJ5NFlancB37YnPzi8mfCVRSbIu5zNyASbcOgWOz15PpxNeuKj88QnfSBPi/0vxZvr23fT9e6FRBU9iKlZSI4mVjgG1XxuZ/3rI5m8aTJWbT5xe08eE9Ab4LJXGQ0StjXKAJea1dHIFFGFecRrIuYO7TdduN9mH2+OA7PcSkJ15cKwgrEd0ZrQCYcq1/Ymukhpg2gUU2yWgCB5c7bimvc/t/gQWPhpZ3k9oK7e74N1JmCRyehEIfHQt1SayHTFEsfHdQ2txAt5rG3+JNGb9ipSs31ONK57WDBbHZcnVhKffq4BHaHIWo6bWlfnMbzbWKOKB+UpmVSXSEzCQUMyuIj09881/P7T3EXRpiJlfw0CLYh8oPy2+elokC0vLZvg68idLyxYJEtVtcPyBeB7cLf5aDpt2Gp1+aVsPv3Su1XY7oD0kPF6PpMZu2RwPbwuJeU8E0bdGJjFniUWCSxpRdql1kDkbUN0Wt71jLLXL5O/dYW92sBcKUhkMvXxGeUcYQmNT2U3IXX0PrD2Nym9wDetvPE0fIft6SVG0ihUPuD9c3gWITsEtsiQ4B0jF1QZ1TKpjjib1aOlHN3kTQj26PJfOLIo644bWaqgdmXXMT6OwNqJ7FTGO4D5bVJrKF7WrsXrJjzTrJY1YNeGeJAX/wQEFh6D+HB1XlrV0pKUxuajX+mV51OERitckZiC3IW7b1dpKJC/ICqmUaLi7btSVVWC+NDivKik0rgN5vmtURFhsjP7Bg2gUK/p71Pw/2sA59LJaV7yqcage8Z6xCMKmg6OkTllFACi2yBktgaXWGLvVmBU4xrzw0MaidMF8sQwtMfcscB73/dUfK8vqdfquZXzCobKD6T6hjvcEn5a7Dhd/QP0vgEiWErPyTa3V8M06BjJZsnILK7eM2g1J57MqGdM9bMDlvYSikYW1kjRmLGm2Mve9xtZp0VDVBGHy2FpYSuE5Wqe+kj05SZDlja7plb3TQLetj99LAyCHhL7bXfwH2I4oVoATAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=8859ad61f76a4abd8927a5097345a01b^sys_idNOT IN2d6b327ef52041d0832f08ae011dc269,4e8eef8ffbea41c3a8ad4550672568da,4f73a9a8086c4b2dbc0024f9f2480d52,7db8d7bdcaf94d05b25885b68e46f554"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent display_value="">f9d01dd2c31332002841b63b12d3aea1</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Return MRO Material / Tool">8859ad61f76a4abd8927a5097345a01b</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id>38a8c3b9-5fe3-4221-a91d-c90d75fba45b</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>2d6b327ef52041d0832f08ae011dc269</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>2d6b327e-f520-41d0-832f-08ae011dc269</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA7WRsWrEMAyG30VzcoQjziWBDh36AO3QpbRGsRUwdRzXVkJD8LuXplDuektu6CihX/o+9LKCw4GgBcbOktyKDGa003fzUx4LURVNI43TU2RZSONmGXlU75CBNtFbXJ73TUcVjOd7xWYmaHu0kTLwGHAgpgDtCrz4PygpZb+EgdQY9Bndup50V+tTp3OFfZOXuhB5dxR1XouuqqmseiHKw9OWS+ka+PYFux30qKaBHEujLyQ29ngmwSOjlR8TOja83N2EdLgMp/T28Hht+Q8X9r+SBm+RSf7opvT6BUlxd9VyAgAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=2d6b327ef52041d0832f08ae011dc269"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Return MRO Material / Tool">8859ad61f76a4abd8927a5097345a01b</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id>38a8c3b9-5fe3-4221-a91d-c90d75fba45b</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>4e8eef8ffbea41c3a8ad4550672568da</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>4e8eef8f-fbea-41c3-a8ad-4550672568da</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA+2ST0vEMBDFv8qSc7vWZbvbXejBg0cRF/QiNkyTKQTzpybTsqXku0uru4h6WPDqbTJ5Q37vZZ5HZsEg2zOCWiOfDwnrQXdT88hXWb7JdjuurOwC8Ywr23M6WpYwqUKrYXi6RBuEVy3dCFI9sn0DOmDCWvBgkNCz/choaL9hxJic6Wag8IWMPNgAgpSzfBotjXfcI3XeVgYIvQLNW+9kJ6gcx8dWAqHk10vReY+WlmcROadjrN46sKRo+FV8uvx8AWWMlbI9WnJ+4IGceC3HcSvrQm5rmQpodulaZnlar/IiLfJ6U+B60+T5enlA4fw0LzGQsjA70E7Mxe+k3p0FMVYeIThb3h3uFycPV5OHxYlt0XhnFgaUJbRgBVaBgLpQCmdajYSyun34+X//if450cu3HE2rgZB/rHOML++e0lHMiQMAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=4e8eef8ffbea41c3a8ad4550672568da"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Return MRO Material / Tool">8859ad61f76a4abd8927a5097345a01b</flow>
+        <generation_source/>
+        <order>5</order>
+        <parent_ui_id>38a8c3b9-5fe3-4221-a91d-c90d75fba45b</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>4f73a9a8086c4b2dbc0024f9f2480d52</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>4f73a9a8-086c-4b2d-bc00-24f9f2480d52</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA62PwQrCMBBEfyXsuRS89uYHiKDoRURiMq3BNAm724KU/Lt4U7x48PoY5s2cFkp2BHUU83CJmBGpodnG6cVC6jM15IOUaB/HTyqOQ9G10zCDut5GQUPFsh2hYOoW0kd55d0tBweqtfmQjRCxA950m93W7KATJ1M4O4jAmz6zWZZD8VbhL6vWTcxI2qZpvIJrbc1es7sbhmhm+PZ78N96f74syiENVOv5CTQqKWhhAQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=4f73a9a8086c4b2dbc0024f9f2480d52"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Return MRO Material / Tool">8859ad61f76a4abd8927a5097345a01b</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>7db8d7bdcaf94d05b25885b68e46f554</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>7db8d7bd-caf9-4d05-b258-85b68e46f554</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA7WSQUvEQAyF/0vOZVkFhS3swR+hF9kNcSbFwelkyGSKS+l/F4vUQgXXg9fkMe97L/M8QqKeoYUiamiXzNDAQLEuMyoOGvCh5EiXp+2mOA3ZHpyFgaHtKBZuIJNSz8YK7Qjzqy24VwmOYZqaxdRJ8sGCpLJy7clYA0XMKr46O47jY/Zk7PFm56oqJ9stIhOJ03QOaeBkopc5w7FXOdOMdDStvA3wPybXd/EdfN2H0UtcH+Adb/d39/vDAUPytRjuMaQBi4l722b6RX013EyBM9IaLnTY12ghR0ZlJ+oLkjJ2UpPHzyIkrdhrYeyCFvsSb3l/UPz9M50+ANtLrFjDAgAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=7db8d7bdcaf94d05b25885b68e46f554"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=8859ad61f76a4abd8927a5097345a01b^sys_idNOT IN38a8c3b95fe34221a91dc90d75fba45b"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block/>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Return MRO Material / Tool">8859ad61f76a4abd8927a5097345a01b</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>2</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>38a8c3b95fe34221a91dc90d75fba45b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>38a8c3b9-5fe3-4221-a91d-c90d75fba45b</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA6WQwWrDMBBE/2XPdgnFSlxBDzn2HnopOay063apLBmtnBCE/r2YppB7bzNvhl2YCmkty1r0lI6q8hnBfpw7uGAWdIH11xJ7UUnxtLG3uPXvwS3iLP4RXVP+nkK6PjL50xWEwAJ0EHFmsOBTJCmSImxPw7qxWg/kRjo46j1OL/1AO9O7ZzP2o3H7kYf9ZMzwpAXLqq297qADEl0C3t7/ccJ/SaDM9wUWzDhz4Qy2tg7UZ1nK0Re5MNgJg3I7tx/n5yPCPgEAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=8859ad61f76a4abd8927a5097345a01b"/>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=8859ad61f76a4abd8927a5097345a01b"/>
+</record_update>

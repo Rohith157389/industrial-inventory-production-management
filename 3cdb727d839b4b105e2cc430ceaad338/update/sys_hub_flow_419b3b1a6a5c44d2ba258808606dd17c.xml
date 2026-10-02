@@ -1,0 +1,1141 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=43000</attributes>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name>fd__machine__retire_and_decommission</internal_name>
+        <label_cache>[{"name":"Updated_1.current","label":"Trigger - Record Updated➛x_2056099_indust_0_machine Record","type":"reference","base_type":"reference","usedInstances":{"7f8c3e09-111b-4097-8072-e64c13ee59d6":["record"],"8a55e35e-7ca7-4573-a0f1-b14d030009e8":["values"]},"attributes":{}},{"name":"Updated_1.current.sys_id","label":"Trigger - Record Updated➛x_2056099_indust_0_machine Record➛Sys Id","type":"string","base_type":"string","usedInstances":{"5eb70a4a-11a6-4744-822f-a85b2b6b64fe":["conditions"],"55a65d36-e813-4230-9d43-c3aa20a65cf0":["conditions"]},"attributes":{}},{"name":"Updated_1.current.name","label":"Trigger - Record Updated➛x_2056099_indust_0_machine Record➛Name","type":"string","base_type":"string","usedInstances":{"ec24bce9-59b8-484f-b984-3481fd6663e9":["log_message"]},"attributes":{}}]</label_cache>
+        <master_snapshot>169515f7532bc31045b132a0a0490ed1</master_snapshot>
+        <master_snapshot_digest/>
+        <name>FD - Machine - Retire and Decommission</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id>aa9555f7532bc31045b132a0a0490e5f</remote_trigger_id>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>published</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:31</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>419b3b1a6a5c44d2ba258808606dd17c</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>FD - Machine - Retire and Decommission</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_419b3b1a6a5c44d2ba258808606dd17c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:16</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_variable_value action="delete_multiple" query="document_key=419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_flow_record_trigger action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition table="x_2056099_indust_0_machine">statusVALCHANGES^statusINretired,decommissioned<item endquery="false" field="status" goto="false" newquery="false" operator="VALCHANGES" or="false" value=""/>
+            <item endquery="false" field="status" goto="false" newquery="false" operator="IN" or="false" value="retired,decommissioned"/>
+        </condition>
+        <name/>
+        <on_delete>false</on_delete>
+        <on_insert>false</on_insert>
+        <on_update>true</on_update>
+        <published_version/>
+        <run_flow_in>background</run_flow_in>
+        <run_on_extended>false</run_on_extended>
+        <run_when_setting>both</run_when_setting>
+        <run_when_user_list/>
+        <run_when_user_setting>any</run_when_user_setting>
+        <sys_class_name>sys_flow_record_trigger</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:16</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>aa9555f7532bc31045b132a0a0490e5f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:16</sys_updated_on>
+        <table>x_2056099_indust_0_machine</table>
+        <trigger_definition/>
+    </sys_flow_record_trigger>
+    <sys_trigger_runner_mapping action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <data>{"run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any","run_on_extended":"false"}</data>
+        <identifier>419b3b1a6a5c44d2ba258808606dd17c</identifier>
+        <identifier_type>flow</identifier_type>
+        <runner>FDTriggerRunner</runner>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:16</sys_created_on>
+        <sys_id>a69555f7532bc31045b132a0a0490e60</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:16</sys_updated_on>
+        <trigger display_value="">aa9555f7532bc31045b132a0a0490e5f</trigger>
+    </sys_trigger_runner_mapping>
+    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=419b3b1a6a5c44d2ba258808606dd17c^sys_idNOT INa69555f7532bc31045b132a0a0490e60"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=419b3b1a6a5c44d2ba258808606dd17c^sys_idNOT IN319515f7532bc31045b132a0a0490e4a,3995d1f7532bc31045b132a0a0490ef6,b19515f7532bc31045b132a0a0490e3f"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="FD - Machine - Retire and Decommission">419b3b1a6a5c44d2ba258808606dd17c</model>
+        <model_id>419b3b1a6a5c44d2ba258808606dd17c</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_419b3b1a6a5c44d2ba258808606dd17c</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:13</sys_created_on>
+        <sys_id>319515f7532bc31045b132a0a0490e4a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:13</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=319515f7532bc31045b132a0a0490e4a"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Machine - Retire and Decommission">419b3b1a6a5c44d2ba258808606dd17c</model>
+        <model_id>419b3b1a6a5c44d2ba258808606dd17c</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_419b3b1a6a5c44d2ba258808606dd17c</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:13</sys_created_on>
+        <sys_id>3995d1f7532bc31045b132a0a0490ef6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:13</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=3995d1f7532bc31045b132a0a0490ef6"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=13000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Machine - Retire and Decommission">419b3b1a6a5c44d2ba258808606dd17c</model>
+        <model_id>419b3b1a6a5c44d2ba258808606dd17c</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_419b3b1a6a5c44d2ba258808606dd17c</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:13</sys_created_on>
+        <sys_id>b19515f7532bc31045b132a0a0490e3f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:13</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=b19515f7532bc31045b132a0a0490e3f"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=419b3b1a6a5c44d2ba258808606dd17c^sys_idNOT IN2367e8f807724534a70a066e3399f4fc"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">419b3b1a6a5c44d2ba258808606dd17c</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:31</sys_created_on>
+        <sys_id>2367e8f807724534a70a066e3399f4fc</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:14</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1Y32/bNhD+VwQ9rYAHeAU2IHnL2qYzkCVAk3UPQSbQ5MkmSpEeebKjBfnfd9QPm5HkRGmjpkXzZOtI8b67+74jqcubGK1cLMDOtEOmOZwXbibiwziexIrNQdHfCzZXQM9SI1jN1EWxAjKjNyeaZX5MwAq0AI3Vq3xpJIcT6ej58moSZ0wLhsYW8SHaHCZxak12AdlKMaS1UqYcGY0VYOPDX6bTSVyuWzuhBddM5f75Onk9/fW36cFBIrXIHSbTJGN8KXUJQjpasPg4ZC79KmFBV/hWzJI/9N5vOnG3oGBP+DVywg3X6BMhtkEFodcWC0ycaVUEU66d/A/K93MHSZDMekZ6vjSbD5ACIeZwTPF4d/WgMpyp7RNDqug8R3AUy+3tNivHElRdWMetXOERR7lukn87GcKED7mO/l6Cjv5yYKOyvB1aLJQUkKhqbDgtmkAf4kVJhABaXRyb62RDyBLKn228N6TpUmMYAXrDvc8h9qTgW6VGzMTal9nn0WsyHosr5+CcNP4XUepFlzEVKx5gyw0FCv/mPsYyGWlTynIxVuEj80nt3mcx8hhSY6v6zXYTG0z+hVnGFjUlyIMCjkGFUnozePpT0msUwi4Pe0Bpo5MhwE6N/vlr4pobXIZgGhy/k/1OgoiZ+8C5L0T3ebpvy85t2bS+G1tL6bX1MWrvEna/c2xR+EdWe6rMhkj01AJnuuhQ1nuSmlhaRNyQs2scTTIkD1hYk2uxD8XdGePolvFP94PYzYh+EpCyXOGr5xaqx0ZtMNRoGEdbqeHYQL3uKNfr9kWdu1Sd6ehdHXRUnmzdUwu1RN6iJ7VRnltKB5ZbSpP2CBsEI4nWj3ex0M4bAGoO9M+qEToobLm400mDvyWRxjxQHb0l3+v7RSxV5t4YLSRWp7C2PpohN8rdpi4NDwA0hCC0mLuPRydv/jg6ff/u/J/KMDu1gNKCmAjgJstkeXKBnu76+AUGkCxMVQ947MnaaKyqvyt8Lqk2TKNL0CRMiCRAvG1rmRGg3gY1r5lEO80qRxffBowgZW0/GIx5Ax/pStV34qJLgj9t+dvuaF2biJeYtPeyJNOoTg71snkR4RIIk6KdnlYuUY23mWjjC9qG9tZENBDZrwLuae5M5aeK7sWpKnerX1TGR38k2X9najl/2W126buoZj21jHMtyZzwJdOL6qzVcPeY1AyML6NqSlRNGVHXvPUJhI/nDNZgi06w3hjlK+GlMpZnpjascJ32Rd3BN4r61EkGkoSuRPBsLaHZuxxamrkogm7QYU2rMXTGB/aIHcn3Y/hemsLwHnD1P6Dt0oxiGQAA</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=419b3b1a6a5c44d2ba258808606dd17c^sys_idNOT IN55a65d36e81342309d43c3aa20a65cf0,5eb70a4a11a64744822fa85b2b6b64fe,7f8c3e09111b40978072e64c13ee59d6,8a55e35e7ca74573a0f1b14d030009e8,ec24bce959b8484fb9843481fd6663e9"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Multiple Records">9daf2a72c75100105312134c95c26073</action_type>
+        <action_type_parent display_value="">9daf2a72c75100105312134c95c26073</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>9daf2a72c75100105312134c95c26073</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">419b3b1a6a5c44d2ba258808606dd17c</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:31</sys_created_on>
+        <sys_id>55a65d36e81342309d43c3aa20a65cf0</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-02 17:23:36</sys_updated_on>
+        <ui_id>55a65d36-e813-4230-9d43-c3aa20a65cf0</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+WXXW+jOBSG/wriOmRsMA70btVupZFmWu2205vZGWRs01hygAHTaSbKf9/jQFJCsv3YTSJVe9PGx1/nvD6Pj/m6cHM2k+6Za1iqZbJqjNwHphtrfEx8FFIUx4nKRVObBCUzxqfwR+UGxglVl5rN7145vGQVrG9k5Z4tXD5VWlQyd8++fhu5SsD8ULDMZxOfT0KMEEZhgH0cEB6H3KdoQmAJzVKpYeitdRfa+7w383Kv7VN/rnPVdhSVsP7gkSsfjcyFBEcypms5cmcsF8wU1dw9M1UDhkoycZ3r+WbE1MZ15sIyU6nL9teMPdbqFzgQITsjkxAjl23fppl0yrXm7IIZdgN7cNNU3VA+LRSXdauOkBlrtDnv29oB16VRRd5OWQXczS50M8uvWnHczQLrgwJLU4MTsrQR2xi6gLKbafHzz7WXl3CMVpyuUxec6U2LGVOptDHWn4XbqNs9qrfWvbpLLWewM+RGWar8Pimr4kGtdgPnZ+N7DY1xpouf4GWt7vMx4zbSMZwIG1+C/WJlvmOVsst+hmVgst3yS65+NPKjTSiSoiCiKfGyLCYeCTj2YkKJl4YMCTlJwywN3OXIref1uWZ1/SQYnFTyo7HhtvJ1QiWt1nYKr1RpfgOnHmSnyXK0oYkXuVDW37pHk2VB5fKvBqFALBZfSohFigSPeVOB3mYMbiRKLJffa8NMU19d3zofr0CNUgM0YsR1Udt/DI5Ga/j1ICuVKcjYHRKPudVLFIv4WYpZj+Lzvkz7pOtQ3rF92rdAh7J/eJQJQu8J5jbE/87yluzbLG8JfxKW4wARhGnqpVEceIRw4TEeMi+KGOJBEKepoP+C5d599SLVdVGZZJWST1CvbKzmuwwyxxTOr1cAw1AWhTEDYHx/FxgkesDcwG7ObevBHqfWuKyyaYjK2thhEj6PSWd5GyeBfxhKFpuANyLu0bsLBNkTWo//Zcez4XhIu94EvNxH4Zv2xG/d01/uUh68CfN+orU9F/+Qb8cq7Zu0GlwFa/NprgEZUbgKmIcDHnsEMwTXQJx5FHGasjSKqCBHKelQ/bRIVkfcL+pt/WwL7aZcfs8LEK81fm5LsVNJoyopPggJYsxUXUPoUjies3ody9zOdZ5W+P2P3RvlqHu9dEvFz5b1yO/dUpdWql5JH0i3fp9LeG3As6TtGL7Ru07nruvsOAoOX9xp+P+s7jv6D17rwxM4Cd4cRwQjEXtY4MjiDY91mkXwgJ8In6ZcEBKdosq3p7KL4CtAkc+X80kPlGub1E46H1TzzeYdKS0/e75kV6ANvmTJEer6u/qUPRQfW6pvs7Gl+2m+ZCMexlnAPUJxbF+/2IMHb+RhTimfCImzLD0yF0lS5zwRBczNmNKwQCKrqqh6xRDtArNa5RXUUH9CURozoIaRHWpY2KPmoshtufMnxrGOOEXurB152dUOqbQotGT5gKdbSJ0Pl53HHU/0CDyR98TTwd6PT5oPKk1f9ZPQRCdhRKXPPJ/AFySBXPNSybkHCRhkFMUY+fiAj8hvfwMbcT+sZxUAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=55a65d36e81342309d43c3aa20a65cf0"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Multiple Records">9daf2a72c75100105312134c95c26073</action_type>
+        <action_type_parent display_value="">9daf2a72c75100105312134c95c26073</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>9daf2a72c75100105312134c95c26073</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">419b3b1a6a5c44d2ba258808606dd17c</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:31</sys_created_on>
+        <sys_id>5eb70a4a11a64744822fa85b2b6b64fe</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-02 17:23:36</sys_updated_on>
+        <ui_id>5eb70a4a-11a6-4744-822f-a85b2b6b64fe</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+WX227bOBCGX8XQteWSEiVLuVskDbBA22A3aW66rTAiqZiALKkSlcQx/O47NGVHPmwOrWMg2Dt7OCRnfs7Hob7NnQKm0jlxNKS5TJZ/hs4t5K0x3iceCUISx4kqRNvohCRT4JNElHcFugnVVDnMrl/mXUGNq2tZOydzh09ULmpZOCffvg8dJXB6ICDzYOzxcUAJoSTwqUd9xuOAeyEZM1wih1Tm6HplgsX/+2LXs2qv7VN/7uCLHShrYeKhQ0fea1kIiYFkkDdy6EyhEKDLeuac6LpFQy1BXBT5bO0xUYXGBXGZicwr+2sK9416wAAiYmZkEnPk0o6t/yadcNacnYGGS9yD67buXPmkVFw2Vh0hM2hzfdq3WYeLSquysFOWCXezy7ydFl+sOM56gdU5oaVtMAhZmYxNDl1C2eWkvPt7FeU5nqIRpxvMSw75+h9oXau01SaeudOqqz2qW+te3WUup7gz1kdVqeImqeryVi13w+Cno5sc/4yyvLzDKBt1U4yAm0xHeCIwOkf72dJ8DbUyy37GZXCy2fJroX628k9TUCwlfhSmzM2ymLnM59SNWcjcNAAi5DgNstR3FkOnmTWnOTTNo2B4UsnP1qRr5euESqzWZgqvVaX/wKBuZafJYrhmiZeFUCbepseSQUEV8p+WEF/M518rzEWKhI54W6PeeoRhJEosFj8aDbptrCPYLXZY+83VnmNRxE+yCD0WT/vJ7hOgA3LH9mnfAh2Q3uGBZIS8JyRtir9P5Ibsm0RuCH8UImOfMELD1E2j2HcZ48IFHoAbRUC478dpKsJfILJ36zzLZlPWOlmW5COaSxs0fBczGOhy8PACYIBkURADAuN5u8AQ0QPmEncbXNkI9gS1wmVZTduorIwdJsHTmHSW13Hie4ehZL5OeC3iHr27RIg5oZX/g/GHbX8su94EuthH4av2pK/d01vsUu6/CvN+odmRs/+ot7dq0Ouy2roKVubjXAMyCvEqAJf6PHYZBYLXQJy5IeFhCmkUhYK9SWPOlMxFsjzifmvut0iel40UP2rZ4FGa1Kz5s+23g1pqVUvxQUiUY6qaBj3Q/eNfu3fHgVZ97uaJn2zVkde7ec5N+r02vSXH6uUsp5iGlnZg+/XcDQ6uu8GODf/wDTsM/p8de0f/rXf09gkcBVlOI0aJiF0qaGSQxWd0mEX4tB4LL0y5YCw6Rue2p7IL2wtAkU+36HEPlAtT1IN0ttWh15t3pFh+9nxjLkHb+sZkb9Cr39VH5qH42FB9k40N3Y/zjRnxIM587rKQxuZFS118xEYu5WHIx0LSLEvfmIskaQqeiBLnZqByXCCRdV3WvQZHdoFZrvICakJvHJI0BqQG2A41EPSoObNtzRvrgQlkUBaDVSDPh9ohlZZlLqHY4ukKS+fDeRdxx1P4Bjyx98TTwd6Ej5pvdZq+6kehKRwHUSg9cD2GX4UMa81NJecuFqCfhSSmxKMHfBh+/xcUthC8/xQAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=5eb70a4a11a64744822fa85b2b6b64fe"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent display_value="">f9d01dd2c31332002841b63b12d3aea1</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>f9d01dd2c31332002841b63b12d3aea1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">419b3b1a6a5c44d2ba258808606dd17c</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:31</sys_created_on>
+        <sys_id>7f8c3e09111b40978072e64c13ee59d6</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-02 17:23:36</sys_updated_on>
+        <ui_id>7f8c3e09-111b-4097-8072-e64c13ee59d6</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VW2/aMBT+K8jPKEq4qfA2lSFN2lqt3Xhpu8jYJ2DJucwXCkP89x3HJkQUtX1BWqXlKefq7zv+TvKwIwXNgUyIoQsJaW10yZpK65ybtBcPR/F4nIqCW23SOM0pW4nCJXGhK0m38/fkVlRhZwOKTHYEnZIrKMjk4alLBMfixZDHyTgZsX7S7/fiuHc1SBaj/iLp8T4FNsYWki5AYuoPBxTtc7jNtjrr+9qu7dz4QKm4wzOMuwQ2BgoOiCSjUkOX5LTg1JRqSyZGWXQooPy2kNsmA4kZ7Ih9ViAr/5bTjRZ/EMFV7CoyQJIMfKwx0zA3786m1NB7PIMZq0IqW5WCgfbj4ZBRK8112+cTbisjysKX1IxDdSltXtz46ZCmweGa0GM1goDKMXYcAqHsflU+3x1QzvAS3XRCUJaMysaixiixsMbh2RGQkGMjvO2qEsUyrVS5FnUxYsmjpUQjymT5jIdqsSwiyhzwCAdMoxn6p7V7TpVwLL5hGyzed4ne6mtJtT5ywSGmv61D4pkFDqkfgythSlTmEx6whgB33200roDhpbf0vdv9rBAG8DSJmFXI3Oz3L6X9DgEP4DUBQ9IS8N0BxSmqoF5eMlsPVPAT+U5DpPNletRvcgH9Dj6Sfj3BDy/f1kfrTSHX+tUtIdM68dHGcZ/Xyb+CnB0dbmvEaS0Yn3MurA1UIfr5+8sluMQRb21V3Ht1q6C1VTMBkuvjVjUjOvwTIEc2BlI/spP/Qgh25iHY7NYFlisZxfXzf8X+vRV7+gvOh5pNEQkAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=7f8c3e09111b40978072e64c13ee59d6"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">419b3b1a6a5c44d2ba258808606dd17c</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:31</sys_created_on>
+        <sys_id>8a55e35e7ca74573a0f1b14d030009e8</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-02 17:23:36</sys_updated_on>
+        <ui_id>8a55e35e-7ca7-4573-a0f1-b14d030009e8</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/9VVTXPaMBD9K4zODLUhYQK3TlJOTTJt2lySoFlbC2hGll19AC7Df+/KEoRpk2kPveCTtV96b3f9/LRjGipkU+agUMi7Q5+tQflg3PJhdjnOJhMutfDW8Yxe1hwUGkdhQtpGQfv4b9ENGKru0LDpjpUrqYRBzaZPL30mBaWPc8wuJ/m4HOWj0TDLhlcXeTEeFflQjADxgkooKFBR6LcAls5vYXdt86bt82lu7y46aiMCnqzPcOtQCyQgC1AW+6wCLcDVpmVTZzwZDIK416o9RqykdlSQyqxQNfGtgq2VPwnAVRYyFkgcS4y+45GnxkXz4gYcPNAdpfMmhZarWpZoY3cELsArd31qiwH3jZO1jikd4ZRdK1/pu9gcdixwmBNZvCUQ2ATGgUMitHhY1ZuvB5QzmmJoTnKqugR1PIFzRhbeBTw7hgorKsQraBqpl7wx9Vp2yYSlGiwVHQYLVW/oUiuXegBlAD6gBsNgRvabzvwIRgYWt1SGkvd9Zlt7rcDaVy7URP7DBySRWeLAYxtCSmlk4z7SBWtMcPf945p3m21PVrzbTh4W5Nln2UhUQKupkXsNa5AqwJlbXKORrk0RKKSv5taB8zaaNG7msVCF1sIy1bqNtXorsL0CUfcMOmlQfBBIbamktdQEFHODChwKnu6Oybvd90Z05nxQekMjcfv9/NOXP7+7c6TwVzEQSELynhjkxYkYzCQqYV/V4DjigxJg1QRwPI78NzVIzt5jciZFyP+/IuTjrHvOSBcizbOXhZN/wTsC8fIL+ygxqAkHAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=8a55e35e7ca74573a0f1b14d030009e8"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>5bc1bcc6531003003bf1d9109ec587d4</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">419b3b1a6a5c44d2ba258808606dd17c</flow>
+        <generation_source/>
+        <order>5</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:31</sys_created_on>
+        <sys_id>ec24bce959b8484fb9843481fd6663e9</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-02 17:23:36</sys_updated_on>
+        <ui_id>ec24bce9-59b8-484f-b984-3481fd6663e9</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VU32/aMBD+V5CfISPQrCtvE6zSpNJKQ6MPVRUZ+wKWHDuzHSiL+N93TkyIWrQNbXuaxAP35X595+/uqSKK5kAmROp1KmELkvTJlsrSY0JlGk0ubCHpfhnQzw1aUIORDgyZVIRthOQGFJk8PfeJ4OiWrFi8Yux9Mo6HwzH+VlnMb+LhDbDkwzW/xhSSrrDehNyFumdacfvCQ2yjBYNg34Ww6RHUhvs2hn0CLw4UB6yfUWmhT3KqOHXa7FvEAOUPSp6AjVAOs2GeDcii+ZfTFyu+Y+WroY/IALkxaL61ZhoG08DZjDq6cKZkrjTBtWnb4lSqluxg0LvXCnqDQWfSHRKH/sk3jPrVewTPuOv5SI0Sat1x3iFych51nT8Zo03HFYIdfMcHfEMOGS2lm17OIP5tBqNLGIwvYHDlGTTDfyic0KhLEnv10JU8Po2WZa7uG8WRlu/ylfQbdHZ2A0qLEoDCC84rKMgpW2z07stRI7dC1R2Fj1IzKluLOmfEqnR+vhUBCTkmSnNaFDiItDB6K+pgbDaP1hKNKJN6h0WtWKuIMk8tQn3T6BbxWQ0vqRGe5hzTYPChT+zeTiW19kQWJZx+K30nDfXAIa0HVYcwIwr3EQtsIbTrx99Z0ByspWvovMGc4hVAWRhwwgB/xwHbzoW12CTw3qBXVV8LbBZ4GkesNDgfF/mMh8PbI/NnyX51m0bjn90mSDq3ad7yPEs+3CeLD1lrt3ufFkfwuBj/4D6NkuTvHKhzK/92iS7aof9vRZ5/AEYQtJZQBwAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=ec24bce959b8484fb9843481fd6663e9"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_419b3b1a6a5c44d2ba258808606dd17c</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:13</sys_created_on>
+        <sys_id>7d9515f7532bc31045b132a0a0490e3a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:13</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_419b3b1a6a5c44d2ba258808606dd17c</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:13</sys_created_on>
+        <sys_id>b59515f7532bc31045b132a0a0490e51</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:13</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_419b3b1a6a5c44d2ba258808606dd17c</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:13</sys_created_on>
+        <sys_id>f99515f7532bc31045b132a0a0490e45</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:13</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_419b3b1a6a5c44d2ba258808606dd17c"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <authored_on_release_version>-1</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>fd__machine__retire_and_decommission</internal_name>
+        <label_cache>[{"name":"Updated_1.current","label":"Trigger - Record Updated➛x_2056099_indust_0_machine Record","type":"reference","base_type":"reference","usedInstances":{"7f8c3e09-111b-4097-8072-e64c13ee59d6":["record"],"8a55e35e-7ca7-4573-a0f1-b14d030009e8":["values"]},"attributes":{}},{"name":"Updated_1.current.sys_id","label":"Trigger - Record Updated➛x_2056099_indust_0_machine Record➛Sys Id","type":"string","base_type":"string","usedInstances":{"5eb70a4a-11a6-4744-822f-a85b2b6b64fe":["conditions"],"55a65d36-e813-4230-9d43-c3aa20a65cf0":["conditions"]},"attributes":{}},{"name":"Updated_1.current.name","label":"Trigger - Record Updated➛x_2056099_indust_0_machine Record➛Name","type":"string","base_type":"string","usedInstances":{"ec24bce9-59b8-484f-b984-3481fd6663e9":["log_message"]},"attributes":{}}]</label_cache>
+        <master>true</master>
+        <name>FD - Machine - Retire and Decommission</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="FD - Machine - Retire and Decommission">419b3b1a6a5c44d2ba258808606dd17c</parent_flow>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>published</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>169515f7532bc31045b132a0a0490ed1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=169515f7532bc31045b132a0a0490ed1"/>
+    <sys_variable_value action="delete_multiple" query="document_key=169515f7532bc31045b132a0a0490ed1"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=169515f7532bc31045b132a0a0490ed1"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=169515f7532bc31045b132a0a0490ed1^sys_idNOT IN529515f7532bc31045b132a0a0490ed2"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>169515f7532bc31045b132a0a0490ed1</id>
+        <name>FD - Machine - Retire and Decommission</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>529515f7532bc31045b132a0a0490ed2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=529515f7532bc31045b132a0a0490ed2"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=169515f7532bc31045b132a0a0490ed1^sys_idNOT IN969515f7532bc31045b132a0a0490ed3,d29515f7532bc31045b132a0a0490efb,da9515f7532bc31045b132a0a0490eef"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=13000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Machine - Retire and Decommission">169515f7532bc31045b132a0a0490ed1</model>
+        <model_id>169515f7532bc31045b132a0a0490ed1</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_169515f7532bc31045b132a0a0490ed1</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>969515f7532bc31045b132a0a0490ed3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=969515f7532bc31045b132a0a0490ed3"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Machine - Retire and Decommission">169515f7532bc31045b132a0a0490ed1</model>
+        <model_id>169515f7532bc31045b132a0a0490ed1</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_169515f7532bc31045b132a0a0490ed1</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>d29515f7532bc31045b132a0a0490efb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=d29515f7532bc31045b132a0a0490efb"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="FD - Machine - Retire and Decommission">169515f7532bc31045b132a0a0490ed1</model>
+        <model_id>169515f7532bc31045b132a0a0490ed1</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_169515f7532bc31045b132a0a0490ed1</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>da9515f7532bc31045b132a0a0490eef</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=da9515f7532bc31045b132a0a0490eef"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=169515f7532bc31045b132a0a0490ed1"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=169515f7532bc31045b132a0a0490ed1"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=169515f7532bc31045b132a0a0490ed1^sys_idNOT IN5e9555f7532bc31045b132a0a0490e14"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">169515f7532bc31045b132a0a0490ed1</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>5e9555f7532bc31045b132a0a0490e14</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1Y32/bNhD+VwQ9rYAHeAU2IHnL2qYzkCVAk3UPQSbQ5MkmSpEeebKjBfnfd9QPm5HkRGmjpkXzZOtI8b67+74jqcubGK1cLMDOtEOmOZwXbibiwziexIrNQdHfCzZXQM9SI1jN1EWxAjKjNyeaZX5MwAq0AI3Vq3xpJIcT6ej58moSZ0wLhsYW8SHaHCZxak12AdlKMaS1UqYcGY0VYOPDX6bTSVyuWzuhBddM5f75Onk9/fW36cFBIrXIHSbTJGN8KXUJQjpasPg4ZC79KmFBV/hWzJI/9N5vOnG3oGBP+DVywg3X6BMhtkEFodcWC0ycaVUEU66d/A/K93MHSZDMekZ6vjSbD5ACIeZwTPF4d/WgMpyp7RNDqug8R3AUy+3tNivHElRdWMetXOERR7lukn87GcKED7mO/l6Cjv5yYKOyvB1aLJQUkKhqbDgtmkAf4kVJhABaXRyb62RDyBLKn228N6TpUmMYAXrDvc8h9qTgW6VGzMTal9nn0WsyHosr5+CcNP4XUepFlzEVKx5gyw0FCv/mPsYyGWlTynIxVuEj80nt3mcx8hhSY6v6zXYTG0z+hVnGFjUlyIMCjkGFUnozePpT0msUwi4Pe0Bpo5MhwE6N/vlr4pobXIZgGhy/k/1OgoiZ+8C5L0T3ebpvy85t2bS+G1tL6bX1MWrvEna/c2xR+EdWe6rMhkj01AJnuuhQ1nuSmlhaRNyQs2scTTIkD1hYk2uxD8XdGePolvFP94PYzYh+EpCyXOGr5xaqx0ZtMNRoGEdbqeHYQL3uKNfr9kWdu1Sd6ehdHXRUnmzdUwu1RN6iJ7VRnltKB5ZbSpP2CBsEI4nWj3ex0M4bAGoO9M+qEToobLm400mDvyWRxjxQHb0l3+v7RSxV5t4YLSRWp7C2PpohN8rdpi4NDwA0hCC0mLuPRydv/jg6ff/u/J/KMDu1gNKCmAjgJstkeXKBnu76+AUGkCxMVQ947MnaaKyqvyt8Lqk2TKNL0CRMiCRAvG1rmRGg3gY1r5lEO80qRxffBowgZW0/GIx5Ax/pStV34qJLgj9t+dvuaF2biJeYtPeyJNOoTg71snkR4RIIk6KdnlYuUY23mWjjC9qG9tZENBDZrwLuae5M5aeK7sWpKnerX1TGR38k2X9najl/2W126buoZj21jHMtyZzwJdOL6qzVcPeY1AyML6NqSlRNGVHXvPUJhI/nDNZgi06w3hjlK+GlMpZnpjascJ32Rd3BN4r61EkGkoSuRPBsLaHZuxxamrkogm7QYU2rMXTGB/aIHcn3Y/hemsLwHnD1P6Dt0oxiGQAA</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=169515f7532bc31045b132a0a0490ed1^sys_idNOT IN529555f7532bc31045b132a0a0490e10,569555f7532bc31045b132a0a0490e11,5a9555f7532bc31045b132a0a0490e12,d69555f7532bc31045b132a0a0490e0f,de9555f7532bc31045b132a0a0490e0d"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Multiple Records">9daf2a72c75100105312134c95c26073</action_type>
+        <action_type_parent display_value="Update Multiple Records">c40e2632c75100105312134c95c260f6</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>9daf2a72c75100105312134c95c26073</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">169515f7532bc31045b132a0a0490ed1</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>529555f7532bc31045b132a0a0490e10</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <ui_id>55a65d36-e813-4230-9d43-c3aa20a65cf0</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+WXXW+jOBSG/wriOmRsMA70btVupZFmWu2205vZGWRs01hygAHTaSbKf9/jQFJCsv3YTSJVe9PGx1/nvD6Pj/m6cHM2k+6Za1iqZbJqjNwHphtrfEx8FFIUx4nKRVObBCUzxqfwR+UGxglVl5rN7145vGQVrG9k5Z4tXD5VWlQyd8++fhu5SsD8ULDMZxOfT0KMEEZhgH0cEB6H3KdoQmAJzVKpYeitdRfa+7w383Kv7VN/rnPVdhSVsP7gkSsfjcyFBEcypms5cmcsF8wU1dw9M1UDhkoycZ3r+WbE1MZ15sIyU6nL9teMPdbqFzgQITsjkxAjl23fppl0yrXm7IIZdgN7cNNU3VA+LRSXdauOkBlrtDnv29oB16VRRd5OWQXczS50M8uvWnHczQLrgwJLU4MTsrQR2xi6gLKbafHzz7WXl3CMVpyuUxec6U2LGVOptDHWn4XbqNs9qrfWvbpLLWewM+RGWar8Pimr4kGtdgPnZ+N7DY1xpouf4GWt7vMx4zbSMZwIG1+C/WJlvmOVsst+hmVgst3yS65+NPKjTSiSoiCiKfGyLCYeCTj2YkKJl4YMCTlJwywN3OXIref1uWZ1/SQYnFTyo7HhtvJ1QiWt1nYKr1RpfgOnHmSnyXK0oYkXuVDW37pHk2VB5fKvBqFALBZfSohFigSPeVOB3mYMbiRKLJffa8NMU19d3zofr0CNUgM0YsR1Udt/DI5Ga/j1ICuVKcjYHRKPudVLFIv4WYpZj+Lzvkz7pOtQ3rF92rdAh7J/eJQJQu8J5jbE/87yluzbLG8JfxKW4wARhGnqpVEceIRw4TEeMi+KGOJBEKepoP+C5d599SLVdVGZZJWST1CvbKzmuwwyxxTOr1cAw1AWhTEDYHx/FxgkesDcwG7ObevBHqfWuKyyaYjK2thhEj6PSWd5GyeBfxhKFpuANyLu0bsLBNkTWo//Zcez4XhIu94EvNxH4Zv2xG/d01/uUh68CfN+orU9F/+Qb8cq7Zu0GlwFa/NprgEZUbgKmIcDHnsEMwTXQJx5FHGasjSKqCBHKelQ/bRIVkfcL+pt/WwL7aZcfs8LEK81fm5LsVNJoyopPggJYsxUXUPoUjies3ody9zOdZ5W+P2P3RvlqHu9dEvFz5b1yO/dUpdWql5JH0i3fp9LeG3As6TtGL7Ru07nruvsOAoOX9xp+P+s7jv6D17rwxM4Cd4cRwQjEXtY4MjiDY91mkXwgJ8In6ZcEBKdosq3p7KL4CtAkc+X80kPlGub1E46H1TzzeYdKS0/e75kV6ANvmTJEer6u/qUPRQfW6pvs7Gl+2m+ZCMexlnAPUJxbF+/2IMHb+RhTimfCImzLD0yF0lS5zwRBczNmNKwQCKrqqh6xRDtArNa5RXUUH9CURozoIaRHWpY2KPmoshtufMnxrGOOEXurB152dUOqbQotGT5gKdbSJ0Pl53HHU/0CDyR98TTwd6PT5oPKk1f9ZPQRCdhRKXPPJ/AFySBXPNSybkHCRhkFMUY+fiAj8hvfwMbcT+sZxUAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=529555f7532bc31045b132a0a0490e10"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">169515f7532bc31045b132a0a0490ed1</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>569555f7532bc31045b132a0a0490e11</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <ui_id>8a55e35e-7ca7-4573-a0f1-b14d030009e8</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/9VVTXPaMBD9K4zODLUhYQK3TlJOTTJt2lySoFlbC2hGll19AC7Df+/KEoRpk2kPveCTtV96b3f9/LRjGipkU+agUMi7Q5+tQflg3PJhdjnOJhMutfDW8Yxe1hwUGkdhQtpGQfv4b9ENGKru0LDpjpUrqYRBzaZPL30mBaWPc8wuJ/m4HOWj0TDLhlcXeTEeFflQjADxgkooKFBR6LcAls5vYXdt86bt82lu7y46aiMCnqzPcOtQCyQgC1AW+6wCLcDVpmVTZzwZDIK416o9RqykdlSQyqxQNfGtgq2VPwnAVRYyFkgcS4y+45GnxkXz4gYcPNAdpfMmhZarWpZoY3cELsArd31qiwH3jZO1jikd4ZRdK1/pu9gcdixwmBNZvCUQ2ATGgUMitHhY1ZuvB5QzmmJoTnKqugR1PIFzRhbeBTw7hgorKsQraBqpl7wx9Vp2yYSlGiwVHQYLVW/oUiuXegBlAD6gBsNgRvabzvwIRgYWt1SGkvd9Zlt7rcDaVy7URP7DBySRWeLAYxtCSmlk4z7SBWtMcPf945p3m21PVrzbTh4W5Nln2UhUQKupkXsNa5AqwJlbXKORrk0RKKSv5taB8zaaNG7msVCF1sIy1bqNtXorsL0CUfcMOmlQfBBIbamktdQEFHODChwKnu6Oybvd90Z05nxQekMjcfv9/NOXP7+7c6TwVzEQSELynhjkxYkYzCQqYV/V4DjigxJg1QRwPI78NzVIzt5jciZFyP+/IuTjrHvOSBcizbOXhZN/wTsC8fIL+ygxqAkHAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=569555f7532bc31045b132a0a0490e11"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="Log">0e0ae8c2531003003bf1d9109ec587c8</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>5bc1bcc6531003003bf1d9109ec587d4</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">169515f7532bc31045b132a0a0490ed1</flow>
+        <generation_source/>
+        <order>5</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>5a9555f7532bc31045b132a0a0490e12</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <ui_id>ec24bce9-59b8-484f-b984-3481fd6663e9</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VU32/aMBD+V5CfISPQrCtvE6zSpNJKQ6MPVRUZ+wKWHDuzHSiL+N93TkyIWrQNbXuaxAP35X595+/uqSKK5kAmROp1KmELkvTJlsrSY0JlGk0ubCHpfhnQzw1aUIORDgyZVIRthOQGFJk8PfeJ4OiWrFi8Yux9Mo6HwzH+VlnMb+LhDbDkwzW/xhSSrrDehNyFumdacfvCQ2yjBYNg34Ww6RHUhvs2hn0CLw4UB6yfUWmhT3KqOHXa7FvEAOUPSp6AjVAOs2GeDcii+ZfTFyu+Y+WroY/IALkxaL61ZhoG08DZjDq6cKZkrjTBtWnb4lSqluxg0LvXCnqDQWfSHRKH/sk3jPrVewTPuOv5SI0Sat1x3iFych51nT8Zo03HFYIdfMcHfEMOGS2lm17OIP5tBqNLGIwvYHDlGTTDfyic0KhLEnv10JU8Po2WZa7uG8WRlu/ylfQbdHZ2A0qLEoDCC84rKMgpW2z07stRI7dC1R2Fj1IzKluLOmfEqnR+vhUBCTkmSnNaFDiItDB6K+pgbDaP1hKNKJN6h0WtWKuIMk8tQn3T6BbxWQ0vqRGe5hzTYPChT+zeTiW19kQWJZx+K30nDfXAIa0HVYcwIwr3EQtsIbTrx99Z0ByspWvovMGc4hVAWRhwwgB/xwHbzoW12CTw3qBXVV8LbBZ4GkesNDgfF/mMh8PbI/NnyX51m0bjn90mSDq3ad7yPEs+3CeLD1lrt3ufFkfwuBj/4D6NkuTvHKhzK/92iS7aof9vRZ5/AEYQtJZQBwAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=5a9555f7532bc31045b132a0a0490e12"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Multiple Records">9daf2a72c75100105312134c95c26073</action_type>
+        <action_type_parent display_value="Update Multiple Records">c40e2632c75100105312134c95c260f6</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>9daf2a72c75100105312134c95c26073</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">169515f7532bc31045b132a0a0490ed1</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>d69555f7532bc31045b132a0a0490e0f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <ui_id>5eb70a4a-11a6-4744-822f-a85b2b6b64fe</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+WX227bOBCGX8XQteWSEiVLuVskDbBA22A3aW66rTAiqZiALKkSlcQx/O47NGVHPmwOrWMg2Dt7OCRnfs7Hob7NnQKm0jlxNKS5TJZ/hs4t5K0x3iceCUISx4kqRNvohCRT4JNElHcFugnVVDnMrl/mXUGNq2tZOydzh09ULmpZOCffvg8dJXB6ICDzYOzxcUAJoSTwqUd9xuOAeyEZM1wih1Tm6HplgsX/+2LXs2qv7VN/7uCLHShrYeKhQ0fea1kIiYFkkDdy6EyhEKDLeuac6LpFQy1BXBT5bO0xUYXGBXGZicwr+2sK9416wAAiYmZkEnPk0o6t/yadcNacnYGGS9yD67buXPmkVFw2Vh0hM2hzfdq3WYeLSquysFOWCXezy7ydFl+sOM56gdU5oaVtMAhZmYxNDl1C2eWkvPt7FeU5nqIRpxvMSw75+h9oXau01SaeudOqqz2qW+te3WUup7gz1kdVqeImqeryVi13w+Cno5sc/4yyvLzDKBt1U4yAm0xHeCIwOkf72dJ8DbUyy37GZXCy2fJroX628k9TUCwlfhSmzM2ymLnM59SNWcjcNAAi5DgNstR3FkOnmTWnOTTNo2B4UsnP1qRr5euESqzWZgqvVaX/wKBuZafJYrhmiZeFUCbepseSQUEV8p+WEF/M518rzEWKhI54W6PeeoRhJEosFj8aDbptrCPYLXZY+83VnmNRxE+yCD0WT/vJ7hOgA3LH9mnfAh2Q3uGBZIS8JyRtir9P5Ibsm0RuCH8UImOfMELD1E2j2HcZ48IFHoAbRUC478dpKsJfILJ36zzLZlPWOlmW5COaSxs0fBczGOhy8PACYIBkURADAuN5u8AQ0QPmEncbXNkI9gS1wmVZTduorIwdJsHTmHSW13Hie4ehZL5OeC3iHr27RIg5oZX/g/GHbX8su94EuthH4av2pK/d01vsUu6/CvN+odmRs/+ot7dq0Ouy2roKVubjXAMyCvEqAJf6PHYZBYLXQJy5IeFhCmkUhYK9SWPOlMxFsjzifmvut0iel40UP2rZ4FGa1Kz5s+23g1pqVUvxQUiUY6qaBj3Q/eNfu3fHgVZ97uaJn2zVkde7ec5N+r02vSXH6uUsp5iGlnZg+/XcDQ6uu8GODf/wDTsM/p8de0f/rXf09gkcBVlOI0aJiF0qaGSQxWd0mEX4tB4LL0y5YCw6Rue2p7IL2wtAkU+36HEPlAtT1IN0ttWh15t3pFh+9nxjLkHb+sZkb9Cr39VH5qH42FB9k40N3Y/zjRnxIM587rKQxuZFS118xEYu5WHIx0LSLEvfmIskaQqeiBLnZqByXCCRdV3WvQZHdoFZrvICakJvHJI0BqQG2A41EPSoObNtzRvrgQlkUBaDVSDPh9ohlZZlLqHY4ukKS+fDeRdxx1P4Bjyx98TTwd6Ej5pvdZq+6kehKRwHUSg9cD2GX4UMa81NJecuFqCfhSSmxKMHfBh+/xcUthC8/xQAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=d69555f7532bc31045b132a0a0490e0f"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Update Record">f9d01dd2c31332002841b63b12d3aea1</action_type>
+        <action_type_parent display_value="Update Record">baf174c8c3c232002841b63b12d3aee4</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>f9d01dd2c31332002841b63b12d3aea1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Retire and Decommission">169515f7532bc31045b132a0a0490ed1</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>de9555f7532bc31045b132a0a0490e0d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <ui_id>7f8c3e09-111b-4097-8072-e64c13ee59d6</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VW2/aMBT+K8jPKEq4qfA2lSFN2lqt3Xhpu8jYJ2DJucwXCkP89x3HJkQUtX1BWqXlKefq7zv+TvKwIwXNgUyIoQsJaW10yZpK65ybtBcPR/F4nIqCW23SOM0pW4nCJXGhK0m38/fkVlRhZwOKTHYEnZIrKMjk4alLBMfixZDHyTgZsX7S7/fiuHc1SBaj/iLp8T4FNsYWki5AYuoPBxTtc7jNtjrr+9qu7dz4QKm4wzOMuwQ2BgoOiCSjUkOX5LTg1JRqSyZGWXQooPy2kNsmA4kZ7Ih9ViAr/5bTjRZ/EMFV7CoyQJIMfKwx0zA3786m1NB7PIMZq0IqW5WCgfbj4ZBRK8112+cTbisjysKX1IxDdSltXtz46ZCmweGa0GM1goDKMXYcAqHsflU+3x1QzvAS3XRCUJaMysaixiixsMbh2RGQkGMjvO2qEsUyrVS5FnUxYsmjpUQjymT5jIdqsSwiyhzwCAdMoxn6p7V7TpVwLL5hGyzed4ne6mtJtT5ywSGmv61D4pkFDqkfgythSlTmEx6whgB33200roDhpbf0vdv9rBAG8DSJmFXI3Oz3L6X9DgEP4DUBQ9IS8N0BxSmqoF5eMlsPVPAT+U5DpPNletRvcgH9Dj6Sfj3BDy/f1kfrTSHX+tUtIdM68dHGcZ/Xyb+CnB0dbmvEaS0Yn3MurA1UIfr5+8sluMQRb21V3Ht1q6C1VTMBkuvjVjUjOvwTIEc2BlI/spP/Qgh25iHY7NYFlisZxfXzf8X+vRV7+gvOh5pNEQkAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=de9555f7532bc31045b132a0a0490e0d"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=169515f7532bc31045b132a0a0490ed1"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=169515f7532bc31045b132a0a0490ed1"/>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=169515f7532bc31045b132a0a0490ed1"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=169515f7532bc31045b132a0a0490ed1"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_169515f7532bc31045b132a0a0490ed1"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_169515f7532bc31045b132a0a0490ed1</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>5e9555f7532bc31045b132a0a0490e01</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_169515f7532bc31045b132a0a0490ed1</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>969515f7532bc31045b132a0a0490eeb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_169515f7532bc31045b132a0a0490ed1</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:15</sys_created_on>
+        <sys_id>9e9515f7532bc31045b132a0a0490ef6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:15</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_169515f7532bc31045b132a0a0490ed1"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_169515f7532bc31045b132a0a0490ed1"/>
+    <sys_hub_flow action="UPDATE">
+        <sys_id>419b3b1a6a5c44d2ba258808606dd17c</sys_id>
+        <latest_snapshot>169515f7532bc31045b132a0a0490ed1</latest_snapshot>
+        <compiler_build>glide-brazil-08-25-2026__patch0-08-26-2026_09-22-2026_1636.zip</compiler_build>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=419b3b1a6a5c44d2ba258808606dd17c^sys_idNOT INae9555f7532bc31045b132a0a0490e60"/>
+    <sys_flow_trigger_plan action="INSERT_OR_UPDATE">
+        <binding_strategy>com.snc.process_flow.engine.binding.OncePerUniqueChange</binding_strategy>
+        <plan>{"@class":"com.snc.process_flow.engine.serialization.plan_data.ChunkingPlanData","chunk_data":{"table":"sys_flow_trigger_plan","id":"ae9555f7532bc31045b132a0a0490e60","name":"plan","plan_signature":null},"plan_data":"CHUNKING_PLAN"}</plan>
+        <plan_id>419b3b1a6a5c44d2ba258808606dd17c</plan_id>
+        <snapshot>7a3132b75367071045b132a0a0490e9a</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:16</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>ae9555f7532bc31045b132a0a0490e60</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:16</sys_updated_on>
+        <trigger display_value="">aa9555f7532bc31045b132a0a0490e5f</trigger>
+    </sys_flow_trigger_plan>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=419b3b1a6a5c44d2ba258808606dd17c"/>
+</record_update>

@@ -96,60 +96,35 @@ SupplierScoringEngine.prototype = {
         //   AVG(documentation_score)
         //   MAX(evaluation_date)
         // ─────────────────────────────────────────
-        var ga = new GlideAggregate(this.PERF);
-        ga.addQuery('supplier', supplierSysId);
-        ga.addQuery('evaluation_status', 'completed');
-        ga.addAggregate('COUNT');
-        ga.addAggregate('AVG', 'quality_score');
-        ga.addAggregate('AVG', 'delivery_score');
-        ga.addAggregate('AVG', 'quantity_score');
-        ga.addAggregate('AVG', 'cost_score');
-        ga.addAggregate('AVG', 'documentation_score');
-        ga.addAggregate('MAX', 'evaluation_date');
-        ga.query();
+        // Use GlideRecord iteration instead of multi-aggregate GlideAggregate
+        // (multi-aggregate GlideAggregate can return incorrect COUNT on integer fields)
+        var perfGr = new GlideRecord(this.PERF);
+        perfGr.addQuery('supplier', supplierSysId);
+        perfGr.addQuery('evaluation_status', 'completed');
+        perfGr.orderByDesc('evaluation_date');
+        perfGr.query();
 
         var completedCount = 0;
-        var avgQuality = 0;
-        var avgDelivery = 0;
-        var avgQuantity = 0;
-        var avgCost = 0;
-        var avgDocumentation = 0;
+        var sumQuality = 0, sumDelivery = 0, sumQuantity = 0, sumCost = 0, sumDocumentation = 0;
         var lastEvalDate = '';
 
-        if (ga.next()) {
-            completedCount = parseInt(ga.getAggregate('COUNT'), 10) || 0;
-            avgQuality = parseFloat(ga.getAggregate('AVG', 'quality_score')) || 0;
-            avgDelivery = parseFloat(ga.getAggregate('AVG', 'delivery_score')) || 0;
-            avgQuantity = parseFloat(ga.getAggregate('AVG', 'quantity_score')) || 0;
-            avgCost = parseFloat(ga.getAggregate('AVG', 'cost_score')) || 0;
-            avgDocumentation = parseFloat(ga.getAggregate('AVG', 'documentation_score')) || 0;
-            lastEvalDate = ga.getAggregate('MAX', 'evaluation_date') || '';
+        while (perfGr.next()) {
+            completedCount++;
+            sumQuality += parseFloat(perfGr.getValue('quality_score')) || 0;
+            sumDelivery += parseFloat(perfGr.getValue('delivery_score')) || 0;
+            sumQuantity += parseFloat(perfGr.getValue('quantity_score')) || 0;
+            sumCost += parseFloat(perfGr.getValue('cost_score')) || 0;
+            sumDocumentation += parseFloat(perfGr.getValue('documentation_score')) || 0;
+            if (!lastEvalDate) {
+                lastEvalDate = perfGr.getValue('evaluation_date');
+            }
         }
 
-        // ─────────────────────────────────────────
-        // STEP 3: Calculate weighted overall score
-        //
-        // Category averages are 0-10. Normalize to 0-100 (* 10),
-        // then apply weights.
-        // ─────────────────────────────────────────
-        var overallScorePct = 0;
-        var overallRating = 0;
-        var performanceStatus = 'not_rated';
-
-        if (completedCount > 0) {
-            overallScorePct =
-                (avgQuality * 10) * this.WEIGHTS.quality +
-                (avgDelivery * 10) * this.WEIGHTS.delivery +
-                (avgQuantity * 10) * this.WEIGHTS.quantity +
-                (avgCost * 10) * this.WEIGHTS.cost +
-                (avgDocumentation * 10) * this.WEIGHTS.documentation;
-
-            // Round to 2 decimal places
-            overallScorePct = Math.round(overallScorePct * 100) / 100;
-            overallRating = Math.round((overallScorePct / 10) * 100) / 100;
-
-            performanceStatus = this._deriveStatus(overallScorePct);
-        }
+        var avgQuality = completedCount > 0 ? sumQuality / completedCount : 0;
+        var avgDelivery = completedCount > 0 ? sumDelivery / completedCount : 0;
+        var avgQuantity = completedCount > 0 ? sumQuantity / completedCount : 0;
+        var avgCost = completedCount > 0 ? sumCost / completedCount : 0;
+        var avgDocumentation = completedCount > 0 ? sumDocumentation / completedCount : 0;
 
         // Round category averages to 2 decimal places for storage
         avgQuality = Math.round(avgQuality * 100) / 100;
@@ -157,6 +132,25 @@ SupplierScoringEngine.prototype = {
         avgQuantity = Math.round(avgQuantity * 100) / 100;
         avgCost = Math.round(avgCost * 100) / 100;
         avgDocumentation = Math.round(avgDocumentation * 100) / 100;
+
+        // ─────────────────────────────────────────
+        // STEP 3: Compute weighted overall score
+        // ─────────────────────────────────────────
+        var overallScorePct = 0;
+        var overallRating = 0;
+        var performanceStatus = 'not_rated';
+
+        if (completedCount > 0) {
+            overallScorePct =
+                (avgQuality * 10 * this.WEIGHTS.quality) +
+                (avgDelivery * 10 * this.WEIGHTS.delivery) +
+                (avgQuantity * 10 * this.WEIGHTS.quantity) +
+                (avgCost * 10 * this.WEIGHTS.cost) +
+                (avgDocumentation * 10 * this.WEIGHTS.documentation);
+            overallScorePct = Math.round(overallScorePct * 100) / 100;
+            overallRating = Math.round((overallScorePct / 10) * 100) / 100;
+            performanceStatus = this._deriveStatus(overallScorePct);
+        }
 
         // ─────────────────────────────────────────
         // STEP 4: Upsert the scorecard record
@@ -265,13 +259,13 @@ SupplierScoringEngine.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 11:54:40</sys_created_on>
         <sys_id>3030cedaeda84b119fd9ee965093e893</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_name>SupplierScoringEngine</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_script_include_3030cedaeda84b119fd9ee965093e893</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 11:54:40</sys_updated_on>
+        <sys_updated_on>2026-10-02 16:30:55</sys_updated_on>
     </sys_script_include>
 </record_update>

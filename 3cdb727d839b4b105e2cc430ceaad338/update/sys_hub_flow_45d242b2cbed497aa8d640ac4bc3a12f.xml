@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>false</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes/>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <compiler_build/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name/>
+        <label_cache>[{"name":"Updated_1.current.material_tool","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Material Tool","type":"string","base_type":"string","usedInstances":{"b68a826a-3538-4dd1-82ed-7d88b3bc872c":["conditions"],"c945122b-67ac-44a6-8f5e-55d9a2b1651e":["values"]},"attributes":{}},{"name":"b68a826a-3538-4dd1-82ed-7d88b3bc872c.Count","label":"b68a826a-3538-4dd1-82ed-7d88b3bc872c➛Count","type":"integer","base_type":"integer","usedInstances":{"7c1ae82e-bc4c-437c-823a-2206d08be02a":["condition"]},"attributes":{}},{"name":"Updated_1.current.number","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Number","type":"string","base_type":"string","usedInstances":{"a1bf2942-08f1-458c-a03a-8c2817c770e5":["log_message"],"17c71bce-66b7-462c-a235-89103721a4d4":["log_message"]},"attributes":{}}]</label_cache>
+        <latest_snapshot/>
+        <master_snapshot/>
+        <master_snapshot_digest/>
+        <name>FD - Maintenance - Approve MRO Material Issue</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>draft</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>45d242b2cbed497aa8d640ac4bc3a12f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>FD - Maintenance - Approve MRO Material Issue</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_45d242b2cbed497aa8d640ac4bc3a12f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_variable_value action="delete_multiple" query="document_key=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=45d242b2cbed497aa8d640ac4bc3a12f^sys_idNOT IN279577d711684dde852f42d510e809da"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Approve MRO Material Issue">45d242b2cbed497aa8d640ac4bc3a12f</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>279577d711684dde852f42d510e809da</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAAA71XbWvbMBD+K0KfNsggG2zQwD5s6wqBboW13T6UIhTr7IgpJ086JzUl/33IL63f0qaN20/G0vnuueeek85Xt5ycThJwc/QkMYLz3M8Vn3E+4UYuwPAZv5ALA3zCNRI4lOYiT4HPOIVlgXIV9hSkgAqQyk+jpdURnGpPfHZ1PeEriUqSdTmfkctgwq1T4Pjs/XQ64YWLyh+f8LU0WXi/ER+mHz9Nj46ERpV5ElOxkhpJrHQIqH1qZP77KcYnGkyVm4+cTulLRHoNfBZL4yGg1kY5wBJzKp1cAQWYt5wGcu7gbtO13U724fZXhuzPEpBdenCsIKxHdGK0AmHKvf2JrpIaYNplKDZLQJF5cLXjmvY+t/sTWPhoZPk4oa3cHoL3IGGSyOlFRuCDa6nWge2AIYiNb59ai3PwXtvwJNKY9CtSsv5INW55XDNYfC5LriY8Pq0CnqHJWYgaW1fmM783rFGED+YrmVSViM/BQEQhu4r0+NI3335o7wPociFkfgcDLYp9oPy0+O5lkSwsLZvh68hfLS1bJEhUu+D4A/E8uVv8nRzW7TQ6/dJePfzQuVPbbkB7SHi8HomN3bA5Ht4WEvOeCIJvjUxiziKLBDc0ouxi6yBxNkO1K27bYiy1y+jvw2HvLdgbBbHMDL19RXkHGEJjU9lNyF19D+y9jMrvcQ3rbzxNnyH7fkNBtIoVF7g/XN4FiE7BLbIocw6QiqMN6phUxxxN6mGlH93kTQj16PJaOrMo6owbWquhdmTWWX4ZhbURPaqIcQT3zaLSVN6oXY3VW36kWS9qxKoJ9yQp859lmjq7hoEO32kwQhGaCQ5gHOKozfpGInlBVkilRMPdXcOtrAJz3OCuqojQmGbk+bbBrLDYGOEzD6JBevD3rDl+tMFx6Ia0rrgdw3A84nlhEYSNB0dCHbOKAFBskTNaAoutMXajMSlwjHlwoQ1F6YI5tgwtMfcqcJ73H9UfD8vqdXqrtfiCw2EH02NCHe8qvSitDhd/hvpfBiJaSkzKu7FWw4l1DGS0ZKUJK01G7Yao83sUjeke1uDyXkJhkWWpkjRmLGk2Mve9xtZx0VDVJGDy0FpYSuE1Wqc+kj05SZDkja7plb3TQLv2x++lAZBDQt9ur/8D5ZoVQUgTAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=45d242b2cbed497aa8d640ac4bc3a12f^sys_idNOT IN17c71bce66b7462ca23589103721a4d4,a1bf294208f1458ca03a8c2817c770e5,b68a826a35384dd182ed7d88b3bc872c,c945122b67ac44a68f5e55d9a2b1651e"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Approve MRO Material Issue">45d242b2cbed497aa8d640ac4bc3a12f</flow>
+        <generation_source/>
+        <order>6</order>
+        <parent_ui_id>805245d4-c341-428b-9259-ed1cc7139834</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>17c71bce66b7462ca23589103721a4d4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>17c71bce-66b7-462c-a235-89103721a4d4</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA62PsQrCQBBEf+XYOgZs0/kBIgjaiIT1somHl8u5uxcJ4f5d0hlsLGyHmXkzlxkC9gQV+KGrPY3koYARfVq0F3KAAhon0eN0Xqti2UXdWXUjQdWiFyogImNPSgzVDDrFxW/vg7MEORcrWE8i2NEHbn88GKZnIlEzz6fYoFJTb0ubmCloGVJ/I87ZbIwLktrWWUdBzZITHezje+s/Kn8+KsoudJDz9Q05GJ8KVwEAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=17c71bce66b7462ca23589103721a4d4"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Approve MRO Material Issue">45d242b2cbed497aa8d640ac4bc3a12f</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id>7c1ae82e-bc4c-437c-823a-2206d08be02a</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>a1bf294208f1458ca03a8c2817c770e5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>a1bf2942-08f1-458c-a03a-8c2817c770e5</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA62PsQoCMRBEfyVsfRzYXucHiKBoIyJrbjyDuSRu9gJy5N/FTrGxsH0M82YOMwUeQR35OJw8Cjw1VNhPL+bCJVJDvcvJ82P/SbMVl3Rp1RVQd2Gf0VBi4REKoW4mfaRX3l6js6Bamw/ZiJx5wJtutVkbwX1CVjPPu9Szoj8tWjuJIGgbpvEMqdVwShIL+tZsNdqb4cLO89mj/V77n9Kfz2YVFwaq9fgEm3iVClsBAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=a1bf294208f1458ca03a8c2817c770e5"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="">43400a1587003300663ca1bb36cb0b4b</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Approve MRO Material Issue">45d242b2cbed497aa8d640ac4bc3a12f</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>b68a826a35384dd182ed7d88b3bc872c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>b68a826a-3538-4dd1-82ed-7d88b3bc872c</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA7WSQWvDMAyF/4vOoSSDDRrIYT9iu4zVaLa2iTm2keXQEPzfR3Mo6XpYd9j1SeJ976GXBQKOBD3YGBwrx5ChgQl9OYkjKgmjN0miK1aHZXlKDpWc6Xa2iFDQ3XlJY/S1HjhMFDTKbHRONIwSD2iVJxpUCkEDjnPyOD//q0m2wkkfVw36d/SZGkgoOJKSQL/A6fAyeK3NuQ/FN0+bKo7mrr1/aPd7w8GVrKY1HCaTNdqv60y/bN8Mt1KYFWkLl6PoGnwDuGqY7TXMZnJ7K5+R7aXpiEcjlIvXzYt0P926P5hwUPoggVpfvwF6VqIXiQIAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=b68a826a35384dd182ed7d88b3bc872c"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Approve MRO Material Issue">45d242b2cbed497aa8d640ac4bc3a12f</flow>
+        <generation_source/>
+        <order>5</order>
+        <parent_ui_id>805245d4-c341-428b-9259-ed1cc7139834</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>c945122b67ac44a68f5e55d9a2b1651e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>c945122b-67ac-44a6-8f5e-55d9a2b1651e</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA9WRQUvEQAyF/0qZc1mqoLALPXjwKIuCXsQOcSa2AzPTIckUS5n/LttlV9HLXj0mvLx8L3ldVISAaqcE3j3qtajVBD4fmp/6urm5bbZb7aLNLLrRLk4aPJKoWlnHycP8cpmaDbkkd0bchGr3AZ6xVgkIAgqS2i1K5vQLpZT6TLhC8Q+61VgfhloeRhLosWOckJzM7eD6oQsgSA68TjTabKRdludkQdDqq43JRBhlcxbJOPpSuqNtQGbosX142lcnRXVaU1kUNIK2splc7KsALgpGiAa/1ZASjRP4jgUkcwtr9O7+8e/p/nOUy/+KIXkQ1McHlvL2BTrSl/5/AgAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=c945122b67ac44a68f5e55d9a2b1651e"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=45d242b2cbed497aa8d640ac4bc3a12f^sys_idNOT IN7c1ae82ebc4c437c823a2206d08be02a,805245d4c341428b9259ed1cc7139834"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block/>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Approve MRO Material Issue">45d242b2cbed497aa8d640ac4bc3a12f</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>2</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>7c1ae82ebc4c437c823a2206d08be02a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>7c1ae82e-bc4c-437c-823a-2206d08be02a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA52PQavCMBCE/8ueW9HWpyEHQTx5Fy/iYZtddTFNSpIqEvLfH0UfeH63mW+GXSaDH9Mwpnjw2xjl6kCfzhU8MAh2luPbEhuJ4t1hYns39T/By2Ev5hs9fbhfrH9+M/nTGYRAA1TgsGfQYLwjSeIdTE/tOLGcu5VC1aywbn9aVS+JFrVqmOo1KdW1nVHrxsx2fnSplM0cKiCJg8XX8f8XzE0sBf7sHzBgz4kD6FwqiCbIkLYmyYNBX9BGLufyC3dZ9Sc8AQAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block/>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Approve MRO Material Issue">45d242b2cbed497aa8d640ac4bc3a12f</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Else">1f781bf3c32232002841b63b12d3aee6</logic_definition>
+        <order>4</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>805245d4c341428b9259ed1cc7139834</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>805245d4-c341-428b-9259-ed1cc7139834</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRKkssykxMykkthnBTUpMzizPz80JAYp55IPVQicq8xNzMZGSh8vyi7LSc/HJksUw4uxYAKGKfk3EAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=45d242b2cbed497aa8d640ac4bc3a12f"/>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=45d242b2cbed497aa8d640ac4bc3a12f"/>
+</record_update>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>false</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes/>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <compiler_build/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name/>
+        <label_cache>[{"name":"Updated_1.current.material_tool","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Material Tool","type":"reference","base_type":"reference","usedInstances":{"c387f202-ef7b-41f0-84cb-8dbc66825ad3":["values"]},"attributes":{}},{"name":"Updated_1.current.quantity_consumed","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Quantity Consumed","type":"decimal","base_type":"decimal","usedInstances":{"c387f202-ef7b-41f0-84cb-8dbc66825ad3":["values"]},"attributes":{}},{"name":"Updated_1.current.number","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Number","type":"string","base_type":"string","usedInstances":{"96f823d1-8a83-47ca-a09f-b880a0839346":["log_message"]},"attributes":{}}]</label_cache>
+        <latest_snapshot/>
+        <master_snapshot/>
+        <master_snapshot_digest/>
+        <name>FD - Maintenance - Record Material Consumption</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>draft</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>3783378ccee44a74972694141b72b273</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>FD - Maintenance - Record Material Consumption</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_3783378ccee44a74972694141b72b273</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=3783378ccee44a74972694141b72b273"/>
+    <sys_variable_value action="delete_multiple" query="document_key=3783378ccee44a74972694141b72b273"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=3783378ccee44a74972694141b72b273"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=3783378ccee44a74972694141b72b273"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=3783378ccee44a74972694141b72b273"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=3783378ccee44a74972694141b72b273"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=3783378ccee44a74972694141b72b273"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=3783378ccee44a74972694141b72b273^sys_idNOT INfd85e28292b4417f9edf741f9fd37a17"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Record Material Consumption">3783378ccee44a74972694141b72b273</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>fd85e28292b4417f9edf741f9fd37a17</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAAA71X22obMRD9FaGnFlxwCy3U0IdewdA2kEv7EFIhr2bXovLIlUZ2luB/L9pLsrckTrzJk1lpNHPmzBlpfH7FyeksAzdHTxITOMn9XPEZ5xNu5AIMn/FTuTDAJ1wjgUNpTvM18BmnuCxQruKegjWgAqTyaLK0OoHv2hOfnV9M+EqikmRdzmfkAky4dQocn72eTie8cFH54xO+kSbE70vxZvr23fT9e6FRBU9iKlZSI4mVjgG1XxuZ/3qI8TcNpsrNJ06v6WNCegN8lkrjIaLWRjnAEvNaOrkCijCvOA3k3MHdpmu3m+zD7XFA9nsJyM48OFYQ1iM6M1qBMOXe/kRXSQ0w7QKK7RJQBA+udlzT3ud2fwILH40s7ye0ldtd8O4kTBI5vQgEPrqWahPZjhii2PjuobU4Ae+1jb9EGrN+RUrW76nGFU9rBovjsuRqwtPvVcAjNDmLUVPrynzmN4Y1inhgvpJZVYn0BAwkFLOrSE/PfPPrh/Y+gi4XYubXMNCi2AfKT4uvnhbJwtKyGb6O/MnSskWCRHUbHH8gngd3i7+Ww6adRqdf2quHXzrXarsd0B4SHq9HUmO3bI6Ht4XEvCeC6Fsjk5izxCLBJY0ou9Q6yJwNqG6L27YYS+0y+Xt32BsL9kJBKoOhl88o7whDaGwquwm5q++BvadR+Q2uYf2Np+kjZF8vKYpWseIB94fLuwDRKbhFlgTnAKm42qCOSXXM0aQeV/rRTd6EUI8uz6Uzi6LOuKG1GmpHZp3lp1FYG9G9ihhHcJ8tKk3li9rVWL3lR5r1kkasmnBPkoL/oL0PoP4cHVffa+lIS2NykVj0YQUDvf+IoyMUrknKQF5DvLYrtZVIXpAVUinRcHfdpCurwHxp8F1VUWhcB/J816iGsNgY+4MH0ShU9Peo2X+0YXPoVbWueFHjQD3iHWMRhE0Hx0idsooAUGyRM1oCS60xdqsxK3CMedmhjUXpgvliGVpi7lngPO6/V3+kLKvX6brW4hMOlB1M9wl1vOf3tLQ6XPwB9b8AIllKzMr3tFbDN+sYyGTJShNWmozaDUnnL1UypnvYgMt7CcVFFtZK0pixpNnK3PcaW6dFQ1XTg8lja2EphedonfpK9uQkQZY3uqZX9k4D3bY/fi8NgBwS+m538R+oS4C1fBMAAA==</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=3783378ccee44a74972694141b72b273^sys_idNOT IN96f823d18a8347caa09fb880a0839346,c387f202ef7b41f084cb8dbc66825ad3"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Record Material Consumption">3783378ccee44a74972694141b72b273</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>96f823d18a8347caa09fb880a0839346</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>96f823d1-8a83-47ca-a09f-b880a0839346</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA6WPzQrCMBCEX6XsORS89uYDiCDoRaSsybYG8sdmUygh7y69WbwIXj+G+WbuFQJ6ggFcnEdHCzlQsKArG7NhiqDA2Jwcrrc9zZptkqMWuxAME7pMChIyehJiGCrImra8fkWrCVpTO5mnnHGmD93pcu50DLn4JDaGjklHNmS6KXJX6zUZFDLjodeFmYL0ofgncWvfG/+p+vlYFrZhhtYeb+1eVoBHAQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=96f823d18a8347caa09fb880a0839346"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Maintenance - Record Material Consumption">3783378ccee44a74972694141b72b273</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:30</sys_created_on>
+        <sys_id>c387f202ef7b41f084cb8dbc66825ad3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:30</sys_updated_on>
+        <ui_id>c387f202-ef7b-41f0-84cb-8dbc66825ad3</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA91RwUoEMQz9laHnYRkFhR2YgwePIgp6EafENkqhTWuaDjsM/XeZ1V1EPezZY957SV7ynhZFEFD1SuDFo94XrZrAlxXc6fPu4rLbbrUjW7LoTjuatOxItcq6nDzMj6dos2GX5MqIm1D1r+AztioBQ0BBVv2iZE4/bNTaHt3tDeVvzoSBMhhxkfTaOgSO2kTKJaQVHAMIsgOvE0dbjAzL8pAsCFp9tjGFGUk2R5HE6Gsd3wuQOJn/FB/IrzVoax0ZIUcabu5vm8Os5kA3trCjtyaAI0ECMjhmASl5MDEkj4J2vL77/cl/ddvpyWNIHgT1Z8S1Pn8AqN6GFp0CAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=c387f202ef7b41f084cb8dbc66825ad3"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=3783378ccee44a74972694141b72b273"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=3783378ccee44a74972694141b72b273"/>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=3783378ccee44a74972694141b72b273"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=3783378ccee44a74972694141b72b273"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_3783378ccee44a74972694141b72b273"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_3783378ccee44a74972694141b72b273"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_3783378ccee44a74972694141b72b273"/>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=3783378ccee44a74972694141b72b273"/>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=3783378ccee44a74972694141b72b273"/>
+</record_update>

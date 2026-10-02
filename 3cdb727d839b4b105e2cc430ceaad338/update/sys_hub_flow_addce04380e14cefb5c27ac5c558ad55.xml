@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>false</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes/>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <compiler_build/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name/>
+        <label_cache>[{"name":"Updated_1.current.material_tool","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Material Tool","type":"string","base_type":"string","usedInstances":{"9e354e57-e3df-4d29-9f4f-4c35c1c45b0d":["conditions"],"6cf49298-d002-4e15-aa41-850aaa0094eb":["conditions"],"52e8889f-b9a8-438a-93c2-40835b8de302":["values"]},"attributes":{}},{"name":"6cf49298-d002-4e15-aa41-850aaa0094eb.status","label":"6cf49298-d002-4e15-aa41-850aaa0094eb➛status","type":"string","base_type":"string","usedInstances":{"6a60e77d-800a-4d0b-9eb9-87bee44794e7":["condition"]},"attributes":{}},{"name":"Updated_1.current.number","label":"Trigger - Record Updated➛x_2056099_indust_0_maint_mi Record➛Number","type":"string","base_type":"string","usedInstances":{"436c38a1-2226-4054-a896-e9f8b0e0ce13":["log_message"]},"attributes":{}}]</label_cache>
+        <latest_snapshot/>
+        <master_snapshot/>
+        <master_snapshot_digest/>
+        <name>FD - MRO - Reorder Monitoring</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>draft</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:31</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>addce04380e14cefb5c27ac5c558ad55</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>FD - MRO - Reorder Monitoring</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_addce04380e14cefb5c27ac5c558ad55</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:31</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_variable_value action="delete_multiple" query="document_key=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=addce04380e14cefb5c27ac5c558ad55^sys_idNOT IN501267567dd3492e828cd01a0a0e9ba1"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - MRO - Reorder Monitoring">addce04380e14cefb5c27ac5c558ad55</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:31</sys_created_on>
+        <sys_id>501267567dd3492e828cd01a0a0e9ba1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:31</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAAA71X22obMRD9FaGnFlxwCy3U0IfeAoa2gVzah9AKeTW7FpVHrjSyswT/e9Fekr0lceJNnoxH0syZM2ek2YsrTk5nGbg5epKYwGnu54rPOJ9wIxdg+IyfyYUBPuEaCRxKc5avgc84RbNAuYprCtaACpDKo8nS6gS+aU98dvF7wlcSlSTrcj4jF2DCrVPg+Oz1dDrhhYvKH5/wjTQh/r8Ub6Zv303fvxcaVfAkpmIlNZJY6RhQ+7WR+c+HbD7SYKrcfOL0mj4mpDfAZ6k0HiJqbZQDLDGvpZMroAjzitNAzh3cbbp2u8k+3J4EZL+WgOzcg2MFYT2iM6MVCFOu7U90ldQA0y6g2C4BRfDgasc17X1u9yew8NHI8n5CW7ndBe9OwiSR04tA4KNrqTaR7Yghio3vHlqLU/Be2/hLpDHrV6Rk/Z5qXPG0ZrA4LkuuJjz9VgU8RpOzGDW1rsxnfrOxRhEPzFcyqyqRnoKBhGJ2FenpuW/++669j6BLQ8z8GgZaFPtA+WHx1dMiWVhaNsPXkT9ZWrZIkKhug+MPxPPgbvHXcti00+j0S9t6+KVzrbbbAe0h4fF6JDV2y+Z4eFtIzHsiiL41Mok5SywSXNKIskutg8zZgOq2uO0dY6ldJn/vDnuzg71QkMpg6OUzyjvCEBqbym5C7up7YO1pVH6Da1h/42n6GNnXS4qiVax4wP3h8i5AdApukSXBOUAqrjaoY1IdczSpR0s/usmbEOrR5bl0ZlHUGTe0VkPtyKxjfhqFtRHdq4hxBPfZotJUvqhdjdVLfqRZL2nEqgn3JCn4D4lFH1ag/hyf1BZjPQx0/N4HRihSk4CBHIY4bFdlK5G8ICukUqLh7rohV1aB+dLgtqqY0LgO5Pmuwbyw2BjxgwfRKEr096g5f7TBcugFta54PePwPOJ9YhGETQdHRp2yigBQbJEzWgJLrTF2qzErcIx5saGNRemC+WIZWmLuWeA87jurPz6W1ev0Wsv4hMNjB9N9Qh3vqT0rdx0u/oD6XwCRLCVm5dtZq+HIOgYyWbJyCyu3jNoNSefzKRnTPWzA5b2EopGFtZI0ZixptjL3vcbWadFQ1aRg8thaWErhOVqnvpI9OUmQ5Y2u6ZW900C3rY/fSwMgh4S+2/3+DyLJTBRoEwAA</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=addce04380e14cefb5c27ac5c558ad55^sys_idNOT IN436c38a122264054a896e9f8b0e0ce13,52e8889fb9a8438a93c240835b8de302,6cf49298d0024e15aa41850aaa0094eb,9e354e57e3df4d299f4f4c35c1c45b0d"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - MRO - Reorder Monitoring">addce04380e14cefb5c27ac5c558ad55</flow>
+        <generation_source/>
+        <order>5</order>
+        <parent_ui_id>6a60e77d-800a-4d0b-9eb9-87bee44794e7</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:31</sys_created_on>
+        <sys_id>436c38a122264054a896e9f8b0e0ce13</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:31</sys_updated_on>
+        <ui_id>436c38a1-2226-4054-a896-e9f8b0e0ce13</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA7WQu2oDMRBFf2WYejGk3S4fEAyGpAnBjKW7sohejGYXzKJ/D+5s0qRJe7hwOPdz5yIZPHOq4ZywIfHEm6T1zmJZKk/sY29Jbh/PtDuNzV6dxQ08L5I6Jm6ikmFQnne2W7vv3bVGBx5jepJl9C4BD7q305FOqOqh5K5w32QaQ4DC01KVshg0SiJZDEqx9xW07+/Ni8GfXw5uVUWxQ1nzBToGuZpbgsH/rvhf2Z/P6aaxBB7j6wf6eQGsiwEAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=436c38a122264054a896e9f8b0e0ce13"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - MRO - Reorder Monitoring">addce04380e14cefb5c27ac5c558ad55</flow>
+        <generation_source/>
+        <order>4</order>
+        <parent_ui_id>6a60e77d-800a-4d0b-9eb9-87bee44794e7</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:31</sys_created_on>
+        <sys_id>52e8889fb9a8438a93c240835b8de302</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:31</sys_updated_on>
+        <ui_id>52e8889f-b9a8-438a-93c2-40835b8de302</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA92RQUvEMBCF/0rIuS5VUNhCDx48iijoRWwYk9ndsEkTZibFUvrfZbu6iF727HGG9x7fvHmddA8RdaMF3gOaZaj0AKEclh/mqr6+qddr43tXWExtfD8YCEiiK+085wDjy3lqtuSz3FrxA+pmA4Gx0hkIIgqSbiYtY/6FMs/ViXCB4h90S7A5mFrCRA6pYxyQvIxtROdL7CIIkodgMiVXrLTT9JwdCDpzubKFCHtZnUSSUpjn7pgbkRm22N4/PaiveGV3aPdKyG+3SOgUbARJffuVTT2XmMWnXl2oA8lmVCzJ7lXAAQN3LCCFW1hK6O4e/5b4P446/9cYcwBBc3zqPL99AkGV8bmTAgAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=52e8889fb9a8438a93c240835b8de302"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - MRO - Reorder Monitoring">addce04380e14cefb5c27ac5c558ad55</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:31</sys_created_on>
+        <sys_id>6cf49298d0024e15aa41850aaa0094eb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:31</sys_updated_on>
+        <ui_id>6cf49298-d002-4e15-aa41-850aaa0094eb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA5XRzWrDMAwH8HfROZRssEEDO+whtssoQrMVJvAXllwWQt59NIwu0MLaq/2X9LP1MUOiyDCA5mpoU2Ho4Eihnc9IHXTgRUug6f3yRl2VYq/O5MgwjBSUOyhUKbJxhWGGtesA7iuLY1iW7jzU5eTFJCfdTp0Uxb/M81vxZOzxYedarZxsF8m4CgW0nMOyXHHdU3u7/I+51Rt9hu13feNj//Tc7/coyTc17DGSYSQ9tbuw/he/mbc6cEVteTJibMGkBMbKLlevSJVxzC15JHd60EbflHGUqvYbvgRfSdy//MMPqyIEaXMCAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=6cf49298d0024e15aa41850aaa0094eb"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes/>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - MRO - Reorder Monitoring">addce04380e14cefb5c27ac5c558ad55</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:31</sys_created_on>
+        <sys_id>9e354e57e3df4d299f4f4c35c1c45b0d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:31</sys_updated_on>
+        <ui_id>9e354e57-e3df-4d29-9f4f-4c35c1c45b0d</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA7WSQUvEQAyF/0vOZVkFhS3swR+hF9kNcSbFwelkyGSKS+l/F4vUQgXXg9fkMe97L/M8QqKeoYUiamiXzNDAQLEuMyoOGvCh5EiXp+2mOA3ZHpyFgaHtKBZuIJNSz8YK7Qjzqy24VwmOYZqaxdRJ8sGCpLJy7clYA0XMKr46O47jY/Zk7PFm56oqJ9stIhOJ03QOaeBkopc5w7FXOdOMdDStvA3wPybXd/EdfN2H0UtcH+Adb/d39/vDAUPytRjuMaQBi4l722b6RX013EyBM9IaLnTY12ghR0ZlJ+oLkjJ2UpPHzyIkrdhrYeyCFvsSb3l/UPz9M50+ANtLrFjDAgAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=9e354e57e3df4d299f4f4c35c1c45b0d"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=addce04380e14cefb5c27ac5c558ad55^sys_idNOT IN6a60e77d800a4d0b9eb987bee44794e7"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block/>
+        <comment/>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - MRO - Reorder Monitoring">addce04380e14cefb5c27ac5c558ad55</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>3</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 08:13:31</sys_created_on>
+        <sys_id>6a60e77d800a4d0b9eb987bee44794e7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 08:13:31</sys_updated_on>
+        <ui_id>6a60e77d-800a-4d0b-9eb9-87bee44794e7</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAAA6WQwQrCMBBE/2XPrUSpYgMePHoXL+JhTba6mCYlmyoS8u9SVPDubebNsAuTIYxpGJPsw1aELx708VTBHSPj2ZG8rSXDwsHvJ7bzU/8TPD32bH7RI8Rb58Ljl/FXZ2ALGqACjz2BBhO85cTBw/TUjRPLeWW6pl2069oqtagbmi9rxGZer5cKEZVqGzrPJGEapZSNggosy+DwefjjhLmys5E+CwwYsadEEXQuFYiJPKStSXwn0B06oXIqL5ufs8o+AQAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=addce04380e14cefb5c27ac5c558ad55"/>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=addce04380e14cefb5c27ac5c558ad55"/>
+</record_update>

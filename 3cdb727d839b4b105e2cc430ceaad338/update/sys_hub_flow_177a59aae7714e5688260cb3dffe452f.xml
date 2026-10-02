@@ -1,0 +1,828 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=27000</attributes>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name>fd__machine__below_threshold_alert</internal_name>
+        <label_cache>[{"name":"Created_1.current.related_machine","label":"Trigger - Record Created➛x_2056099_indust_0_inv_alert Record➛Related Machine","type":"string","base_type":"string","usedInstances":{"cadb57cd-8c49-4d39-ace8-a4e5ad2379d4":["conditions"],"c0221c3c-4024-445a-8df1-2ea160be8301":["values"]},"attributes":{}},{"name":"cadb57cd-8c49-4d39-ace8-a4e5ad2379d4.Record.name","label":"cadb57cd-8c49-4d39-ace8-a4e5ad2379d4➛Record➛name","type":"string","base_type":"string","usedInstances":{"708c5ba5-e76c-4ae0-b9c8-ca1245de3e2f":["ah_subject"]},"attributes":{}},{"name":"Created_1.current","label":"Trigger - Record Created➛x_2056099_indust_0_inv_alert Record","type":"reference","base_type":"reference","usedInstances":{"708c5ba5-e76c-4ae0-b9c8-ca1245de3e2f":["record"]},"attributes":{}},{"name":"cadb57cd-8c49-4d39-ace8-a4e5ad2379d4.Record.assigned_operator.email","label":"cadb57cd-8c49-4d39-ace8-a4e5ad2379d4➛Record➛assigned_operator➛email","type":"string","base_type":"string","usedInstances":{"708c5ba5-e76c-4ae0-b9c8-ca1245de3e2f":["ah_to"]},"attributes":{}}]</label_cache>
+        <master_snapshot>ce855db7532bc31045b132a0a0490e95</master_snapshot>
+        <master_snapshot_digest/>
+        <name>FD - Machine - Below Threshold Alert</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id>96859db7532bc31045b132a0a0490e18</remote_trigger_id>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>published</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:30</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>177a59aae7714e5688260cb3dffe452f</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>FD - Machine - Below Threshold Alert</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_177a59aae7714e5688260cb3dffe452f</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:59</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="delete_multiple" query="documentkey=177a59aae7714e5688260cb3dffe452f"/>
+    <sys_variable_value action="delete_multiple" query="document_key=177a59aae7714e5688260cb3dffe452f"/>
+    <sys_flow_record_trigger action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition table="x_2056099_indust_0_inv_alert">alert_type=machine_threshold<item display_value="Machine Below Threshold" endquery="false" field="alert_type" goto="false" newquery="false" operator="=" or="false" value="machine_threshold"/>
+        </condition>
+        <name/>
+        <on_delete>false</on_delete>
+        <on_insert>true</on_insert>
+        <on_update>false</on_update>
+        <published_version/>
+        <run_flow_in>background</run_flow_in>
+        <run_on_extended>false</run_on_extended>
+        <run_when_setting>both</run_when_setting>
+        <run_when_user_list/>
+        <run_when_user_setting>any</run_when_user_setting>
+        <sys_class_name>sys_flow_record_trigger</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:59</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>96859db7532bc31045b132a0a0490e18</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:59</sys_updated_on>
+        <table>x_2056099_indust_0_inv_alert</table>
+        <trigger_definition/>
+    </sys_flow_record_trigger>
+    <sys_trigger_runner_mapping action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <data>{"run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any","run_on_extended":"false"}</data>
+        <identifier>177a59aae7714e5688260cb3dffe452f</identifier>
+        <identifier_type>flow</identifier_type>
+        <runner>FDTriggerRunner</runner>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:59</sys_created_on>
+        <sys_id>92859db7532bc31045b132a0a0490e19</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:59</sys_updated_on>
+        <trigger display_value="">96859db7532bc31045b132a0a0490e18</trigger>
+    </sys_trigger_runner_mapping>
+    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=177a59aae7714e5688260cb3dffe452f^sys_idNOT IN92859db7532bc31045b132a0a0490e19"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=177a59aae7714e5688260cb3dffe452f"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=177a59aae7714e5688260cb3dffe452f"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=177a59aae7714e5688260cb3dffe452f^sys_idNOT IN61851db7532bc31045b132a0a0490ef4,a5855db7532bc31045b132a0a0490e0f"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=13000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Machine - Below Threshold Alert">177a59aae7714e5688260cb3dffe452f</model>
+        <model_id>177a59aae7714e5688260cb3dffe452f</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_177a59aae7714e5688260cb3dffe452f</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:56</sys_created_on>
+        <sys_id>61851db7532bc31045b132a0a0490ef4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:56</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=61851db7532bc31045b132a0a0490ef4"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Machine - Below Threshold Alert">177a59aae7714e5688260cb3dffe452f</model>
+        <model_id>177a59aae7714e5688260cb3dffe452f</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_177a59aae7714e5688260cb3dffe452f</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:56</sys_created_on>
+        <sys_id>a5855db7532bc31045b132a0a0490e0f</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:56</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=a5855db7532bc31045b132a0a0490e0f"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=177a59aae7714e5688260cb3dffe452f"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=177a59aae7714e5688260cb3dffe452f"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=177a59aae7714e5688260cb3dffe452f^sys_idNOT IN191c8f4683ab41d5aeeaf6c43357c155"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Machine - Below Threshold Alert">177a59aae7714e5688260cb3dffe452f</flow>
+        <generation_source/>
+        <name>Created</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:30</sys_created_on>
+        <sys_id>191c8f4683ab41d5aeeaf6c43357c155</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:57</sys_updated_on>
+        <trigger_definition display_value="Created">798916a0c31322002841b63b12d3ae7c</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1XUW/TMBD+K1aeQCpSAYG0vQFjUqXBpG3Aw5giN760Fq5d7EvbMPW/c06T1kvTLdsaQGhPrc+O77u777PPl9cRWjkagR1oh1wncJ67gYgOo6gXKT4ERX8v+FABjaVGsJqri3wKZEZvjjWf+DkBU9ACNK4+TcZGJnAiHY0vr3rRhGvB0dg8OkSbQS9KrZlcwGSqONJeKVeOjMYKsNHhy36/FxX7lk5owxlXmR8v4lf9N2/7Bwex1CJzGPfpzyzmCix6GNLRlvnXdquTsVTCgl5hnHJLPtEjuN6KvQYHG1JQoifssECfDLEOLAi/tFjg4lSrPFiycPIXFN9nDuIgoeWK9Hxs5meQAiFO4Jgi8u7KSWUSrtYjjlTVYYbgKJblcp2XYwmqLK5LrJziuwTlrCrAsteGDWeZZqeafSxjZEWG3DY9VhS4gxrXFBX8zHxAReRpVTnPElqcngRejWZJZil6ZJRPVmWZYYUgHUz4CFZuaF8FCQZFSL+4cPRJOif1KIh9B5RifhuLykNAFTEeA+GqiShthWIzHRsdr6m3kUyFv6aNytxCBDtLvtM31jjwr2oj4mLmeS4qynUglm9j0OwcqNTG/yL6ku9ZLkOD4zpFU2PZe7KzgffEC/CFcD4b/SK0ldi6U5AmcsiNwxCorzOr0O4A1hmuNphoa8v2D+rRWp8Tq2K3ZtPsJhFqWi+tLaW+g7C7nT+pPVCdMnPiy74FznW+pW/vSWqSdM4SQ84W2JlShjz5MbIm02IXis0K9kxAyjOFz7u7ko2F2+HcXPE3heoR0ekXajRMZl2p4VxLvW4o1+j2SZ2rVH0wWkhcHd11bVZT7l5PmXuyIQkAVFwoniKxL9H3rN9/LSaciq4hxrEFNzaqgSJtPmnBnDAdDQCxITOdMad8Ez6UOHOu0cVoYi5EHCBePyMmRoA6CupasoUEMs3QRcug6tTJrh96HTWDRU/RUSfYdFFQG+MvCUq67exINsRAkza2UTJlZXLo7TDMGY6BMCk6oGjnAlWXracvaB3akWE0wewfAbefVs8jaej3VuWunxCF8T7dXo2Rdzh/ulGa0lcoc0vNIyUFxGo1t/+rpeBBAK2xcqX3ijPbhHkIW8pwb3OIDSn4D7ly9Rtj/ZQIRhUAAA==</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=177a59aae7714e5688260cb3dffe452f^sys_idNOT IN708c5ba5e76c4ae0b9c8ca1245de3e2f,c0221c3c4024445a8df12ea160be8301,cadb57cd8c494d39ace8a4e5ad2379d4"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Send Email">c1806bf4a70323008299b39f087901cb</action_type>
+        <action_type_parent display_value="">c1806bf4a70323008299b39f087901cb</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Machine - Below Threshold Alert">177a59aae7714e5688260cb3dffe452f</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:30</sys_created_on>
+        <sys_id>708c5ba5e76c4ae0b9c8ca1245de3e2f</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:57</sys_updated_on>
+        <ui_id>708c5ba5-e76c-4ae0-b9c8-ca1245de3e2f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Y227bOBD9FULPtle+W3lLEwQboGmBJOg+FIUwIimLu5SoJamkXiP/viOJluULnDhNdlM0b+aQHB4Oz5kZ+evSyyDl3olnIZI8rAYd7w5kURq/hwN/PPGDIBQZK4wNffxxF4Lk2uIyJkwuYfHlaatz0Ojdcu2dLD2aCMk0z7yTr986nmC4vR/M/EkUj2DqDwdD358NgiAaBrE/mwZ+n43QhYSIS1x6W4LF8T7sdpHvtX1s7yWf6gmlWYmn3/H4d8szxhFIDNLwjpdCxsAqvWgsmgP7nEk0WF3gOBGZLR0mnFjQc26J5hQ9EuvgJVzmBxek8N2IfxDuzC/dxxwjQkv0XmsYujDX5vgcLNwgAGoL7ZbSRAnKTR1LxmMopD1r2+oFn3MrVFZvqRHUu5Us0uxTHUqvcbB6VbQUBkHwvIxPeWMXjvgmUffXK5QX+OZlKN2kVBRkMwJrtYgKW+JZelzyFB2FKeS5yOZhrtWdqDYjlrQ3lzjoxVLd46FGzLMe0BJ4D58DehdoP6/MX0CL8hZX6AY3I4tMaKgW+epu1eHeQ8czC3MmwZj1HTG44d9FibC+sbtbWIen3FI5OsWD77i7xkOnEcs9II1T0H+FPAUhW4rp78qiJMsT6O9PJlE0icbT4Zr+AY3ZNIonMKXDFv0vMyoLxskfKxhrKewic3qIlJIcsm0xILbfLqo4NWIYHCkGZ3BqqElGrCL4LHJBgDSQSqNFLVTI8BdYIgwxGPceuVVEuFu1dnTIQhUkxVyCyyzObMiot5bYf3xqo9vR29Wto52znu/l5E8h7NcQMCShKaI/ObUt7V4ByjLj5ANHKOQ20dwkSjLSJcslBYbSpKw7o6OgO2LDoAuUz7ow4mNgg+E0YKPedU2Q8oyHh91E8OL+H0spY3aoonLaSik3TTT2RcjlEIOPnc23UsjNyujSx+Rw+qhL5272qHW8WRP9t6uuX1w8kWKLlnJOSeq4nYAhEecZiSXM55yRWGk0ILyubQiPV2NFjZ6c4ogzUR2FXrCI8AwwcpiY77ixYg5VZm/8UqSO5VUW3pLX/wPiMQ3CQQ3Gg5YGP9RB3YmyU19iU7mlvd9vrz6ulTd9ZuHeld5kPB5O3rX3wx1pfs8GTKs8d3eryu5rSLJuTVqKXC7Pao6G/R4tNAbE7itJTyDw6CCBKdv4LKv6pOsVmG1wjshM0aIKt2BbfD53M+TyfE1r/4f60VNjFBUYCdPqAu+FTbCv22kjn7a4kclwsKkR7CVFRcj9WrlcT78BzdSF+AjJxDccNE0uBJclL7IijSqSb0qJ4leGDrcI7NrNt1LiWv8NPKXYWbUhrGNaNcSEgFGFCpGWhO1VnNonxZdz/GhbePiPFmgrWm0UpCoSxzSDw/dm8E0VJMalSEVFjdcrRkgUSp9Va9hBZnK/xcyzsw1mVgcew8zRizVL79T8qagZPZOb/cMf05N2I79Fzuhodo7f2fnLsPPbv1KUV7eFGQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=708c5ba5e76c4ae0b9c8ca1245de3e2f"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Machine - Below Threshold Alert">177a59aae7714e5688260cb3dffe452f</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:30</sys_created_on>
+        <sys_id>c0221c3c4024445a8df12ea160be8301</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:57</sys_updated_on>
+        <ui_id>c0221c3c-4024-445a-8df1-2ea160be8301</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VVy27bMBD8FYFnR5DsxEh8C5Lm1CZoU+SSxgItriwCFMmSSyeu4X/vUpQdIw+0h16C+mCYsw/NDlfj+w3TvAM2Y8gXCqr+MGIrrkIEn6pxcTItzs4qqUXwWBVVx+uWvqRGyhPSW8XXd3+Zbrmj/giOzTasbqUSDjSb3T+MmBRUPy2hODkrp/WknEzGRTE+PS4X08miHIsJBzimFoovQFHq90iXzm+xx7V9E/t8WJtdp4BxIvIpRgyeELQAItJw5WHEOq4FR+PWbIYuEOCAixut1vuMNs41Y9SmBWXTr44/efmLCJwWsaIBmrGGFNsfq0G5BDeXHPktPaPG4IbUujWyBp/UEdDwoPDiEEsJNxal0amkH3ioNip0+jqJw/YNdhdFSPBEAmycOM4wDNTctubx247lFV1jFGcIKlNztT9xRCcXASOfDQMFHTWiq7ZW6mVlnVnJvpi4dPlS0SFvlHmkh3q51DmvI/GcBOb5FeGXPXzHnYxTfKE2VLwdMb/2F4p7/zwLiVj9DJFJmmyYoUoyxJLaSYvn9IAVDHS3o/2i97vtD5Y8rqjU8CMUxURsNhd0ywiiKvM6OJIBcweqR4bE7XbukWPwqUI43uC8X3HQPN5t3LUUsw6E7HnMPazASVynQEd46ObWSfMK1IY0Tch5QHNUJ0JZ40yXDRwybB341iiRcQUOs6NM6hV4lEvKzUh9EXqBMxPQBswE1Irq5p++vn5t/z8B/mhEAsjF3jOicnFgRFcSlPDPTrRfr50LQWejelVatxdONASzuyE4uFH5792onBb95wN5Uhrzw1vSwf/QO+b08BuXpUsQhwcAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=c0221c3c4024445a8df12ea160be8301"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="FD - Machine - Below Threshold Alert">177a59aae7714e5688260cb3dffe452f</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:30</sys_created_on>
+        <sys_id>cadb57cd8c494d39ace8a4e5ad2379d4</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:57</sys_updated_on>
+        <ui_id>cadb57cd-8c49-4d39-ace8-a4e5ad2379d4</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY32/iOBD+V6I8Uy7hV6BvJyqklfa20rbXl92V5cROsc7YWdtpSxH/+41jJ3CQQtkWaat7ajMee2a++WbG5tsqFHhBw8tQS2WQWRY07IQPmJeNDOsMRITpguPlnV/BgZHBM8gLrGC/oSq8XIXZnHGiqAgvv/3ohIyA4pBEk3wyGY6TKOr3o2g06mc4TtP+KEujNI3hCI5TykH1BqwFt86DFqeqP5dgQ7Ks/v7st05roVTEutLvhPTJUEEo+JBjrmknXGBBsJFq2UgUxeRa8I1gzoSB0+CcOeWF+2+BnzR7Bsv9nt2RU4gvo26t+UQeHifOr7DBN0aVmSmVV3Vua0Bm1QTcgNiCtw8kWnc2+s9WH+/qE7q9IV4D8oTmuORm+ms241Nt9qxNF+B1YZiE/Id9myGc8jp8ycuF+OKyGjYe3rUQza1cvcC3UgPYtLCptbnyictv5vLxa52NGROVX36Rywzz5gsbo1haGovLKswJyhnlBDHBmbCWIG2WSJTTBVhAC1wUTNyjQskHVp0KsSy69xw+ujmXjxYLdi+6OLORd4FiuDsD+VUlvsOKWRT+gmNgc8canMNWbw/pTLHCoEdG7qnZWK+1iDSPmP/Ttu4Zh+pEVeGF606ol3rKsdYbsIGm6GdpMXDQe/RQlahqS+XFnxDBA/VAWQ74IsykIMwGp7dpsNSIke8lVDVZraZQSoYSFHezUkEOTFdRXkkWGJqCoOv1fg/5lSOOtRsyPNRu8GSr3Uy3w2oLtW44u7LPbQfUtXOGxjOIouh9Wk9ba9gv3ZMqd78kLUXfUJHnKbzT68JBcLQ4nNqmLp5QLxqOoskEKpyU2qCo5u9+ARzUPcr0yUGmD7aYfut93HHZ87v6RNXaf/ldbQu+uIV6Hp2B3+OPxO63DpyzzRXGgSvIJVPLUlVQPqCMA7HsgsJCu7POMiRYjhYAHCvAvKIZ0EUjrCjKZSkI8oY3ZWJRzZkCzjvl/eL4SiHHIpBAo8DMaVBpB432sfKID5ZHuj0IPuVB7bo/XwfgelC5HjSunxboKbfVwVmGxnvfVmeY8SoTwKdiK5VUKaleuLEeSeIBNrzyOvtKp+J3dert9902+rfee4/4+iGa0znaTfVgcCDvt47XtIeDz1JMttrDtU16kC53XqWNcV/p7hnRMkZndmFnjPb+72P0t7wkdl56Dp7t9oiQFhm88mBbDp0M9qK6c9VtKNrnt3vqHSd5RnE66OFR0o/jKIojkkTjJInHozQf4WSQb5H8Sgr7EOslJrCOQMMJakeOu+orIJWSUyx26H8LAP4x8x57+g9/44H3IW6RJbvdxdyJWlE/V7WU7G/Bfpb0kyXbmEa9cUyyi3ESJxeDnIwuJgQPL/AkHSZ9QrNB/p4/T/z4F8HnDQS6FAAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=cadb57cd8c494d39ace8a4e5ad2379d4"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=177a59aae7714e5688260cb3dffe452f"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=177a59aae7714e5688260cb3dffe452f"/>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=177a59aae7714e5688260cb3dffe452f"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=177a59aae7714e5688260cb3dffe452f"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_177a59aae7714e5688260cb3dffe452f"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_177a59aae7714e5688260cb3dffe452f</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:56</sys_created_on>
+        <sys_id>61855db7532bc31045b132a0a0490e0b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:56</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_177a59aae7714e5688260cb3dffe452f</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:56</sys_created_on>
+        <sys_id>fd855db7532bc31045b132a0a0490e15</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:56</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_177a59aae7714e5688260cb3dffe452f"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_177a59aae7714e5688260cb3dffe452f"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <authored_on_release_version>-1</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>fd__machine__below_threshold_alert</internal_name>
+        <label_cache>[{"name":"Created_1.current.related_machine","label":"Trigger - Record Created➛x_2056099_indust_0_inv_alert Record➛Related Machine","type":"string","base_type":"string","usedInstances":{"cadb57cd-8c49-4d39-ace8-a4e5ad2379d4":["conditions"],"c0221c3c-4024-445a-8df1-2ea160be8301":["values"]},"attributes":{}},{"name":"cadb57cd-8c49-4d39-ace8-a4e5ad2379d4.Record.name","label":"cadb57cd-8c49-4d39-ace8-a4e5ad2379d4➛Record➛name","type":"string","base_type":"string","usedInstances":{"708c5ba5-e76c-4ae0-b9c8-ca1245de3e2f":["ah_subject"]},"attributes":{}},{"name":"Created_1.current","label":"Trigger - Record Created➛x_2056099_indust_0_inv_alert Record","type":"reference","base_type":"reference","usedInstances":{"708c5ba5-e76c-4ae0-b9c8-ca1245de3e2f":["record"]},"attributes":{}},{"name":"cadb57cd-8c49-4d39-ace8-a4e5ad2379d4.Record.assigned_operator.email","label":"cadb57cd-8c49-4d39-ace8-a4e5ad2379d4➛Record➛assigned_operator➛email","type":"string","base_type":"string","usedInstances":{"708c5ba5-e76c-4ae0-b9c8-ca1245de3e2f":["ah_to"]},"attributes":{}}]</label_cache>
+        <master>true</master>
+        <name>FD - Machine - Below Threshold Alert</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="FD - Machine - Below Threshold Alert">177a59aae7714e5688260cb3dffe452f</parent_flow>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>published</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:58</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>ce855db7532bc31045b132a0a0490e95</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:58</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=ce855db7532bc31045b132a0a0490e95"/>
+    <sys_variable_value action="delete_multiple" query="document_key=ce855db7532bc31045b132a0a0490e95"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=ce855db7532bc31045b132a0a0490e95"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=ce855db7532bc31045b132a0a0490e95^sys_idNOT IN0e855db7532bc31045b132a0a0490e96"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>ce855db7532bc31045b132a0a0490e95</id>
+        <name>FD - Machine - Below Threshold Alert</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:58</sys_created_on>
+        <sys_id>0e855db7532bc31045b132a0a0490e96</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:58</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=0e855db7532bc31045b132a0a0490e96"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=ce855db7532bc31045b132a0a0490e95^sys_idNOT IN42855db7532bc31045b132a0a0490e98,56855db7532bc31045b132a0a0490ec0"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=13000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Machine - Below Threshold Alert">ce855db7532bc31045b132a0a0490e95</model>
+        <model_id>ce855db7532bc31045b132a0a0490e95</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_ce855db7532bc31045b132a0a0490e95</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:58</sys_created_on>
+        <sys_id>42855db7532bc31045b132a0a0490e98</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:58</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=42855db7532bc31045b132a0a0490e98"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Machine - Below Threshold Alert">ce855db7532bc31045b132a0a0490e95</model>
+        <model_id>ce855db7532bc31045b132a0a0490e95</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_ce855db7532bc31045b132a0a0490e95</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:58</sys_created_on>
+        <sys_id>56855db7532bc31045b132a0a0490ec0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:58</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=56855db7532bc31045b132a0a0490ec0"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=ce855db7532bc31045b132a0a0490e95"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=ce855db7532bc31045b132a0a0490e95"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=ce855db7532bc31045b132a0a0490e95^sys_idNOT IN52855db7532bc31045b132a0a0490ed8"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Machine - Below Threshold Alert">ce855db7532bc31045b132a0a0490e95</flow>
+        <generation_source/>
+        <name>Created</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:58</sys_created_on>
+        <sys_id>52855db7532bc31045b132a0a0490ed8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:58</sys_updated_on>
+        <trigger_definition display_value="Created">798916a0c31322002841b63b12d3ae7c</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1XUW/TMBD+K1aeQCpSAYG0vQFjUqXBpG3Aw5giN760Fq5d7EvbMPW/c06T1kvTLdsaQGhPrc+O77u777PPl9cRWjkagR1oh1wncJ67gYgOo6gXKT4ERX8v+FABjaVGsJqri3wKZEZvjjWf+DkBU9ACNK4+TcZGJnAiHY0vr3rRhGvB0dg8OkSbQS9KrZlcwGSqONJeKVeOjMYKsNHhy36/FxX7lk5owxlXmR8v4lf9N2/7Bwex1CJzGPfpzyzmCix6GNLRlvnXdquTsVTCgl5hnHJLPtEjuN6KvQYHG1JQoifssECfDLEOLAi/tFjg4lSrPFiycPIXFN9nDuIgoeWK9Hxs5meQAiFO4Jgi8u7KSWUSrtYjjlTVYYbgKJblcp2XYwmqLK5LrJziuwTlrCrAsteGDWeZZqeafSxjZEWG3DY9VhS4gxrXFBX8zHxAReRpVTnPElqcngRejWZJZil6ZJRPVmWZYYUgHUz4CFZuaF8FCQZFSL+4cPRJOif1KIh9B5RifhuLykNAFTEeA+GqiShthWIzHRsdr6m3kUyFv6aNytxCBDtLvtM31jjwr2oj4mLmeS4qynUglm9j0OwcqNTG/yL6ku9ZLkOD4zpFU2PZe7KzgffEC/CFcD4b/SK0ldi6U5AmcsiNwxCorzOr0O4A1hmuNphoa8v2D+rRWp8Tq2K3ZtPsJhFqWi+tLaW+g7C7nT+pPVCdMnPiy74FznW+pW/vSWqSdM4SQ84W2JlShjz5MbIm02IXis0K9kxAyjOFz7u7ko2F2+HcXPE3heoR0ekXajRMZl2p4VxLvW4o1+j2SZ2rVH0wWkhcHd11bVZT7l5PmXuyIQkAVFwoniKxL9H3rN9/LSaciq4hxrEFNzaqgSJtPmnBnDAdDQCxITOdMad8Ez6UOHOu0cVoYi5EHCBePyMmRoA6CupasoUEMs3QRcug6tTJrh96HTWDRU/RUSfYdFFQG+MvCUq67exINsRAkza2UTJlZXLo7TDMGY6BMCk6oGjnAlWXracvaB3akWE0wewfAbefVs8jaej3VuWunxCF8T7dXo2Rdzh/ulGa0lcoc0vNIyUFxGo1t/+rpeBBAK2xcqX3ijPbhHkIW8pwb3OIDSn4D7ly9Rtj/ZQIRhUAAA==</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=ce855db7532bc31045b132a0a0490e95^sys_idNOT IN12855db7532bc31045b132a0a0490ed3,9a855db7532bc31045b132a0a0490ed4,9e855db7532bc31045b132a0a0490ed5"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="Look Up Record">b93f42810b30030085c083eb37673a63</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Below Threshold Alert">ce855db7532bc31045b132a0a0490e95</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:58</sys_created_on>
+        <sys_id>12855db7532bc31045b132a0a0490ed3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:58</sys_updated_on>
+        <ui_id>cadb57cd-8c49-4d39-ace8-a4e5ad2379d4</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY32/iOBD+V6I8Uy7hV6BvJyqklfa20rbXl92V5cROsc7YWdtpSxH/+41jJ3CQQtkWaat7ajMee2a++WbG5tsqFHhBw8tQS2WQWRY07IQPmJeNDOsMRITpguPlnV/BgZHBM8gLrGC/oSq8XIXZnHGiqAgvv/3ohIyA4pBEk3wyGY6TKOr3o2g06mc4TtP+KEujNI3hCI5TykH1BqwFt86DFqeqP5dgQ7Ks/v7st05roVTEutLvhPTJUEEo+JBjrmknXGBBsJFq2UgUxeRa8I1gzoSB0+CcOeWF+2+BnzR7Bsv9nt2RU4gvo26t+UQeHifOr7DBN0aVmSmVV3Vua0Bm1QTcgNiCtw8kWnc2+s9WH+/qE7q9IV4D8oTmuORm+ms241Nt9qxNF+B1YZiE/Id9myGc8jp8ycuF+OKyGjYe3rUQza1cvcC3UgPYtLCptbnyictv5vLxa52NGROVX36Rywzz5gsbo1haGovLKswJyhnlBDHBmbCWIG2WSJTTBVhAC1wUTNyjQskHVp0KsSy69xw+ujmXjxYLdi+6OLORd4FiuDsD+VUlvsOKWRT+gmNgc8canMNWbw/pTLHCoEdG7qnZWK+1iDSPmP/Ttu4Zh+pEVeGF606ol3rKsdYbsIGm6GdpMXDQe/RQlahqS+XFnxDBA/VAWQ74IsykIMwGp7dpsNSIke8lVDVZraZQSoYSFHezUkEOTFdRXkkWGJqCoOv1fg/5lSOOtRsyPNRu8GSr3Uy3w2oLtW44u7LPbQfUtXOGxjOIouh9Wk9ba9gv3ZMqd78kLUXfUJHnKbzT68JBcLQ4nNqmLp5QLxqOoskEKpyU2qCo5u9+ARzUPcr0yUGmD7aYfut93HHZ87v6RNXaf/ldbQu+uIV6Hp2B3+OPxO63DpyzzRXGgSvIJVPLUlVQPqCMA7HsgsJCu7POMiRYjhYAHCvAvKIZ0EUjrCjKZSkI8oY3ZWJRzZkCzjvl/eL4SiHHIpBAo8DMaVBpB432sfKID5ZHuj0IPuVB7bo/XwfgelC5HjSunxboKbfVwVmGxnvfVmeY8SoTwKdiK5VUKaleuLEeSeIBNrzyOvtKp+J3dert9902+rfee4/4+iGa0znaTfVgcCDvt47XtIeDz1JMttrDtU16kC53XqWNcV/p7hnRMkZndmFnjPb+72P0t7wkdl56Dp7t9oiQFhm88mBbDp0M9qK6c9VtKNrnt3vqHSd5RnE66OFR0o/jKIojkkTjJInHozQf4WSQb5H8Sgr7EOslJrCOQMMJakeOu+orIJWSUyx26H8LAP4x8x57+g9/44H3IW6RJbvdxdyJWlE/V7WU7G/Bfpb0kyXbmEa9cUyyi3ESJxeDnIwuJgQPL/AkHSZ9QrNB/p4/T/z4F8HnDQS6FAAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=12855db7532bc31045b132a0a0490ed3"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Send Email">c1806bf4a70323008299b39f087901cb</action_type>
+        <action_type_parent display_value="Send Email">98c181d20b100300d97d8bf637673ab5</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>c1806bf4a70323008299b39f087901cb</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Below Threshold Alert">ce855db7532bc31045b132a0a0490e95</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:58</sys_created_on>
+        <sys_id>9a855db7532bc31045b132a0a0490ed4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:58</sys_updated_on>
+        <ui_id>708c5ba5-e76c-4ae0-b9c8-ca1245de3e2f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Y227bOBD9FULPtle+W3lLEwQboGmBJOg+FIUwIimLu5SoJamkXiP/viOJluULnDhNdlM0b+aQHB4Oz5kZ+evSyyDl3olnIZI8rAYd7w5kURq/hwN/PPGDIBQZK4wNffxxF4Lk2uIyJkwuYfHlaatz0Ojdcu2dLD2aCMk0z7yTr986nmC4vR/M/EkUj2DqDwdD358NgiAaBrE/mwZ+n43QhYSIS1x6W4LF8T7sdpHvtX1s7yWf6gmlWYmn3/H4d8szxhFIDNLwjpdCxsAqvWgsmgP7nEk0WF3gOBGZLR0mnFjQc26J5hQ9EuvgJVzmBxek8N2IfxDuzC/dxxwjQkv0XmsYujDX5vgcLNwgAGoL7ZbSRAnKTR1LxmMopD1r2+oFn3MrVFZvqRHUu5Us0uxTHUqvcbB6VbQUBkHwvIxPeWMXjvgmUffXK5QX+OZlKN2kVBRkMwJrtYgKW+JZelzyFB2FKeS5yOZhrtWdqDYjlrQ3lzjoxVLd46FGzLMe0BJ4D58DehdoP6/MX0CL8hZX6AY3I4tMaKgW+epu1eHeQ8czC3MmwZj1HTG44d9FibC+sbtbWIen3FI5OsWD77i7xkOnEcs9II1T0H+FPAUhW4rp78qiJMsT6O9PJlE0icbT4Zr+AY3ZNIonMKXDFv0vMyoLxskfKxhrKewic3qIlJIcsm0xILbfLqo4NWIYHCkGZ3BqqElGrCL4LHJBgDSQSqNFLVTI8BdYIgwxGPceuVVEuFu1dnTIQhUkxVyCyyzObMiot5bYf3xqo9vR29Wto52znu/l5E8h7NcQMCShKaI/ObUt7V4ByjLj5ANHKOQ20dwkSjLSJcslBYbSpKw7o6OgO2LDoAuUz7ow4mNgg+E0YKPedU2Q8oyHh91E8OL+H0spY3aoonLaSik3TTT2RcjlEIOPnc23UsjNyujSx+Rw+qhL5272qHW8WRP9t6uuX1w8kWKLlnJOSeq4nYAhEecZiSXM55yRWGk0ILyubQiPV2NFjZ6c4ogzUR2FXrCI8AwwcpiY77ixYg5VZm/8UqSO5VUW3pLX/wPiMQ3CQQ3Gg5YGP9RB3YmyU19iU7mlvd9vrz6ulTd9ZuHeld5kPB5O3rX3wx1pfs8GTKs8d3eryu5rSLJuTVqKXC7Pao6G/R4tNAbE7itJTyDw6CCBKdv4LKv6pOsVmG1wjshM0aIKt2BbfD53M+TyfE1r/4f60VNjFBUYCdPqAu+FTbCv22kjn7a4kclwsKkR7CVFRcj9WrlcT78BzdSF+AjJxDccNE0uBJclL7IijSqSb0qJ4leGDrcI7NrNt1LiWv8NPKXYWbUhrGNaNcSEgFGFCpGWhO1VnNonxZdz/GhbePiPFmgrWm0UpCoSxzSDw/dm8E0VJMalSEVFjdcrRkgUSp9Va9hBZnK/xcyzsw1mVgcew8zRizVL79T8qagZPZOb/cMf05N2I79Fzuhodo7f2fnLsPPbv1KUV7eFGQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=9a855db7532bc31045b132a0a0490ed4"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <comment/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Machine - Below Threshold Alert">ce855db7532bc31045b132a0a0490e95</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:58</sys_created_on>
+        <sys_id>9e855db7532bc31045b132a0a0490ed5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:58</sys_updated_on>
+        <ui_id>c0221c3c-4024-445a-8df1-2ea160be8301</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VVy27bMBD8FYFnR5DsxEh8C5Lm1CZoU+SSxgItriwCFMmSSyeu4X/vUpQdIw+0h16C+mCYsw/NDlfj+w3TvAM2Y8gXCqr+MGIrrkIEn6pxcTItzs4qqUXwWBVVx+uWvqRGyhPSW8XXd3+Zbrmj/giOzTasbqUSDjSb3T+MmBRUPy2hODkrp/WknEzGRTE+PS4X08miHIsJBzimFoovQFHq90iXzm+xx7V9E/t8WJtdp4BxIvIpRgyeELQAItJw5WHEOq4FR+PWbIYuEOCAixut1vuMNs41Y9SmBWXTr44/efmLCJwWsaIBmrGGFNsfq0G5BDeXHPktPaPG4IbUujWyBp/UEdDwoPDiEEsJNxal0amkH3ioNip0+jqJw/YNdhdFSPBEAmycOM4wDNTctubx247lFV1jFGcIKlNztT9xRCcXASOfDQMFHTWiq7ZW6mVlnVnJvpi4dPlS0SFvlHmkh3q51DmvI/GcBOb5FeGXPXzHnYxTfKE2VLwdMb/2F4p7/zwLiVj9DJFJmmyYoUoyxJLaSYvn9IAVDHS3o/2i97vtD5Y8rqjU8CMUxURsNhd0ywiiKvM6OJIBcweqR4bE7XbukWPwqUI43uC8X3HQPN5t3LUUsw6E7HnMPazASVynQEd46ObWSfMK1IY0Tch5QHNUJ0JZ40yXDRwybB341iiRcQUOs6NM6hV4lEvKzUh9EXqBMxPQBswE1Irq5p++vn5t/z8B/mhEAsjF3jOicnFgRFcSlPDPTrRfr50LQWejelVatxdONASzuyE4uFH5792onBb95wN5Uhrzw1vSwf/QO+b08BuXpUsQhwcAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=9e855db7532bc31045b132a0a0490ed5"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=ce855db7532bc31045b132a0a0490e95"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=ce855db7532bc31045b132a0a0490e95"/>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=ce855db7532bc31045b132a0a0490e95"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=ce855db7532bc31045b132a0a0490e95"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_ce855db7532bc31045b132a0a0490e95"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_ce855db7532bc31045b132a0a0490e95</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:58</sys_created_on>
+        <sys_id>02855db7532bc31045b132a0a0490ebc</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:58</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_ce855db7532bc31045b132a0a0490e95</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:58</sys_created_on>
+        <sys_id>9e855db7532bc31045b132a0a0490ec6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:58</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_ce855db7532bc31045b132a0a0490e95"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_ce855db7532bc31045b132a0a0490e95"/>
+    <sys_hub_flow action="UPDATE">
+        <sys_id>177a59aae7714e5688260cb3dffe452f</sys_id>
+        <latest_snapshot>ce855db7532bc31045b132a0a0490e95</latest_snapshot>
+        <compiler_build/>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="delete_multiple" query="plan_id=177a59aae7714e5688260cb3dffe452f^sys_idNOT IN9a859db7532bc31045b132a0a0490e19"/>
+    <sys_flow_trigger_plan action="INSERT_OR_UPDATE">
+        <binding_strategy>com.snc.process_flow.engine.binding.OncePerRecord</binding_strategy>
+        <plan/>
+        <plan_id>177a59aae7714e5688260cb3dffe452f</plan_id>
+        <snapshot>ce855db7532bc31045b132a0a0490e95</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:42:59</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>9a859db7532bc31045b132a0a0490e19</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:42:59</sys_updated_on>
+        <trigger display_value="">96859db7532bc31045b132a0a0490e18</trigger>
+    </sys_flow_trigger_plan>
+    <sys_flow_subflow_plan action="delete_multiple" query="plan_id=177a59aae7714e5688260cb3dffe452f"/>
+</record_update>
