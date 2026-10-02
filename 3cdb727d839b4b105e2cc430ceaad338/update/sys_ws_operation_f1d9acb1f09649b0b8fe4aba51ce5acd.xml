@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>GET</http_method>
+        <name>Get Alerts</name>
+        <operation_script><![CDATA[/**
+ * Alert Center API Handler (plain server script)
+ * Returns filtered alert data with summary counts, display values, and related record details.
+ * GET /api/x_2056099_indust_0/alert_center_api/alerts
+ */
+(function process(request, response) {
+    var ALERT = 'x_2056099_indust_0_inv_alert';
+
+    // ── Parse query parameters ──
+    var severity = request.queryParams.severity ? String(request.queryParams.severity) : '';
+    var alertType = request.queryParams.alert_type ? String(request.queryParams.alert_type) : '';
+    var status = request.queryParams.status ? String(request.queryParams.status) : '';
+    var search = request.queryParams.search ? String(request.queryParams.search) : '';
+    var dateFrom = request.queryParams.date_from ? String(request.queryParams.date_from) : '';
+    var dateTo = request.queryParams.date_to ? String(request.queryParams.date_to) : '';
+    var limit = request.queryParams.limit ? parseInt(String(request.queryParams.limit), 10) : 50;
+    var offset = request.queryParams.offset ? parseInt(String(request.queryParams.offset), 10) : 0;
+
+    if (isNaN(limit) || limit < 1) limit = 50;
+    if (limit > 200) limit = 200;
+    if (isNaN(offset) || offset < 0) offset = 0;
+
+    // ── Build encoded query ──
+    var queryParts = [];
+    if (severity) queryParts.push('severity=' + severity);
+    if (alertType) queryParts.push('alert_type=' + alertType);
+    if (status) queryParts.push('status=' + status);
+    if (search) queryParts.push('alert_messageLIKE' + search + '^ORnumberLIKE' + search);
+    if (dateFrom) queryParts.push('alert_date>=' + dateFrom);
+    if (dateTo) queryParts.push('alert_date<=' + dateTo + ' 23:59:59');
+
+    var encodedQuery = queryParts.join('^');
+
+    // ── Summary counts ──
+    function countRecords(table, query) {
+        var ga = new GlideAggregate(table);
+        if (query) ga.addEncodedQuery(query);
+        ga.addAggregate('COUNT');
+        ga.query();
+        ga.next();
+        return parseInt(String(ga.getAggregate('COUNT') || '0'), 10);
+    }
+
+    var summary = {
+        critical: countRecords(ALERT, 'severity=critical^statusNOT INresolved,dismissed'),
+        high: countRecords(ALERT, 'severity=high^statusNOT INresolved,dismissed'),
+        medium: countRecords(ALERT, 'severity=medium^statusNOT INresolved,dismissed'),
+        low: countRecords(ALERT, 'severity=low^statusNOT INresolved,dismissed'),
+        open: countRecords(ALERT, 'statusINopen,acknowledged,in_progress'),
+        resolved: countRecords(ALERT, 'statusINresolved,dismissed')
+    };
+
+    var totalMatching = countRecords(ALERT, encodedQuery);
+
+    // ── Fetch alert records ──
+    var alerts = [];
+    var gr = new GlideRecord(ALERT);
+    if (encodedQuery) gr.addEncodedQuery(encodedQuery);
+    gr.orderByDesc('alert_date');
+    gr.chooseWindow(offset, offset + limit);
+    gr.query();
+
+    while (gr.next()) {
+        alerts.push({
+            sys_id: gr.getValue('sys_id') || '',
+            number: gr.getValue('number') || '',
+            severity: gr.getValue('severity') || '',
+            severityDisplay: gr.getDisplayValue('severity') || '',
+            alert_type: gr.getValue('alert_type') || '',
+            alertTypeDisplay: gr.getDisplayValue('alert_type') || '',
+            alert_message: gr.getValue('alert_message') || '',
+            status: gr.getValue('status') || '',
+            statusDisplay: gr.getDisplayValue('status') || '',
+            alert_date: gr.getDisplayValue('alert_date') || '',
+            resolved_date: gr.getDisplayValue('resolved_date') || '',
+            current_quantity: gr.getValue('current_quantity') || '',
+            threshold_quantity: gr.getValue('threshold_quantity') || '',
+            material_product: gr.getDisplayValue('material_product') || '',
+            material_product_id: gr.getValue('material_product') || '',
+            assigned_to: gr.getDisplayValue('assigned_to') || '',
+            resolution_notes: gr.getValue('resolution_notes') || '',
+            relatedRecord: _getRelatedRecord(gr)
+        });
+    }
+
+    // ── Get distinct alert_type values for filter options ──
+    var alertTypes = [];
+    var gaTypes = new GlideAggregate(ALERT);
+    gaTypes.addAggregate('COUNT');
+    gaTypes.groupBy('alert_type');
+    gaTypes.query();
+    while (gaTypes.next()) {
+        var typeVal = gaTypes.getValue('alert_type') || '';
+        if (typeVal) {
+            alertTypes.push({
+                value: typeVal,
+                label: gaTypes.getDisplayValue('alert_type') || typeVal
+            });
+        }
+    }
+
+    response.setBody({
+        result: {
+            summary: summary,
+            total: totalMatching,
+            limit: limit,
+            offset: offset,
+            alertTypes: alertTypes,
+            alerts: alerts
+        }
+    });
+
+    function _getRelatedRecord(rec) {
+        var refFields = [
+            { field: 'inventory_stock', type: 'Inventory Stock', table: 'x_2056099_indust_0_inv_stock' },
+            { field: 'batch_lot', type: 'Batch/Lot', table: 'x_2056099_indust_0_inv_batch' },
+            { field: 'related_quality_inspection', type: 'Quality Inspection', table: 'x_2056099_indust_0_qc_insp' },
+            { field: 'related_inventory_request', type: 'Inventory Request', table: 'x_2056099_indust_0_inv_req' },
+            { field: 'material_product', type: 'Material/Product', table: 'x_2056099_indust_0_mat_master' }
+        ];
+        for (var i = 0; i < refFields.length; i++) {
+            var ref = refFields[i];
+            var val = rec.getValue(ref.field) || '';
+            if (val) {
+                return {
+                    type: ref.type,
+                    label: rec.getDisplayValue(ref.field) || val,
+                    table: ref.table,
+                    sys_id: val
+                };
+            }
+        }
+        return null;
+    }
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/alert_center_api/alerts</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/alerts</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description>Returns filtered alerts with summary counts, pagination, and filter options</short_description>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 11:13:52</sys_created_on>
+        <sys_id>f1d9acb1f09649b0b8fe4aba51ce5acd</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Get Alerts</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_f1d9acb1f09649b0b8fe4aba51ce5acd</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 11:13:52</sys_updated_on>
+        <web_service_definition display_value="Alert Center API">e59ecfc3b61648638019226a50133330</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>
