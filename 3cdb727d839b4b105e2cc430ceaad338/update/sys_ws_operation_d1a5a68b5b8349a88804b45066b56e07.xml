@@ -20,6 +20,9 @@
 if (response.getStatus() == 403) { /* early exit */ }
 else
 (function process(request, response) {
+  // API execution flag for lifecycle guard BR
+  gs.getSession().putClientData("x_2056099_indust_0_api_transition", "confirm");
+
   var SCHED_TABLE = "x_2056099_indust_0_prod_sched";
   var body = {};
   try { body = JSON.parse(request.body.dataString); } catch (e) {
@@ -40,52 +43,68 @@ else
     return;
   }
   var currentStatus = gr.getValue("status");
-  if (currentStatus == "scheduled") {
-    response.setStatus(400);
-    response.setBody({ result: { success: false, error: "Schedule is already in Scheduled status" } });
-    return;
-  }
-  if (currentStatus == "confirmed") {
-    response.setStatus(400);
-    response.setBody({ result: { success: false, error: "Schedule is already confirmed" } });
-    return;
-  }
-  if (currentStatus == "in_progress") {
-    response.setStatus(400);
-    response.setBody({ result: { success: false, error: "Schedule is already in progress" } });
-    return;
-  }
-  if (currentStatus == "completed") {
-    response.setStatus(400);
-    response.setBody({ result: { success: false, error: "Cannot confirm a completed schedule" } });
-    return;
-  }
-  if (currentStatus == "cancelled") {
-    response.setStatus(400);
-    response.setBody({ result: { success: false, error: "Cannot confirm a cancelled schedule" } });
-    return;
-  }
-  if (currentStatus != "draft") {
-    response.setStatus(400);
-    response.setBody({ result: { success: false, error: "Only draft schedules can be confirmed. Current status: " + gr.getDisplayValue("status") } });
-    return;
-  }
-  gr.setValue("status", "scheduled");
-  gr.update();
-  response.setBody({
-    result: {
-      success: true,
-      message: "Schedule confirmed. Status changed from Draft to Scheduled.",
-      record: {
-        sys_id: gr.getValue("sys_id"),
-        number: gr.getValue("number") || gr.getValue("sys_id"),
-        status: gr.getValue("status"),
-        statusDisplay: gr.getDisplayValue("status"),
-        production_order: gr.getDisplayValue("production_order"),
-        production_resource: gr.getDisplayValue("production_resource")
+
+  // TRANSITION 1: draft -> scheduled (planner scheduling)
+  if (currentStatus == "draft") {
+    // Any role in the RBAC check can schedule a draft
+    gr.setValue("status", "scheduled");
+    gr.update();
+    response.setBody({
+      result: {
+        success: true,
+        message: "Schedule moved to Scheduled status. Awaiting manager approval to Confirmed.",
+        schedule_id: schedId,
+        previous_status: "draft",
+        new_status: "scheduled"
       }
+    });
+    return;
+  }
+
+  // TRANSITION 2: scheduled -> confirmed (manager approval)
+  if (currentStatus == "scheduled") {
+    // Only manager-level roles can approve (confirm)
+    var isManager = gs.hasRole("admin") ||
+                    gs.hasRole("x_2056099_indust_0.production_manager") ||
+                    gs.hasRole("x_2056099_indust_0.plant_manager") ||
+                    gs.hasRole("x_2056099_indust_0.operations_manager");
+    if (!isManager) {
+      response.setStatus(403);
+      response.setBody({
+        result: {
+          success: false,
+          error: "Only production_manager, plant_manager, or operations_manager can approve (confirm) a scheduled production schedule. production_planner cannot self-approve."
+        }
+      });
+      return;
     }
-  });
+    gr.setValue("status", "confirmed");
+    gr.setValue("confirmed_by", gs.getUserID());
+    gr.setValue("confirmation_date", new GlideDateTime().getValue());
+    gr.update();
+    response.setBody({
+      result: {
+        success: true,
+        message: "Schedule approved and confirmed by manager. Ready for production execution.",
+        schedule_id: schedId,
+        previous_status: "scheduled",
+        new_status: "confirmed",
+        confirmed_by: gs.getUserID(),
+        confirmation_date: new GlideDateTime().getDisplayValue()
+      }
+    });
+    return;
+  }
+
+  // All other statuses are invalid for confirmation
+  var errorMsg = "Cannot confirm schedule. Current status: " + gr.getDisplayValue("status") + ". ";
+  if (currentStatus == "confirmed") errorMsg += "Schedule is already confirmed.";
+  else if (currentStatus == "in_progress") errorMsg += "Schedule is already in progress.";
+  else if (currentStatus == "completed") errorMsg += "Cannot confirm a completed schedule.";
+  else if (currentStatus == "cancelled") errorMsg += "Cannot confirm a cancelled schedule.";
+  else errorMsg += "Only draft or scheduled schedules can be progressed.";
+  response.setStatus(400);
+  response.setBody({ result: { success: false, error: errorMsg } });
 })(request, response);]]></operation_script>
         <operation_uri>/api/x_2056099_indust_0/operator_api/confirm-schedule</operation_uri>
         <produces>application/json,application/xml,text/xml</produces>
@@ -101,14 +120,14 @@ else
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-27 11:40:43</sys_created_on>
         <sys_id>d1a5a68b5b8349a88804b45066b56e07</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>3</sys_mod_count>
         <sys_name>Confirm Schedule</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ws_operation_d1a5a68b5b8349a88804b45066b56e07</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-02 12:32:55</sys_updated_on>
+        <sys_updated_on>2026-10-03 10:05:53</sys_updated_on>
         <web_service_definition display_value="Operator API">7acd7c17725147d9a550963b7da0fe53</web_service_definition>
         <web_service_version/>
     </sys_ws_operation>

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.ProductionScheduler</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Production scheduling engine. Creates draft production schedules for production orders by selecting the best available resource, calculating capacity-based planned dates, and checking delivery feasibility. Enforces single-active-schedule constraint per production order.
+
+Usage:
+  var scheduler = new x_2056099_indust_0.ProductionScheduler();
+  var result = scheduler.createDraftSchedule(productionOrderSysId);</description>
+        <mobile_callable>false</mobile_callable>
+        <name>ProductionScheduler</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var ProductionScheduler = Class.create();
+ProductionScheduler.prototype = {
+    initialize: function() {
+        this.PO = 'x_2056099_indust_0_production_order';
+        this.SCHED = 'x_2056099_indust_0_prod_sched';
+        this.RES = 'x_2056099_indust_0_prod_res';
+    },
+
+    /**
+     * Creates a draft production schedule for a production order.
+     *
+     * Steps:
+     *   1. Validate production order exists and is in a schedulable state
+     *   2. Check for existing active schedule (duplicate protection)
+     *   3. Find best available production resource
+     *   4. Calculate planned start/end based on capacity
+     *   5. Check delivery feasibility against customer order
+     *   6. Create draft schedule record
+     *
+     * @param {string} productionOrderSysId - sys_id of the production order
+     * @returns {object} { success, message, schedule, delivery_feasibility, error }
+     */
+    createDraftSchedule: function(productionOrderSysId) {
+        if (!productionOrderSysId) {
+            return { success: false, error: 'Production order sys_id is required' };
+        }
+
+        // Step 1: Validate production order
+        var po = new GlideRecord(this.PO);
+        if (!po.get(productionOrderSysId)) {
+            return { success: false, error: 'Production order not found: ' + productionOrderSysId };
+        }
+
+        var poNumber = po.getValue('number');
+        var poStatus = po.getValue('status');
+
+        var schedulableStatuses = ['planned', 'material_check', 'materials_reserved', 'in_production'];
+        if (schedulableStatuses.indexOf(poStatus) === -1) {
+            return {
+                success: false,
+                error: 'Production order ' + poNumber + ' is in status \"' + poStatus +
+                       '\" and cannot be scheduled. Schedulable statuses: ' + schedulableStatuses.join(', ')
+            };
+        }
+
+        // Step 2: Check for existing active schedule (duplicate protection)
+        // FIX: Added in_progress to prevent duplicate schedule creation
+        // while a schedule is actively being executed.
+        // Previous (defective): 'draft,scheduled,confirmed'
+        // Fixed: 'draft,scheduled,confirmed,in_progress'
+        var existingCheck = new GlideRecord(this.SCHED);
+        existingCheck.addQuery('production_order', productionOrderSysId);
+        existingCheck.addQuery('status', 'IN', 'draft,scheduled,confirmed,in_progress');
+        existingCheck.setLimit(1);
+        existingCheck.query();
+
+        if (existingCheck.next()) {
+            return {
+                success: false,
+                error: 'Production order ' + poNumber + ' already has an active schedule (' +
+                       existingCheck.getValue('number') + ') in status \"' +
+                       existingCheck.getValue('status') + '\". ' +
+                       'Cancel or complete the existing schedule before creating a new one.',
+                existing_schedule: {
+                    sys_id: existingCheck.getValue('sys_id'),
+                    number: existingCheck.getValue('number'),
+                    status: existingCheck.getValue('status')
+                }
+            };
+        }
+
+        // Step 3: Find best available production resource
+        var resource = this._findAvailableResource(po);
+        if (!resource.success) {
+            return { success: false, error: resource.error };
+        }
+
+        // Step 4: Calculate planned dates based on capacity
+        var dates = this._calculatePlannedDates(po, resource.resource);
+
+        // Step 5: Check delivery feasibility
+        var feasibility = this._checkDeliveryFeasibility(po, dates);
+
+        // Step 6: Create draft schedule record
+        var sched = new GlideRecord(this.SCHED);
+        sched.initialize();
+        sched.setValue('production_order', productionOrderSysId);
+        sched.setValue('production_resource', resource.resource.sys_id);
+        sched.setValue('planned_quantity', po.getValue('quantity_planned'));
+        sched.setValue('planned_start', dates.planned_start);
+        sched.setValue('planned_end', dates.planned_end);
+        sched.setValue('status', 'draft');
+        sched.setValue('priority', po.getValue('priority') || 'medium');
+        sched.setValue('active', true);
+        sched.setValue('description', 'Draft schedule for ' + poNumber +
+                       ' on resource ' + resource.resource.resource_name);
+
+                gs.getSession().putClientData("x_2056099_indust_0_api_transition", "create");
+        var schedId = sched.insert();
+        if (!schedId) {
+            return { success: false, error: 'Failed to create schedule record' };
+        }
+
+        // Retrieve the generated number
+        sched.get(schedId);
+        var schedNumber = sched.getValue('number');
+
+        gs.info('ProductionScheduler: Created draft schedule ' + schedNumber +
+                ' for PO ' + poNumber + ' on resource ' + resource.resource.resource_name);
+
+        return {
+            success: true,
+            message: 'Draft schedule created successfully',
+            schedule: {
+                sys_id: schedId,
+                number: schedNumber,
+                status: 'draft',
+                production_order: poNumber,
+                resource: resource.resource.resource_name,
+                resource_sys_id: resource.resource.sys_id,
+                planned_quantity: po.getValue('quantity_planned'),
+                planned_start: dates.planned_start,
+                planned_end: dates.planned_end,
+                days_needed: dates.days_needed
+            },
+            delivery_feasibility: feasibility
+        };
+    },
+
+    /**
+     * Find the best available production resource.
+     * Prefers: active, available status, no maintenance, highest capacity.
+     */
+    _findAvailableResource: function(po) {
+        var res = new GlideRecord(this.RES);
+        res.addQuery('active', true);
+        res.addQuery('status', 'available');
+        res.addQuery('maintenance_required', false);
+        res.orderByDesc('capacity_per_day');
+        res.setLimit(1);
+        res.query();
+
+        if (!res.next()) {
+            // Fallback: active + available (allow maintenance_required as warning)
+            // Do NOT select maintenance or unavailable status resources
+            res = new GlideRecord(this.RES);
+            res.addQuery('active', true);
+            res.addQuery('status', 'available');
+            res.orderByDesc('capacity_per_day');
+            res.setLimit(1);
+            res.query();
+
+            if (!res.next()) {
+                return { success: false, error: 'No production resources available. All resources are in maintenance, unavailable, or inactive.' };
+            }
+        }
+
+        return {
+            success: true,
+            resource: {
+                sys_id: res.getValue('sys_id'),
+                resource_name: res.getValue('resource_name'),
+                resource_id: res.getValue('resource_id'),
+                capacity_per_day: parseFloat(res.getValue('capacity_per_day')) || 0,
+                efficiency_percentage: parseFloat(res.getValue('efficiency_percentage')) || 100
+            }
+        };
+    },
+
+    /**
+     * Calculate planned start/end dates from resource capacity.
+     * effective_capacity = capacity_per_day * (efficiency / 100)
+     * days_needed = ceil(quantity / effective_capacity)
+     */
+    _calculatePlannedDates: function(po, resource) {
+        var qtyPlanned = parseFloat(po.getValue('quantity_planned')) || 0;
+        var capacityPerDay = resource.capacity_per_day || 1;
+        var efficiency = (resource.efficiency_percentage || 100) / 100;
+        var effectiveCapacity = capacityPerDay * efficiency;
+        if (effectiveCapacity <= 0) effectiveCapacity = 1;
+
+        var daysNeeded = Math.ceil(qtyPlanned / effectiveCapacity);
+        if (daysNeeded < 1) daysNeeded = 1;
+
+        var plannedStart = new GlideDateTime();
+        var plannedEnd = new GlideDateTime(plannedStart);
+        plannedEnd.addDaysLocalTime(daysNeeded);
+
+        return {
+            planned_start: plannedStart.getValue(),
+            planned_end: plannedEnd.getValue(),
+            days_needed: daysNeeded,
+            effective_capacity_per_day: effectiveCapacity
+        };
+    },
+
+    /**
+     * Check if schedule completion will meet the customer delivery deadline.
+     */
+    _checkDeliveryFeasibility: function(po, dates) {
+        var customerOrder = po.getValue('customer_order');
+        if (!customerOrder) {
+            return { feasible: true, message: 'No customer order linked — no delivery constraint' };
+        }
+
+        var co = new GlideRecord('x_2056099_indust_0_cust_order');
+        if (!co.get(customerOrder)) {
+            return { feasible: true, message: 'Customer order not found — no delivery constraint' };
+        }
+
+        var requiredDate = co.getValue('required_delivery_date');
+        if (!requiredDate) {
+            return { feasible: true, message: 'No required delivery date set on customer order' };
+        }
+
+        var required = new GlideDateTime(requiredDate);
+        var plannedEnd = new GlideDateTime(dates.planned_end);
+
+        if (plannedEnd.compareTo(required) <= 0) {
+            return { feasible: true, message: 'Schedule meets delivery deadline' };
+        } else {
+            return {
+                feasible: false,
+                message: 'Schedule may miss delivery deadline. Planned end: ' +
+                         dates.planned_end + ', Required: ' + requiredDate
+            };
+        }
+    },
+
+    type: 'ProductionScheduler'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-03 06:44:54</sys_created_on>
+        <sys_id>64a8a140833fc310dd8c9610feaad380</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>ProductionScheduler</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_64a8a140833fc310dd8c9610feaad380</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-03 10:57:33</sys_updated_on>
+    </sys_script_include>
+</record_update>

@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.WhatIfSimulationEngine</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Non-destructive What-If simulation engine for production scheduling.
+Supports 5 scenario types: resource_down, capacity_reduction, quantity_change, material_shortage, schedule_shift.
+READ-ONLY against production data. Records simulation results to sim_scenario and sim_schedule_run tables.
+Does NOT modify production_order, prod_sched, prod_res, inv_stock, inv_txn, or inv_req.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>WhatIfSimulationEngine</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var WhatIfSimulationEngine = Class.create();
+WhatIfSimulationEngine.prototype = {
+    initialize: function() {
+        this.PO = "x_2056099_indust_0_production_order";
+        this.SCHED = "x_2056099_indust_0_prod_sched";
+        this.RES = "x_2056099_indust_0_prod_res";
+        this.SCENARIO = "x_2056099_indust_0_sim_scenario";
+        this.RUN = "x_2056099_indust_0_sim_schedule_run";
+        this.PM = "x_2056099_indust_0_production_material";
+        this.STOCK = "x_2056099_indust_0_inv_stock";
+        this.VALID_TYPES = ["resource_down", "capacity_reduction", "quantity_change", "material_shortage", "schedule_shift"];
+    },
+
+    simulate: function(params) {
+        if (!params || !params.scenario_type) {
+            return this._fail("scenario_type is required. Supported: " + this.VALID_TYPES.join(", "));
+        }
+        if (this.VALID_TYPES.indexOf(params.scenario_type) === -1) {
+            return this._fail("Unsupported scenario_type: " + params.scenario_type + ". Supported: " + this.VALID_TYPES.join(", "));
+        }
+
+        switch (params.scenario_type) {
+            case "resource_down":       return this._simulateResourceDown(params);
+            case "capacity_reduction":  return this._simulateCapacityReduction(params);
+            case "quantity_change":     return this._simulateQuantityChange(params);
+            case "material_shortage":   return this._simulateMaterialShortage(params);
+            case "schedule_shift":      return this._simulateScheduleShift(params);
+            default: return this._fail("Unhandled scenario type");
+        }
+    },
+
+    // ═══════════════════════════════════════
+    // RESOURCE DOWN
+    // ═══════════════════════════════════════
+    _simulateResourceDown: function(params) {
+        var resId = params.resource_id || "";
+        if (!resId) return this._fail("resource_id is required for resource_down scenario");
+
+        var res = new GlideRecord(this.RES);
+        if (!res.get(resId)) return this._fail("Resource not found: " + resId);
+        var resName = res.getValue("resource_name");
+
+        // Find active schedules on this resource (READ-ONLY)
+        var affected = this._getActiveSchedulesForResource(resId);
+
+        // Find alternate resources (READ-ONLY)
+        var alternates = this._findAlternateResources(resId);
+
+        // Build adaptive proposals
+        var proposals = [];
+        for (var i = 0; i < affected.length; i++) {
+            var sched = affected[i];
+            var proposal = { schedule_sys_id: sched.sys_id, po_number: sched.po_number, current_resource: resName, proposed_action: "reschedule" };
+            if (alternates.length > 0) {
+                var alt = alternates[0];
+                var newDays = this._calcDays(sched.planned_quantity, alt.capacity_per_day, alt.efficiency);
+                proposal.proposed_resource = alt.resource_name;
+                proposal.proposed_resource_id = alt.sys_id;
+                proposal.simulated_duration_days = newDays;
+                proposal.capacity_available = alt.capacity_per_day;
+            } else {
+                proposal.proposed_resource = "NONE_AVAILABLE";
+                proposal.proposed_action = "manual_review";
+            }
+            proposals.push(proposal);
+        }
+
+        // Create sim_scenario record
+        var scenarioId = this._createScenario({
+            scenario_name: "Resource Down: " + resName,
+            disruption_category: "machine_breakdown",
+            target_entity: resName,
+            disruption_parameter: "Resource " + resName + " taken offline",
+            impacted_order_count: affected.length,
+            recommended_strategy: alternates.length > 0 ? "Reschedule to " + alternates[0].resource_name : "Manual review required"
+        });
+
+        // Create sim_schedule_run records
+        for (var j = 0; j < affected.length; j++) {
+            this._createRunRecord(scenarioId, affected[j], proposals[j] || {});
+        }
+
+        return {
+            success: true,
+            scenario_type: "resource_down",
+            scenario_sys_id: scenarioId,
+            resource_affected: resName,
+            impacted_schedules: affected.length,
+            alternate_resources_available: alternates.length,
+            affected_orders: affected,
+            alternateResources: alternates,
+            adaptiveProposals: proposals,
+            message: affected.length > 0 ? affected.length + " schedule(s) impacted by " + resName + " going down." : "No active schedules on this resource."
+        };
+    },
+
+    // ═══════════════════════════════════════
+    // CAPACITY REDUCTION
+    // ═══════════════════════════════════════
+    _simulateCapacityReduction: function(params) {
+        var resId = params.resource_id || "";
+        var reductionPct = parseFloat(params.reduction_percentage) || 50;
+        if (!resId) return this._fail("resource_id is required for capacity_reduction scenario");
+        if (reductionPct <= 0 || reductionPct >= 100) return this._fail("reduction_percentage must be between 1 and 99");
+
+        var res = new GlideRecord(this.RES);
+        if (!res.get(resId)) return this._fail("Resource not found: " + resId);
+        var resName = res.getValue("resource_name");
+        var currentCapacity = parseFloat(res.getValue("capacity_per_day")) || 0;
+        var currentEfficiency = parseFloat(res.getValue("efficiency_percentage")) || 100;
+        var simulatedCapacity = currentCapacity * (1 - reductionPct / 100);
+
+        var affected = this._getActiveSchedulesForResource(resId);
+        var impacts = [];
+        for (var i = 0; i < affected.length; i++) {
+            var sched = affected[i];
+            var originalDays = this._calcDays(sched.planned_quantity, currentCapacity, currentEfficiency);
+            var newDays = this._calcDays(sched.planned_quantity, simulatedCapacity, currentEfficiency);
+            impacts.push({
+                schedule_sys_id: sched.sys_id,
+                po_number: sched.po_number,
+                planned_quantity: sched.planned_quantity,
+                original_duration_days: originalDays,
+                simulated_duration_days: newDays,
+                additional_days: newDays - originalDays,
+                delay_impact: (newDays - originalDays) + " additional day(s) needed"
+            });
+        }
+
+        var scenarioId = this._createScenario({
+            scenario_name: "Capacity Reduction: " + resName + " by " + reductionPct + "%",
+            disruption_category: "machine_breakdown",
+            target_entity: resName,
+            disruption_parameter: "Capacity reduced from " + currentCapacity + " to " + simulatedCapacity.toFixed(1) + " units/day (" + reductionPct + "% reduction)",
+            impacted_order_count: affected.length,
+            recommended_strategy: "Extend schedule durations or redistribute load"
+        });
+
+        return {
+            success: true,
+            scenario_type: "capacity_reduction",
+            scenario_sys_id: scenarioId,
+            resource: resName,
+            current_capacity: currentCapacity,
+            simulated_capacity: parseFloat(simulatedCapacity.toFixed(1)),
+            reduction_percentage: reductionPct,
+            impacted_schedules: affected.length,
+            impacts: impacts,
+            message: "Capacity reduction of " + reductionPct + "% on " + resName + " affects " + affected.length + " schedule(s)."
+        };
+    },
+
+    // ═══════════════════════════════════════
+    // QUANTITY CHANGE
+    // ═══════════════════════════════════════
+    _simulateQuantityChange: function(params) {
+        var poId = params.production_order_id || "";
+        var newQty = parseFloat(params.new_quantity) || 0;
+        if (!poId) return this._fail("production_order_id is required for quantity_change scenario");
+        if (newQty <= 0) return this._fail("new_quantity must be positive");
+
+        var po = new GlideRecord(this.PO);
+        if (!po.get(poId)) return this._fail("Production order not found: " + poId);
+        var poNumber = po.getValue("number");
+        var originalQty = parseFloat(po.getValue("quantity_planned")) || 0;
+        var qtyDelta = newQty - originalQty;
+
+        // Find active schedule
+        var schedGr = new GlideRecord(this.SCHED);
+        schedGr.addQuery("production_order", poId);
+        schedGr.addQuery("status", "IN", "draft,scheduled,confirmed,in_progress");
+        schedGr.setLimit(1);
+        schedGr.query();
+
+        var schedInfo = null;
+        var originalDays = 0;
+        var newDays = 0;
+        if (schedGr.next()) {
+            var resId = schedGr.getValue("production_resource");
+            var resGr = new GlideRecord(this.RES);
+            var cap = 1; var eff = 100;
+            if (resGr.get(resId)) {
+                cap = parseFloat(resGr.getValue("capacity_per_day")) || 1;
+                eff = parseFloat(resGr.getValue("efficiency_percentage")) || 100;
+            }
+            originalDays = this._calcDays(originalQty, cap, eff);
+            newDays = this._calcDays(newQty, cap, eff);
+            schedInfo = {
+                sys_id: schedGr.getValue("sys_id"),
+                status: schedGr.getValue("status"),
+                resource: resGr.getValue("resource_name"),
+                original_duration_days: originalDays,
+                simulated_duration_days: newDays,
+                additional_days: newDays - originalDays
+            };
+        }
+
+        var scenarioId = this._createScenario({
+            scenario_name: "Quantity Change: " + poNumber + " from " + originalQty + " to " + newQty,
+            disruption_category: "urgent_order_ingestion",
+            target_entity: poNumber,
+            disruption_parameter: "Quantity " + (qtyDelta > 0 ? "increased" : "decreased") + " by " + Math.abs(qtyDelta) + " units",
+            impacted_order_count: 1,
+            recommended_strategy: qtyDelta > 0 ? "Extend schedule or add resource" : "Schedule may complete earlier"
+        });
+
+        return {
+            success: true,
+            scenario_type: "quantity_change",
+            scenario_sys_id: scenarioId,
+            production_order: poNumber,
+            original_quantity: originalQty,
+            simulated_quantity: newQty,
+            quantity_delta: qtyDelta,
+            schedule_impact: schedInfo,
+            message: "Quantity change from " + originalQty + " to " + newQty + " for " + poNumber + ". " + (schedInfo ? "Duration changes from " + originalDays + " to " + newDays + " day(s)." : "No active schedule found.")
+        };
+    },
+
+    // ═══════════════════════════════════════
+    // MATERIAL SHORTAGE
+    // ═══════════════════════════════════════
+    _simulateMaterialShortage: function(params) {
+        var materialId = params.material_id || "";
+        var shortageQty = parseFloat(params.shortage_quantity) || 0;
+        if (!materialId) return this._fail("material_id is required for material_shortage scenario");
+        if (shortageQty <= 0) return this._fail("shortage_quantity must be positive");
+
+        var mat = new GlideRecord("x_2056099_indust_0_mat_master");
+        if (!mat.get(materialId)) return this._fail("Material not found: " + materialId);
+        var matName = mat.getValue("name");
+
+        // Check current inventory (READ-ONLY)
+        var stockGr = new GlideRecord(this.STOCK);
+        stockGr.addQuery("material_product", materialId);
+        stockGr.addQuery("active", true);
+        stockGr.query();
+        var totalAvailable = 0;
+        while (stockGr.next()) {
+            totalAvailable += parseFloat(stockGr.getValue("available_quantity")) || 0;
+        }
+
+        // Find production orders using this material (READ-ONLY)
+        var pmGr = new GlideRecord(this.PM);
+        pmGr.addQuery("material_product", materialId);
+        pmGr.query();
+        var affectedPOs = [];
+        while (pmGr.next()) {
+            var poid = pmGr.getValue("production_order");
+            var poGr = new GlideRecord(this.PO);
+            if (poGr.get(poid) && poGr.getValue("status") !== "completed" && poGr.getValue("status") !== "cancelled") {
+                affectedPOs.push({
+                    po_sys_id: poid,
+                    po_number: poGr.getValue("number"),
+                    po_status: poGr.getValue("status"),
+                    required_qty: parseFloat(pmGr.getValue("required_quantity")) || 0
+                });
+            }
+        }
+
+        // Also check POs where material is the finished_product
+        var poByProduct = new GlideRecord(this.PO);
+        poByProduct.addQuery("finished_product", materialId);
+        poByProduct.addQuery("status", "NOT IN", "completed,cancelled");
+        poByProduct.query();
+        while (poByProduct.next()) {
+            var exists = false;
+            for (var x = 0; x < affectedPOs.length; x++) {
+                if (affectedPOs[x].po_sys_id === poByProduct.getValue("sys_id")) { exists = true; break; }
+            }
+            if (!exists) {
+                affectedPOs.push({
+                    po_sys_id: poByProduct.getValue("sys_id"),
+                    po_number: poByProduct.getValue("number"),
+                    po_status: poByProduct.getValue("status"),
+                    required_qty: parseFloat(poByProduct.getValue("quantity_planned")) || 0
+                });
+            }
+        }
+
+        var simulatedAvailable = Math.max(0, totalAvailable - shortageQty);
+
+        var scenarioId = this._createScenario({
+            scenario_name: "Material Shortage: " + matName + " (-" + shortageQty + " units)",
+            disruption_category: "material_shortage",
+            target_entity: matName,
+            disruption_parameter: "Shortage of " + shortageQty + " units. Available: " + totalAvailable + " -> Simulated: " + simulatedAvailable,
+            impacted_order_count: affectedPOs.length,
+            recommended_strategy: simulatedAvailable > 0 ? "Partial fulfillment possible" : "Procurement or substitution required"
+        });
+
+        return {
+            success: true,
+            scenario_type: "material_shortage",
+            scenario_sys_id: scenarioId,
+            material: matName,
+            material_id: materialId,
+            current_available: totalAvailable,
+            shortage_quantity: shortageQty,
+            simulated_available: simulatedAvailable,
+            affected_production_orders: affectedPOs,
+            impacted_order_count: affectedPOs.length,
+            message: "Material shortage of " + shortageQty + " units for " + matName + ". " + affectedPOs.length + " production order(s) potentially affected."
+        };
+    },
+
+    // ═══════════════════════════════════════
+    // SCHEDULE SHIFT
+    // ═══════════════════════════════════════
+    _simulateScheduleShift: function(params) {
+        var schedId = params.schedule_id || "";
+        var shiftDays = parseInt(params.shift_days) || 0;
+        if (!schedId) return this._fail("schedule_id is required for schedule_shift scenario");
+        if (shiftDays === 0) return this._fail("shift_days must be non-zero (positive=delay, negative=advance)");
+
+        var sched = new GlideRecord(this.SCHED);
+        if (!sched.get(schedId)) return this._fail("Schedule not found: " + schedId);
+
+        var originalStart = sched.getValue("planned_start");
+        var originalEnd = sched.getValue("planned_end");
+        var schedStatus = sched.getValue("status");
+
+        var poGr = new GlideRecord(this.PO);
+        var poNumber = "";
+        if (poGr.get(sched.getValue("production_order"))) {
+            poNumber = poGr.getValue("number");
+        }
+
+        // Calculate simulated dates (DO NOT write)
+        var simStart = new GlideDateTime(originalStart);
+        simStart.addDaysLocalTime(shiftDays);
+        var simEnd = new GlideDateTime(originalEnd);
+        simEnd.addDaysLocalTime(shiftDays);
+
+        // Check if shift causes resource conflict
+        var resId = sched.getValue("production_resource");
+        var conflictsFound = [];
+        var otherScheds = new GlideRecord(this.SCHED);
+        otherScheds.addQuery("production_resource", resId);
+        otherScheds.addQuery("sys_id", "!=", schedId);
+        otherScheds.addQuery("status", "IN", "draft,scheduled,confirmed,in_progress");
+        otherScheds.query();
+        while (otherScheds.next()) {
+            var oStart = new GlideDateTime(otherScheds.getValue("planned_start"));
+            var oEnd = new GlideDateTime(otherScheds.getValue("planned_end"));
+            if (simStart.compareTo(oEnd) < 0 && simEnd.compareTo(oStart) > 0) {
+                conflictsFound.push({ sys_id: otherScheds.getValue("sys_id"), status: otherScheds.getValue("status") });
+            }
+        }
+
+        var scenarioId = this._createScenario({
+            scenario_name: "Schedule Shift: " + poNumber + " by " + shiftDays + " day(s)",
+            disruption_category: "urgent_order_ingestion",
+            target_entity: poNumber,
+            disruption_parameter: "Shift " + (shiftDays > 0 ? "delayed" : "advanced") + " by " + Math.abs(shiftDays) + " day(s)",
+            impacted_order_count: 1,
+            recommended_strategy: conflictsFound.length > 0 ? "Resolve resource conflicts before applying shift" : "Shift is feasible"
+        });
+
+        return {
+            success: true,
+            scenario_type: "schedule_shift",
+            scenario_sys_id: scenarioId,
+            production_order: poNumber,
+            schedule_sys_id: schedId,
+            schedule_status: schedStatus,
+            original_start: originalStart,
+            original_end: originalEnd,
+            simulated_start: simStart.getValue(),
+            simulated_end: simEnd.getValue(),
+            shift_days: shiftDays,
+            resource_conflicts: conflictsFound,
+            message: "Schedule for " + poNumber + " shifted by " + shiftDays + " day(s). " + (conflictsFound.length > 0 ? conflictsFound.length + " resource conflict(s) detected." : "No resource conflicts.")
+        };
+    },
+
+    // ═══════════════════════════════════════
+    // HELPERS (READ-ONLY)
+    // ═══════════════════════════════════════
+
+    _getActiveSchedulesForResource: function(resId) {
+        var results = [];
+        var gr = new GlideRecord(this.SCHED);
+        gr.addQuery("production_resource", resId);
+        gr.addQuery("status", "IN", "draft,scheduled,confirmed,in_progress");
+        gr.query();
+        while (gr.next()) {
+            var poGr = new GlideRecord(this.PO);
+            var poNum = "";
+            if (poGr.get(gr.getValue("production_order"))) poNum = poGr.getValue("number");
+            results.push({
+                sys_id: gr.getValue("sys_id"),
+                status: gr.getValue("status"),
+                po_number: poNum,
+                po_sys_id: gr.getValue("production_order"),
+                planned_quantity: parseFloat(gr.getValue("planned_quantity")) || 0,
+                planned_start: gr.getValue("planned_start"),
+                planned_end: gr.getValue("planned_end")
+            });
+        }
+        return results;
+    },
+
+    _findAlternateResources: function(excludeResId) {
+        var results = [];
+        var gr = new GlideRecord(this.RES);
+        gr.addQuery("sys_id", "!=", excludeResId);
+        gr.addQuery("active", true);
+        gr.addQuery("status", "available");
+        gr.addQuery("maintenance_required", false);
+        gr.orderByDesc("capacity_per_day");
+        gr.query();
+        while (gr.next()) {
+            results.push({
+                sys_id: gr.getValue("sys_id"),
+                resource_name: gr.getValue("resource_name"),
+                resource_id: gr.getValue("resource_id"),
+                capacity_per_day: parseFloat(gr.getValue("capacity_per_day")) || 0,
+                efficiency: parseFloat(gr.getValue("efficiency_percentage")) || 100
+            });
+        }
+        return results;
+    },
+
+    _calcDays: function(qty, capacity, efficiency) {
+        var eff = (efficiency || 100) / 100;
+        var effective = (capacity || 1) * eff;
+        if (effective <= 0) effective = 1;
+        return Math.ceil(qty / effective);
+    },
+
+    _createScenario: function(data) {
+        var gr = new GlideRecord(this.SCENARIO);
+        gr.initialize();
+        gr.setValue("scenario_name", data.scenario_name || "");
+        gr.setValue("scenario_id", "SIM-" + new GlideDateTime().getNumericValue());
+        gr.setValue("disruption_category", data.disruption_category || "");
+        gr.setValue("target_entity", data.target_entity || "");
+        gr.setValue("disruption_parameter", data.disruption_parameter || "");
+        gr.setValue("simulation_status", "evaluated");
+        gr.setValue("impacted_order_count", data.impacted_order_count || 0);
+        gr.setValue("recommended_strategy", data.recommended_strategy || "");
+        return gr.insert() || "";
+    },
+
+    _createRunRecord: function(scenarioId, schedData, proposal) {
+        var gr = new GlideRecord(this.RUN);
+        gr.initialize();
+        gr.setValue("scenario", scenarioId);
+        gr.setValue("customer_order_ref", schedData.po_number || "");
+        gr.setValue("order_qty", schedData.planned_quantity || 0);
+        gr.setValue("assigned_machine", proposal.current_resource || "");
+        gr.setValue("adaptive_strategy", proposal.proposed_resource ? "Reschedule to " + proposal.proposed_resource : "Manual review");
+        gr.setValue("material_status", "in_stock");
+        return gr.insert() || "";
+    },
+
+    _fail: function(reason) {
+        return { success: false, error: reason };
+    },
+
+    type: "WhatIfSimulationEngine"
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-03 06:55:35</sys_created_on>
+        <sys_id>4d1b610883f7c310dd8c9610feaad365</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>WhatIfSimulationEngine</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_4d1b610883f7c310dd8c9610feaad365</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-03 06:55:35</sys_updated_on>
+    </sys_script_include>
+</record_update>

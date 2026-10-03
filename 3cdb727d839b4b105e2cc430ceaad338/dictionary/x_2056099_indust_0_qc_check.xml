@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="2c196e88b67044e1a0e2e350608e9d20" label="Quality Check" name="x_2056099_indust_0_qc_check" type="collection">
-        <element label="Inspector" max_length="32" name="inspector" reference="sys_user" type="reference"/>
-        <element label="Defect Description" max_length="2000" name="defect_description" type="multi_two_lines"/>
-        <element label="Compliance Score (0-100)" max_length="40" name="compliance_score" type="integer"/>
         <element label="Material Receipt" mandatory="true" max_length="32" name="material_receipt" reference="x_2056099_indust_0_mat_rcpt" type="reference"/>
-        <element label="Result" mandatory="true" max_length="40" name="result" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Fail" sequence="2" value="fail"/>
-                <element inactive_on_update="false" label="Pass" sequence="1" value="pass"/>
-                <element inactive_on_update="false" label="Conditional Pass" sequence="3" value="conditional_pass"/>
-            </choice>
-        </element>
-        <element display="true" label="Check Number" max_length="20" name="check_number" type="string"/>
-        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
         <element label="Check Date" mandatory="true" max_length="40" name="check_date" type="glide_date_time"/>
         <element label="Parameters Checked" max_length="1000" name="parameters_checked" type="multi_two_lines"/>
+        <element label="Result" mandatory="true" max_length="40" name="result" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Pass" sequence="1" value="pass"/>
+                <element inactive_on_update="false" label="Conditional Pass" sequence="3" value="conditional_pass"/>
+                <element inactive_on_update="false" label="Fail" sequence="2" value="fail"/>
+            </choice>
+        </element>
+        <element label="Inspector" max_length="32" name="inspector" reference="sys_user" type="reference"/>
+        <element label="Defect Description" max_length="2000" name="defect_description" type="multi_two_lines"/>
+        <element display="true" label="Check Number" max_length="20" name="check_number" type="string"/>
         <element default="0" label="Defects Found" max_length="40" name="defects_found" type="integer"/>
+        <element label="Compliance Score (0-100)" max_length="40" name="compliance_score" type="integer"/>
+        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
         <index name="index">
             <element name="inspector"/>
         </index>

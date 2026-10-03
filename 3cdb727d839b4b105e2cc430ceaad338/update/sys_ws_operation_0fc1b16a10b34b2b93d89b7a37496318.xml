@@ -20,6 +20,9 @@
 if (response.getStatus() == 403) { /* early exit */ }
 else
 (function process(request, response) {
+  // API execution flag for lifecycle guard BR
+  gs.getSession().putClientData("x_2056099_indust_0_api_transition", "start");
+
   var PO_TABLE = "x_2056099_indust_0_production_order";
   var RES_TABLE = "x_2056099_indust_0_prod_res";
 
@@ -99,7 +102,36 @@ else
   if (!gr.getValue("actual_start_date")) {
     gr.setValue("actual_start_date", new GlideDateTime().getValue());
   }
-  gr.setValue("status", "in_production");
+    // === SCHEDULE CONFIRMATION GATE (Prompt 30) ===
+  // Production cannot start unless a confirmed schedule exists
+  var schedCheck = new GlideRecord("x_2056099_indust_0_prod_sched");
+  schedCheck.addQuery("production_order", sysId);
+  schedCheck.addQuery("status", "confirmed");
+  schedCheck.addQuery("active", true);
+  schedCheck.setLimit(1);
+  schedCheck.query();
+  if (!schedCheck.hasNext()) {
+    // Check if there is a schedule in another state to give specific guidance
+    var anySchedCheck = new GlideRecord("x_2056099_indust_0_prod_sched");
+    anySchedCheck.addQuery("production_order", sysId);
+    anySchedCheck.addQuery("status", "IN", "draft,scheduled");
+    anySchedCheck.addQuery("active", true);
+    anySchedCheck.setLimit(1);
+    anySchedCheck.query();
+    var schedMsg = "Cannot start production. No confirmed production schedule found for this order. ";
+    if (anySchedCheck.hasNext()) {
+      anySchedCheck.next();
+      schedMsg += "A schedule exists in \"" + anySchedCheck.getDisplayValue("status") + "\" status. It must be approved (confirmed) by a manager before production can begin.";
+    } else {
+      schedMsg += "Create and approve a production schedule first.";
+    }
+    response.setStatus(400);
+    response.setBody({ result: { success: false, error: schedMsg } });
+    return;
+  }
+  // === END SCHEDULE CONFIRMATION GATE ===
+
+gr.setValue("status", "in_production");
   gr.update();
 
   // --- Link to Production Schedule: transition scheduled/confirmed → in_progress ---
@@ -111,7 +143,9 @@ else
   schedGr.query();
   var scheduleLinked = false;
   while (schedGr.next()) {
-    schedGr.setValue("status", "in_progress");
+    schedGr.setValue("status", "in_progress")
+      schedGr.setValue("started_by", gs.getUserID());
+      schedGr.setValue("start_date", new GlideDateTime().getValue());;
     schedGr.update();
     scheduleLinked = true;
   }
@@ -148,14 +182,14 @@ else
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-27 08:03:16</sys_created_on>
         <sys_id>0fc1b16a10b34b2b93d89b7a37496318</sys_id>
-        <sys_mod_count>2</sys_mod_count>
+        <sys_mod_count>5</sys_mod_count>
         <sys_name>Start Production</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ws_operation_0fc1b16a10b34b2b93d89b7a37496318</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-02 12:32:54</sys_updated_on>
+        <sys_updated_on>2026-10-03 10:13:04</sys_updated_on>
         <web_service_definition display_value="Operator API">7acd7c17725147d9a550963b7da0fe53</web_service_definition>
         <web_service_version/>
     </sys_ws_operation>

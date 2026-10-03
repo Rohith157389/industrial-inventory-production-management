@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_prod_sched</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Enforce Schedule Lifecycle Transitions</name>
+        <order>10</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous) {
+    var FLAG_KEY = "x_2056099_indust_0_api_transition";
+    var apiFlag = gs.getSession().getClientData(FLAG_KEY) || "";
+
+    // Always clear the flag after reading to prevent reuse
+    gs.getSession().putClientData(FLAG_KEY, "");
+
+    // On INSERT: only allow if the API create flag is set
+    if (current.operation() == "insert") {
+        if (apiFlag == "create") return; // Legitimate API creation
+        // Allow admin direct inserts for data management
+        if (gs.hasRole("admin")) return;
+        gs.addErrorMessage("Production schedules must be created through the Create Schedule API.");
+        current.setAbortAction(true);
+        return;
+    }
+
+    // On UPDATE: check if status changed
+    var newStatus = current.getValue("status");
+    var oldStatus = previous ? previous.getValue("status") : "";
+
+    // If status did not change, allow the update (non-status field edits)
+    if (newStatus == oldStatus) return;
+
+    // Define the valid transition matrix
+    var validTransitions = {
+        "draft":      { "scheduled": "confirm",  "cancelled": "cancel" },
+        "scheduled":  { "confirmed": "confirm",  "cancelled": "cancel" },
+        "confirmed":  { "in_progress": "start",  "cancelled": "cancel" },
+        "in_progress":{ "completed": "complete", "cancelled": "cancel" }
+    };
+
+    // Check if the transition is in the valid matrix
+    var allowedTargets = validTransitions[oldStatus];
+    if (!allowedTargets || !allowedTargets[newStatus]) {
+        // Invalid transition path
+        gs.addErrorMessage("Invalid schedule status transition: " + oldStatus + " → " + newStatus + ". This transition is not permitted.");
+        current.setAbortAction(true);
+        return;
+    }
+
+    // Valid transition path exists - now check if it came through the API
+    var requiredFlag = allowedTargets[newStatus];
+    if (apiFlag == requiredFlag) {
+        return; // Legitimate API-driven transition
+    }
+
+    // Admin bypass for operational recovery
+    if (gs.hasRole("admin")) return;
+
+    // No valid API flag - block the direct write
+    gs.addErrorMessage("Status transition " + oldStatus + " → " + newStatus + " must be performed through the authorized production API, not by direct record update.");
+    current.setAbortAction(true);
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-03 10:06:50</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>6ed65a0c83b30710dd8c9610feaad30e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Enforce Schedule Lifecycle Transitions</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_6ed65a0c83b30710dd8c9610feaad30e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-03 10:06:50</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=6ed65a0c83b30710dd8c9610feaad30e"/>
+</record_update>
