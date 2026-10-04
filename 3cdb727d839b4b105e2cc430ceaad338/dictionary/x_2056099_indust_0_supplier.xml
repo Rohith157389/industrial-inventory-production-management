@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="609dd8273a9642b2ba8f7d9a2584c59a" label="Supplier" name="x_2056099_indust_0_supplier" type="collection">
-        <element default="40" label="Threshold Score" max_length="40" name="threshold_score" type="integer"/>
+        <element default="0" label="Cumulative Score" max_length="15" name="cumulative_score" type="decimal"/>
+        <element label="Address" max_length="500" name="address" type="multi_two_lines"/>
         <element label="Contact Email" max_length="40" name="contact_email" type="email"/>
+        <element label="Contact Phone" max_length="20" name="contact_phone" type="string"/>
+        <element default="0" label="Total Orders" max_length="40" name="total_orders" type="integer"/>
         <element label="Category" max_length="40" name="category" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Components" sequence="2" value="components"/>
-                <element inactive_on_update="false" label="Equipment" sequence="5" value="equipment"/>
-                <element inactive_on_update="false" label="Raw Materials" sequence="1" value="raw_materials"/>
                 <element inactive_on_update="false" label="Chemicals" sequence="4" value="chemicals"/>
+                <element inactive_on_update="false" label="Components" sequence="2" value="components"/>
                 <element inactive_on_update="false" label="Packaging" sequence="3" value="packaging"/>
+                <element inactive_on_update="false" label="Raw Materials" sequence="1" value="raw_materials"/>
+                <element inactive_on_update="false" label="Equipment" sequence="5" value="equipment"/>
             </choice>
         </element>
-        <element display="true" label="Supplier Name" mandatory="true" max_length="200" name="name" type="string"/>
-        <element default="0" label="Total Ratings" max_length="40" name="total_ratings" type="integer"/>
-        <element default="0" label="Cumulative Score" max_length="15" name="cumulative_score" type="decimal"/>
-        <element label="Contact Phone" max_length="20" name="contact_phone" type="string"/>
         <element default="available" label="Availability" max_length="40" name="availability" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Available" sequence="1" value="available"/>
                 <element inactive_on_update="false" label="Unavailable" sequence="2" value="unavailable"/>
+                <element inactive_on_update="false" label="Available" sequence="1" value="available"/>
             </choice>
         </element>
+        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
+        <element display="true" label="Supplier Name" mandatory="true" max_length="200" name="name" type="string"/>
+        <element default="0" label="Total Ratings" max_length="40" name="total_ratings" type="integer"/>
         <element default="active" label="Status" max_length="40" name="status" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Blacklisted" sequence="3" value="blacklisted"/>
                 <element inactive_on_update="false" label="Under Review" sequence="2" value="under_review"/>
                 <element inactive_on_update="false" label="Active" sequence="1" value="active"/>
-                <element inactive_on_update="false" label="Blacklisted" sequence="3" value="blacklisted"/>
             </choice>
         </element>
-        <element label="Address" max_length="500" name="address" type="multi_two_lines"/>
-        <element default="0" label="Total Orders" max_length="40" name="total_orders" type="integer"/>
-        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
+        <element default="40" label="Threshold Score" max_length="40" name="threshold_score" type="integer"/>
     </element>
 </database>

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="23eea95c6bfe47b8aa529e73a1a29194" label="Procurement Report" name="x_2056099_indust_0_proc_rpt" type="collection">
+        <element display="true" label="Report Number" max_length="20" name="report_number" type="string"/>
+        <element label="Material Receipt" mandatory="true" max_length="32" name="material_receipt" reference="x_2056099_indust_0_mat_rcpt" type="reference"/>
+        <element label="Procurement Order" mandatory="true" max_length="32" name="procurement_order" reference="x_2056099_indust_0_proc_ord" type="reference"/>
         <element label="Amount Summary" max_length="1000" name="amount_summary" type="multi_two_lines"/>
+        <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="x_2056099_indust_0_supplier" type="reference"/>
+        <element label="Overall Score (0-100)" max_length="40" name="overall_score" type="integer"/>
+        <element label="Report Date" mandatory="true" max_length="40" name="report_date" type="glide_date_time"/>
         <element default="draft" label="Status" max_length="40" name="status" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Reviewed" sequence="3" value="reviewed"/>
@@ -8,17 +14,11 @@
                 <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
             </choice>
         </element>
-        <element label="Delivery Score (0-100)" max_length="40" name="delivery_score" type="integer"/>
-        <element display="true" label="Report Number" max_length="20" name="report_number" type="string"/>
-        <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="x_2056099_indust_0_supplier" type="reference"/>
         <element label="Quantity Accuracy (0-100)" max_length="40" name="quantity_accuracy" type="integer"/>
-        <element label="Material Receipt" mandatory="true" max_length="32" name="material_receipt" reference="x_2056099_indust_0_mat_rcpt" type="reference"/>
-        <element label="Overall Score (0-100)" max_length="40" name="overall_score" type="integer"/>
-        <element label="Quality Score (0-100)" max_length="40" name="quality_score" type="integer"/>
-        <element label="Quality Check" mandatory="true" max_length="32" name="quality_check" reference="x_2056099_indust_0_qc_check" type="reference"/>
-        <element label="Procurement Order" mandatory="true" max_length="32" name="procurement_order" reference="x_2056099_indust_0_proc_ord" type="reference"/>
-        <element label="Report Date" mandatory="true" max_length="40" name="report_date" type="glide_date_time"/>
         <element label="Materials Summary" max_length="2000" name="materials_summary" type="multi_two_lines"/>
+        <element label="Quality Score (0-100)" max_length="40" name="quality_score" type="integer"/>
+        <element label="Delivery Score (0-100)" max_length="40" name="delivery_score" type="integer"/>
+        <element label="Quality Check" mandatory="true" max_length="32" name="quality_check" reference="x_2056099_indust_0_qc_check" type="reference"/>
         <element label="Recommendations" max_length="2000" name="recommendations" type="multi_two_lines"/>
         <index name="index">
             <element name="material_receipt"/>

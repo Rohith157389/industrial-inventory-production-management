@@ -5,7 +5,7 @@
         <active>true</active>
         <allow_high_security_roles>false</allow_high_security_roles>
         <annotation/>
-        <attributes>timeFromCreateToActivate=13000</attributes>
+        <attributes>timeFromCreateToActivate=616953000</attributes>
         <authored_on_release_version/>
         <callable_by_client_api>false</callable_by_client_api>
         <category/>
@@ -17,13 +17,13 @@
         <generation_source>fluent</generation_source>
         <internal_name>fd__production_order__material_availability_check</internal_name>
         <label_cache>[{"name":"Created or Updated_1.current.finished_product","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_production_order Record➛Finished Product","type":"string","base_type":"string","usedInstances":{"067d08e9-37cc-400e-b252-cf363ca7bc9f":["conditions"],"7728d95a-6e17-4cc3-b212-6d550453920b":["values"],"3bcec958-70d3-4ef7-8ead-53d1841d11fb":["values"]},"attributes":{}},{"name":"067d08e9-37cc-400e-b252-cf363ca7bc9f.status","label":"067d08e9-37cc-400e-b252-cf363ca7bc9f➛status","type":"string","base_type":"string","usedInstances":{"9e694a9a-a492-411d-b785-bafa2b4f78cd":["condition"]},"attributes":{}},{"name":"Created or Updated_1.current.sys_updated_on","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_production_order Record➛Sys Updated On","type":"glide_date_time","base_type":"glide_date_time","usedInstances":{"7728d95a-6e17-4cc3-b212-6d550453920b":["values"],"3bcec958-70d3-4ef7-8ead-53d1841d11fb":["values"],"16c56292-590f-4651-89cf-d35214ee2425":["values"],"3e2ab03a-1ecf-4593-88e0-d7e32ea2f373":["values"],"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"067d08e9-37cc-400e-b252-cf363ca7bc9f.Record.sys_id","label":"067d08e9-37cc-400e-b252-cf363ca7bc9f➛Record➛sys_id","type":"string","base_type":"string","usedInstances":{"12c051f6-9e48-4f8e-b0ae-ae1a0bd57300":["conditions"]},"attributes":{}},{"name":"12c051f6-9e48-4f8e-b0ae-ae1a0bd57300.Count","label":"12c051f6-9e48-4f8e-b0ae-ae1a0bd57300➛Count","type":"integer","base_type":"integer","usedInstances":{"de07b457-e1d6-44dc-aa86-943cf75807fe":["condition"]},"attributes":{}},{"name":"12c051f6-9e48-4f8e-b0ae-ae1a0bd57300.Records","label":"12c051f6-9e48-4f8e-b0ae-ae1a0bd57300➛Records","type":"records","base_type":"records","column_name":"Records","usedInstances":{"5b9678e4-f193-431a-8954-0cae706581ed":["items"]},"attributes":{}},{"name":"5b9678e4-f193-431a-8954-0cae706581ed.item.material_product","label":"9 - For Each - ➛item➛Material Product","type":"string","base_type":"string","usedInstances":{"c2dca4de-8626-4cd6-b326-c427ea830973":["conditions"],"16c56292-590f-4651-89cf-d35214ee2425":["values"],"3e2ab03a-1ecf-4593-88e0-d7e32ea2f373":["values"],"51577d6f-1f78-4dda-8a11-235f5d1a5851":["conditions"],"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.status","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛status","type":"string","base_type":"string","usedInstances":{"ea576a8c-e662-4264-bad4-9d9dd2385244":["condition"]},"attributes":{}},{"name":"5b9678e4-f193-431a-8954-0cae706581ed.item.quantity_required","label":"9 - For Each - ➛item➛Quantity Required","type":"decimal","base_type":"decimal","usedInstances":{"16c56292-590f-4651-89cf-d35214ee2425":["values"],"1b20c288-f679-442c-bba2-298708f79f08":["condition"],"3e2ab03a-1ecf-4593-88e0-d7e32ea2f373":["values"],"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.Record.available_quantity","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛Record➛available_quantity","type":"decimal","base_type":"decimal","usedInstances":{"1b20c288-f679-442c-bba2-298708f79f08":["condition"],"3e2ab03a-1ecf-4593-88e0-d7e32ea2f373":["values"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.Record","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛Record","type":"reference","base_type":"reference","usedInstances":{"3e2ab03a-1ecf-4593-88e0-d7e32ea2f373":["values"],"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.sys_id","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_production_order Record➛Sys Id","type":"string","base_type":"string","usedInstances":{"51577d6f-1f78-4dda-8a11-235f5d1a5851":["conditions"],"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"51577d6f-1f78-4dda-8a11-235f5d1a5851.Count","label":"51577d6f-1f78-4dda-8a11-235f5d1a5851➛Count","type":"integer","base_type":"integer","usedInstances":{"b87d4297-1b60-4120-9177-ebe2f2346b1f":["condition"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.Record.batch_lot","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛Record➛batch_lot","type":"reference","base_type":"reference","usedInstances":{"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.Record.location","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛Record➛location","type":"reference","base_type":"reference","usedInstances":{"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.production_location","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_production_order Record➛Production Location","type":"string","base_type":"string","usedInstances":{"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.assigned_planner","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_production_order Record➛Assigned Planner","type":"string","base_type":"string","usedInstances":{"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.Record.inventory_type","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛Record➛inventory_type","type":"string","base_type":"string","usedInstances":{"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}}]</label_cache>
-        <master_snapshot>94339efdc363c310d1c3b61ed40131d3</master_snapshot>
+        <master_snapshot>de6b3ad893f78710e61e3b277bba10e2</master_snapshot>
         <master_snapshot_digest/>
         <name>FD - Production Order - Material Availability Check</name>
         <natlang/>
         <outputs/>
         <pre_compiled>false</pre_compiled>
-        <remote_trigger_id>e9331231c3a3c310d1c3b61ed4013180</remote_trigger_id>
+        <remote_trigger_id>376bfad893f78710e61e3b277bba1033</remote_trigger_id>
         <run_as>system</run_as>
         <run_with_roles/>
         <sc_callable>false</sc_callable>
@@ -37,7 +37,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>e152b03ef6ca4d5cb13cc46e99c248d8</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>1</sys_mod_count>
         <sys_name>FD - Production Order - Material Availability Check</sys_name>
         <sys_overrides/>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -45,7 +45,7 @@
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_hub_flow_e152b03ef6ca4d5cb13cc46e99c248d8</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-02 23:31:43</sys_updated_on>
+        <sys_updated_on>2026-10-04 07:25:09</sys_updated_on>
         <type>flow</type>
         <updation_source/>
         <version>2</version>
@@ -70,33 +70,33 @@
         <run_when_user_setting>any</run_when_user_setting>
         <sys_class_name>sys_flow_record_trigger</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-09-26 10:04:36</sys_created_on>
+        <sys_created_on>2026-10-04 07:25:08</sys_created_on>
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
-        <sys_id>e9331231c3a3c310d1c3b61ed4013180</sys_id>
+        <sys_id>376bfad893f78710e61e3b277bba1033</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_overrides/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:36</sys_updated_on>
+        <sys_updated_on>2026-10-04 07:25:08</sys_updated_on>
         <table>x_2056099_indust_0_production_order</table>
         <trigger_definition/>
     </sys_flow_record_trigger>
     <sys_trigger_runner_mapping action="INSERT_OR_UPDATE">
         <active>true</active>
-        <data>{"run_on_extended":"false","run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any"}</data>
+        <data>{"run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any","run_on_extended":"false"}</data>
         <identifier>e152b03ef6ca4d5cb13cc46e99c248d8</identifier>
         <identifier_type>flow</identifier_type>
         <runner>FDTriggerRunner</runner>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-09-26 10:04:36</sys_created_on>
-        <sys_id>ad331231c3a3c310d1c3b61ed4013181</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_created_on>2026-10-04 07:25:08</sys_created_on>
+        <sys_id>376bfad893f78710e61e3b277bba1035</sys_id>
+        <sys_mod_count>0</sys_mod_count>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:20:29</sys_updated_on>
-        <trigger display_value="">e9331231c3a3c310d1c3b61ed4013180</trigger>
+        <sys_updated_on>2026-10-04 07:25:08</sys_updated_on>
+        <trigger display_value="">376bfad893f78710e61e3b277bba1033</trigger>
     </sys_trigger_runner_mapping>
-    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=e152b03ef6ca4d5cb13cc46e99c248d8^sys_idNOT INad331231c3a3c310d1c3b61ed4013181"/>
+    <sys_trigger_runner_mapping action="delete_multiple" query="identifier=e152b03ef6ca4d5cb13cc46e99c248d8^sys_idNOT IN376bfad893f78710e61e3b277bba1035"/>
     <sys_hub_flow_stage action="delete_multiple" query="flow=e152b03ef6ca4d5cb13cc46e99c248d8"/>
     <sys_flow_cat_variable_model action="delete_multiple" query="id=e152b03ef6ca4d5cb13cc46e99c248d8"/>
     <sys_hub_flow_input action="delete_multiple" query="model=e152b03ef6ca4d5cb13cc46e99c248d8^sys_idNOT IN86231efdc363c310d1c3b61ed40131b1,a2235efdc363c310d1c3b61ed4013114,d6231efdc363c310d1c3b61ed40131fc"/>
@@ -385,7 +385,7 @@
         <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
         <attributes/>
         <comment>Look up the active Customer BOM whose finished_product matches the Production Order finished_product</comment>
-        <compiled_snapshot/>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
         <display_text/>
         <flow display_value="FD - Production Order - Material Availability Check">e152b03ef6ca4d5cb13cc46e99c248d8</flow>
         <generation_source/>
@@ -395,10 +395,10 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:16</sys_created_on>
         <sys_id>067d08e937cc400eb252cf363ca7bc9f</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:26</sys_updated_on>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:53</sys_updated_on>
         <ui_id>067d08e9-37cc-400e-b252-cf363ca7bc9f</ui_id>
         <updation_source/>
         <values>H4sIAAAAAAAA/+VY32/bOAz+Vww/pzk7v9O3Q4oAA3YrsHZ92W2CbMmNMEXyJLltGuR/P8qSncDxkubaDBv2lJgSRfLjR9Ly53Uo8JKGl6GWyiCzymnYCR8wL2oZ1imICNM5x6s7v4IDI4NnkOdYgb6hKrxch+mCcaKoCC8/f+mEjMDGIYmm2XQ6nIyjqN+PotGon+I4SfqjNImSJIYjOE4oh603YC24dR60OFX+XIINydLq+b1XnVVCqYh1pd8J6ZOhglDwIcNc0064xIJgI9WqliiKybXgW8GCCQOnwTkLynP3b4mfNHsGy/2e1cgoxJdSt1Y/Ig+PE2dX2OAbo4rUFMpvdW5rQGZdB1yD2IK3DyTadLb7n+1+3NxP6K5CvAHkCc1wwc3s/9mMT7XZszZdgNe5YRLyH/ZthnDCq/AlL5big8tqWHt410I0t3L1A74VGsCmuU2tzZVPXHazkI8fq2zMmSj98otcppjXT9gYxZLCWFzWYUZQxigniAnOhLUEabNEopwuwQJa4jxn4h7lSj6w8lSIZdm95/DQzbh8tFiwe9HFqY28CxTD3TnIr0rxHVbMovAPHAPKHWtwAareHtKpYrlBj4zcU7O1Xu0i0jxi/q1t3TMOVYkqwws3nVCv9IxjrbdgA03R98Ji4KD36KEyUaVK6cXfEMED9UBZDvgiTKUgzAand2iQMcH0ghILDAGi/1tAfZP1egZFZSgJpAo+5cT+RXE3LRQkxnSbSpvNV22wKbTTxqUDX92PE/l4G93n5xo/1uLI8FCLw9OdFjfbhbIN3qrJNWXv2w6o6vUMzW4QRdHbtLu2drTfLk7qFvttwGbqFV3gPMV+ei06CI4WJEJapNAbQC3DjIMuokpJtVOeUUvRlA3iOJ1TipNBD4/G/TiOojgi42gyHseTUZKN8HiQ7dD5SgpbKb2xCawjgRRB5chxVz3VEyk5xaLB81tI6F9z77Hn+fAsPP+NWP7aYVew2ybmTtSK+rkmYME+Cfa9oO8s2SY06k1ikl5MxvH4YpCR0cWU4OEFnibDcZ/QdJCdZ6i5PGwL5gn1ouEomk5hMpNCGxShFH7kkiqUyOV+OR1XODo3pgfnxmCn0G69tw3nfQmVj6hca1SRXQg+uIXqjfIMVTT5k6robG+GjANXkEumloUqoXxAKQda2QWFhXZnnaUiWIaWABzLwbyiKdBFI6woymQhCPKGtwVjUc2YAuK7zfsV8pFCjgUMBb4KzIIG5e6g3n2sPOKD5ZHsvla9y4LKdX++DsD1oHQ9qF0/LdBT7puDX3g0be9yczujbSaAT/lOKquJ3HbnPJLEA2x44YX0hU7Fb+rU62+sbfRvvbke8fW3aE7naDflld+BvN86XtIeDn5YwmSnPVzbpAfJqvFdqTbuK919CGgZo3O70BijvT99jP6SV67Ojz7ovPFd7Mt/u1XyIjgVAAA=</values>
@@ -409,7 +409,7 @@
         <action_type_parent display_value="">43400a1587003300663ca1bb36cb0b4b</action_type_parent>
         <attributes/>
         <comment>Look up active Customer BOM Line records for the Customer BOM</comment>
-        <compiled_snapshot/>
+        <compiled_snapshot>43400a1587003300663ca1bb36cb0b4b</compiled_snapshot>
         <display_text/>
         <flow display_value="FD - Production Order - Material Availability Check">e152b03ef6ca4d5cb13cc46e99c248d8</flow>
         <generation_source/>
@@ -419,10 +419,10 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:16</sys_created_on>
         <sys_id>12c051f69e484f8eb0aeae1a0bd57300</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:26</sys_updated_on>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:53</sys_updated_on>
         <ui_id>12c051f6-9e48-4f8e-b0ae-ae1a0bd57300</ui_id>
         <updation_source/>
         <values>H4sIAAAAAAAA/+VXW0/bMBT+K1WeQ+U2tKW8TSCkSQMkQLxszHJsp7XmxJntAKXqf99xnKRZG24bnUB7a879HH/fsft1GWQk5cFhQFXGhBUqM0EY3BJZlMLCWJVyjWOVfisQithyicYThg74dC+aULq3jxDfi4ej4R5NonFEySSm06R/wanSrG8WBgu2Wn0n1Ipb7kNYDbHDgAmTS7K4/gepcqKhSct1cLgM6FxIpnkWHH69CQPBIPdBArHJYHQwAacIobGLPojjaExjFI8QhJAk5hJMj9pj6hqdXeSdsi9dAaBwV9QgDPi95RnjUE1CpOFhkJKMEav0opFoTth5JteCucgsRIQ4cy5z/ysl90Y8QAXQEXI+CYdeKffa5hNX0/fi5JhYcgnDorbQlSmdK0G58VNiPCGFtEdtmTc4z10v3sWSWNbeShZpdubnEzQB6sMGSWGgCJ67pl0X7qSgkMu5uruoizwRWTmeql2pKJHNF7FWi7iwrpxlwCVPIQ5OSZ6LbIZzrW5F6QylpP2ZhI9+ItUd5DRilvUdSlTWhxGT/gnIj0vxNdHCNXEKYcB5FQYAqyNJjFm3AjPEPwtXiW+sagGXU/AjcH5Ui9x+KrFY1bwKG7J5szXP7vEQjcZoOsXQMhABI9zmA5Yi66DMC73+Dv37cQv9V1XdG21UmC8/can7HfOlW+/MKyrMox1g/uAjIb5q6J1BHgoSErCC/WEaVehylLeYSsCWU2iSGR/rDwjyPDeM0haXiFrzo5QRQ7c5QHpW9R5egHL09I6ftlB+Cdl6V76CjqLqDV+iYXO718IK5dEOUB4N3wbly6bhZogd867p6k6otn9w9mTTHmDWchisulj0qpyD1+YcrrZZGr2Kpm2gec3xI3h7YzYnDCeCSwarvFzbsE3922VnNGd4Dq5VPuw5ie8Em3G7zl5bMWXviPzRpa8Qh+uDKtvbyWYABmDNDRxK+406Qmh7LXjhczth/8mdMB60dsIpue9dNLk7C6r2AlCXz8oRtxfD50ZaYXV/J2++d3v/DZA/pk5SDUKv/RA35M7uPD/BbSy/AMh08uTlNmoB+dzBrxcvNu62JnmFYr+MOt5yJ06x8ZYb/u9vuXf57yV87FJ54781N78AvEOtuEUQAAA=</values>
@@ -433,7 +433,7 @@
         <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
         <attributes/>
         <comment>Create Inventory Alert: no Inventory Stock found for component material</comment>
-        <compiled_snapshot/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
         <display_text/>
         <flow display_value="FD - Production Order - Material Availability Check">e152b03ef6ca4d5cb13cc46e99c248d8</flow>
         <generation_source/>
@@ -443,10 +443,10 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:16</sys_created_on>
         <sys_id>16c56292590f465189cfd35214ee2425</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:27</sys_updated_on>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:53</sys_updated_on>
         <ui_id>16c56292-590f-4651-89cf-d35214ee2425</ui_id>
         <updation_source/>
         <values>H4sIAAAAAAAA/+1W227TQBD9lZWfU8tuLiR9Q4VKSFAEhb4Atcbecb1ivTa767Qh6r9z7HVMxEWAxAsSeYiyczl7ZubYk3f7yFDN0VnkKdecDYdZtCXd9cb77DRZrpLNJlNGds5nCX5sM9JsPcKkcq2m3fXvRbdkge7ZRmf7qKiUlpZNdPbuwyxSEumrlJPlJl0V83Q+P02S0/UizVfzPD2Vc2JeAEJTzhqhb3qyOP+Iu9+1P7Q9P84Vl8HRWNnzSWYR33s2kkGkJO14FtVkJPnG7qIzbzsYLJN8afRuiqiU8QAETMW6Db9qunfqMwiskz6jZNRYcPBNx2xsXDCXT8jTFe4ofGfH0KJqVMEudEdySZ3258e2EPCy9aoxIWUoeMxudFeby9CcaAI4zAmWzoEEt33FfQ1jQeVV1dy9PrC8wBT75oxO3RSkpxN5b1Xe+Z7PPmLNNYCymtpWmdustc1WDcngUse3Goe41M0dLnXq1sRU9MRjNJjiC9ifDOZrsqqv4gVgkPwwi9zOnWty7mstaGL2qeuZhMrGGrLQhj6lsKr1j3HBlke6D7NJ5oOy3ZHEB3VmvUDed0kylzVBoYp05qrGerrlG8dbWPwu+IHuFTpx4zz5zgVjAxY3UyaqlxhmcO33y3yzerTmxUmZbuYni3lKJ+vNcnGSFMSPktVynbKMlec6/hbh4eEm0KvZOVAJiC/GKEFbUngilAY5UVRcfBQlLEATl42goQOHIEj+mdmiURC0uPINYi0XkL+4IyfKpjMS31b4SjmBmbWNQbA4MIrHnBqPtchZgGABsUqBlJrk8TU5A2eI6EvAlEVBZkhgMBsLwuD50J9zPFg+QL1te4fM0hjoEKGPIYCsG62NQUN8ZRmj0bJXgfHTXP6kz4fMzPKnTqEM4D599f0L7b82/mtj0sYv15dkrL6fra80P1pfF4q1dF/31/RSOuwuriFDz1l4SX2zv0anuB6d4w5L//4OS1fJ8PmHNlko859fZEf/Xn6y0j58AdbXvx+7CQAA</values>
@@ -457,7 +457,7 @@
         <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
         <attributes/>
         <comment>Create Inventory Alert: BOM contains no active component lines</comment>
-        <compiled_snapshot/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
         <display_text/>
         <flow display_value="FD - Production Order - Material Availability Check">e152b03ef6ca4d5cb13cc46e99c248d8</flow>
         <generation_source/>
@@ -467,10 +467,10 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:16</sys_created_on>
         <sys_id>3bcec95870d34ef78ead53d1841d11fb</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:26</sys_updated_on>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:53</sys_updated_on>
         <ui_id>3bcec958-70d3-4ef7-8ead-53d1841d11fb</ui_id>
         <updation_source/>
         <values>H4sIAAAAAAAA/+1WS1PbMBD+KxqfMx47gQzk1oZyKjAtlAslno21jjWVJSPJgTST/96VpZhMC1MOvTDTnKRvX98+5M3dNlHQYDJLHCwlFv1llKxBdh58KsbZ8TQ7PS2E4p11RUaHdQESjSM1LmwrYXP7Nu0WDHl3aJLZNilrIblBlczu7keJ4GQ+zTE7Ps2n5SSfTMZZNj45ypfTyTIf8wkgHpELCUuUpHrjydL9Je5u076IfT60ZZdBoA33fLJRgk8OFUciUoG0OEoaUBycNptk5kxHgEHgV0puBo1aKEcOyU2Nsg2nBp6s+EkETjJvUSHlWGKQDdciFi7A1Rk4uKYYpetMVC1rLUq0oTocK+ikmx9iQeGqdUKrYNInHK217Bp1GYqTDA72fSKks0QCW5+xzyEmVF3X+vHrnuU5ddEXJwqlLkEON3DOiGXnPJ9tghIbclQ00LZCrYrW6LXojYlLk64kXdJK6kcKasVKpVB64ikVGNJzws96+BaM8FlckBsy3o0Su7FzCdY+50JFLB46zyRkFnMoQhm8SWlE6z5QgDVGurvRMOb9ZNuDEe+ns/AD8r3LsglvgCZUgCxsrY2DFS4srglxmyCvxapeWAeuswHQxGAxWFHmnBoZRNvtnIbGIWfasG8t98ciT8vOUIFdWgklbE1QNNrtFoFNg9ZS5ODkIrpmsAZBD0BI4sLKGssfrCIEecpuamTQZ8zm9PB0g4Z9vLpgFcV1tbBsH4rFUKzUyoFQlim9t6ROtVoRMSaFQpuyD3RCsI4R2rvzOCNvBh86Ycib08zXptqw5kWWPn6M6Nsd0/N1eFOBqPtFF1GtqDyfvvz51fnfwPfWwL8uAo60RF5bBPnyYBGcC5TcPm+C4XnvtwA2NCsOi/Dcf9sEUchuozBug/zfb4N8mvW/d7QTQprvfiUc/A94ZTnc/wJpNotTBQkAAA==</values>
@@ -481,7 +481,7 @@
         <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
         <attributes/>
         <comment>Create Inventory Alert: insufficient material availability for this BOM component</comment>
-        <compiled_snapshot/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
         <display_text/>
         <flow display_value="FD - Production Order - Material Availability Check">e152b03ef6ca4d5cb13cc46e99c248d8</flow>
         <generation_source/>
@@ -491,10 +491,10 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:16</sys_created_on>
         <sys_id>3e2ab03a1ecf459388e0d7e32ea2f373</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:27</sys_updated_on>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:53</sys_updated_on>
         <ui_id>3e2ab03a-1ecf-4593-88e0-d7e32ea2f373</ui_id>
         <updation_source/>
         <values>H4sIAAAAAAAA/+1WyW7bMBD9FUFnW5AsW7Fza9MGKNAk6JZL2xBjcmQRoZaSlBPXyL93KEqKkbRoUfTQAPFJnOXxveGQ48/7sIISw+PQwloh6xaTcAuqdcZbNosXWbxaMVmJ1lgW08eWgUJtKUxI0yjYXf5ZdAOa0C3q8Hgf8kIqobEKjz9/nYRSUHqWYLxYJRlPkzSdxfFsOU/WWbpOZiIFxDlBKFijotCPjiytf8bd7pqf2t4e5gbn3lFr4fjEkxBvLVYCiUgOyuAkLKESYGu9C4+tbsmgEcRFpXZjRCErS4AEU6Bq/FcJt0Z+JwLL2GXkSBo5et+4ZH3hvDl/BRY+0B7ctroP5UUtORpfHYE5tMqeHNp8wEVjZV35lE5wn12rtqzOfXHCEWA4J7K0hkhg4xQ7Db2g/ENR37wfWJ7SKbri9E5Vc1DjCqzVct1ax2cfosKSgFgJTSOrDWt0vZVdMnEpo42iRZSr+oY2NXJTRcAd8YgKDNEp2V915kvQ0qk4IxhKvpuEZmdOFBhzr4WKyL61jolX1mtgvgwuhWvZ2Be0wRZ7uneTsc27zjYHLd51J3MN8qWN41SUQB0qQTFT1NrCBq8Mbslid95fyE1xZSzY1nhDTQyuxixSLuggvWu/X6xX2dES59M8WaXTeZrAdLlazKcxBzyKs8UyQRFJi2X0EOHu7oouDymjDmTG1vx6wOQzwWEucLrMZtl0zkU2Xaf0xeezI4RlGq+O0ug9cuptAvH6SjSGtHiIs36rALYg6UpJReoCXiC/DnKyEKXgTWXaPJdcEoOg236IpsuT1zqwhTTBy4uzgA64qSsKi4KPBR5E0SlV1iFTIF29+oZyMND4rZUaxb27QqR714H22l1r9MSpQ3AQfkI30FIkBX5qnEOwJOKt1m5z6hTW9ta6IuG9gw37/EX5olHMiELAttBIzaHEI+g/P+0hkw3lINzX7x4/qc/d+dyd/1F3/naEC6Tx/6sRnqwPRvipRCXM/QwfH+ZhfmNJF8Ei8w/1gxneO4PL3tnP8eTfz/Eki7vfE5rmXuaTH+YH/+B+Mda//gDpFXOHvwoAAA==</values>
@@ -505,7 +505,7 @@
         <action_type_parent display_value="">43400a1587003300663ca1bb36cb0b4b</action_type_parent>
         <attributes/>
         <comment>Check for existing non-terminal Inventory Requests matching this material_product and related_production_order</comment>
-        <compiled_snapshot/>
+        <compiled_snapshot>43400a1587003300663ca1bb36cb0b4b</compiled_snapshot>
         <display_text/>
         <flow display_value="FD - Production Order - Material Availability Check">e152b03ef6ca4d5cb13cc46e99c248d8</flow>
         <generation_source/>
@@ -515,10 +515,10 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:16</sys_created_on>
         <sys_id>51577d6f1f784dda8a11235f5d1a5851</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:27</sys_updated_on>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:53</sys_updated_on>
         <ui_id>51577d6f-1f78-4dda-8a11-235f5d1a5851</ui_id>
         <updation_source/>
         <values>H4sIAAAAAAAA/+VXW0/bMBT+K12eS5SQ3t8mENKkARIwXhizHNtpvTkXbKelVP3vO7GTNGsDg41KIN6ac/+Ov3Ps3qycBMfMmTgkTSjXPE2U03XmWOSFMMaaSY4FymRKc6K/554X0NWqH44HwxHrHUT+ODjoBT4+GI37vQOPYDb0Bv2Rz6jLNYvd7Qjr9Q/JBAhpJYGUKJWUySr4kWSFvpPKzreMGlPfJbmULNGuWirEKURRGutcfbJOJI0zwcByS4wTwoTYFkv2kxEwBqCUq0zg5fVHwZthCccNJTqTlUNmXIAycSY3t12HU2jAKOp5Hvb7oyE4Bp43GAQE+2EYDEjohX0PQggcMgGmR03CtJFIL7NW2de2AKYjzsTvOuxes4RCtZMIC8W6cCgJdCWVy1oCDaPnidgIZjzREBHizJjI7K8Y3yv+ABUAIq/wiRhgJcxq609UUsCKo2Os8aWWcE65LE3JLOWEKdslyiKcC33UlFmD86zAYl00DkXlnYo8Ts5sf5w6QMU4kOQKimBZAbpAAckBUXQ5SxcXVZEnPDHtKeGKlGBRf2GtJQ9zXZSzcphgMcRBMc4ynkwL1s25cYZSYncq4MONRLqAnIpPExcbSrrQYuyegPzYiK8xsBhAnEIYcF53HWDikcBKbaBAD9FdXlRigZUQkOmCbUHhRyTP9GfIMmdlzetuvXas2Wbj3KNDrz/wxmMEkHOlkQc/5kiyu91pfdL2/5jeCxtMvypr3Cq55Lf5REb3J7+NW+fMKkp+e3vg9+g9sbsE9MboDQVxAVxB9jBVmkvTyjkiAohVKCROlI31D8Pw9zlQqdTIMGozC0aGFdllPu7otPPwDJZ7T+/zcYPll5Ctc2UraCmq2uaGDdubvBKWLA/2wPLg8HVYvqoB101s6Xc1rsUJVfYPhT3etgeaNRz8ddsUvSin/9Kch+vdKQ1eNKZNolnN8SN8e+VpjiiKOBMU9rbgidmmcPtBnr2NOUUzcC3zITuTaMHplOlN9sqKpnqBxa82fck4VB2UgbeXzQATAFeagkNpvsz93aXgP2Mf9J7cBwO/sQ9O8X3nos7bWky5E2Bs2dS0t7kUvtTSkqe9vbzt3uzd58Oz89GB8rtW+y5ux73dd7aDu0x+BpHJ8MmLrd8g8nlBv0643LrX6uQli+0iannHnRSKrXfc4Ud/x73Jfyndxy6UV/77cvsb4UM+vjcRAAA=</values>
@@ -529,7 +529,7 @@
         <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
         <attributes/>
         <comment>Create Inventory Alert: no active Customer BOM found for this finished product</comment>
-        <compiled_snapshot/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
         <display_text/>
         <flow display_value="FD - Production Order - Material Availability Check">e152b03ef6ca4d5cb13cc46e99c248d8</flow>
         <generation_source/>
@@ -539,10 +539,10 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:16</sys_created_on>
         <sys_id>7728d95a6e174cc3b2126d550453920b</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:26</sys_updated_on>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:53</sys_updated_on>
         <ui_id>7728d95a-6e17-4cc3-b212-6d550453920b</ui_id>
         <updation_source/>
         <values>H4sIAAAAAAAA/+1VwW7bMAz9FcHnwLCTNmhz29L1tDbbuvXSNQZj0bEwWXIlOW0W9N9HWYobbC3Wwy4FlkNgkSL5HkmRN7tEQYPJLHGwklj0h1GyAdl54UMxzo6n2elpIRTvrCsy+tgUINE4usaFbSVsr193uwVD3h2aZLZLylpIblAls5vbUSI4mU9zzI5P82k5ySeTcZaNT47y1XSyysd8AohH5ELCCiVd/erB0vk57G7bPiv7eGjLLoNCG+7xZKMEHxwqjgSkAmlxlDSgODhttsnMmY4EBoEvlNwON2qhHDkkNzXKNnw18GDFTwJwknmLColjiUE3HIuYuCCuzsDBFcUoXWfi1bLWokQbssOxgk66+aEsXFi0TmgVTHrC0VrLrlGXITnJ4GBfJ5J0lkBg6xl7DpFQdVXr+y97lOdURZ+cqJS6BDmcwDkjVp3zeHYJSmzIUdFA2wq1LlqjN6I3JixNupZ0SCup7ymoFWuVQumBp5RgSM9JftaLr8EIz+KC3JDx4yixWzuXYO0TF0picdd5JIFZ5FCENHiT0ojWvaMAG4xwH0dDm/edbQ9avO/OwjfI9y7LJrwB6lABsrC1Ng7WuLS4IYnbBn0t1vXSOnCdDQJNCJaDFTHnVMig2u3m1DQOOdOGfWu5/yzytOwMJdillVDC1iSKRo+Py4CmQWspcnByEV0z2ICgByAkYWFljeUPVpEEecouNYOeMJvTu9MNGvZ+ccHuwbJKd4rTv2GuRrYPyWJIphXJhWWfwpmKwhb+TaTsXe+CVAbvOmHIxmnG/ftthMLeG9W21YqosD1/yxQivaI+YDv4TCMxn4FXpYbqXnRRqhUl5sPnP+fN/9K9ndL9dfhzpMXx0vDPVwfD/1yg5PZp+g9Pej/5saEucViEJ/7b9I9Kdh2VcQPk/34D5NOs/72hPRBovvk1cLD7X1gIt78AuzK8bvkIAAA=</values>
@@ -553,7 +553,7 @@
         <action_type_parent display_value="">9d09f99587003300663ca1bb36cb0ba3</action_type_parent>
         <attributes/>
         <comment>Look up active Inventory Stock with status=available for the BOM Line material_product</comment>
-        <compiled_snapshot/>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
         <display_text/>
         <flow display_value="FD - Production Order - Material Availability Check">e152b03ef6ca4d5cb13cc46e99c248d8</flow>
         <generation_source/>
@@ -563,10 +563,10 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:16</sys_created_on>
         <sys_id>c2dca4de86264cd6b326c427ea830973</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:27</sys_updated_on>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:53</sys_updated_on>
         <ui_id>c2dca4de-8626-4cd6-b326-c427ea830973</ui_id>
         <updation_source/>
         <values>H4sIAAAAAAAA/+VY32/bOAz+Vww/Jzk7TuK4b4cWAQZsK7D2+rLbBNqSG2GK5Ely2jTo/36UfyRB4jXttcE27CkxRYnkx4+k5c9rX8KC+We+UdoSuyqY3/OXIMqNDEyGIspNIWB106yAZ5X3gPICNO63TPtnaz+bc0E1k/7Z5y89n1NUHNMgyZNkPI2DIIqCYDKJMgjTNJpkaZCmIR4hIGUCVa/Qmndde9DhVPVzhjYUz9rn983W81aoNHWuRD2f3VsmKUMfchCG9fwFSApW6dVGohnQSym2gjmXFk/Dc+ZMFPW/Bdwb/oCWo6HbkTOML2P12uaRNPDU4vwCLFxZXWa21I1q7bZBZNabgDcgduDdBBI89rb6D04f9vUp290QPiLylOVQCnv+/2yGL7U5dDbrAC8LyxXm349chiAVbfhKlAv5sc6qv/HwpoNo9crFD/hWGgSbFS61LldN4vKrubr71GZjxmXlV7MoVAZi8wTWap6W1uGy9nNKcs4EJVwKLp0lTJsjEhNsgRbIAoqCy1tSaLXk1akYy2JwK/BhkAt157Dgt3IAmYt8gBSDwQzlF5X4BjR3KHzAY3Bzzxmc49bGHjGZ5oUld5zeMru13mpRZe9AfOtabxhH2kRV4fmPPd+szLkAY7ZgI03J99JhUEPfoEeqRFVbKi/+xgiWrAHKcaApwkxJyl1wZocGC8Ca5yAcMBSJ/m+J9U3X63GaTOIpG/XzMIn6oyiE/jQZj/pBBiwOJuNpyOiAW7YY7J/w+PgVKg/qo1ykX40FW5paAEvgomLUQTf6uc4ca4F0/FQLhGSnBZ7vQt0Ff9sE92Xvuw5o6/kEzXAUBMHbtMOudnXYTl7UTQ7bhMvfK7rEaZrBy2u1huBowRJiZIa9A7flSFPcS5jWSu+Ub3BYRHUDOU7njEE6GsIkjsIwCMKAxsE0jsPpJM0nEI/yHTpfKOnKZRhbzzniKem1jhx3taF6qpRgIPd4fo0J/WvWeNzwfHwSnv9GLH/tMCz59T7mtagT9VNNyJL/I/n3kr1zZJuyYDgNadafxmHcH+V00k8ojPuQpOM4oiwb5acZerZp7m3B3JNhMJ4ESYKTm5bGkgD/LImxKvt2WEtHtI9OjOTJiTHaKbHrxs89t5viqR5JtbZXP27B+1gvtO+aJ6if6Z9UPyd7Z+QCuULqZBpV6grKJckEUsstaJCmPusktcBzskDgeIHmNcuQLoaAZiRXpaSkMbwtFYdqzjWyvlY+LI9PDHMscRyIlWfnzKu0vY32sfIInyyPdPeF6l3uta435xsPXfcq172N6y8L9CU30dEvPJS2t7yZm84uE8inYieV7Szuuo0eSeITbHjmVfWZToVv6tTr77Jd9O+80x7x9bdoTqdoN9XHgBrkw9bxnPbw5CcnoDvt4dIl3UtXe1+cNsabSq8/EXSM0Zlb2Bujwz99jP6Sl63ejz71vPEt7Mt/fofnS1IVAAA=</values>
@@ -577,7 +577,7 @@
         <action_type_parent display_value="">2de05916c31332002841b63b12d3aee1</action_type_parent>
         <attributes/>
         <comment>Create material_reservation Inventory Request in pending_approval status for this BOM component</comment>
-        <compiled_snapshot/>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
         <display_text/>
         <flow display_value="FD - Production Order - Material Availability Check">e152b03ef6ca4d5cb13cc46e99c248d8</flow>
         <generation_source/>
@@ -587,10 +587,10 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:16</sys_created_on>
         <sys_id>d65168d2beda41799341c9ba0beed409</sys_id>
-        <sys_mod_count>1</sys_mod_count>
+        <sys_mod_count>2</sys_mod_count>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:27</sys_updated_on>
+        <sys_updated_by>system</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:53</sys_updated_on>
         <ui_id>d65168d2-beda-4179-9341-c9ba0beed409</ui_id>
         <updation_source/>
         <values>H4sIAAAAAAAA/+1XS3PbOAz+KxqdbY1k2YqdWzdtTm2z22xzaWsOREIxp9SjfLjxevLfC+plpY/dtLOXziQnEQQ+fgA/wsi7Y1hBieF5aCFXyNrFLNyDct54xxbxKos3GyYr4YxlMX3smcZP5CSkaRQcbh7j24AmZIs6PD+GfCeV0FiF5+8+zEIpKDhLMF5tkoynSZou4nixXiZ5lubJQqSAuCQIBTkqcv3bE6X193jbQ/Nd28tpbPC626i18HziWYh3FiuBRKQAZXAWllAJsLU+hOdWOzJoBHFVqcPosZOVJUCC2aFquq8S7oz8hwisYx9RIOXIsdsbl6wvW2cunoOFazqDW6d7V76rJUfTVUdgAU7Zi6mtc7hqrKyrLqRNuI+ulSur111xwhFguCWyOEMksPEZ+xz6hIrrXf35zcDyku7QF6ffVDUHNa7AWi1zZz2fY4gKSwJiJTSNrG5Zo+u9bIOJSxndKlpEhao/06FG3lYRcE88ogJDdEn25635BrT0WbwiGAq+n4XmYC4UGHPKhYrIPjnPpMusz4F1ZfAhXMvGPqMD9tjTvZ+NEm9VbSbyJm2SwTIvkfcujlNRAmlUgiLZGtR78Ey3xoJ1pnPwR/osiSXlCWo7RtBa0DV2bsfjKt9kZ2tczotkk86XaQLz9Wa1nMcc8CzOVusERSQtltHXCPf3W0qystIeWM8Qxc/DPsCQGgXhalR0mBhOouRY+woG9AvSOe0HtQ7eNqJ1TSLuNGnCRnQfTE5R6HmTnV4JM7bmHwcQvhAclgLn62yRzZdcZPM8pS++XJwhrNN4c5ZGb5DTyROwHCzfMVXbX4CJxmACNLXT9My8ZH2CvwI3xBIaadbKql19A/mv1ZqUeAI33ifLD4+CIf3T4/BXpqCqUD/A8M6PvjrXW1sejZa1JnH0qkchXbk93efpQfxc4R4itFzBDAV75mxNWpfUStQhuEXKpmU86D+YvLmgTzIodF0Gf461DK68XE8hsAdJPwxSUS4B3yH/GAXXrigkl0QkaHUZSDP4UfMvqEB2R6Y/rl4F1KCauvIV2r7469uftKf+8NQfnvrDU38Y+8N/jrECaQD+0Rib5JMx9lKiEuY0x47DyTDDYtl45bNuWPlqju03g5t+s59lk/9/lk2yuP37jSbaLs3ffqCd/Bfzg9H2wxfizYL6vw0AAA==</values>
@@ -845,6 +845,29 @@
     <sys_hub_flow_variable action="delete_multiple" query="model=e152b03ef6ca4d5cb13cc46e99c248d8"/>
     <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_e152b03ef6ca4d5cb13cc46e99c248d8"/>
     <sys_documentation action="INSERT_OR_UPDATE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_e152b03ef6ca4d5cb13cc46e99c248d8</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-09-26 10:04:23</sys_created_on>
+        <sys_id>0092cb8493370710e61e3b277bba1047</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Table Name</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_e152b03ef6ca4d5cb13cc46e99c248d8_table_name_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-09-26 10:04:23</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
         <element>changed_fields</element>
         <help/>
         <hint/>
@@ -855,7 +878,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:23</sys_created_on>
-        <sys_id>272b3ab747efc310527276a4416d433c</sys_id>
+        <sys_id>4092cb8493370710e61e3b277bba102e</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Changed Fields</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -878,7 +901,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:23</sys_created_on>
-        <sys_id>272b3ab747efc310527276a4416d434f</sys_id>
+        <sys_id>c492cb8493370710e61e3b277bba1034</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Record</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -890,68 +913,907 @@
         <url/>
         <url_target/>
     </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_e152b03ef6ca4d5cb13cc46e99c248d8"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_e152b03ef6ca4d5cb13cc46e99c248d8"/>
+    <sys_hub_flow_snapshot action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=13000</attributes>
+        <authored_on_release_version>-1</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description>When a Production Order reaches Material Check status, verifies whether the materials required for that production order are available or reserved.</description>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>fd__production_order__material_availability_check</internal_name>
+        <label_cache>[{"name":"Created or Updated_1.current.finished_product","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_production_order Record➛Finished Product","type":"string","base_type":"string","usedInstances":{"067d08e9-37cc-400e-b252-cf363ca7bc9f":["conditions"],"7728d95a-6e17-4cc3-b212-6d550453920b":["values"],"3bcec958-70d3-4ef7-8ead-53d1841d11fb":["values"]},"attributes":{}},{"name":"067d08e9-37cc-400e-b252-cf363ca7bc9f.status","label":"067d08e9-37cc-400e-b252-cf363ca7bc9f➛status","type":"string","base_type":"string","usedInstances":{"9e694a9a-a492-411d-b785-bafa2b4f78cd":["condition"]},"attributes":{}},{"name":"Created or Updated_1.current.sys_updated_on","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_production_order Record➛Sys Updated On","type":"glide_date_time","base_type":"glide_date_time","usedInstances":{"7728d95a-6e17-4cc3-b212-6d550453920b":["values"],"3bcec958-70d3-4ef7-8ead-53d1841d11fb":["values"],"16c56292-590f-4651-89cf-d35214ee2425":["values"],"3e2ab03a-1ecf-4593-88e0-d7e32ea2f373":["values"],"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"067d08e9-37cc-400e-b252-cf363ca7bc9f.Record.sys_id","label":"067d08e9-37cc-400e-b252-cf363ca7bc9f➛Record➛sys_id","type":"string","base_type":"string","usedInstances":{"12c051f6-9e48-4f8e-b0ae-ae1a0bd57300":["conditions"]},"attributes":{}},{"name":"12c051f6-9e48-4f8e-b0ae-ae1a0bd57300.Count","label":"12c051f6-9e48-4f8e-b0ae-ae1a0bd57300➛Count","type":"integer","base_type":"integer","usedInstances":{"de07b457-e1d6-44dc-aa86-943cf75807fe":["condition"]},"attributes":{}},{"name":"12c051f6-9e48-4f8e-b0ae-ae1a0bd57300.Records","label":"12c051f6-9e48-4f8e-b0ae-ae1a0bd57300➛Records","type":"records","base_type":"records","column_name":"Records","usedInstances":{"5b9678e4-f193-431a-8954-0cae706581ed":["items"]},"attributes":{}},{"name":"5b9678e4-f193-431a-8954-0cae706581ed.item.material_product","label":"9 - For Each - ➛item➛Material Product","type":"string","base_type":"string","usedInstances":{"c2dca4de-8626-4cd6-b326-c427ea830973":["conditions"],"16c56292-590f-4651-89cf-d35214ee2425":["values"],"3e2ab03a-1ecf-4593-88e0-d7e32ea2f373":["values"],"51577d6f-1f78-4dda-8a11-235f5d1a5851":["conditions"],"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.status","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛status","type":"string","base_type":"string","usedInstances":{"ea576a8c-e662-4264-bad4-9d9dd2385244":["condition"]},"attributes":{}},{"name":"5b9678e4-f193-431a-8954-0cae706581ed.item.quantity_required","label":"9 - For Each - ➛item➛Quantity Required","type":"decimal","base_type":"decimal","usedInstances":{"16c56292-590f-4651-89cf-d35214ee2425":["values"],"1b20c288-f679-442c-bba2-298708f79f08":["condition"],"3e2ab03a-1ecf-4593-88e0-d7e32ea2f373":["values"],"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.Record.available_quantity","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛Record➛available_quantity","type":"decimal","base_type":"decimal","usedInstances":{"1b20c288-f679-442c-bba2-298708f79f08":["condition"],"3e2ab03a-1ecf-4593-88e0-d7e32ea2f373":["values"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.Record","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛Record","type":"reference","base_type":"reference","usedInstances":{"3e2ab03a-1ecf-4593-88e0-d7e32ea2f373":["values"],"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.sys_id","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_production_order Record➛Sys Id","type":"string","base_type":"string","usedInstances":{"51577d6f-1f78-4dda-8a11-235f5d1a5851":["conditions"],"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"51577d6f-1f78-4dda-8a11-235f5d1a5851.Count","label":"51577d6f-1f78-4dda-8a11-235f5d1a5851➛Count","type":"integer","base_type":"integer","usedInstances":{"b87d4297-1b60-4120-9177-ebe2f2346b1f":["condition"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.Record.batch_lot","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛Record➛batch_lot","type":"reference","base_type":"reference","usedInstances":{"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.Record.location","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛Record➛location","type":"reference","base_type":"reference","usedInstances":{"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.production_location","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_production_order Record➛Production Location","type":"string","base_type":"string","usedInstances":{"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"Created or Updated_1.current.assigned_planner","label":"Trigger - Record Created or Updated➛x_2056099_indust_0_production_order Record➛Assigned Planner","type":"string","base_type":"string","usedInstances":{"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}},{"name":"c2dca4de-8626-4cd6-b326-c427ea830973.Record.inventory_type","label":"c2dca4de-8626-4cd6-b326-c427ea830973➛Record➛inventory_type","type":"string","base_type":"string","usedInstances":{"d65168d2-beda-4179-9341-c9ba0beed409":["values"]},"attributes":{}}]</label_cache>
+        <master>true</master>
+        <name>FD - Production Order - Material Availability Check</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="FD - Production Order - Material Availability Check">e152b03ef6ca4d5cb13cc46e99c248d8</parent_flow>
+        <remote_trigger_id>e9331231c3a3c310d1c3b61ed4013180</remote_trigger_id>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>published</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:02</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>de6b3ad893f78710e61e3b277bba10e2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:02</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="delete_multiple" query="documentkey=de6b3ad893f78710e61e3b277bba10e2"/>
+    <sys_variable_value action="delete_multiple" query="document_key=de6b3ad893f78710e61e3b277bba10e2"/>
+    <sys_hub_flow_stage action="delete_multiple" query="flow=de6b3ad893f78710e61e3b277bba10e2"/>
+    <sys_flow_cat_variable_model action="delete_multiple" query="id=de6b3ad893f78710e61e3b277bba10e2^sys_idNOT IN9e6b7ad893f78710e61e3b277bba1027"/>
+    <sys_flow_cat_variable_model action="INSERT_OR_UPDATE">
+        <id>de6b3ad893f78710e61e3b277bba10e2</id>
+        <name>FD - Production Order - Material Availability Check</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:03</sys_created_on>
+        <sys_id>9e6b7ad893f78710e61e3b277bba1027</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:03</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=9e6b7ad893f78710e61e3b277bba1027"/>
+    <sys_hub_flow_input action="delete_multiple" query="model=de6b3ad893f78710e61e3b277bba10e2^sys_idNOT IN326b7ad893f78710e61e3b277bba1080,6e6b7ad893f78710e61e3b277bba102a,fa6b7ad893f78710e61e3b277bba1071"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</model>
+        <model_id>de6b3ad893f78710e61e3b277bba10e2</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_de6b3ad893f78710e61e3b277bba10e2</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:05</sys_created_on>
+        <sys_id>326b7ad893f78710e61e3b277bba1080</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:05</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=326b7ad893f78710e61e3b277bba1080"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</model>
+        <model_id>de6b3ad893f78710e61e3b277bba10e2</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_de6b3ad893f78710e61e3b277bba10e2</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:03</sys_created_on>
+        <sys_id>6e6b7ad893f78710e61e3b277bba102a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:03</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=6e6b7ad893f78710e61e3b277bba102a"/>
+    <sys_hub_flow_input action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</model>
+        <model_id>de6b3ad893f78710e61e3b277bba10e2</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_de6b3ad893f78710e61e3b277bba10e2</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:05</sys_created_on>
+        <sys_id>fa6b7ad893f78710e61e3b277bba1071</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:05</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="delete_multiple" query="action_input=fa6b7ad893f78710e61e3b277bba1071"/>
+    <sys_hub_flow_output action="delete_multiple" query="model=de6b3ad893f78710e61e3b277bba10e2"/>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=de6b3ad893f78710e61e3b277bba10e2"/>
+    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=de6b3ad893f78710e61e3b277bba10e2^sys_idNOT IN136bbad893f78710e61e3b277bba100c"/>
+    <sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE">
+        <comment/>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <generation_source/>
+        <name>Created or Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:07</sys_created_on>
+        <sys_id>136bbad893f78710e61e3b277bba100c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:07</sys_updated_on>
+        <trigger_definition display_value="Created or Updated">a45d9180c32222002841b63b12d3aea7</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1Y224bNxD9FWKfWkABlBYpYL+1cQ0YSBrAdtsHx11Q5KxEhCIVXiRvDf97hnuRqL24q1rrJICf7OVtzsycM0Pq5j5xRsznYC6UdVQxuMrtBU9Ok2SSSDoDif9e05kE/BbKgVFUXucrwGEXhlNFl2GOwwoUB+XKrWyhBYN3wuL3ze0kWVLFqdMmT06d8TBJMqOX17BcSerwrIxKi4PacDDJ6evpdJIU51ZG8MA1lT5836U/Td/8Mj05SYXi3rp0mq6M5p45oVVaHoBohMWT878O2sQWQnIDqkS8ogYRuIDnvhWJBjjXEZDKF/QE7lwIDd+6GQWjGjFA+Qcl82jJnRX/QrHfW0ij8FYrsquF3lxCBoiYwTk6FsxVk1IzKrdf1GGOZ96BRV8eHrbhORcgq1RbZsTK/YoBWdfpeJgM4calV+SDIr9XPpIiQrZNlpIQ/0GUe/QKPvvgUOF5VicwcAYXZ+8iq1oR5g167wjGk9RRJq5GkF0s6RxKM3iuBOaiJGR/2vjrvbBWqHnkew+UYr6NReYxoJoYT4Fw20WUobIxHnmt0i31dgKq8TckUg8PEEFvynttuwYHvlVtJJSvA895TbkRxJJJvSEX6tgKoSpvkrKwJBSqIydMo7E7N5oqZpR9mhvtFe9DsVtBfuCQUS/dj+OJVBt4HM7+iq8p04AI+1Ik0b1gNnS6NzdQrDvKdZp9UWcZqrdacRFuBB3arKfsQVedA9nAIgA1FxCt8/ajn05/5kvcbwSVKVsA+/QPLVwsp6oG2SDLYZsHsCkOUQdo1xGt0dhU3SP/L5k2VDmbOp1SztMI8faysdQc5FmU64pBKJqVdzZ5iJiA/W57HTx+y/h7AYpcAZYdHf46F8rPkftHcVhJirhkhmSQooZoQ7AOGqwj24U1ptHKuMJrxBBgf2j16jlxzbRbtBoL4vgNx/cCFC6mPeCeekN9ct/ZIKtSu2XTet+3ZtspRwc2nB7C9ht/aUGN4BVSKzTb0vlcCg6pLOeO34sKHkTQmknDgJraes2ZNl8O5Ers7mMGXUcIXrgSgjdSW+h6VmChC0+KkJfRKqxWkOqss+CLjFTBwbfnLCduAYhJ4nUWTy5Qjff4Vzq0+ia0M01wgphnAXecul+Iql38y3Q3tFwOHizn/rrfMP5S/Hfhuy5XHVvGWrHG7Yk99eepfpFQuaG5bWkXpRFUUv1EhgPIB1UyYBwcsAazV73OsXIVg8SveFDKWJa9EjiMLy2q5mBbEChbkHIJKZd8zZJQv2qsM7hynkfVoOVGozC05gfWiB3J+zF8L0VheA24/QJOLipGbBkAAA==</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_create_or_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=de6b3ad893f78710e61e3b277bba10e2^sys_idNOT IN036bbad893f78710e61e3b277bba1008,0b6b7ad893f78710e61e3b277bba10fe,0f6bbad893f78710e61e3b277bba1003,436bbad893f78710e61e3b277bba1009,4f6bbad893f78710e61e3b277bba1000,4f6bbad893f78710e61e3b277bba1004,8f6bbad893f78710e61e3b277bba1005,cb6bbad893f78710e61e3b277bba1002,cf6bbad893f78710e61e3b277bba1006"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="Look Up Records">d1c56ec50b30030085c083eb37673a50</action_type_parent>
+        <attributes/>
+        <comment>Check for existing non-terminal Inventory Requests matching this material_product and related_production_order</comment>
+        <compiled_snapshot>43400a1587003300663ca1bb36cb0b4b</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <generation_source/>
+        <order>16</order>
+        <parent_ui_id>dad47bcf-85b8-40ad-be3e-e01b3e6104aa</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>036bbad893f78710e61e3b277bba1008</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>51577d6f-1f78-4dda-8a11-235f5d1a5851</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VXW0/bMBT+K12eS5SQ3t8mENKkARIwXhizHNtpvTkXbKelVP3vO7GTNGsDg41KIN6ac/+Ov3Ps3qycBMfMmTgkTSjXPE2U03XmWOSFMMaaSY4FymRKc6K/554X0NWqH44HwxHrHUT+ODjoBT4+GI37vQOPYDb0Bv2Rz6jLNYvd7Qjr9Q/JBAhpJYGUKJWUySr4kWSFvpPKzreMGlPfJbmULNGuWirEKURRGutcfbJOJI0zwcByS4wTwoTYFkv2kxEwBqCUq0zg5fVHwZthCccNJTqTlUNmXIAycSY3t12HU2jAKOp5Hvb7oyE4Bp43GAQE+2EYDEjohX0PQggcMgGmR03CtJFIL7NW2de2AKYjzsTvOuxes4RCtZMIC8W6cCgJdCWVy1oCDaPnidgIZjzREBHizJjI7K8Y3yv+ABUAIq/wiRhgJcxq609UUsCKo2Os8aWWcE65LE3JLOWEKdslyiKcC33UlFmD86zAYl00DkXlnYo8Ts5sf5w6QMU4kOQKimBZAbpAAckBUXQ5SxcXVZEnPDHtKeGKlGBRf2GtJQ9zXZSzcphgMcRBMc4ynkwL1s25cYZSYncq4MONRLqAnIpPExcbSrrQYuyegPzYiK8xsBhAnEIYcF53HWDikcBKbaBAD9FdXlRigZUQkOmCbUHhRyTP9GfIMmdlzetuvXas2Wbj3KNDrz/wxmMEkHOlkQc/5kiyu91pfdL2/5jeCxtMvypr3Cq55Lf5REb3J7+NW+fMKkp+e3vg9+g9sbsE9MboDQVxAVxB9jBVmkvTyjkiAohVKCROlI31D8Pw9zlQqdTIMGozC0aGFdllPu7otPPwDJZ7T+/zcYPll5Ctc2UraCmq2uaGDdubvBKWLA/2wPLg8HVYvqoB101s6Xc1rsUJVfYPhT3etgeaNRz8ddsUvSin/9Kch+vdKQ1eNKZNolnN8SN8e+VpjiiKOBMU9rbgidmmcPtBnr2NOUUzcC3zITuTaMHplOlN9sqKpnqBxa82fck4VB2UgbeXzQATAFeagkNpvsz93aXgP2Mf9J7cBwO/sQ9O8X3nos7bWky5E2Bs2dS0t7kUvtTSkqe9vbzt3uzd58Oz89GB8rtW+y5ux73dd7aDu0x+BpHJ8MmLrd8g8nlBv0643LrX6uQli+0iannHnRSKrXfc4Ud/x73Jfyndxy6UV/77cvsb4UM+vjcRAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=036bbad893f78710e61e3b277bba1008"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="Look Up Record">b93f42810b30030085c083eb37673a63</action_type_parent>
+        <attributes/>
+        <comment>Look up the active Customer BOM whose finished_product matches the Production Order finished_product</comment>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>0b6b7ad893f78710e61e3b277bba10fe</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>067d08e9-37cc-400e-b252-cf363ca7bc9f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY32/bOAz+Vww/pzk7v9O3Q4oAA3YrsHZ92W2CbMmNMEXyJLltGuR/P8qSncDxkubaDBv2lJgSRfLjR9Ly53Uo8JKGl6GWyiCzymnYCR8wL2oZ1imICNM5x6s7v4IDI4NnkOdYgb6hKrxch+mCcaKoCC8/f+mEjMDGIYmm2XQ6nIyjqN+PotGon+I4SfqjNImSJIYjOE4oh603YC24dR60OFX+XIINydLq+b1XnVVCqYh1pd8J6ZOhglDwIcNc0064xIJgI9WqliiKybXgW8GCCQOnwTkLynP3b4mfNHsGy/2e1cgoxJdSt1Y/Ig+PE2dX2OAbo4rUFMpvdW5rQGZdB1yD2IK3DyTadLb7n+1+3NxP6K5CvAHkCc1wwc3s/9mMT7XZszZdgNe5YRLyH/ZthnDCq/AlL5big8tqWHt410I0t3L1A74VGsCmuU2tzZVPXHazkI8fq2zMmSj98otcppjXT9gYxZLCWFzWYUZQxigniAnOhLUEabNEopwuwQJa4jxn4h7lSj6w8lSIZdm95/DQzbh8tFiwe9HFqY28CxTD3TnIr0rxHVbMovAPHAPKHWtwAareHtKpYrlBj4zcU7O1Xu0i0jxi/q1t3TMOVYkqwws3nVCv9IxjrbdgA03R98Ji4KD36KEyUaVK6cXfEMED9UBZDvgiTKUgzAand2iQMcH0ghILDAGi/1tAfZP1egZFZSgJpAo+5cT+RXE3LRQkxnSbSpvNV22wKbTTxqUDX92PE/l4G93n5xo/1uLI8FCLw9OdFjfbhbIN3qrJNWXv2w6o6vUMzW4QRdHbtLu2drTfLk7qFvttwGbqFV3gPMV+ei06CI4WJEJapNAbQC3DjIMuokpJtVOeUUvRlA3iOJ1TipNBD4/G/TiOojgi42gyHseTUZKN8HiQ7dD5SgpbKb2xCawjgRRB5chxVz3VEyk5xaLB81tI6F9z77Hn+fAsPP+NWP7aYVew2ybmTtSK+rkmYME+Cfa9oO8s2SY06k1ikl5MxvH4YpCR0cWU4OEFnibDcZ/QdJCdZ6i5PGwL5gn1ouEomk5hMpNCGxShFH7kkiqUyOV+OR1XODo3pgfnxmCn0G69tw3nfQmVj6hca1SRXQg+uIXqjfIMVTT5k6robG+GjANXkEumloUqoXxAKQda2QWFhXZnnaUiWIaWABzLwbyiKdBFI6woymQhCPKGtwVjUc2YAuK7zfsV8pFCjgUMBb4KzIIG5e6g3n2sPOKD5ZHsvla9y4LKdX++DsD1oHQ9qF0/LdBT7puDX3g0be9yczujbSaAT/lOKquJ3HbnPJLEA2x44YX0hU7Fb+rU62+sbfRvvbke8fW3aE7naDflld+BvN86XtIeDn5YwmSnPVzbpAfJqvFdqTbuK919CGgZo3O70BijvT99jP6SV67Ojz7ovPFd7Mt/u1XyIjgVAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=0b6b7ad893f78710e61e3b277bba10fe"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes/>
+        <comment>Create Inventory Alert: BOM contains no active component lines</comment>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <generation_source/>
+        <order>7</order>
+        <parent_ui_id>de07b457-e1d6-44dc-aa86-943cf75807fe</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>0f6bbad893f78710e61e3b277bba1003</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>3bcec958-70d3-4ef7-8ead-53d1841d11fb</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1WS1PbMBD+KxqfMx47gQzk1oZyKjAtlAslno21jjWVJSPJgTST/96VpZhMC1MOvTDTnKRvX98+5M3dNlHQYDJLHCwlFv1llKxBdh58KsbZ8TQ7PS2E4p11RUaHdQESjSM1LmwrYXP7Nu0WDHl3aJLZNilrIblBlczu7keJ4GQ+zTE7Ps2n5SSfTMZZNj45ypfTyTIf8wkgHpELCUuUpHrjydL9Je5u076IfT60ZZdBoA33fLJRgk8OFUciUoG0OEoaUBycNptk5kxHgEHgV0puBo1aKEcOyU2Nsg2nBp6s+EkETjJvUSHlWGKQDdciFi7A1Rk4uKYYpetMVC1rLUq0oTocK+ikmx9iQeGqdUKrYNInHK217Bp1GYqTDA72fSKks0QCW5+xzyEmVF3X+vHrnuU5ddEXJwqlLkEON3DOiGXnPJ9tghIbclQ00LZCrYrW6LXojYlLk64kXdJK6kcKasVKpVB64ikVGNJzws96+BaM8FlckBsy3o0Su7FzCdY+50JFLB46zyRkFnMoQhm8SWlE6z5QgDVGurvRMOb9ZNuDEe+ns/AD8r3LsglvgCZUgCxsrY2DFS4srglxmyCvxapeWAeuswHQxGAxWFHmnBoZRNvtnIbGIWfasG8t98ciT8vOUIFdWgklbE1QNNrtFoFNg9ZS5ODkIrpmsAZBD0BI4sLKGssfrCIEecpuamTQZ8zm9PB0g4Z9vLpgFcV1tbBsH4rFUKzUyoFQlim9t6ROtVoRMSaFQpuyD3RCsI4R2rvzOCNvBh86Ycib08zXptqw5kWWPn6M6Nsd0/N1eFOBqPtFF1GtqDyfvvz51fnfwPfWwL8uAo60RF5bBPnyYBGcC5TcPm+C4XnvtwA2NCsOi/Dcf9sEUchuozBug/zfb4N8mvW/d7QTQprvfiUc/A94ZTnc/wJpNotTBQkAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=0f6bbad893f78710e61e3b277bba1003"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes/>
+        <comment>Create material_reservation Inventory Request in pending_approval status for this BOM component</comment>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <generation_source/>
+        <order>18</order>
+        <parent_ui_id>b87d4297-1b60-4120-9177-ebe2f2346b1f</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>436bbad893f78710e61e3b277bba1009</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>d65168d2-beda-4179-9341-c9ba0beed409</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1XS3PbOAz+KxqdbY1k2YqdWzdtTm2z22xzaWsOREIxp9SjfLjxevLfC+plpY/dtLOXziQnEQQ+fgA/wsi7Y1hBieF5aCFXyNrFLNyDct54xxbxKos3GyYr4YxlMX3smcZP5CSkaRQcbh7j24AmZIs6PD+GfCeV0FiF5+8+zEIpKDhLMF5tkoynSZou4nixXiZ5lubJQqSAuCQIBTkqcv3bE6X193jbQ/Nd28tpbPC626i18HziWYh3FiuBRKQAZXAWllAJsLU+hOdWOzJoBHFVqcPosZOVJUCC2aFquq8S7oz8hwisYx9RIOXIsdsbl6wvW2cunoOFazqDW6d7V76rJUfTVUdgAU7Zi6mtc7hqrKyrLqRNuI+ulSur111xwhFguCWyOEMksPEZ+xz6hIrrXf35zcDyku7QF6ffVDUHNa7AWi1zZz2fY4gKSwJiJTSNrG5Zo+u9bIOJSxndKlpEhao/06FG3lYRcE88ogJDdEn25635BrT0WbwiGAq+n4XmYC4UGHPKhYrIPjnPpMusz4F1ZfAhXMvGPqMD9tjTvZ+NEm9VbSbyJm2SwTIvkfcujlNRAmlUgiLZGtR78Ey3xoJ1pnPwR/osiSXlCWo7RtBa0DV2bsfjKt9kZ2tczotkk86XaQLz9Wa1nMcc8CzOVusERSQtltHXCPf3W0qystIeWM8Qxc/DPsCQGgXhalR0mBhOouRY+woG9AvSOe0HtQ7eNqJ1TSLuNGnCRnQfTE5R6HmTnV4JM7bmHwcQvhAclgLn62yRzZdcZPM8pS++XJwhrNN4c5ZGb5DTyROwHCzfMVXbX4CJxmACNLXT9My8ZH2CvwI3xBIaadbKql19A/mv1ZqUeAI33ifLD4+CIf3T4/BXpqCqUD/A8M6PvjrXW1sejZa1JnH0qkchXbk93efpQfxc4R4itFzBDAV75mxNWpfUStQhuEXKpmU86D+YvLmgTzIodF0Gf461DK68XE8hsAdJPwxSUS4B3yH/GAXXrigkl0QkaHUZSDP4UfMvqEB2R6Y/rl4F1KCauvIV2r7469uftKf+8NQfnvrDU38Y+8N/jrECaQD+0Rib5JMx9lKiEuY0x47DyTDDYtl45bNuWPlqju03g5t+s59lk/9/lk2yuP37jSbaLs3ffqCd/Bfzg9H2wxfizYL6vw0AAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=436bbad893f78710e61e3b277bba1009"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes/>
+        <comment>Create Inventory Alert: no active Customer BOM found for this finished product</comment>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id>9e694a9a-a492-411d-b785-bafa2b4f78cd</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>4f6bbad893f78710e61e3b277bba1000</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>7728d95a-6e17-4cc3-b212-6d550453920b</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VwW7bMAz9FcHnwLCTNmhz29L1tDbbuvXSNQZj0bEwWXIlOW0W9N9HWYobbC3Wwy4FlkNgkSL5HkmRN7tEQYPJLHGwklj0h1GyAdl54UMxzo6n2elpIRTvrCsy+tgUINE4usaFbSVsr193uwVD3h2aZLZLylpIblAls5vbUSI4mU9zzI5P82k5ySeTcZaNT47y1XSyysd8AohH5ELCCiVd/erB0vk57G7bPiv7eGjLLoNCG+7xZKMEHxwqjgSkAmlxlDSgODhttsnMmY4EBoEvlNwON2qhHDkkNzXKNnw18GDFTwJwknmLColjiUE3HIuYuCCuzsDBFcUoXWfi1bLWokQbssOxgk66+aEsXFi0TmgVTHrC0VrLrlGXITnJ4GBfJ5J0lkBg6xl7DpFQdVXr+y97lOdURZ+cqJS6BDmcwDkjVp3zeHYJSmzIUdFA2wq1LlqjN6I3JixNupZ0SCup7ymoFWuVQumBp5RgSM9JftaLr8EIz+KC3JDx4yixWzuXYO0TF0picdd5JIFZ5FCENHiT0ojWvaMAG4xwH0dDm/edbQ9avO/OwjfI9y7LJrwB6lABsrC1Ng7WuLS4IYnbBn0t1vXSOnCdDQJNCJaDFTHnVMig2u3m1DQOOdOGfWu5/yzytOwMJdillVDC1iSKRo+Py4CmQWspcnByEV0z2ICgByAkYWFljeUPVpEEecouNYOeMJvTu9MNGvZ+ccHuwbJKd4rTv2GuRrYPyWJIphXJhWWfwpmKwhb+TaTsXe+CVAbvOmHIxmnG/ftthMLeG9W21YqosD1/yxQivaI+YDv4TCMxn4FXpYbqXnRRqhUl5sPnP+fN/9K9ndL9dfhzpMXx0vDPVwfD/1yg5PZp+g9Pej/5saEucViEJ/7b9I9Kdh2VcQPk/34D5NOs/72hPRBovvk1cLD7X1gIt78AuzK8bvkIAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=4f6bbad893f78710e61e3b277bba1000"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Record">9d09f99587003300663ca1bb36cb0ba3</action_type>
+        <action_type_parent display_value="Look Up Record">b93f42810b30030085c083eb37673a63</action_type_parent>
+        <attributes/>
+        <comment>Look up active Inventory Stock with status=available for the BOM Line material_product</comment>
+        <compiled_snapshot>9d09f99587003300663ca1bb36cb0ba3</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <generation_source/>
+        <order>10</order>
+        <parent_ui_id>5b9678e4-f193-431a-8954-0cae706581ed</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>4f6bbad893f78710e61e3b277bba1004</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>c2dca4de-8626-4cd6-b326-c427ea830973</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VY32/bOAz+Vww/Jzk7TuK4b4cWAQZsK7D2+rLbBNqSG2GK5Ely2jTo/36UfyRB4jXttcE27CkxRYnkx4+k5c9rX8KC+We+UdoSuyqY3/OXIMqNDEyGIspNIWB106yAZ5X3gPICNO63TPtnaz+bc0E1k/7Z5y89n1NUHNMgyZNkPI2DIIqCYDKJMgjTNJpkaZCmIR4hIGUCVa/Qmndde9DhVPVzhjYUz9rn983W81aoNHWuRD2f3VsmKUMfchCG9fwFSApW6dVGohnQSym2gjmXFk/Dc+ZMFPW/Bdwb/oCWo6HbkTOML2P12uaRNPDU4vwCLFxZXWa21I1q7bZBZNabgDcgduDdBBI89rb6D04f9vUp290QPiLylOVQCnv+/2yGL7U5dDbrAC8LyxXm349chiAVbfhKlAv5sc6qv/HwpoNo9crFD/hWGgSbFS61LldN4vKrubr71GZjxmXlV7MoVAZi8wTWap6W1uGy9nNKcs4EJVwKLp0lTJsjEhNsgRbIAoqCy1tSaLXk1akYy2JwK/BhkAt157Dgt3IAmYt8gBSDwQzlF5X4BjR3KHzAY3Bzzxmc49bGHjGZ5oUld5zeMru13mpRZe9AfOtabxhH2kRV4fmPPd+szLkAY7ZgI03J99JhUEPfoEeqRFVbKi/+xgiWrAHKcaApwkxJyl1wZocGC8Ca5yAcMBSJ/m+J9U3X63GaTOIpG/XzMIn6oyiE/jQZj/pBBiwOJuNpyOiAW7YY7J/w+PgVKg/qo1ykX40FW5paAEvgomLUQTf6uc4ca4F0/FQLhGSnBZ7vQt0Ff9sE92Xvuw5o6/kEzXAUBMHbtMOudnXYTl7UTQ7bhMvfK7rEaZrBy2u1huBowRJiZIa9A7flSFPcS5jWSu+Ub3BYRHUDOU7njEE6GsIkjsIwCMKAxsE0jsPpJM0nEI/yHTpfKOnKZRhbzzniKem1jhx3taF6qpRgIPd4fo0J/WvWeNzwfHwSnv9GLH/tMCz59T7mtagT9VNNyJL/I/n3kr1zZJuyYDgNadafxmHcH+V00k8ojPuQpOM4oiwb5acZerZp7m3B3JNhMJ4ESYKTm5bGkgD/LImxKvt2WEtHtI9OjOTJiTHaKbHrxs89t5viqR5JtbZXP27B+1gvtO+aJ6if6Z9UPyd7Z+QCuULqZBpV6grKJckEUsstaJCmPusktcBzskDgeIHmNcuQLoaAZiRXpaSkMbwtFYdqzjWyvlY+LI9PDHMscRyIlWfnzKu0vY32sfIInyyPdPeF6l3uta435xsPXfcq172N6y8L9CU30dEvPJS2t7yZm84uE8inYieV7Szuuo0eSeITbHjmVfWZToVv6tTr77Jd9O+80x7x9bdoTqdoN9XHgBrkw9bxnPbw5CcnoDvt4dIl3UtXe1+cNsabSq8/EXSM0Zlb2Bujwz99jP6Sl63ejz71vPEt7Mt/fofnS1IVAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=4f6bbad893f78710e61e3b277bba1004"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes/>
+        <comment>Create Inventory Alert: no Inventory Stock found for component material</comment>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <generation_source/>
+        <order>12</order>
+        <parent_ui_id>ea576a8c-e662-4264-bad4-9d9dd2385244</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>8f6bbad893f78710e61e3b277bba1005</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>16c56292-590f-4651-89cf-d35214ee2425</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1W227TQBD9lZWfU8tuLiR9Q4VKSFAEhb4Atcbecb1ivTa767Qh6r9z7HVMxEWAxAsSeYiyczl7ZubYk3f7yFDN0VnkKdecDYdZtCXd9cb77DRZrpLNJlNGds5nCX5sM9JsPcKkcq2m3fXvRbdkge7ZRmf7qKiUlpZNdPbuwyxSEumrlJPlJl0V83Q+P02S0/UizVfzPD2Vc2JeAEJTzhqhb3qyOP+Iu9+1P7Q9P84Vl8HRWNnzSWYR33s2kkGkJO14FtVkJPnG7qIzbzsYLJN8afRuiqiU8QAETMW6Db9qunfqMwiskz6jZNRYcPBNx2xsXDCXT8jTFe4ofGfH0KJqVMEudEdySZ3258e2EPCy9aoxIWUoeMxudFeby9CcaAI4zAmWzoEEt33FfQ1jQeVV1dy9PrC8wBT75oxO3RSkpxN5b1Xe+Z7PPmLNNYCymtpWmdustc1WDcngUse3Goe41M0dLnXq1sRU9MRjNJjiC9ifDOZrsqqv4gVgkPwwi9zOnWty7mstaGL2qeuZhMrGGrLQhj6lsKr1j3HBlke6D7NJ5oOy3ZHEB3VmvUDed0kylzVBoYp05qrGerrlG8dbWPwu+IHuFTpx4zz5zgVjAxY3UyaqlxhmcO33y3yzerTmxUmZbuYni3lKJ+vNcnGSFMSPktVynbKMlec6/hbh4eEm0KvZOVAJiC/GKEFbUngilAY5UVRcfBQlLEATl42goQOHIEj+mdmiURC0uPINYi0XkL+4IyfKpjMS31b4SjmBmbWNQbA4MIrHnBqPtchZgGABsUqBlJrk8TU5A2eI6EvAlEVBZkhgMBsLwuD50J9zPFg+QL1te4fM0hjoEKGPIYCsG62NQUN8ZRmj0bJXgfHTXP6kz4fMzPKnTqEM4D599f0L7b82/mtj0sYv15dkrL6fra80P1pfF4q1dF/31/RSOuwuriFDz1l4SX2zv0anuB6d4w5L//4OS1fJ8PmHNlko859fZEf/Xn6y0j58AdbXvx+7CQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=8f6bbad893f78710e61e3b277bba1005"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Look Up Records">43400a1587003300663ca1bb36cb0b4b</action_type>
+        <action_type_parent display_value="Look Up Records">d1c56ec50b30030085c083eb37673a50</action_type_parent>
+        <attributes/>
+        <comment>Look up active Customer BOM Line records for the Customer BOM</comment>
+        <compiled_snapshot>43400a1587003300663ca1bb36cb0b4b</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <generation_source/>
+        <order>5</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>cb6bbad893f78710e61e3b277bba1002</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>12c051f6-9e48-4f8e-b0ae-ae1a0bd57300</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VXW0/bMBT+K1WeQ+U2tKW8TSCkSQMkQLxszHJsp7XmxJntAKXqf99xnKRZG24bnUB7a879HH/fsft1GWQk5cFhQFXGhBUqM0EY3BJZlMLCWJVyjWOVfisQithyicYThg74dC+aULq3jxDfi4ej4R5NonFEySSm06R/wanSrG8WBgu2Wn0n1Ipb7kNYDbHDgAmTS7K4/gepcqKhSct1cLgM6FxIpnkWHH69CQPBIPdBArHJYHQwAacIobGLPojjaExjFI8QhJAk5hJMj9pj6hqdXeSdsi9dAaBwV9QgDPi95RnjUE1CpOFhkJKMEav0opFoTth5JteCucgsRIQ4cy5z/ysl90Y8QAXQEXI+CYdeKffa5hNX0/fi5JhYcgnDorbQlSmdK0G58VNiPCGFtEdtmTc4z10v3sWSWNbeShZpdubnEzQB6sMGSWGgCJ67pl0X7qSgkMu5uruoizwRWTmeql2pKJHNF7FWi7iwrpxlwCVPIQ5OSZ6LbIZzrW5F6QylpP2ZhI9+ItUd5DRilvUdSlTWhxGT/gnIj0vxNdHCNXEKYcB5FQYAqyNJjFm3AjPEPwtXiW+sagGXU/AjcH5Ui9x+KrFY1bwKG7J5szXP7vEQjcZoOsXQMhABI9zmA5Yi66DMC73+Dv37cQv9V1XdG21UmC8/can7HfOlW+/MKyrMox1g/uAjIb5q6J1BHgoSErCC/WEaVehylLeYSsCWU2iSGR/rDwjyPDeM0haXiFrzo5QRQ7c5QHpW9R5egHL09I6ftlB+Cdl6V76CjqLqDV+iYXO718IK5dEOUB4N3wbly6bhZogd867p6k6otn9w9mTTHmDWchisulj0qpyD1+YcrrZZGr2Kpm2gec3xI3h7YzYnDCeCSwarvFzbsE3922VnNGd4Dq5VPuw5ie8Em3G7zl5bMWXviPzRpa8Qh+uDKtvbyWYABmDNDRxK+406Qmh7LXjhczth/8mdMB60dsIpue9dNLk7C6r2AlCXz8oRtxfD50ZaYXV/J2++d3v/DZA/pk5SDUKv/RA35M7uPD/BbSy/AMh08uTlNmoB+dzBrxcvNu62JnmFYr+MOt5yJ06x8ZYb/u9vuXf57yV87FJ54781N78AvEOtuEUQAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=cb6bbad893f78710e61e3b277bba1002"/>
+    <sys_hub_action_instance_v2 action="INSERT_OR_UPDATE">
+        <action_type display_value="Create Record">2de05916c31332002841b63b12d3aee1</action_type>
+        <action_type_parent display_value="Create Record">02f0b88cc3c632002841b63b12d3aeff</action_type_parent>
+        <attributes/>
+        <comment>Create Inventory Alert: insufficient material availability for this BOM component</comment>
+        <compiled_snapshot>2de05916c31332002841b63b12d3aee1</compiled_snapshot>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <generation_source/>
+        <order>14</order>
+        <parent_ui_id>1b20c288-f679-442c-bba2-298708f79f08</parent_ui_id>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>cf6bbad893f78710e61e3b277bba1006</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>3e2ab03a-1ecf-4593-88e0-d7e32ea2f373</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1WyW7bMBD9FUFnW5AsW7Fza9MGKNAk6JZL2xBjcmQRoZaSlBPXyL93KEqKkbRoUfTQAPFJnOXxveGQ48/7sIISw+PQwloh6xaTcAuqdcZbNosXWbxaMVmJ1lgW08eWgUJtKUxI0yjYXf5ZdAOa0C3q8Hgf8kIqobEKjz9/nYRSUHqWYLxYJRlPkzSdxfFsOU/WWbpOZiIFxDlBKFijotCPjiytf8bd7pqf2t4e5gbn3lFr4fjEkxBvLVYCiUgOyuAkLKESYGu9C4+tbsmgEcRFpXZjRCErS4AEU6Bq/FcJt0Z+JwLL2GXkSBo5et+4ZH3hvDl/BRY+0B7ctroP5UUtORpfHYE5tMqeHNp8wEVjZV35lE5wn12rtqzOfXHCEWA4J7K0hkhg4xQ7Db2g/ENR37wfWJ7SKbri9E5Vc1DjCqzVct1ax2cfosKSgFgJTSOrDWt0vZVdMnEpo42iRZSr+oY2NXJTRcAd8YgKDNEp2V915kvQ0qk4IxhKvpuEZmdOFBhzr4WKyL61jolX1mtgvgwuhWvZ2Be0wRZ7uneTsc27zjYHLd51J3MN8qWN41SUQB0qQTFT1NrCBq8Mbslid95fyE1xZSzY1nhDTQyuxixSLuggvWu/X6xX2dES59M8WaXTeZrAdLlazKcxBzyKs8UyQRFJi2X0EOHu7oouDymjDmTG1vx6wOQzwWEucLrMZtl0zkU2Xaf0xeezI4RlGq+O0ug9cuptAvH6SjSGtHiIs36rALYg6UpJReoCXiC/DnKyEKXgTWXaPJdcEoOg236IpsuT1zqwhTTBy4uzgA64qSsKi4KPBR5E0SlV1iFTIF29+oZyMND4rZUaxb27QqR714H22l1r9MSpQ3AQfkI30FIkBX5qnEOwJOKt1m5z6hTW9ta6IuG9gw37/EX5olHMiELAttBIzaHEI+g/P+0hkw3lINzX7x4/qc/d+dyd/1F3/naEC6Tx/6sRnqwPRvipRCXM/QwfH+ZhfmNJF8Ei8w/1gxneO4PL3tnP8eTfz/Eki7vfE5rmXuaTH+YH/+B+Mda//gDpFXOHvwoAAA==</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="delete_multiple" query="source_id=cf6bbad893f78710e61e3b277bba1006"/>
+    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=de6b3ad893f78710e61e3b277bba10e2"/>
+    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=de6b3ad893f78710e61e3b277bba10e2^sys_idNOT IN036b7ad893f78710e61e3b277bba10c4,036b7ad893f78710e61e3b277bba10f9,0b6b7ad893f78710e61e3b277bba10bc,476b7ad893f78710e61e3b277bba10d3,4b6b7ad893f78710e61e3b277bba10dc,836b7ad893f78710e61e3b277bba10c1,8f6b7ad893f78710e61e3b277bba10fb,c36b7ad893f78710e61e3b277bba10d6,cb6b7ad893f78710e61e3b277bba10d9"/>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">cb6b7ad893f78710e61e3b277bba10c2</block>
+        <comment>Customer BOM has no active component lines</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>6</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:05</sys_created_on>
+        <sys_id>036b7ad893f78710e61e3b277bba10c4</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:05</sys_updated_on>
+        <ui_id>de07b457-e1d6-44dc-aa86-943cf75807fe</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXW+bMBT9K5Ofk8gEyNdblapSpW6V1qovW4Uu9iWxZjDDpi1D+e+7BpJUbaau6+ve8LHv9TmHe6BlpnZl7eytObNWbQq2+nY/YqrwGD23TEm2YmzECsiRnoQppHLKFAQ9gK491rbBVPA4yGbjJUaLcZQtcJxywDFgADyV8TzkfLI2deF2u+8156HkVC+VLTU0dx9sI7ZKywoH6iVUxNRhxVbti61OyhLiLA54LMLpLJxyPl1EQToL02AqQ8BoRg01pKjp6PqZ1hPyXVN6yLpKFZthfTWU3uxBU0lPZcpHDJ8cFhKJRAba4ojlUEhwpmrYylU1ARWCvC50czixVYXr7d+iLvunHJ6s+oW+J+e+JkNSKLDfPSyTwd0ezs7BAZGqhaur4ajYGiXQ9t5IzKDWbv0c6w9cl53ersRBqvfVRtd58aW3hR0a7F8mIbUlElh6zV7FICm72ZrHr3uWF6ro/Bk2tRGgDytw5GJaO8+nZagxp0ZJDmVJ3iZlZR5UV0xc8slG02KSafNIl/pJnoDwxCdkMUwuCD/v4DuolFfxmdpQMU2FTayoVLnX1l3OdiNmG7vWYO1RI5mb/Kw9w17xoC3p7fElXaMzuvgBBxm7Ucs8qyuzUeKysA5I9k1jL/0wSuTzNIrnGMhZFEkBsJgto1Bk83jB5xmyYWgzDlmwFMHpoYXwxIAmHXAM6eu8sbfD8hf3vgrLpz4Df2b0ntwEb+RmQN4ZnDj+n5sP58bTTMEqkXR/C2rnP2L/GJzB9AuFWp4cplPJuvfT3bM6vA2hLJXdeuxy/xPzGw0Nn8/fEXo01Q8v+4jtfgPor98pDgcAAA==</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">cb6b7ad893f78710e61e3b277bba10f7</block>
+        <comment>Sufficient stock exists — check for existing requests and create material reservation if none found</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Else">1f781bf3c32232002841b63b12d3aee6</logic_definition>
+        <order>15</order>
+        <outputs_assigned/>
+        <parent_ui_id>5b9678e4-f193-431a-8954-0cae706581ed</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>036b7ad893f78710e61e3b277bba10f9</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>dad47bcf-85b8-40ad-be3e-e01b3e6104aa</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">0b6b7ad893f78710e61e3b277bba10ba</block>
+        <comment>No active Customer BOM found for the finished product</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>2</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:05</sys_created_on>
+        <sys_id>0b6b7ad893f78710e61e3b277bba10bc</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:05</sys_updated_on>
+        <ui_id>9e694a9a-a492-411d-b785-bafa2b4f78cd</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K5Of28r5apu+oSIkJDakgXjZUHRjO601x85iB8ii/vddJ2mLoBNjvO4tPva9PufknqQjpnFV4+ytObNWbjRZfbufEKk9hs8dkZysCJkQDaXAJ2Y0l04ajdADqMZjXUfnC06XIp1GC8amMaVimodJOGVFNI8YLHKWFjPrwDV2t/veUBrxABtwaSsF7d1H+7CtVLwWI/kKauTqRE1W3YutXkwKSZEENGFROI9CSsNlHOTzKA9CHoGI59hQQS4UHl0/U3vCANdWHrKulnozrq/G0ps9aGruqYR0QsSTE5oLJFGAsmJCStAcnKlbsnJ1g0AtgF9r1R5ObKV2wwvYClUNTyU8WflL+J6U+ppCoEImht3DMhvtHeDiHBwgqYa5ph6Psq2RTNjBGy4KaJRbP8eGA9dVr7cvcZCrfbVRTam/DLaQQ4P920SksUhCVF6zVzFKKm625vHrnuWF1L0/46YyDNRhBQ5dzBvn+XREKFFio6yEqkJvs6o2D7IvRi7lbKNwMSuUecRL/SzPgHniM7QYZheIn/fwHdTSq/iMbbAYp8JmltWy2mvrLye7CbGtXSuw9qgRzc1+Np7hoHjUlg32+JK+0Rle/CBGGbtJRzyrK7OR7FLj+KLsm9Ze9sMo5mkMKUCchnEQ8HyxTHIoIMzjYrFknIxDW1AogpQFp4cWohMDmvXAMaavA0feDstf3PsqLJ+GDPyZ0XtyE7yRmxF5Z3CS5H9uPpwbTzMHK1nW/y+wnf+I/WNwRtMvpFD85DCdSta9n+6B1eFtMGmx7NZjl/vfmN9ocfh8/o7Qo6l/eNlHbPcbY7NbORAHAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">036b7ad893f78710e61e3b277bba10d2</block>
+        <comment>End flow — no active BOM Lines found</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>8</order>
+        <outputs_assigned/>
+        <parent_ui_id>de07b457-e1d6-44dc-aa86-943cf75807fe</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>476b7ad893f78710e61e3b277bba10d3</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>76af74f0-d54d-47de-85dd-6843c95e0a01</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">076b7ad893f78710e61e3b277bba10db</block>
+        <comment>Inventory Stock available_quantity is less than BOM Line quantity_required</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="Else If">666e5545c3e232002841b63b12d3ae99</logic_definition>
+        <order>13</order>
+        <outputs_assigned/>
+        <parent_ui_id>5b9678e4-f193-431a-8954-0cae706581ed</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>4b6b7ad893f78710e61e3b277bba10dc</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>1b20c288-f679-442c-bba2-298708f79f08</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Vy27bMBD8lYJnW9DLtuxbkCBAgLQBkiCXNhBW5MomSj1CUk5Uwf/epSTbQeuiTXPpoTdyyF3O7O5IHasaWzfW3Fdnxsh1yVafHydMlg6jdcekYCvGJqyEAmnFq1JIK6uSoC2oxmFdx0PBIRY4TebhfBpzMZ9mEa14HC4QkshfLiLvFnmlhQdbkAoyhelTA6WVtt3tvjS+H/Gum2XL+SLBeJoHy2gaRwFMk+UsnvoccOHPZ0mAwpMWC28fm2p8aqRGsdsRIyFNraB9+OeI8Y1UQuNY3ho0VdOiZqvuh6O+3LkP9A4POFGNQt8PkzjI5lEWhCIChIASElFUdPX8VT9OtMi2tYOM1bJcj/vrMfRuD5J4RyX0JwxfLJYCiUQOyuCEFVAKsJVu2crqhgCNIG5K1R5ubGRphxHZoKqHVQEvRn5Dl9P3XUyOpJDjcHrYpmO/Bji/AAtEquG20eNVvqkkRzPURmAOjbLnr7Hhwk3d6+1DrGvhGF2ppig/DWVhhwT78SCkMUQCa6fZqRgl5Xeb6vl2z/JSln19xkNVcVCHHViqYtZYx6djqLCgRGkBdU21TWtdbWUfTFwKb61o4+WqeqZHnds84I64RyUG75Lwix5+AC2dio+UhoJpKkxquJb1Xlv/ONtNmGnNuQJjjhqpuG5+1V7xqC0dyuNC+kRn9PAWRxm7Scccq+tqLflVaSyQ7LvWXLlhDLLQ52GS5PPFMo5DnmUQhstk4Sf5Ypn7CfuzoQ1PDGjaA8cPyc8OZu82S3jKLB8GD/ya0Vt8E/zGNyPyRuPMZv99827fOJoZGMnT/o9G6dxH7C+NMxb9UqISJ4fplLMe3XQPrA7d4NJQ2L3DrvY/WnfQ0vA5/x2h50p/dbKP2O47Eox4sbIHAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">4f6b7ad893f78710e61e3b277bba10bf</block>
+        <comment>End flow — no active Customer BOM found</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="End">d176605ea76103004f27b0d2187901c7</logic_definition>
+        <order>4</order>
+        <outputs_assigned/>
+        <parent_ui_id>9e694a9a-a492-411d-b785-bafa2b4f78cd</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:05</sys_created_on>
+        <sys_id>836b7ad893f78710e61e3b277bba10c1</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:05</sys_updated_on>
+        <ui_id>71017c23-7c21-4f5f-9ebf-5b26800a80e9</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/6tWyi8tKSgtKQ7JdywuzkzPU7KKjtVRyswDiUHYZYlFmYlJOalQbkpqcmZxZn5eCEjME0ldSmVeYm5mMrJQeX5RdlpOfjlCrBYAD1ouqHEAAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">4b6b7ad893f78710e61e3b277bba10fa</block>
+        <comment>No existing non-terminal Inventory Request found for this material and Production Order — create one</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>17</order>
+        <outputs_assigned/>
+        <parent_ui_id>dad47bcf-85b8-40ad-be3e-e01b3e6104aa</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>8f6b7ad893f78710e61e3b277bba10fb</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>b87d4297-1b60-4120-9177-ebe2f2346b1f</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1V0W6bMBT9lcnPSYQhhCRvVapKlbpVWqu+bBW62CaxZmyGTVKG8u+7BpJUbaau6+ve8LHv9TmHe6AlpnZl7ey9ubBWrjVZfnscEak9hs8tkZwsCRkRDYXAJ2Y0l04ajdAWVO2xto1pnCR8lo9pnszHU85hPAdKx2EU5zGnEM9jOlmZWrv9/nsdBBEPsJ5LWypoHj7Yhm2k4pUYqJdQIVMnKrJsX2x1UhaAvWgQsyicRWEQhPMpzWZRRkMegZjOsKGCTCg8unqm9Yx815Qesq6Sej2sb4bSuwNoKu6phMGIiCcnNBdIIgdlxYgUoDk4UzVk6aoagUoAv9WqOZ7YSO16+zdClf1TAU9W/hK+ZxD4mlygQib63eMyHdzt4fwSHCCpmrm6Go6yjZFM2N4bLnKolVs9x/oDt2WntytxkKlDtVF1ob/0tpBjg8PLRKS2SEKUXrNXMUjK7zZm9/XA8krqzp9hUxkG6rgChy5mtfN8WiKUKLBRWkBZordpWZmt7IqRSzFZK1xMcmV2eKmf5AkwT3yCFsPkCvHLDn6ASnoVn7ENFuNU2NSySpYHbd3lZD8itrErBdaeNKK56c/aM+wVD9rS3h5f0jW6wIu3YpCxH7XEs7oxa8mutXWAsu8ae+2HMZsnfBouEpzAYErDYEGTRGQizMNoOstoToahzQPI6YLR80ML0ZkBTTvgFNLXeSNvh+Uv7n0Vlk99Bv7M6D25oW/kZkDeGZw4/p+bD+fG08zASpZ2fwts5z9i/xicwfQrKRQ/O0znkvXop7tndXwbTFosu/fY9eEn5jcaHD6fvxO0M9UPL/uE7X8DYHiKEg4HAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">8f6b7ad893f78710e61e3b277bba10d4</block>
+        <comment>Iterate over each active BOM Line to check component material availability</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="For Each">098e1dc5c3e232002841b63b12d3ae33</logic_definition>
+        <order>9</order>
+        <outputs_assigned/>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>c36b7ad893f78710e61e3b277bba10d6</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>5b9678e4-f193-431a-8954-0cae706581ed</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/51TwW7iMBD9F58hcgJlgVvVqlKl3a1Eq15WFZrYE7DWsbO2A81G/PuOcZJWPe4Jz/O8mfdeTM9sG5o2+Bd76706GLb99TZjykSMzj1Tkm0ZmzEDNdJJBaw9lSfQbaz7Pi8Ev8mr1XyDy/V8Wa1xXnLAOWAOvJQ33xacZzsU1kl/uRBVKt9o6F7/f0IDjtQEdGzbM3FUWjoclUe5+UZWm5xvxKJYLQrOi/UyL1eLMi/kAlCuaISGEjW1Pg5+vtgLXRNLl5YOwPeBs5tQ+okiCj5j+B7QSKT1FWiPM1aDkRCs69g2uJYAhyCfjO6mjqMyIYV7RN2kUw3vXv2l3TnnkVIhWROYLqdyP2SY4OoeAjzTEhFaN7SKo1UCfQpFYgWtDnefsdTw1ARlTaIEKPXItrqtzc+UCZsGjJ+MkNaTCGyi5WhicFQ9H+15N6p8UOYaz3CprQA9VRCCU2Ubop6eocaaBu1raBplDvvG2ZO6kklLnR00FVml7ZmWxmeagYjCM0oYsgfC76/wKzgVXfygMUS+zJjv/J0G7z+8UIj7P21UkpwNHvYphkgRTjXhlhaccJB7eYsvPs2eMhXKk4SXiD2O/5d40dFbUuIzdLbudxT/gV3+AfQcipl5AwAA</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_flow_logic_instance_v2 action="INSERT_OR_UPDATE">
+        <attributes/>
+        <block display_value="">876b7ad893f78710e61e3b277bba10d8</block>
+        <comment>No active available Inventory Stock record found for this component material</comment>
+        <connected_to/>
+        <decision_table/>
+        <display_text/>
+        <flow display_value="FD - Production Order - Material Availability Check">de6b3ad893f78710e61e3b277bba10e2</flow>
+        <flow_variables_assigned/>
+        <generation_source/>
+        <logic_definition display_value="If">af4e1945c3e232002841b63b12d3ae3e</logic_definition>
+        <order>11</order>
+        <outputs_assigned/>
+        <parent_ui_id>5b9678e4-f193-431a-8954-0cae706581ed</parent_ui_id>
+        <sys_class_name>sys_hub_flow_logic_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:06</sys_created_on>
+        <sys_id>cb6b7ad893f78710e61e3b277bba10d9</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:06</sys_updated_on>
+        <ui_id>ea576a8c-e662-4264-bad4-9d9dd2385244</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1VXU/bMBT9K5OfS5Vv2r4hEBISG9JAe9lQdGM7rTXHzvwBZFH/+66TtEWjE2O87s0+9r0+5+Setifau9Y7e6fPrBVrRVZf72dEqIDhuieCkRUhM6Kg4biiWjHhhFYIPYD0Aet7mjAKGeMniyIpTjLKipMqxRXNklMOizRanqZz68B5u91+81GUshgbMGFbCd2X9/ahGyGZ4RP5FgxyddyQVf/b0SBmCXmdx1FOsXOaRFGyyOKqSKs4YSnwrMCGEiou8er5M7VHDHBdGyDrjFDraX89ld7uQG1YoJJEM8KfHFeMI4kapOUz0oBi4LTpyMoZj4DhwG6U7PY3NkK58QNsuGzHVQNPVvzkoWcUhZqao0LKx9P9tpzsHeH6AhwgKU+dN9NVutGCcjt6w3gNXrrz59h44aYd9A4lDiq5q9bSN+rTaAvZN9h9TUS8RRK8DZqDiklSfbvRj593LC+FGvyZDqWmIPc7cOhi5V3g0xMueYONygbaFr0tW6MfxFCMXJr5WuJmXkv9iI+GWZ4DDcTnaDHMLxG/GOAvYERQ8RHbYDFOhS0tNaLdaRseJ9sZsZ09l2DtQSOaW/7wgeGoeNJWjvaEkqHRGT78wCcZ21lPAqtrvRb0SuH4ouzbzl6FYeSQnxawoLwokiwpsgpYtmRLxpJ0kSdZRqahrSOo4yWNjw8tpEcGtByAQ0xfBo68Hpa/ePdFWD6MGfgzo7fkJn4lNxPyxuDk+f/cvDs3gWYFVtBy+L/AduFH7B+DM5l+KbhkR4fpWLLuw3SPrPZfgwqLZXcBu9r9jYWDDocv5O8APWrzPcg+YNtfmxLtTRAHAAA=</values>
+        <workflow_reference/>
+    </sys_hub_flow_logic_instance_v2>
+    <sys_hub_pill_compound action="delete_multiple" query="attached_to=de6b3ad893f78710e61e3b277bba10e2"/>
+    <sys_hub_flow_variable action="delete_multiple" query="model=de6b3ad893f78710e61e3b277bba10e2"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_de6b3ad893f78710e61e3b277bba10e2"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_de6b3ad893f78710e61e3b277bba10e2</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:05</sys_created_on>
+        <sys_id>766b7ad893f78710e61e3b277bba107a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:05</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
     <sys_documentation action="INSERT_OR_UPDATE">
         <element>table_name</element>
         <help/>
         <hint/>
         <label>Table Name</label>
         <language>en</language>
-        <name>var__m_sys_hub_flow_input_e152b03ef6ca4d5cb13cc46e99c248d8</name>
+        <name>var__m_sys_hub_flow_input_de6b3ad893f78710e61e3b277bba10e2</name>
         <plural/>
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-09-26 10:04:23</sys_created_on>
-        <sys_id>6b2b3ab747efc310527276a4416d4355</sys_id>
+        <sys_created_on>2026-10-04 07:25:05</sys_created_on>
+        <sys_id>b26b7ad893f78710e61e3b277bba1088</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name>Table Name</sys_name>
+        <sys_name/>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_e152b03ef6ca4d5cb13cc46e99c248d8_table_name_en</sys_update_name>
+        <sys_update_name/>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:23</sys_updated_on>
+        <sys_updated_on>2026-10-04 07:25:05</sys_updated_on>
         <url/>
         <url_target/>
     </sys_documentation>
-    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_e152b03ef6ca4d5cb13cc46e99c248d8"/>
-    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_e152b03ef6ca4d5cb13cc46e99c248d8"/>
-    <sys_hub_flow_stage action="delete_multiple" query="flow=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_flow_cat_variable_model action="delete_multiple" query="id=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_hub_flow_input action="delete_multiple" query="model=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_hub_flow_output action="delete_multiple" query="model=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_hub_alias_mapping action="delete_multiple" query="source_id=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_hub_action_instance_v2 action="delete_multiple" query="flow=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_hub_pill_compound action="delete_multiple" query="attached_to=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_hub_flow_variable action="delete_multiple" query="model=94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_94339efdc363c310d1c3b61ed40131d3"/>
-    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_94339efdc363c310d1c3b61ed40131d3"/>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_de6b3ad893f78710e61e3b277bba10e2</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 07:25:04</sys_created_on>
+        <sys_id>be6b7ad893f78710e61e3b277bba105c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 07:25:04</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_de6b3ad893f78710e61e3b277bba10e2"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_de6b3ad893f78710e61e3b277bba10e2"/>
     <sys_hub_flow action="UPDATE">
         <sys_id>e152b03ef6ca4d5cb13cc46e99c248d8</sys_id>
-        <latest_snapshot>94339efdc363c310d1c3b61ed40131d3</latest_snapshot>
-        <compiler_build/>
+        <latest_snapshot>de6b3ad893f78710e61e3b277bba10e2</latest_snapshot>
+        <compiler_build>glide-brazil-08-25-2026__patch0-08-26-2026_09-22-2026_1636.zip</compiler_build>
         <version_record/>
     </sys_hub_flow>
     <sys_flow_trigger_plan action="delete_multiple" query="plan_id=e152b03ef6ca4d5cb13cc46e99c248d8^sys_idNOT INad331231c3a3c310d1c3b61ed4013182"/>
     <sys_flow_trigger_plan action="INSERT_OR_UPDATE">
         <binding_strategy>com.snc.process_flow.engine.binding.OncePerUniqueChange</binding_strategy>
-        <plan/>
+        <plan>{"@class":"com.snc.process_flow.engine.serialization.plan_data.ChunkingPlanData","chunk_data":{"table":"sys_flow_trigger_plan","id":"ad331231c3a3c310d1c3b61ed4013182","name":"plan","plan_signature":null},"plan_data":"CHUNKING_PLAN"}</plan>
         <plan_id>e152b03ef6ca4d5cb13cc46e99c248d8</plan_id>
-        <snapshot>94339efdc363c310d1c3b61ed40131d3</snapshot>
+        <snapshot>1a9b721c93f78710e61e3b277bba1097</snapshot>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-26 10:04:36</sys_created_on>
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>ad331231c3a3c310d1c3b61ed4013182</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>1</sys_mod_count>
         <sys_overrides/>
         <sys_scope/>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-26 10:04:36</sys_updated_on>
-        <trigger display_value="">e9331231c3a3c310d1c3b61ed4013180</trigger>
+        <sys_updated_on>2026-10-04 07:25:08</sys_updated_on>
+        <trigger display_value="">376bfad893f78710e61e3b277bba1033</trigger>
     </sys_flow_trigger_plan>
     <sys_flow_subflow_plan action="delete_multiple" query="plan_id=e152b03ef6ca4d5cb13cc46e99c248d8"/>
 </record_update>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="DELETE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>Record Insert</display_name>
+        <inputs/>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>3</order>
+        <step_config display_value="Record Insert">14872288df60220062fe6c7a4df26319</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>8486468024a345fe9d4b9946453fe646</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record Insert</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_8486468024a345fe9d4b9946453fe646</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <table>x_2056099_indust_0_mat_rcpt</table>
+        <test display_value="Procurement E2E Lifecycle Test">1a352663b4004bc196b37107c5fd0da8</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="DELETE" query="document_key=8486468024a345fe9d4b9946453fe646"/>
+    <sys_variable_value action="DELETE">
+        <document>sys_atf_step</document>
+        <document_key>8486468024a345fe9d4b9946453fe646</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>a788efe8918546548e2aa45e74e8456d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <value>1</value>
+        <variable display_value="Enforce security">e6e3c7535320220002c6435723dc3496</variable>
+    </sys_variable_value>
+    <sys_variable_value action="DELETE">
+        <document>sys_atf_step</document>
+        <document_key>8486468024a345fe9d4b9946453fe646</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>d9ebb9859baf4d73af7e8b754903de09</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <value>record_successfully_inserted</value>
+        <variable display_value="Assert type">9024a37f671003007ba405225685efe5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="DELETE">
+        <document>sys_atf_step</document>
+        <document_key>8486468024a345fe9d4b9946453fe646</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>e4a0a51628ac406f8d41428dc0ae270e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <value>x_2056099_indust_0_mat_rcpt</value>
+        <variable display_value="Table">90144b535320220002c6435723dc3488</variable>
+    </sys_variable_value>
+    <sys_variable_value action="DELETE">
+        <document>sys_atf_step</document>
+        <document_key>8486468024a345fe9d4b9946453fe646</document_key>
+        <order>400</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>f63b205e42124ceea5e56df2d5dd5caf</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <value>procurement_order={{step['590458613f704b89b1cb03679293f823'].record_id}}^supplier={{step['3bce6edc626245549b1b4bd74c8604e5'].record_id}}^received_date=2026-10-05 10:00:00^quantity_received=95^quantity_accepted=90^quantity_rejected=5^status=passed^EQ</value>
+        <variable display_value="Field values">dd54cf535320220002c6435723dc34fd</variable>
+    </sys_variable_value>
+    <sys_element_mapping action="DELETE" query="id=8486468024a345fe9d4b9946453fe646"/>
+    <sys_element_mapping action="DELETE">
+        <field>field_values</field>
+        <id>8486468024a345fe9d4b9946453fe646</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>882f1f7b3eb343099f2394b5a85416d1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <table>var__m_atf_input_variable_14872288df60220062fe6c7a4df26319</table>
+        <value>procurement_order={{step['590458613f704b89b1cb03679293f823'].record_id}}^supplier={{step['3bce6edc626245549b1b4bd74c8604e5'].record_id}}^received_date=2026-10-05 10:00:00^quantity_received=95^quantity_accepted=90^quantity_rejected=5^status=passed^EQ</value>
+    </sys_element_mapping>
+<sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</application>
+        <file_path/>
+        <instance_id>03b75dc82b7a0fd02fdcfcd2ce91bfc9</instance_id>
+        <instance_name>dev445625</instance_name>
+        <merge_base/>
+        <name>sys_atf_step_8486468024a345fe9d4b9946453fe646</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>Record Insert</display_name>
+        <inputs/>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>3</order>
+        <step_config display_value="Record Insert">14872288df60220062fe6c7a4df26319</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>8486468024a345fe9d4b9946453fe646</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record Insert</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_8486468024a345fe9d4b9946453fe646</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <table>x_2056099_indust_0_mat_rcpt</table>
+        <test display_value="Procurement E2E Lifecycle Test">1a352663b4004bc196b37107c5fd0da8</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=8486468024a345fe9d4b9946453fe646"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>8486468024a345fe9d4b9946453fe646</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>a788efe8918546548e2aa45e74e8456d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <value>1</value>
+        <variable display_value="Enforce security">e6e3c7535320220002c6435723dc3496</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>8486468024a345fe9d4b9946453fe646</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>d9ebb9859baf4d73af7e8b754903de09</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <value>record_successfully_inserted</value>
+        <variable display_value="Assert type">9024a37f671003007ba405225685efe5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>8486468024a345fe9d4b9946453fe646</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>e4a0a51628ac406f8d41428dc0ae270e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <value>x_2056099_indust_0_mat_rcpt</value>
+        <variable display_value="Table">90144b535320220002c6435723dc3488</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>8486468024a345fe9d4b9946453fe646</document_key>
+        <order>400</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>f63b205e42124ceea5e56df2d5dd5caf</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <value>procurement_order={{step['590458613f704b89b1cb03679293f823'].record_id}}^supplier={{step['3bce6edc626245549b1b4bd74c8604e5'].record_id}}^received_date=2026-10-05 10:00:00^quantity_received=95^quantity_accepted=90^quantity_rejected=5^status=passed^EQ</value>
+        <variable display_value="Field values">dd54cf535320220002c6435723dc34fd</variable>
+    </sys_variable_value>
+    <sys_element_mapping action="delete_multiple" query="id=8486468024a345fe9d4b9946453fe646"/>
+    <sys_element_mapping action="INSERT_OR_UPDATE">
+        <field>field_values</field>
+        <id>8486468024a345fe9d4b9946453fe646</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:34:58</sys_created_on>
+        <sys_id>882f1f7b3eb343099f2394b5a85416d1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:34:58</sys_updated_on>
+        <table>var__m_atf_input_variable_14872288df60220062fe6c7a4df26319</table>
+        <value>procurement_order={{step['590458613f704b89b1cb03679293f823'].record_id}}^supplier={{step['3bce6edc626245549b1b4bd74c8604e5'].record_id}}^received_date=2026-10-05 10:00:00^quantity_received=95^quantity_accepted=90^quantity_rejected=5^status=passed^EQ</value>
+    </sys_element_mapping>
+</record_update>]]></payload>
+        <payload_hash>500546538</payload_hash>
+        <record_name>Record Insert</record_name>
+        <reverted_from/>
+        <source>21e1cb0093370710e61e3b277bba10f4</source>
+        <source_table>sys_upgrade_history</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-03 13:24:35</sys_created_on>
+        <sys_id>53148f0493770710e61e3b277bba10ac</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a101f01d4d0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-03 13:24:35</sys_updated_on>
+        <type>Test Step</type>
+        <update_guid>13148f0442770710696268c6cece27ac</update_guid>
+        <update_guid_history>13148f0442770710696268c6cece27ac:500546538</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-03 16:55:13</sys_created_on>
+        <sys_db_object display_value="" name="sys_atf_step">sys_atf_step</sys_db_object>
+        <sys_id>06e3e2a3a97a485c8fd0b7cbdb11b0e9</sys_id>
+        <sys_metadata>8486468024a345fe9d4b9946453fe646</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record Insert</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_scope_delete display_value="">3325c354032d4b36a9e117288ded1fc4</sys_scope_delete>
+        <sys_update_name>sys_atf_step_8486468024a345fe9d4b9946453fe646</sys_update_name>
+        <sys_update_version display_value="sys_atf_step_8486468024a345fe9d4b9946453fe646">53148f0493770710e61e3b277bba10ac</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-03 16:55:13</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

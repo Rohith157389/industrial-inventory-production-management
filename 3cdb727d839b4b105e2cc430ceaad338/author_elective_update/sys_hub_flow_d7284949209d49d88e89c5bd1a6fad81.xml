@@ -1,0 +1,2135 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_hub_flow">
+    <sys_hub_flow action="DELETE">
+        <access>public</access>
+        <acls/>
+        <active>false</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=18000</attributes>
+        <authored_on_release_version/>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <display_name_after_preview/>
+        <flow_priority>MEDIUM</flow_priority>
+        <generation_source>fluent</generation_source>
+        <internal_name>supplier_low_score_alert</internal_name>
+        <label_cache>[{"name":"Updated_1.current.name","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Name","type":"string","base_type":"string","usedInstances":{"620587ae-7863-4603-8bf3-201be59e1f3a":["log_message"],"c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2":["ah_subject"]},"attributes":{}},{"name":"Updated_1.current.cumulative_score","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Cumulative Score","type":"string","base_type":"string","usedInstances":{"620587ae-7863-4603-8bf3-201be59e1f3a":["log_message"]},"attributes":{}},{"name":"Updated_1.current","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record","type":"reference","base_type":"reference","usedInstances":{"097d07f9-5dd8-4822-ac04-6cd70e7e0552":["record"],"c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2":["record"]},"attributes":{}},{"name":"Updated_1.current.contact_email","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Contact Email","type":"string","base_type":"string","usedInstances":{"097d07f9-5dd8-4822-ac04-6cd70e7e0552":["ah_to"]},"attributes":{}}]</label_cache>
+        <master_snapshot>5b9cd523c3eb4310239a32f1b40131b6</master_snapshot>
+        <master_snapshot_digest/>
+        <name>Supplier Low Score Alert</name>
+        <natlang/>
+        <outputs/>
+        <pre_compiled>false</pre_compiled>
+        <remote_trigger_id>bf9c1923c3eb4310239a32f1b4013133</remote_trigger_id>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <show_draft_actions>false</show_draft_actions>
+        <show_triggered_flows>false</show_triggered_flows>
+        <status>published</status>
+        <substatus/>
+        <sys_class_name>sys_hub_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:07</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>d7284949209d49d88e89c5bd1a6fad81</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Supplier Low Score Alert</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_hub_flow_d7284949209d49d88e89c5bd1a6fad81</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 22:46:48</sys_updated_on>
+        <type>flow</type>
+        <updation_source/>
+        <version>2</version>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_translated_text action="DELETE" query="documentkey=d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_variable_value action="DELETE" query="document_key=d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_flow_record_trigger action="DELETE">
+        <active>true</active>
+        <condition table="x_2056099_indust_0_supplier">statusVALCHANGES^status=under_review<item endquery="false" field="status" goto="false" newquery="false" operator="VALCHANGES" or="false" value=""/>
+            <item endquery="false" field="status" goto="false" newquery="false" operator="=" or="false" value="under_review"/>
+        </condition>
+        <name/>
+        <on_delete>false</on_delete>
+        <on_insert>false</on_insert>
+        <on_update>true</on_update>
+        <published_version/>
+        <run_flow_in>background</run_flow_in>
+        <run_on_extended>false</run_on_extended>
+        <run_when_setting>both</run_when_setting>
+        <run_when_user_list/>
+        <run_when_user_setting>any</run_when_user_setting>
+        <sys_class_name>sys_flow_record_trigger</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:28</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>bf9c1923c3eb4310239a32f1b4013133</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:28</sys_updated_on>
+        <table>x_2056099_indust_0_supplier</table>
+        <trigger_definition/>
+    </sys_flow_record_trigger>
+    <sys_trigger_runner_mapping action="DELETE">
+        <active>true</active>
+        <data>{"run_on_extended":"false","run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any"}</data>
+        <identifier>d7284949209d49d88e89c5bd1a6fad81</identifier>
+        <identifier_type>flow</identifier_type>
+        <runner>FDTriggerRunner</runner>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:28</sys_created_on>
+        <sys_id>ff9c1923c3eb4310239a32f1b4013159</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 17:27:46</sys_updated_on>
+        <trigger display_value="">bf9c1923c3eb4310239a32f1b4013133</trigger>
+    </sys_trigger_runner_mapping>
+    <sys_trigger_runner_mapping action="DELETE" query="identifier=d7284949209d49d88e89c5bd1a6fad81^sys_idNOT INff9c1923c3eb4310239a32f1b4013159"/>
+    <sys_hub_flow_stage action="DELETE" query="flow=d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_flow_cat_variable_model action="DELETE" query="id=d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_hub_flow_input action="DELETE" query="model=d7284949209d49d88e89c5bd1a6fad81^sys_idNOT IN729cd523c3eb4310239a32f1b4013158,a69cd523c3eb4310239a32f1b401314d,e29cd523c3eb4310239a32f1b4013108"/>
+    <sys_hub_flow_input action="DELETE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="Supplier Low Score Alert">d7284949209d49d88e89c5bd1a6fad81</model>
+        <model_id>d7284949209d49d88e89c5bd1a6fad81</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:23</sys_created_on>
+        <sys_id>729cd523c3eb4310239a32f1b4013158</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:23</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="DELETE" query="action_input=729cd523c3eb4310239a32f1b4013158"/>
+    <sys_hub_flow_input action="DELETE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=9000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Supplier Low Score Alert">d7284949209d49d88e89c5bd1a6fad81</model>
+        <model_id>d7284949209d49d88e89c5bd1a6fad81</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:23</sys_created_on>
+        <sys_id>a69cd523c3eb4310239a32f1b401314d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:23</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="DELETE" query="action_input=a69cd523c3eb4310239a32f1b401314d"/>
+    <sys_hub_flow_input action="DELETE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Supplier Low Score Alert">d7284949209d49d88e89c5bd1a6fad81</model>
+        <model_id>d7284949209d49d88e89c5bd1a6fad81</model_id>
+        <model_table>sys_hub_flow</model_table>
+        <name>var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:23</sys_created_on>
+        <sys_id>e29cd523c3eb4310239a32f1b4013108</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:23</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="DELETE" query="action_input=e29cd523c3eb4310239a32f1b4013108"/>
+    <sys_hub_flow_output action="DELETE" query="model=d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_hub_alias_mapping action="DELETE" query="source_id=d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_hub_trigger_instance_v2 action="DELETE" query="flow=d7284949209d49d88e89c5bd1a6fad81^sys_idNOT INe69a6999603b47f79bd439f2965367d2"/>
+    <sys_hub_trigger_instance_v2 action="DELETE">
+        <comment/>
+        <display_text/>
+        <flow display_value="Supplier Low Score Alert">d7284949209d49d88e89c5bd1a6fad81</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:07</sys_created_on>
+        <sys_id>e69a6999603b47f79bd439f2965367d2</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:25</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1YUW/bNhD+K4KeNsAFvBUd0LxlbbMFyFqgydqHrhNo8WQTo0mNPNpRg/z3HiXKZiS5Vbqo6dA82TqSuu/uvu9I6t1VikYsl2BOlUWmcjiv7ClPj9J0lkq2AEl/L9hCAj0LhWAUkxdVCWRGb84UW/sxDiUoDgqbpflKixzOhKXnd+9n6ZopzlCbKj1C42CWFkavL2BdSob0roJJS0ZtOJj06Kf5fJbW7w1O6IUbJp1/vsx+nj/5Zf70aSYUdxazeWZdWUpBCwmFsPTG6s2oyflKSG5ANQhLZsgjev9Xvcg7YHAgAQE7IYdL9Kngu7Ci4IPFAOOvlKyiKZdWfIB6vbOQRekMM4rzld6+hgIIcQ4nFJB3FwalzpncPTGkmi4cgqVYrq93aTkRIENpbW5Eicc5ik2b/uvZGC68dip5uwKV/GnBJHWBe8RYSsEhk83YeGK0gX6OGTUVImihOMapbEvIMsqfab23tOlzYxwBBsP9lEMcSMG3So2U8Y0vs8+jV2U6FVfOwVqh/S+iUMs+YxpWfIYtVxQo/Ot8jHUyiraU9ctYg4/MZ8G9z2LiMRTaNPU73U9sMfkFp2u2DJQgDxJyjCpU0Mro6Q9ByyiEfR4OgFJaZWOAvdTq0dfEtdC4isG0OH4l+40EETMPgbP/Ed2X6b4rO7tj0+ZmbB2lB+tt1N4n7GHn2KHw96z2QuotkeiuBc5U1aOs9yQUsbRKck3OLnEyyZA8YGm0U/wQipszptEty//5NIj9jOQHDgVzEn+8b6F6bNQGY43GcXSVGo+N1OuecoNuH9S5T9UrlbwIQSf1ydbetVBr5B16UhvNnaF0YL2ltGlPsEUwkWj9eB8L7bwRoPZAf68aoYPCjot7nbT4OxJpzSPVMVjyg74fxNJk7plWXGBzCuvqox2yk9xtQmnyCEBLCEKLzr45Pnv2+/HL316c/90Y/nLz+WPufOoyAxsB2z5pbrN0BLHi9AwAxoFMTcak8DXhS4m0ZQpthjpjnGcR4l0rW2sO8nlU58Ae2l1Khza9jlhAatp9JJjy1j3RNWrolEUXA3/C8jfcyTq1VpDpYvCCJIokJIf616JKcAWESdLuTm+uUU23gSjtC9qF9lwnNJCYrwLubu5J9eeJ/mWpKXenUzTGW38YOXxP6jh/2GH26btoZt21jJ0SZM7yFVPL5nzVcveE1AwsXyXNlKSZMqGu885nj3w6Z7ABU/WC9cbEldxLZSrPTG5ZZXvti7qDbxThpEkGkoRqRHBvLaHduywamrmsom4QitVpB8E6sh/sCX3Y3/+lAYzX+/uPPOztEUQZAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="DELETE" query="flow=d7284949209d49d88e89c5bd1a6fad81^sys_idNOT IN097d07f95dd84822ac046cd70e7e0552,620587ae786346038bf3201be59e1f3a,c8b4d6ad619143b2ad290468ac5a7ee2"/>
+    <sys_hub_action_instance_v2 action="DELETE">
+        <action_type display_value="Send Email">c1806bf4a70323008299b39f087901cb</action_type>
+        <action_type_parent display_value="">c1806bf4a70323008299b39f087901cb</action_type_parent>
+        <attributes>timeFromCreateToActivate=9000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="Supplier Low Score Alert">d7284949209d49d88e89c5bd1a6fad81</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:07</sys_created_on>
+        <sys_id>097d07f95dd84822ac046cd70e7e0552</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:25</sys_updated_on>
+        <ui_id>097d07f9-5dd8-4822-ac04-6cd70e7e0552</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1YbW/iOBD+K1Y+o1yAAqXf9oqqq7TbPZXunk6rVeTYE+I7J87aTimH+t9vkhgIL6LQXk9U229kYo9nxs/zzIRvcy+jKXgXnqWRhLB6aHn3VBal8SHsBL1+MByGIuOFsWEQmiLPpQCNq7gwuaSzrwctzqlG3xZ/X8w9lgjJNWTexbfvLU9w3N0engf9KD6jg6Db6QbBeWc4jLrDODgfDIM2P0MXkkYgceldGSo+74rczvKdto/NveSmfqE0L+Nptzx4sJBxwEBiKg20vJRmnFqlZ0uLBso/ZxINVhf4nIjMlg4TIJbqCViigaFHYl14Cch874KUPhjxD4Z7HpTuY8CKsDJ6r/EYuirX5nhELR1jAMwW2i1liRIMTF1LDjEtpL1s2uoFn3MrVFZvqSOodytZpNlNXUpv6WBxqWgpDAYBeVmfMmNXjnicqOntIsorvPKylO6lVIzK5RO1VouosGU8cw8kpOgoTGmei2wS5lrdi2ozxpL6E4kPfizVFA81YpL5lJWB+3gd1L9C+6gyf6ValFl8QjcVwIQJDdMiX+RWHe49tjwzM5eSGrPKEYsb/ijKCOuMXW5hXZ5yS+XoAx58Dy6Nx9aSKlOKME6p/juElArZ4Et7mxUlWA6Af9DvR1E/6g26K/gPWcwHUdynA9ZtwP86Y7LgQP5YhLGiwnZkjg+RUhJotkkGjO2Xq6pOSzJ0jiSDMzg21CAjVhG8FjkjlCxDKo0WuVBFhr+oJcIQg3X3yZ0iwmXV2NEiM1WQFKUEl1l8s0Yjf0Wx//nUJW/PTpe3DnbOOtqJyTdB7NcgME2wM0V/AbMN7t4oi9W+IH+qQpNF4yLGUlsYklBDIoCMsIRmE+AlrL6UlSG3cC9gus37l7p7SjB6fF+/BNYQjPEy1135O4UweJXZZEMgxgujE4f+fnGoG+O2NtQsXe94wely5yenRqT4rMGLEVBNxg7AlThqgqfHCtUSq0AMyiJUiEZfEjGN0FHTSnQ1/CiELuGdaDCJkpwgWGoXBzLBJ79j4zJAmMosVoVUx2vFEAplSYkFmhIMhsSFxjM14WBR6o2/Tck3nMlTakD3qkHcaajBr/X1bt2304HEpnJDBX67+/RxpQGDZw4I2yLQ7/W6/XcVePHkm095h2uV5y63qr2/hjjUI1BDG+bzLzlGBzxs+4hjLIh9fNwm3gEAPtsLYMbXPv+qeex2EcxmcA7IHJlVlVvwDTyP3BtyPVrBOnjR3PvBGMUEVsI0ps2psAnOj1vj6mGLlzTpdtY5gjOrqAC5myvXq9cnwJl6JDiCMvEYVZolVwJkiYusSKMK5OtUYiilOtwAsBtrT6XZNv6DOKTtWrWfWL7rG/Wn3S6aHbbpycFy/x8xtMlEtdZIqgyOGSe77+PkSTUSDlKkooLG6zURBApjz+oRfC8yIWgg8/JyDZnVgccg8+w/G3LeofmmoBk9E5vt/Z/j/eYAvgHO6Gh09t7R+dOg8/u/thhErqMZAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="DELETE" query="source_id=097d07f95dd84822ac046cd70e7e0552"/>
+    <sys_hub_action_instance_v2 action="DELETE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="">5bc1bcc6531003003bf1d9109ec587d4</action_type_parent>
+        <attributes>timeFromCreateToActivate=9000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="Supplier Low Score Alert">d7284949209d49d88e89c5bd1a6fad81</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:07</sys_created_on>
+        <sys_id>620587ae786346038bf3201be59e1f3a</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:25</sys_updated_on>
+        <ui_id>620587ae-7863-4603-8bf3-201be59e1f3a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VUTW/bMAz9K4bOiREnzbrmViQrMKAfwIJ1h6IwFIlOBMiSp4+kWeD/PspWEncNtgXYsMMAH8wnUuR7Ivm0I4qWQCZE6mUuYQ2S9MiaSh+wDTUKTS5sJen2MaJfEBVqiQcVNRjswJDJjrCVkNyAIpOn5x4RHD3HC5YtGHs3HmWDwQi/RZHxq2xwBWz8/pJf4hWSLjDlhNzG1CeqcdsqQGylBYNo38aw6R7UhocyBj0CLw4UB8xfUGmhR0qqOHXabA+IAcoflDwCK6Ec3ob3rEBW7V9JX6z4hpkvBiGiAOTGoD07mHnUpoWLGXV07oxnzpvo2pZtUZXdgWy/n9xrBUm/3xG7Q6LuHX0/qkJ3vERrRs+s63l8lx/eLzoPu84fjNGm4wrRjr6jGt+QQ0G9dNPzGWS/zWB4DoPRGQwuAoNW/IfKCY19SbLQPXQh90+jpS/Vfdtx5MD38XWhEZ29HoJIyltsAahCw4UOiu1UzFd682nfIzdCNRXFQ6kZlQeLOmfEwrug746AhBIvyktaVShEXhm9Fk0wFlumS4lGWki9waRWLFVKWaCWYn/T9AbxWQM/UiMCzTu8BoPrHrFbO5XU2iNZbOH8qw+VtNQjh7wRqglhRlTuGhOsIZYb5O8MaAnW0iV03mDuq0oKMMlu97nCooDnWcq8QR1cGiLrOrFMG0i40VgbT5w+6ct86SUNqfPGv67TZO6o8zZhK6qWbaQPwuYG1gI26dtF9Y+r+dV2HI5+th1h3NmOdwelT8ofN6TFVmqmp7sh53twP5p/YUMOx+M/syJPLZ23Y3zWFP9/Q/r8Habk5RnVBwAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="DELETE" query="source_id=620587ae786346038bf3201be59e1f3a"/>
+    <sys_hub_action_instance_v2 action="DELETE">
+        <action_type display_value="Send Email">c1806bf4a70323008299b39f087901cb</action_type>
+        <action_type_parent display_value="">c1806bf4a70323008299b39f087901cb</action_type_parent>
+        <attributes>timeFromCreateToActivate=9000</attributes>
+        <comment/>
+        <compiled_snapshot/>
+        <display_text/>
+        <flow display_value="Supplier Low Score Alert">d7284949209d49d88e89c5bd1a6fad81</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:07</sys_created_on>
+        <sys_id>c8b4d6ad619143b2ad290468ac5a7ee2</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:25</sys_updated_on>
+        <ui_id>c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Y227jNhD9FUJ9NVT5JsfpS9MYQQPspYiz24ftQqBIymKXElWSiuMa/vcOJdqWL3WcpCkcbJ5sjsjRmeE5M2N/mXs5zph37hkcCxZVi5Z3h0VpjfdRJ+iHwXAY8ZyW2kRBpMuiEJwp2EW5LgSefT5qc4EV+Dbw/XzukZQLqljunX/52vI4hdPt4VkQxkkPD4JupxsEZ53hMO4Ok+BsMAzatAcuBI6ZgK23Fiqs9yE3s2Kv7V3zLPpQP5CKWjztlsfuDcspAyAJFpq1vAznFBupZiuLYph+zAUYjCphnfLcWIcpQwarCTNIMQIekXHwUiaKgxsyfK/53wD3LLDuEwYZIRa911hGLsu1ORlhg8cAgJhSua0klZwwXeeSsgSXwlw2bfWGj4XhMq+P1Ajq01KUWf6hTqW3crC8VLCUGkCwwubHRuzSkYxTOb1ZoryCK7epdA+FJFisVtgYxePSWDxzjwmWgaMow0XB80lUKHnHq8OAJfMnAhZ+IuQUXqr5JPcxscB9uA7sX4F9VJk/Y8VtFO/BTUUwriNNFC+WsVUv9xYtT8/0pcBar2OE5EZ/lRZhHbGLLarTY49Uji7gxXfMhbForaQyxUDjDKtvEcswFw29tHdVYclyBP2DMIzjMO4Pumv6D0lCB3ES4gHpNuh/nRNRUoZ+X8JYS2EXmdNDLKVgON8WA2D78arK00oMnUeKwRmcGmqSISMRXIuYIYxWkKzRgBYqZPANG8Q10pB3H91KxF1UjRMtNJMlyqCUwDYDTzZk5K8l9j+/daXb3unq1tHOWUd7OfkqhP0SAsYpdKb4T0ZMQ7sXgilzjsauZaH5/FMB0BiN2j4plbKUsecXC8ugXE7RJ5sadMPuOJvuCv/Z/h4qGX16qGMy0igZ41W0+zLgaoSGy8wnWyVivDS68hAeLg91a9ytDrVON3tecLrq+c7FEUs6ayoDLee4P8og6Aw0gncnEqol5ABpKIsMpVgj8CRYjoA4QGZbdE2qmE6loAgYYi1cIW2wKXW1P2awm6Q4nzBq63ST/z76DRqWZlB27bJyt0SxnKMqp/gbs1VfyQIyY+B7nbc9etyMIvyhO/zplUTyUCXABytB0mlUgl/qq925a1cDUpOJrQrw6+37d2v9D544HuwWgLDf74ZvFeDZc28xpR0KpClcbFVzf4nCUHO1URf2dLTFYld4RxC4d5DAhG78+KumsZslmG1wjshUkrJKN6dbfB65J+h6tKZ18Kyp90JrSaxmdWPWnHKTwvS4M6wet3klk25nUyMwsfKKkPu1cr1+fAKaqceBR0gmGTOsSHrFmbC8yMssrki+KSUCBVVFWwR2Q+2pNNrGPxDHtFwjG8ICzKCnKo6fAXSB85kPn7vS+veNDw6Ph/9uwU3FyY2GUSF9zMjYfRsZT6phUCZ4xitqvFyzAKIQ8qReQA8ykwUNZl5ebjCzeuFjmNn7z4aZN2q+KmrGT+Rm+/BP7rA5aG+RM340O/tv7Pxu2Pn1H3kGoAyJGQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="DELETE" query="source_id=c8b4d6ad619143b2ad290468ac5a7ee2"/>
+    <sys_hub_sub_flow_instance_v2 action="DELETE" query="flow=d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_hub_flow_logic_instance_v2 action="DELETE" query="flow=d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_hub_pill_compound action="DELETE" query="attached_to=d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_hub_flow_variable action="DELETE" query="model=d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_choice action="DELETE" query="name=var__m_sys_hub_flow_variable_d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_documentation action="DELETE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:23</sys_created_on>
+        <sys_id>31d97333832f8310dd8c9610feaad33c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Changed Fields</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81_changed_fields_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:23</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="DELETE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:23</sys_created_on>
+        <sys_id>3dd97333832f8310dd8c9610feaad341</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81_current_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:23</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="DELETE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:23</sys_created_on>
+        <sys_id>7dd97333832f8310dd8c9610feaad360</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Table Name</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81_table_name_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:23</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="DELETE" query="name=var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_choice action="DELETE" query="name=var__m_sys_hub_flow_output_d7284949209d49d88e89c5bd1a6fad81"/>
+    <sys_hub_flow_snapshot action="DELETE">
+        <access>public</access>
+        <acls/>
+        <active>true</active>
+        <allow_high_security_roles>false</allow_high_security_roles>
+        <annotation/>
+        <attributes>timeFromCreateToActivate=9000</attributes>
+        <authored_on_release_version>-1</authored_on_release_version>
+        <callable_by_client_api>false</callable_by_client_api>
+        <category/>
+        <copied_from/>
+        <copied_from_name/>
+        <description/>
+        <flow_priority>MEDIUM</flow_priority>
+        <internal_name>supplier_low_score_alert</internal_name>
+        <label_cache>[{"name":"Updated_1.current.name","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Name","type":"string","base_type":"string","usedInstances":{"620587ae-7863-4603-8bf3-201be59e1f3a":["log_message"],"c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2":["ah_subject"]},"attributes":{}},{"name":"Updated_1.current.cumulative_score","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Cumulative Score","type":"string","base_type":"string","usedInstances":{"620587ae-7863-4603-8bf3-201be59e1f3a":["log_message"]},"attributes":{}},{"name":"Updated_1.current","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record","type":"reference","base_type":"reference","usedInstances":{"097d07f9-5dd8-4822-ac04-6cd70e7e0552":["record"],"c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2":["record"]},"attributes":{}},{"name":"Updated_1.current.contact_email","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Contact Email","type":"string","base_type":"string","usedInstances":{"097d07f9-5dd8-4822-ac04-6cd70e7e0552":["ah_to"]},"attributes":{}}]</label_cache>
+        <master>true</master>
+        <name>Supplier Low Score Alert</name>
+        <natlang/>
+        <outputs/>
+        <parent_flow display_value="Supplier Low Score Alert">d7284949209d49d88e89c5bd1a6fad81</parent_flow>
+        <remote_trigger_id/>
+        <run_as>system</run_as>
+        <run_with_roles/>
+        <sc_callable>false</sc_callable>
+        <status>published</status>
+        <sys_class_name>sys_hub_flow_snapshot</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:26</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>5b9cd523c3eb4310239a32f1b40131b6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_overrides/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:26</sys_updated_on>
+        <type>flow</type>
+        <version>2</version>
+    </sys_hub_flow_snapshot>
+    <sys_translated_text action="DELETE" query="documentkey=5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_variable_value action="DELETE" query="document_key=5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_hub_flow_stage action="DELETE" query="flow=5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_flow_cat_variable_model action="DELETE" query="id=5b9cd523c3eb4310239a32f1b40131b6^sys_idNOT IN979cd523c3eb4310239a32f1b40131b7"/>
+    <sys_flow_cat_variable_model action="DELETE">
+        <id>5b9cd523c3eb4310239a32f1b40131b6</id>
+        <name>Supplier Low Score Alert</name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:26</sys_created_on>
+        <sys_id>979cd523c3eb4310239a32f1b40131b7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:26</sys_updated_on>
+    </sys_flow_cat_variable_model>
+    <sys_flow_cat_variable action="DELETE" query="flow_catalog_model=979cd523c3eb4310239a32f1b40131b7"/>
+    <sys_hub_flow_input action="DELETE" query="model=5b9cd523c3eb4310239a32f1b40131b6^sys_idNOT IN179cd523c3eb4310239a32f1b40131e0,6b9cd523c3eb4310239a32f1b40131eb,939cd523c3eb4310239a32f1b40131c5"/>
+    <sys_hub_flow_input action="DELETE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>changed_fields</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="String">string</internal_type>
+        <label>Changed Fields</label>
+        <mandatory>false</mandatory>
+        <max_length>4000</max_length>
+        <model display_value="Supplier Low Score Alert">5b9cd523c3eb4310239a32f1b40131b6</model>
+        <model_id>5b9cd523c3eb4310239a32f1b40131b6</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:26</sys_created_on>
+        <sys_id>179cd523c3eb4310239a32f1b40131e0</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:26</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="DELETE" query="action_input=179cd523c3eb4310239a32f1b40131e0"/>
+    <sys_hub_flow_input action="DELETE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent/>
+        <dependent_on_field/>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>table_name</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">table_name</internal_type>
+        <label>Table Name</label>
+        <mandatory>false</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Supplier Low Score Alert">5b9cd523c3eb4310239a32f1b40131b6</model>
+        <model_id>5b9cd523c3eb4310239a32f1b40131b6</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6</name>
+        <next_element/>
+        <order>101</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:26</sys_created_on>
+        <sys_id>6b9cd523c3eb4310239a32f1b40131eb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:26</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>false</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="DELETE" query="action_input=6b9cd523c3eb4310239a32f1b40131eb"/>
+    <sys_hub_flow_input action="DELETE">
+        <active>true</active>
+        <array>false</array>
+        <array_denormalized>false</array_denormalized>
+        <attributes>element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=9000,uiType=document_id</attributes>
+        <audit>false</audit>
+        <calculation><![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]></calculation>
+        <choice/>
+        <choice_field/>
+        <choice_table/>
+        <column_label/>
+        <comments/>
+        <create_roles/>
+        <default_value/>
+        <defaultsort/>
+        <delete_roles/>
+        <dependent>table_name</dependent>
+        <dependent_on_field>table_name</dependent_on_field>
+        <display>false</display>
+        <dynamic_creation>false</dynamic_creation>
+        <dynamic_creation_script/>
+        <dynamic_default_value/>
+        <dynamic_ref_qual/>
+        <element>current</element>
+        <element_reference>false</element_reference>
+        <foreign_database/>
+        <formula/>
+        <function_definition/>
+        <function_field>false</function_field>
+        <help/>
+        <hint/>
+        <internal_type display_value="">document_id</internal_type>
+        <label>Record</label>
+        <mandatory>true</mandatory>
+        <max_length>200</max_length>
+        <model display_value="Supplier Low Score Alert">5b9cd523c3eb4310239a32f1b40131b6</model>
+        <model_id>5b9cd523c3eb4310239a32f1b40131b6</model_id>
+        <model_table>sys_hub_flow_snapshot</model_table>
+        <name>var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6</name>
+        <next_element/>
+        <order>100</order>
+        <primary>false</primary>
+        <read_only>false</read_only>
+        <read_only_option/>
+        <read_roles/>
+        <reference/>
+        <reference_cascade_rule/>
+        <reference_floats>false</reference_floats>
+        <reference_key/>
+        <reference_qual/>
+        <reference_qual_condition/>
+        <reference_type/>
+        <sizeclass/>
+        <spell_check>false</spell_check>
+        <staged>false</staged>
+        <sys_class_name>sys_hub_flow_input</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:26</sys_created_on>
+        <sys_id>939cd523c3eb4310239a32f1b40131c5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name/>
+        <sys_package/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:26</sys_updated_on>
+        <table_reference>false</table_reference>
+        <text_index>false</text_index>
+        <unique>false</unique>
+        <use_dependent_field>true</use_dependent_field>
+        <use_dynamic_default>false</use_dynamic_default>
+        <use_reference_qualifier>simple</use_reference_qualifier>
+        <virtual>false</virtual>
+        <virtual_type>script</virtual_type>
+        <widget/>
+        <write_roles/>
+        <xml_view>false</xml_view>
+    </sys_hub_flow_input>
+    <sys_hub_action_input_action_instance action="DELETE" query="action_input=939cd523c3eb4310239a32f1b40131c5"/>
+    <sys_hub_flow_output action="DELETE" query="model=5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_hub_alias_mapping action="DELETE" query="source_id=5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_hub_trigger_instance_v2 action="DELETE" query="flow=5b9cd523c3eb4310239a32f1b40131b6^sys_idNOT INab9c1923c3eb4310239a32f1b4013102"/>
+    <sys_hub_trigger_instance_v2 action="DELETE">
+        <comment/>
+        <display_text/>
+        <flow display_value="Supplier Low Score Alert">5b9cd523c3eb4310239a32f1b40131b6</flow>
+        <generation_source/>
+        <name>Updated</name>
+        <published_version/>
+        <remote_sys_id/>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:27</sys_created_on>
+        <sys_id>ab9c1923c3eb4310239a32f1b4013102</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:27</sys_updated_on>
+        <trigger_definition display_value="Updated">bb695e60c31322002841b63b12d3aea5</trigger_definition>
+        <trigger_inputs>H4sIAAAAAAAA/+1YUW/bNhD+K4KeNsAFvBUd0LxlbbMFyFqgydqHrhNo8WQTo0mNPNpRg/z3HiXKZiS5Vbqo6dA82TqSuu/uvu9I6t1VikYsl2BOlUWmcjiv7ClPj9J0lkq2AEl/L9hCAj0LhWAUkxdVCWRGb84UW/sxDiUoDgqbpflKixzOhKXnd+9n6ZopzlCbKj1C42CWFkavL2BdSob0roJJS0ZtOJj06Kf5fJbW7w1O6IUbJp1/vsx+nj/5Zf70aSYUdxazeWZdWUpBCwmFsPTG6s2oyflKSG5ANQhLZsgjev9Xvcg7YHAgAQE7IYdL9Kngu7Ci4IPFAOOvlKyiKZdWfIB6vbOQRekMM4rzld6+hgIIcQ4nFJB3FwalzpncPTGkmi4cgqVYrq93aTkRIENpbW5Eicc5ik2b/uvZGC68dip5uwKV/GnBJHWBe8RYSsEhk83YeGK0gX6OGTUVImihOMapbEvIMsqfab23tOlzYxwBBsP9lEMcSMG3So2U8Y0vs8+jV2U6FVfOwVqh/S+iUMs+YxpWfIYtVxQo/Ot8jHUyiraU9ctYg4/MZ8G9z2LiMRTaNPU73U9sMfkFp2u2DJQgDxJyjCpU0Mro6Q9ByyiEfR4OgFJaZWOAvdTq0dfEtdC4isG0OH4l+40EETMPgbP/Ed2X6b4rO7tj0+ZmbB2lB+tt1N4n7GHn2KHw96z2QuotkeiuBc5U1aOs9yQUsbRKck3OLnEyyZA8YGm0U/wQipszptEty//5NIj9jOQHDgVzEn+8b6F6bNQGY43GcXSVGo+N1OuecoNuH9S5T9UrlbwIQSf1ydbetVBr5B16UhvNnaF0YL2ltGlPsEUwkWj9eB8L7bwRoPZAf68aoYPCjot7nbT4OxJpzSPVMVjyg74fxNJk7plWXGBzCuvqox2yk9xtQmnyCEBLCEKLzr45Pnv2+/HL316c/90Y/nLz+WPufOoyAxsB2z5pbrN0BLHi9AwAxoFMTcak8DXhS4m0ZQpthjpjnGcR4l0rW2sO8nlU58Ae2l1Khza9jlhAatp9JJjy1j3RNWrolEUXA3/C8jfcyTq1VpDpYvCCJIokJIf616JKcAWESdLuTm+uUU23gSjtC9qF9lwnNJCYrwLubu5J9eeJ/mWpKXenUzTGW38YOXxP6jh/2GH26btoZt21jJ0SZM7yFVPL5nzVcveE1AwsXyXNlKSZMqGu885nj3w6Z7ABU/WC9cbEldxLZSrPTG5ZZXvti7qDbxThpEkGkoRqRHBvLaHduywamrmsom4QitVpB8E6sh/sCX3Y3/+lAYzX+/uPPOztEUQZAAA=</trigger_inputs>
+        <trigger_outputs/>
+        <trigger_type>record_update</trigger_type>
+        <updation_source/>
+    </sys_hub_trigger_instance_v2>
+    <sys_hub_action_instance_v2 action="DELETE" query="flow=5b9cd523c3eb4310239a32f1b40131b6^sys_idNOT IN2f9cd523c3eb4310239a32f1b40131ff,a39cd523c3eb4310239a32f1b40131fe,a79c1923c3eb4310239a32f1b4013100"/>
+    <sys_hub_action_instance_v2 action="DELETE">
+        <action_type display_value="Send Email">c1806bf4a70323008299b39f087901cb</action_type>
+        <action_type_parent display_value="Send Email">98c181d20b100300d97d8bf637673ab5</action_type_parent>
+        <attributes>timeFromCreateToActivate=9000</attributes>
+        <comment/>
+        <compiled_snapshot>c1806bf4a70323008299b39f087901cb</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Supplier Low Score Alert">5b9cd523c3eb4310239a32f1b40131b6</flow>
+        <generation_source/>
+        <order>2</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:27</sys_created_on>
+        <sys_id>2f9cd523c3eb4310239a32f1b40131ff</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:27</sys_updated_on>
+        <ui_id>097d07f9-5dd8-4822-ac04-6cd70e7e0552</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1YbW/iOBD+K1Y+o1yAAqXf9oqqq7TbPZXunk6rVeTYE+I7J87aTimH+t9vkhgIL6LQXk9U229kYo9nxs/zzIRvcy+jKXgXnqWRhLB6aHn3VBal8SHsBL1+MByGIuOFsWEQmiLPpQCNq7gwuaSzrwctzqlG3xZ/X8w9lgjJNWTexbfvLU9w3N0engf9KD6jg6Db6QbBeWc4jLrDODgfDIM2P0MXkkYgceldGSo+74rczvKdto/NveSmfqE0L+Nptzx4sJBxwEBiKg20vJRmnFqlZ0uLBso/ZxINVhf4nIjMlg4TIJbqCViigaFHYl14Cch874KUPhjxD4Z7HpTuY8CKsDJ6r/EYuirX5nhELR1jAMwW2i1liRIMTF1LDjEtpL1s2uoFn3MrVFZvqSOodytZpNlNXUpv6WBxqWgpDAYBeVmfMmNXjnicqOntIsorvPKylO6lVIzK5RO1VouosGU8cw8kpOgoTGmei2wS5lrdi2ozxpL6E4kPfizVFA81YpL5lJWB+3gd1L9C+6gyf6ValFl8QjcVwIQJDdMiX+RWHe49tjwzM5eSGrPKEYsb/ijKCOuMXW5hXZ5yS+XoAx58Dy6Nx9aSKlOKME6p/juElArZ4Et7mxUlWA6Af9DvR1E/6g26K/gPWcwHUdynA9ZtwP86Y7LgQP5YhLGiwnZkjg+RUhJotkkGjO2Xq6pOSzJ0jiSDMzg21CAjVhG8FjkjlCxDKo0WuVBFhr+oJcIQg3X3yZ0iwmXV2NEiM1WQFKUEl1l8s0Yjf0Wx//nUJW/PTpe3DnbOOtqJyTdB7NcgME2wM0V/AbMN7t4oi9W+IH+qQpNF4yLGUlsYklBDIoCMsIRmE+AlrL6UlSG3cC9gus37l7p7SjB6fF+/BNYQjPEy1135O4UweJXZZEMgxgujE4f+fnGoG+O2NtQsXe94wely5yenRqT4rMGLEVBNxg7AlThqgqfHCtUSq0AMyiJUiEZfEjGN0FHTSnQ1/CiELuGdaDCJkpwgWGoXBzLBJ79j4zJAmMosVoVUx2vFEAplSYkFmhIMhsSFxjM14WBR6o2/Tck3nMlTakD3qkHcaajBr/X1bt2304HEpnJDBX67+/RxpQGDZw4I2yLQ7/W6/XcVePHkm095h2uV5y63qr2/hjjUI1BDG+bzLzlGBzxs+4hjLIh9fNwm3gEAPtsLYMbXPv+qeex2EcxmcA7IHJlVlVvwDTyP3BtyPVrBOnjR3PvBGMUEVsI0ps2psAnOj1vj6mGLlzTpdtY5gjOrqAC5myvXq9cnwJl6JDiCMvEYVZolVwJkiYusSKMK5OtUYiilOtwAsBtrT6XZNv6DOKTtWrWfWL7rG/Wn3S6aHbbpycFy/x8xtMlEtdZIqgyOGSe77+PkSTUSDlKkooLG6zURBApjz+oRfC8yIWgg8/JyDZnVgccg8+w/G3LeofmmoBk9E5vt/Z/j/eYAvgHO6Gh09t7R+dOg8/u/thhErqMZAAA=</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="DELETE" query="source_id=2f9cd523c3eb4310239a32f1b40131ff"/>
+    <sys_hub_action_instance_v2 action="DELETE">
+        <action_type display_value="Log">5bc1bcc6531003003bf1d9109ec587d4</action_type>
+        <action_type_parent display_value="Log">0e0ae8c2531003003bf1d9109ec587c8</action_type_parent>
+        <attributes>timeFromCreateToActivate=9000</attributes>
+        <comment/>
+        <compiled_snapshot>5bc1bcc6531003003bf1d9109ec587d4</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Supplier Low Score Alert">5b9cd523c3eb4310239a32f1b40131b6</flow>
+        <generation_source/>
+        <order>1</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:27</sys_created_on>
+        <sys_id>a39cd523c3eb4310239a32f1b40131fe</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:27</sys_updated_on>
+        <ui_id>620587ae-7863-4603-8bf3-201be59e1f3a</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+VUTW/bMAz9K4bOiREnzbrmViQrMKAfwIJ1h6IwFIlOBMiSp4+kWeD/PspWEncNtgXYsMMAH8wnUuR7Ivm0I4qWQCZE6mUuYQ2S9MiaSh+wDTUKTS5sJen2MaJfEBVqiQcVNRjswJDJjrCVkNyAIpOn5x4RHD3HC5YtGHs3HmWDwQi/RZHxq2xwBWz8/pJf4hWSLjDlhNzG1CeqcdsqQGylBYNo38aw6R7UhocyBj0CLw4UB8xfUGmhR0qqOHXabA+IAcoflDwCK6Ec3ob3rEBW7V9JX6z4hpkvBiGiAOTGoD07mHnUpoWLGXV07oxnzpvo2pZtUZXdgWy/n9xrBUm/3xG7Q6LuHX0/qkJ3vERrRs+s63l8lx/eLzoPu84fjNGm4wrRjr6jGt+QQ0G9dNPzGWS/zWB4DoPRGQwuAoNW/IfKCY19SbLQPXQh90+jpS/Vfdtx5MD38XWhEZ29HoJIyltsAahCw4UOiu1UzFd682nfIzdCNRXFQ6kZlQeLOmfEwrug746AhBIvyktaVShEXhm9Fk0wFlumS4lGWki9waRWLFVKWaCWYn/T9AbxWQM/UiMCzTu8BoPrHrFbO5XU2iNZbOH8qw+VtNQjh7wRqglhRlTuGhOsIZYb5O8MaAnW0iV03mDuq0oKMMlu97nCooDnWcq8QR1cGiLrOrFMG0i40VgbT5w+6ct86SUNqfPGv67TZO6o8zZhK6qWbaQPwuYG1gI26dtF9Y+r+dV2HI5+th1h3NmOdwelT8ofN6TFVmqmp7sh53twP5p/YUMOx+M/syJPLZ23Y3zWFP9/Q/r8Habk5RnVBwAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="DELETE" query="source_id=a39cd523c3eb4310239a32f1b40131fe"/>
+    <sys_hub_action_instance_v2 action="DELETE">
+        <action_type display_value="Send Email">c1806bf4a70323008299b39f087901cb</action_type>
+        <action_type_parent display_value="Send Email">98c181d20b100300d97d8bf637673ab5</action_type_parent>
+        <attributes>timeFromCreateToActivate=9000</attributes>
+        <comment/>
+        <compiled_snapshot>c1806bf4a70323008299b39f087901cb</compiled_snapshot>
+        <display_text/>
+        <flow display_value="Supplier Low Score Alert">5b9cd523c3eb4310239a32f1b40131b6</flow>
+        <generation_source/>
+        <order>3</order>
+        <parent_ui_id/>
+        <sys_class_name>sys_hub_action_instance_v2</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:27</sys_created_on>
+        <sys_id>a79c1923c3eb4310239a32f1b4013100</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:27</sys_updated_on>
+        <ui_id>c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2</ui_id>
+        <updation_source/>
+        <values>H4sIAAAAAAAA/+1Y227jNhD9FUJ9NVT5JsfpS9MYQQPspYiz24ftQqBIymKXElWSiuMa/vcOJdqWL3WcpCkcbJ5sjsjRmeE5M2N/mXs5zph37hkcCxZVi5Z3h0VpjfdRJ+iHwXAY8ZyW2kRBpMuiEJwp2EW5LgSefT5qc4EV+Dbw/XzukZQLqljunX/52vI4hdPt4VkQxkkPD4JupxsEZ53hMO4Ok+BsMAzatAcuBI6ZgK23Fiqs9yE3s2Kv7V3zLPpQP5CKWjztlsfuDcspAyAJFpq1vAznFBupZiuLYph+zAUYjCphnfLcWIcpQwarCTNIMQIekXHwUiaKgxsyfK/53wD3LLDuEwYZIRa911hGLsu1ORlhg8cAgJhSua0klZwwXeeSsgSXwlw2bfWGj4XhMq+P1Ajq01KUWf6hTqW3crC8VLCUGkCwwubHRuzSkYxTOb1ZoryCK7epdA+FJFisVtgYxePSWDxzjwmWgaMow0XB80lUKHnHq8OAJfMnAhZ+IuQUXqr5JPcxscB9uA7sX4F9VJk/Y8VtFO/BTUUwriNNFC+WsVUv9xYtT8/0pcBar2OE5EZ/lRZhHbGLLarTY49Uji7gxXfMhbForaQyxUDjDKtvEcswFw29tHdVYclyBP2DMIzjMO4Pumv6D0lCB3ES4gHpNuh/nRNRUoZ+X8JYS2EXmdNDLKVgON8WA2D78arK00oMnUeKwRmcGmqSISMRXIuYIYxWkKzRgBYqZPANG8Q10pB3H91KxF1UjRMtNJMlyqCUwDYDTzZk5K8l9j+/daXb3unq1tHOWUd7OfkqhP0SAsYpdKb4T0ZMQ7sXgilzjsauZaH5/FMB0BiN2j4plbKUsecXC8ugXE7RJ5sadMPuOJvuCv/Z/h4qGX16qGMy0igZ41W0+zLgaoSGy8wnWyVivDS68hAeLg91a9ytDrVON3tecLrq+c7FEUs6ayoDLee4P8og6Aw0gncnEqol5ABpKIsMpVgj8CRYjoA4QGZbdE2qmE6loAgYYi1cIW2wKXW1P2awm6Q4nzBq63ST/z76DRqWZlB27bJyt0SxnKMqp/gbs1VfyQIyY+B7nbc9etyMIvyhO/zplUTyUCXABytB0mlUgl/qq925a1cDUpOJrQrw6+37d2v9D544HuwWgLDf74ZvFeDZc28xpR0KpClcbFVzf4nCUHO1URf2dLTFYld4RxC4d5DAhG78+KumsZslmG1wjshUkrJKN6dbfB65J+h6tKZ18Kyp90JrSaxmdWPWnHKTwvS4M6wet3klk25nUyMwsfKKkPu1cr1+fAKaqceBR0gmGTOsSHrFmbC8yMssrki+KSUCBVVFWwR2Q+2pNNrGPxDHtFwjG8ICzKCnKo6fAXSB85kPn7vS+veNDw6Ph/9uwU3FyY2GUSF9zMjYfRsZT6phUCZ4xitqvFyzAKIQ8qReQA8ykwUNZl5ebjCzeuFjmNn7z4aZN2q+KmrGT+Rm+/BP7rA5aG+RM340O/tv7Pxu2Pn1H3kGoAyJGQAA</values>
+    </sys_hub_action_instance_v2>
+    <sys_hub_alias_mapping action="DELETE" query="source_id=a79c1923c3eb4310239a32f1b4013100"/>
+    <sys_hub_sub_flow_instance_v2 action="DELETE" query="flow=5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_hub_flow_logic_instance_v2 action="DELETE" query="flow=5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_hub_pill_compound action="DELETE" query="attached_to=5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_hub_flow_variable action="DELETE" query="model=5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_choice action="DELETE" query="name=var__m_sys_hub_flow_variable_5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_documentation action="DELETE">
+        <element>changed_fields</element>
+        <help/>
+        <hint/>
+        <label>Changed Fields</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:26</sys_created_on>
+        <sys_id>53c97bff83eb8310dd8c9610feaad399</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Changed Fields</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6_changed_fields_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:26</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="DELETE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:26</sys_created_on>
+        <sys_id>5fc97bff83eb8310dd8c9610feaad39e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6_current_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:26</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="DELETE">
+        <element>table_name</element>
+        <help/>
+        <hint/>
+        <label>Table Name</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:27</sys_created_on>
+        <sys_id>d3c97bff83eb8310dd8c9610feaad3bd</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Table Name</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6_table_name_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:27</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_choice action="DELETE" query="name=var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_choice action="DELETE" query="name=var__m_sys_hub_flow_output_5b9cd523c3eb4310239a32f1b40131b6"/>
+    <sys_hub_flow action="DELETE">
+        <sys_id>d7284949209d49d88e89c5bd1a6fad81</sys_id>
+        <latest_snapshot>5b9cd523c3eb4310239a32f1b40131b6</latest_snapshot>
+        <compiler_build/>
+        <version_record/>
+    </sys_hub_flow>
+    <sys_flow_trigger_plan action="DELETE" query="plan_id=d7284949209d49d88e89c5bd1a6fad81^sys_idNOT INf79c1923c3eb4310239a32f1b401315a"/>
+    <sys_flow_trigger_plan action="DELETE">
+        <binding_strategy>com.snc.process_flow.engine.binding.OncePerRecord</binding_strategy>
+        <plan/>
+        <plan_id>d7284949209d49d88e89c5bd1a6fad81</plan_id>
+        <snapshot>5b9cd523c3eb4310239a32f1b40131b6</snapshot>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 16:35:28</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>f79c1923c3eb4310239a32f1b401315a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_overrides/>
+        <sys_scope/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 16:35:28</sys_updated_on>
+        <trigger display_value="">bf9c1923c3eb4310239a32f1b4013133</trigger>
+    </sys_flow_trigger_plan>
+    <sys_flow_subflow_plan action="DELETE" query="plan_id=d7284949209d49d88e89c5bd1a6fad81"/>
+<sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</application>
+        <file_path/>
+        <instance_id>03b75dc82b7a0fd02fdcfcd2ce91bfc9</instance_id>
+        <instance_name>dev445625</instance_name>
+        <merge_base display_value="sys_hub_flow_d7284949209d49d88e89c5bd1a6fad81">3294074893770710e61e3b277bba101f</merge_base>
+        <name>sys_hub_flow_d7284949209d49d88e89c5bd1a6fad81</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update sys_domain="global" table="sys_hub_flow"&gt;
+    &lt;sys_hub_flow action="INSERT_OR_UPDATE"&gt;
+        &lt;access&gt;public&lt;/access&gt;
+        &lt;acls/&gt;
+        &lt;active&gt;false&lt;/active&gt;
+        &lt;allow_high_security_roles&gt;false&lt;/allow_high_security_roles&gt;
+        &lt;annotation/&gt;
+        &lt;attributes&gt;timeFromCreateToActivate=18000&lt;/attributes&gt;
+        &lt;authored_on_release_version/&gt;
+        &lt;callable_by_client_api&gt;false&lt;/callable_by_client_api&gt;
+        &lt;category/&gt;
+        &lt;copied_from/&gt;
+        &lt;copied_from_name/&gt;
+        &lt;description/&gt;
+        &lt;display_name_after_preview/&gt;
+        &lt;flow_priority&gt;MEDIUM&lt;/flow_priority&gt;
+        &lt;generation_source&gt;fluent&lt;/generation_source&gt;
+        &lt;internal_name&gt;supplier_low_score_alert&lt;/internal_name&gt;
+        &lt;label_cache&gt;[{"name":"Updated_1.current.name","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Name","type":"string","base_type":"string","usedInstances":{"620587ae-7863-4603-8bf3-201be59e1f3a":["log_message"],"c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2":["ah_subject"]},"attributes":{}},{"name":"Updated_1.current.cumulative_score","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Cumulative Score","type":"string","base_type":"string","usedInstances":{"620587ae-7863-4603-8bf3-201be59e1f3a":["log_message"]},"attributes":{}},{"name":"Updated_1.current","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record","type":"reference","base_type":"reference","usedInstances":{"097d07f9-5dd8-4822-ac04-6cd70e7e0552":["record"],"c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2":["record"]},"attributes":{}},{"name":"Updated_1.current.contact_email","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Contact Email","type":"string","base_type":"string","usedInstances":{"097d07f9-5dd8-4822-ac04-6cd70e7e0552":["ah_to"]},"attributes":{}}]&lt;/label_cache&gt;
+        &lt;master_snapshot&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/master_snapshot&gt;
+        &lt;master_snapshot_digest/&gt;
+        &lt;name&gt;Supplier Low Score Alert&lt;/name&gt;
+        &lt;natlang/&gt;
+        &lt;outputs/&gt;
+        &lt;pre_compiled&gt;false&lt;/pre_compiled&gt;
+        &lt;remote_trigger_id&gt;bf9c1923c3eb4310239a32f1b4013133&lt;/remote_trigger_id&gt;
+        &lt;run_as&gt;system&lt;/run_as&gt;
+        &lt;run_with_roles/&gt;
+        &lt;sc_callable&gt;false&lt;/sc_callable&gt;
+        &lt;show_draft_actions&gt;false&lt;/show_draft_actions&gt;
+        &lt;show_triggered_flows&gt;false&lt;/show_triggered_flows&gt;
+        &lt;status&gt;published&lt;/status&gt;
+        &lt;substatus/&gt;
+        &lt;sys_class_name&gt;sys_hub_flow&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:07&lt;/sys_created_on&gt;
+        &lt;sys_domain&gt;global&lt;/sys_domain&gt;
+        &lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;
+        &lt;sys_id&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;Supplier Low Score Alert&lt;/sys_name&gt;
+        &lt;sys_overrides/&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_hub_flow_d7284949209d49d88e89c5bd1a6fad81&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-02 22:46:48&lt;/sys_updated_on&gt;
+        &lt;type&gt;flow&lt;/type&gt;
+        &lt;updation_source/&gt;
+        &lt;version&gt;2&lt;/version&gt;
+        &lt;version_record/&gt;
+    &lt;/sys_hub_flow&gt;
+    &lt;sys_translated_text action="delete_multiple" query="documentkey=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_variable_value action="delete_multiple" query="document_key=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_flow_record_trigger action="INSERT_OR_UPDATE"&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;condition table="x_2056099_indust_0_supplier"&gt;statusVALCHANGES^status=under_review&lt;item endquery="false" field="status" goto="false" newquery="false" operator="VALCHANGES" or="false" value=""/&gt;
+            &lt;item endquery="false" field="status" goto="false" newquery="false" operator="=" or="false" value="under_review"/&gt;
+        &lt;/condition&gt;
+        &lt;name/&gt;
+        &lt;on_delete&gt;false&lt;/on_delete&gt;
+        &lt;on_insert&gt;false&lt;/on_insert&gt;
+        &lt;on_update&gt;true&lt;/on_update&gt;
+        &lt;published_version/&gt;
+        &lt;run_flow_in&gt;background&lt;/run_flow_in&gt;
+        &lt;run_on_extended&gt;false&lt;/run_on_extended&gt;
+        &lt;run_when_setting&gt;both&lt;/run_when_setting&gt;
+        &lt;run_when_user_list/&gt;
+        &lt;run_when_user_setting&gt;any&lt;/run_when_user_setting&gt;
+        &lt;sys_class_name&gt;sys_flow_record_trigger&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:28&lt;/sys_created_on&gt;
+        &lt;sys_domain&gt;global&lt;/sys_domain&gt;
+        &lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;
+        &lt;sys_id&gt;bf9c1923c3eb4310239a32f1b4013133&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_overrides/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:28&lt;/sys_updated_on&gt;
+        &lt;table&gt;x_2056099_indust_0_supplier&lt;/table&gt;
+        &lt;trigger_definition/&gt;
+    &lt;/sys_flow_record_trigger&gt;
+    &lt;sys_trigger_runner_mapping action="INSERT_OR_UPDATE"&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;data&gt;{"run_on_extended":"false","run_flow_in":"background","run_when_user_list":[],"run_when_setting":"both","run_when_user_setting":"any"}&lt;/data&gt;
+        &lt;identifier&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/identifier&gt;
+        &lt;identifier_type&gt;flow&lt;/identifier_type&gt;
+        &lt;runner&gt;FDTriggerRunner&lt;/runner&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:28&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;ff9c1923c3eb4310239a32f1b4013159&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;1&lt;/sys_mod_count&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 17:27:46&lt;/sys_updated_on&gt;
+        &lt;trigger display_value=""&gt;bf9c1923c3eb4310239a32f1b4013133&lt;/trigger&gt;
+    &lt;/sys_trigger_runner_mapping&gt;
+    &lt;sys_trigger_runner_mapping action="delete_multiple" query="identifier=d7284949209d49d88e89c5bd1a6fad81^sys_idNOT INff9c1923c3eb4310239a32f1b4013159"/&gt;
+    &lt;sys_hub_flow_stage action="delete_multiple" query="flow=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_flow_cat_variable_model action="delete_multiple" query="id=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_hub_flow_input action="delete_multiple" query="model=d7284949209d49d88e89c5bd1a6fad81^sys_idNOT IN729cd523c3eb4310239a32f1b4013158,a69cd523c3eb4310239a32f1b401314d,e29cd523c3eb4310239a32f1b4013108"/&gt;
+    &lt;sys_hub_flow_input action="INSERT_OR_UPDATE"&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;array&gt;false&lt;/array&gt;
+        &lt;array_denormalized&gt;false&lt;/array_denormalized&gt;
+        &lt;attributes&gt;child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,co_type_name=FDCollection,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object&lt;/attributes&gt;
+        &lt;audit&gt;false&lt;/audit&gt;
+        &lt;calculation&gt;&lt;![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]&gt;&lt;/calculation&gt;
+        &lt;choice/&gt;
+        &lt;choice_field/&gt;
+        &lt;choice_table/&gt;
+        &lt;column_label/&gt;
+        &lt;comments/&gt;
+        &lt;create_roles/&gt;
+        &lt;default_value/&gt;
+        &lt;defaultsort/&gt;
+        &lt;delete_roles/&gt;
+        &lt;dependent/&gt;
+        &lt;dependent_on_field/&gt;
+        &lt;display&gt;false&lt;/display&gt;
+        &lt;dynamic_creation&gt;false&lt;/dynamic_creation&gt;
+        &lt;dynamic_creation_script/&gt;
+        &lt;dynamic_default_value/&gt;
+        &lt;dynamic_ref_qual/&gt;
+        &lt;element&gt;changed_fields&lt;/element&gt;
+        &lt;element_reference&gt;false&lt;/element_reference&gt;
+        &lt;foreign_database/&gt;
+        &lt;formula/&gt;
+        &lt;function_definition/&gt;
+        &lt;function_field&gt;false&lt;/function_field&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;internal_type display_value="String"&gt;string&lt;/internal_type&gt;
+        &lt;label&gt;Changed Fields&lt;/label&gt;
+        &lt;mandatory&gt;false&lt;/mandatory&gt;
+        &lt;max_length&gt;4000&lt;/max_length&gt;
+        &lt;model display_value="Supplier Low Score Alert"&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/model&gt;
+        &lt;model_id&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/model_id&gt;
+        &lt;model_table&gt;sys_hub_flow&lt;/model_table&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81&lt;/name&gt;
+        &lt;next_element/&gt;
+        &lt;order&gt;100&lt;/order&gt;
+        &lt;primary&gt;false&lt;/primary&gt;
+        &lt;read_only&gt;false&lt;/read_only&gt;
+        &lt;read_only_option/&gt;
+        &lt;read_roles/&gt;
+        &lt;reference/&gt;
+        &lt;reference_cascade_rule/&gt;
+        &lt;reference_floats&gt;false&lt;/reference_floats&gt;
+        &lt;reference_key/&gt;
+        &lt;reference_qual/&gt;
+        &lt;reference_qual_condition/&gt;
+        &lt;reference_type/&gt;
+        &lt;sizeclass/&gt;
+        &lt;spell_check&gt;false&lt;/spell_check&gt;
+        &lt;staged&gt;false&lt;/staged&gt;
+        &lt;sys_class_name&gt;sys_hub_flow_input&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:23&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;729cd523c3eb4310239a32f1b4013158&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name/&gt;
+        &lt;sys_package/&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name/&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:23&lt;/sys_updated_on&gt;
+        &lt;table_reference&gt;false&lt;/table_reference&gt;
+        &lt;text_index&gt;false&lt;/text_index&gt;
+        &lt;unique&gt;false&lt;/unique&gt;
+        &lt;use_dependent_field&gt;false&lt;/use_dependent_field&gt;
+        &lt;use_dynamic_default&gt;false&lt;/use_dynamic_default&gt;
+        &lt;use_reference_qualifier&gt;simple&lt;/use_reference_qualifier&gt;
+        &lt;virtual&gt;false&lt;/virtual&gt;
+        &lt;virtual_type&gt;script&lt;/virtual_type&gt;
+        &lt;widget/&gt;
+        &lt;write_roles/&gt;
+        &lt;xml_view&gt;false&lt;/xml_view&gt;
+    &lt;/sys_hub_flow_input&gt;
+    &lt;sys_hub_action_input_action_instance action="delete_multiple" query="action_input=729cd523c3eb4310239a32f1b4013158"/&gt;
+    &lt;sys_hub_flow_input action="INSERT_OR_UPDATE"&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;array&gt;false&lt;/array&gt;
+        &lt;array_denormalized&gt;false&lt;/array_denormalized&gt;
+        &lt;attributes&gt;element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=9000,uiType=document_id&lt;/attributes&gt;
+        &lt;audit&gt;false&lt;/audit&gt;
+        &lt;calculation&gt;&lt;![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]&gt;&lt;/calculation&gt;
+        &lt;choice/&gt;
+        &lt;choice_field/&gt;
+        &lt;choice_table/&gt;
+        &lt;column_label/&gt;
+        &lt;comments/&gt;
+        &lt;create_roles/&gt;
+        &lt;default_value/&gt;
+        &lt;defaultsort/&gt;
+        &lt;delete_roles/&gt;
+        &lt;dependent&gt;table_name&lt;/dependent&gt;
+        &lt;dependent_on_field&gt;table_name&lt;/dependent_on_field&gt;
+        &lt;display&gt;false&lt;/display&gt;
+        &lt;dynamic_creation&gt;false&lt;/dynamic_creation&gt;
+        &lt;dynamic_creation_script/&gt;
+        &lt;dynamic_default_value/&gt;
+        &lt;dynamic_ref_qual/&gt;
+        &lt;element&gt;current&lt;/element&gt;
+        &lt;element_reference&gt;false&lt;/element_reference&gt;
+        &lt;foreign_database/&gt;
+        &lt;formula/&gt;
+        &lt;function_definition/&gt;
+        &lt;function_field&gt;false&lt;/function_field&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;internal_type display_value=""&gt;document_id&lt;/internal_type&gt;
+        &lt;label&gt;Record&lt;/label&gt;
+        &lt;mandatory&gt;true&lt;/mandatory&gt;
+        &lt;max_length&gt;200&lt;/max_length&gt;
+        &lt;model display_value="Supplier Low Score Alert"&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/model&gt;
+        &lt;model_id&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/model_id&gt;
+        &lt;model_table&gt;sys_hub_flow&lt;/model_table&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81&lt;/name&gt;
+        &lt;next_element/&gt;
+        &lt;order&gt;100&lt;/order&gt;
+        &lt;primary&gt;false&lt;/primary&gt;
+        &lt;read_only&gt;false&lt;/read_only&gt;
+        &lt;read_only_option/&gt;
+        &lt;read_roles/&gt;
+        &lt;reference/&gt;
+        &lt;reference_cascade_rule/&gt;
+        &lt;reference_floats&gt;false&lt;/reference_floats&gt;
+        &lt;reference_key/&gt;
+        &lt;reference_qual/&gt;
+        &lt;reference_qual_condition/&gt;
+        &lt;reference_type/&gt;
+        &lt;sizeclass/&gt;
+        &lt;spell_check&gt;false&lt;/spell_check&gt;
+        &lt;staged&gt;false&lt;/staged&gt;
+        &lt;sys_class_name&gt;sys_hub_flow_input&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:23&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;a69cd523c3eb4310239a32f1b401314d&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name/&gt;
+        &lt;sys_package/&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name/&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:23&lt;/sys_updated_on&gt;
+        &lt;table_reference&gt;false&lt;/table_reference&gt;
+        &lt;text_index&gt;false&lt;/text_index&gt;
+        &lt;unique&gt;false&lt;/unique&gt;
+        &lt;use_dependent_field&gt;true&lt;/use_dependent_field&gt;
+        &lt;use_dynamic_default&gt;false&lt;/use_dynamic_default&gt;
+        &lt;use_reference_qualifier&gt;simple&lt;/use_reference_qualifier&gt;
+        &lt;virtual&gt;false&lt;/virtual&gt;
+        &lt;virtual_type&gt;script&lt;/virtual_type&gt;
+        &lt;widget/&gt;
+        &lt;write_roles/&gt;
+        &lt;xml_view&gt;false&lt;/xml_view&gt;
+    &lt;/sys_hub_flow_input&gt;
+    &lt;sys_hub_action_input_action_instance action="delete_multiple" query="action_input=a69cd523c3eb4310239a32f1b401314d"/&gt;
+    &lt;sys_hub_flow_input action="INSERT_OR_UPDATE"&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;array&gt;false&lt;/array&gt;
+        &lt;array_denormalized&gt;false&lt;/array_denormalized&gt;
+        &lt;attributes&gt;element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name&lt;/attributes&gt;
+        &lt;audit&gt;false&lt;/audit&gt;
+        &lt;calculation&gt;&lt;![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]&gt;&lt;/calculation&gt;
+        &lt;choice/&gt;
+        &lt;choice_field/&gt;
+        &lt;choice_table/&gt;
+        &lt;column_label/&gt;
+        &lt;comments/&gt;
+        &lt;create_roles/&gt;
+        &lt;default_value/&gt;
+        &lt;defaultsort/&gt;
+        &lt;delete_roles/&gt;
+        &lt;dependent/&gt;
+        &lt;dependent_on_field/&gt;
+        &lt;display&gt;false&lt;/display&gt;
+        &lt;dynamic_creation&gt;false&lt;/dynamic_creation&gt;
+        &lt;dynamic_creation_script/&gt;
+        &lt;dynamic_default_value/&gt;
+        &lt;dynamic_ref_qual/&gt;
+        &lt;element&gt;table_name&lt;/element&gt;
+        &lt;element_reference&gt;false&lt;/element_reference&gt;
+        &lt;foreign_database/&gt;
+        &lt;formula/&gt;
+        &lt;function_definition/&gt;
+        &lt;function_field&gt;false&lt;/function_field&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;internal_type display_value=""&gt;table_name&lt;/internal_type&gt;
+        &lt;label&gt;Table Name&lt;/label&gt;
+        &lt;mandatory&gt;false&lt;/mandatory&gt;
+        &lt;max_length&gt;200&lt;/max_length&gt;
+        &lt;model display_value="Supplier Low Score Alert"&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/model&gt;
+        &lt;model_id&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/model_id&gt;
+        &lt;model_table&gt;sys_hub_flow&lt;/model_table&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81&lt;/name&gt;
+        &lt;next_element/&gt;
+        &lt;order&gt;101&lt;/order&gt;
+        &lt;primary&gt;false&lt;/primary&gt;
+        &lt;read_only&gt;false&lt;/read_only&gt;
+        &lt;read_only_option/&gt;
+        &lt;read_roles/&gt;
+        &lt;reference/&gt;
+        &lt;reference_cascade_rule/&gt;
+        &lt;reference_floats&gt;false&lt;/reference_floats&gt;
+        &lt;reference_key/&gt;
+        &lt;reference_qual/&gt;
+        &lt;reference_qual_condition/&gt;
+        &lt;reference_type/&gt;
+        &lt;sizeclass/&gt;
+        &lt;spell_check&gt;false&lt;/spell_check&gt;
+        &lt;staged&gt;false&lt;/staged&gt;
+        &lt;sys_class_name&gt;sys_hub_flow_input&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:23&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;e29cd523c3eb4310239a32f1b4013108&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name/&gt;
+        &lt;sys_package/&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name/&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:23&lt;/sys_updated_on&gt;
+        &lt;table_reference&gt;false&lt;/table_reference&gt;
+        &lt;text_index&gt;false&lt;/text_index&gt;
+        &lt;unique&gt;false&lt;/unique&gt;
+        &lt;use_dependent_field&gt;false&lt;/use_dependent_field&gt;
+        &lt;use_dynamic_default&gt;false&lt;/use_dynamic_default&gt;
+        &lt;use_reference_qualifier&gt;simple&lt;/use_reference_qualifier&gt;
+        &lt;virtual&gt;false&lt;/virtual&gt;
+        &lt;virtual_type&gt;script&lt;/virtual_type&gt;
+        &lt;widget/&gt;
+        &lt;write_roles/&gt;
+        &lt;xml_view&gt;false&lt;/xml_view&gt;
+    &lt;/sys_hub_flow_input&gt;
+    &lt;sys_hub_action_input_action_instance action="delete_multiple" query="action_input=e29cd523c3eb4310239a32f1b4013108"/&gt;
+    &lt;sys_hub_flow_output action="delete_multiple" query="model=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_hub_alias_mapping action="delete_multiple" query="source_id=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=d7284949209d49d88e89c5bd1a6fad81^sys_idNOT INe69a6999603b47f79bd439f2965367d2"/&gt;
+    &lt;sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE"&gt;
+        &lt;comment/&gt;
+        &lt;display_text/&gt;
+        &lt;flow display_value="Supplier Low Score Alert"&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/flow&gt;
+        &lt;generation_source/&gt;
+        &lt;name&gt;Updated&lt;/name&gt;
+        &lt;published_version/&gt;
+        &lt;remote_sys_id/&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:07&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;e69a6999603b47f79bd439f2965367d2&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;1&lt;/sys_mod_count&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:25&lt;/sys_updated_on&gt;
+        &lt;trigger_definition display_value="Updated"&gt;bb695e60c31322002841b63b12d3aea5&lt;/trigger_definition&gt;
+        &lt;trigger_inputs&gt;H4sIAAAAAAAA/+1YUW/bNhD+K4KeNsAFvBUd0LxlbbMFyFqgydqHrhNo8WQTo0mNPNpRg/z3HiXKZiS5Vbqo6dA82TqSuu/uvu9I6t1VikYsl2BOlUWmcjiv7ClPj9J0lkq2AEl/L9hCAj0LhWAUkxdVCWRGb84UW/sxDiUoDgqbpflKixzOhKXnd+9n6ZopzlCbKj1C42CWFkavL2BdSob0roJJS0ZtOJj06Kf5fJbW7w1O6IUbJp1/vsx+nj/5Zf70aSYUdxazeWZdWUpBCwmFsPTG6s2oyflKSG5ANQhLZsgjev9Xvcg7YHAgAQE7IYdL9Kngu7Ci4IPFAOOvlKyiKZdWfIB6vbOQRekMM4rzld6+hgIIcQ4nFJB3FwalzpncPTGkmi4cgqVYrq93aTkRIENpbW5Eicc5ik2b/uvZGC68dip5uwKV/GnBJHWBe8RYSsEhk83YeGK0gX6OGTUVImihOMapbEvIMsqfab23tOlzYxwBBsP9lEMcSMG3So2U8Y0vs8+jV2U6FVfOwVqh/S+iUMs+YxpWfIYtVxQo/Ot8jHUyiraU9ctYg4/MZ8G9z2LiMRTaNPU73U9sMfkFp2u2DJQgDxJyjCpU0Mro6Q9ByyiEfR4OgFJaZWOAvdTq0dfEtdC4isG0OH4l+40EETMPgbP/Ed2X6b4rO7tj0+ZmbB2lB+tt1N4n7GHn2KHw96z2QuotkeiuBc5U1aOs9yQUsbRKck3OLnEyyZA8YGm0U/wQipszptEty//5NIj9jOQHDgVzEn+8b6F6bNQGY43GcXSVGo+N1OuecoNuH9S5T9UrlbwIQSf1ydbetVBr5B16UhvNnaF0YL2ltGlPsEUwkWj9eB8L7bwRoPZAf68aoYPCjot7nbT4OxJpzSPVMVjyg74fxNJk7plWXGBzCuvqox2yk9xtQmnyCEBLCEKLzr45Pnv2+/HL316c/90Y/nLz+WPufOoyAxsB2z5pbrN0BLHi9AwAxoFMTcak8DXhS4m0ZQpthjpjnGcR4l0rW2sO8nlU58Ae2l1Khza9jlhAatp9JJjy1j3RNWrolEUXA3/C8jfcyTq1VpDpYvCCJIokJIf616JKcAWESdLuTm+uUU23gSjtC9qF9lwnNJCYrwLubu5J9eeJ/mWpKXenUzTGW38YOXxP6jh/2GH26btoZt21jJ0SZM7yFVPL5nzVcveE1AwsXyXNlKSZMqGu885nj3w6Z7ABU/WC9cbEldxLZSrPTG5ZZXvti7qDbxThpEkGkoRqRHBvLaHduywamrmsom4QitVpB8E6sh/sCX3Y3/+lAYzX+/uPPOztEUQZAAA=&lt;/trigger_inputs&gt;
+        &lt;trigger_outputs/&gt;
+        &lt;trigger_type&gt;record_update&lt;/trigger_type&gt;
+        &lt;updation_source/&gt;
+    &lt;/sys_hub_trigger_instance_v2&gt;
+    &lt;sys_hub_action_instance_v2 action="delete_multiple" query="flow=d7284949209d49d88e89c5bd1a6fad81^sys_idNOT IN097d07f95dd84822ac046cd70e7e0552,620587ae786346038bf3201be59e1f3a,c8b4d6ad619143b2ad290468ac5a7ee2"/&gt;
+    &lt;sys_hub_action_instance_v2 action="INSERT_OR_UPDATE"&gt;
+        &lt;action_type display_value="Send Email"&gt;c1806bf4a70323008299b39f087901cb&lt;/action_type&gt;
+        &lt;action_type_parent display_value=""&gt;c1806bf4a70323008299b39f087901cb&lt;/action_type_parent&gt;
+        &lt;attributes&gt;timeFromCreateToActivate=9000&lt;/attributes&gt;
+        &lt;comment/&gt;
+        &lt;compiled_snapshot/&gt;
+        &lt;display_text/&gt;
+        &lt;flow display_value="Supplier Low Score Alert"&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/flow&gt;
+        &lt;generation_source/&gt;
+        &lt;order&gt;2&lt;/order&gt;
+        &lt;parent_ui_id/&gt;
+        &lt;sys_class_name&gt;sys_hub_action_instance_v2&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:07&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;097d07f95dd84822ac046cd70e7e0552&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;1&lt;/sys_mod_count&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:25&lt;/sys_updated_on&gt;
+        &lt;ui_id&gt;097d07f9-5dd8-4822-ac04-6cd70e7e0552&lt;/ui_id&gt;
+        &lt;updation_source/&gt;
+        &lt;values&gt;H4sIAAAAAAAA/+1YbW/iOBD+K1Y+o1yAAqXf9oqqq7TbPZXunk6rVeTYE+I7J87aTimH+t9vkhgIL6LQXk9U229kYo9nxs/zzIRvcy+jKXgXnqWRhLB6aHn3VBal8SHsBL1+MByGIuOFsWEQmiLPpQCNq7gwuaSzrwctzqlG3xZ/X8w9lgjJNWTexbfvLU9w3N0engf9KD6jg6Db6QbBeWc4jLrDODgfDIM2P0MXkkYgceldGSo+74rczvKdto/NveSmfqE0L+Nptzx4sJBxwEBiKg20vJRmnFqlZ0uLBso/ZxINVhf4nIjMlg4TIJbqCViigaFHYl14Cch874KUPhjxD4Z7HpTuY8CKsDJ6r/EYuirX5nhELR1jAMwW2i1liRIMTF1LDjEtpL1s2uoFn3MrVFZvqSOodytZpNlNXUpv6WBxqWgpDAYBeVmfMmNXjnicqOntIsorvPKylO6lVIzK5RO1VouosGU8cw8kpOgoTGmei2wS5lrdi2ozxpL6E4kPfizVFA81YpL5lJWB+3gd1L9C+6gyf6ValFl8QjcVwIQJDdMiX+RWHe49tjwzM5eSGrPKEYsb/ijKCOuMXW5hXZ5yS+XoAx58Dy6Nx9aSKlOKME6p/juElArZ4Et7mxUlWA6Af9DvR1E/6g26K/gPWcwHUdynA9ZtwP86Y7LgQP5YhLGiwnZkjg+RUhJotkkGjO2Xq6pOSzJ0jiSDMzg21CAjVhG8FjkjlCxDKo0WuVBFhr+oJcIQg3X3yZ0iwmXV2NEiM1WQFKUEl1l8s0Yjf0Wx//nUJW/PTpe3DnbOOtqJyTdB7NcgME2wM0V/AbMN7t4oi9W+IH+qQpNF4yLGUlsYklBDIoCMsIRmE+AlrL6UlSG3cC9gus37l7p7SjB6fF+/BNYQjPEy1135O4UweJXZZEMgxgujE4f+fnGoG+O2NtQsXe94wely5yenRqT4rMGLEVBNxg7AlThqgqfHCtUSq0AMyiJUiEZfEjGN0FHTSnQ1/CiELuGdaDCJkpwgWGoXBzLBJ79j4zJAmMosVoVUx2vFEAplSYkFmhIMhsSFxjM14WBR6o2/Tck3nMlTakD3qkHcaajBr/X1bt2304HEpnJDBX67+/RxpQGDZw4I2yLQ7/W6/XcVePHkm095h2uV5y63qr2/hjjUI1BDG+bzLzlGBzxs+4hjLIh9fNwm3gEAPtsLYMbXPv+qeex2EcxmcA7IHJlVlVvwDTyP3BtyPVrBOnjR3PvBGMUEVsI0ps2psAnOj1vj6mGLlzTpdtY5gjOrqAC5myvXq9cnwJl6JDiCMvEYVZolVwJkiYusSKMK5OtUYiilOtwAsBtrT6XZNv6DOKTtWrWfWL7rG/Wn3S6aHbbpycFy/x8xtMlEtdZIqgyOGSe77+PkSTUSDlKkooLG6zURBApjz+oRfC8yIWgg8/JyDZnVgccg8+w/G3LeofmmoBk9E5vt/Z/j/eYAvgHO6Gh09t7R+dOg8/u/thhErqMZAAA=&lt;/values&gt;
+    &lt;/sys_hub_action_instance_v2&gt;
+    &lt;sys_hub_alias_mapping action="delete_multiple" query="source_id=097d07f95dd84822ac046cd70e7e0552"/&gt;
+    &lt;sys_hub_action_instance_v2 action="INSERT_OR_UPDATE"&gt;
+        &lt;action_type display_value="Log"&gt;5bc1bcc6531003003bf1d9109ec587d4&lt;/action_type&gt;
+        &lt;action_type_parent display_value=""&gt;5bc1bcc6531003003bf1d9109ec587d4&lt;/action_type_parent&gt;
+        &lt;attributes&gt;timeFromCreateToActivate=9000&lt;/attributes&gt;
+        &lt;comment/&gt;
+        &lt;compiled_snapshot/&gt;
+        &lt;display_text/&gt;
+        &lt;flow display_value="Supplier Low Score Alert"&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/flow&gt;
+        &lt;generation_source/&gt;
+        &lt;order&gt;1&lt;/order&gt;
+        &lt;parent_ui_id/&gt;
+        &lt;sys_class_name&gt;sys_hub_action_instance_v2&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:07&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;620587ae786346038bf3201be59e1f3a&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;1&lt;/sys_mod_count&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:25&lt;/sys_updated_on&gt;
+        &lt;ui_id&gt;620587ae-7863-4603-8bf3-201be59e1f3a&lt;/ui_id&gt;
+        &lt;updation_source/&gt;
+        &lt;values&gt;H4sIAAAAAAAA/+VUTW/bMAz9K4bOiREnzbrmViQrMKAfwIJ1h6IwFIlOBMiSp4+kWeD/PspWEncNtgXYsMMAH8wnUuR7Ivm0I4qWQCZE6mUuYQ2S9MiaSh+wDTUKTS5sJen2MaJfEBVqiQcVNRjswJDJjrCVkNyAIpOn5x4RHD3HC5YtGHs3HmWDwQi/RZHxq2xwBWz8/pJf4hWSLjDlhNzG1CeqcdsqQGylBYNo38aw6R7UhocyBj0CLw4UB8xfUGmhR0qqOHXabA+IAcoflDwCK6Ec3ob3rEBW7V9JX6z4hpkvBiGiAOTGoD07mHnUpoWLGXV07oxnzpvo2pZtUZXdgWy/n9xrBUm/3xG7Q6LuHX0/qkJ3vERrRs+s63l8lx/eLzoPu84fjNGm4wrRjr6jGt+QQ0G9dNPzGWS/zWB4DoPRGQwuAoNW/IfKCY19SbLQPXQh90+jpS/Vfdtx5MD38XWhEZ29HoJIyltsAahCw4UOiu1UzFd682nfIzdCNRXFQ6kZlQeLOmfEwrug746AhBIvyktaVShEXhm9Fk0wFlumS4lGWki9waRWLFVKWaCWYn/T9AbxWQM/UiMCzTu8BoPrHrFbO5XU2iNZbOH8qw+VtNQjh7wRqglhRlTuGhOsIZYb5O8MaAnW0iV03mDuq0oKMMlu97nCooDnWcq8QR1cGiLrOrFMG0i40VgbT5w+6ct86SUNqfPGv67TZO6o8zZhK6qWbaQPwuYG1gI26dtF9Y+r+dV2HI5+th1h3NmOdwelT8ofN6TFVmqmp7sh53twP5p/YUMOx+M/syJPLZ23Y3zWFP9/Q/r8Habk5RnVBwAA&lt;/values&gt;
+    &lt;/sys_hub_action_instance_v2&gt;
+    &lt;sys_hub_alias_mapping action="delete_multiple" query="source_id=620587ae786346038bf3201be59e1f3a"/&gt;
+    &lt;sys_hub_action_instance_v2 action="INSERT_OR_UPDATE"&gt;
+        &lt;action_type display_value="Send Email"&gt;c1806bf4a70323008299b39f087901cb&lt;/action_type&gt;
+        &lt;action_type_parent display_value=""&gt;c1806bf4a70323008299b39f087901cb&lt;/action_type_parent&gt;
+        &lt;attributes&gt;timeFromCreateToActivate=9000&lt;/attributes&gt;
+        &lt;comment/&gt;
+        &lt;compiled_snapshot/&gt;
+        &lt;display_text/&gt;
+        &lt;flow display_value="Supplier Low Score Alert"&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/flow&gt;
+        &lt;generation_source/&gt;
+        &lt;order&gt;3&lt;/order&gt;
+        &lt;parent_ui_id/&gt;
+        &lt;sys_class_name&gt;sys_hub_action_instance_v2&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:07&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;c8b4d6ad619143b2ad290468ac5a7ee2&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;1&lt;/sys_mod_count&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:25&lt;/sys_updated_on&gt;
+        &lt;ui_id&gt;c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2&lt;/ui_id&gt;
+        &lt;updation_source/&gt;
+        &lt;values&gt;H4sIAAAAAAAA/+1Y227jNhD9FUJ9NVT5JsfpS9MYQQPspYiz24ftQqBIymKXElWSiuMa/vcOJdqWL3WcpCkcbJ5sjsjRmeE5M2N/mXs5zph37hkcCxZVi5Z3h0VpjfdRJ+iHwXAY8ZyW2kRBpMuiEJwp2EW5LgSefT5qc4EV+Dbw/XzukZQLqljunX/52vI4hdPt4VkQxkkPD4JupxsEZ53hMO4Ok+BsMAzatAcuBI6ZgK23Fiqs9yE3s2Kv7V3zLPpQP5CKWjztlsfuDcspAyAJFpq1vAznFBupZiuLYph+zAUYjCphnfLcWIcpQwarCTNIMQIekXHwUiaKgxsyfK/53wD3LLDuEwYZIRa911hGLsu1ORlhg8cAgJhSua0klZwwXeeSsgSXwlw2bfWGj4XhMq+P1Ajq01KUWf6hTqW3crC8VLCUGkCwwubHRuzSkYxTOb1ZoryCK7epdA+FJFisVtgYxePSWDxzjwmWgaMow0XB80lUKHnHq8OAJfMnAhZ+IuQUXqr5JPcxscB9uA7sX4F9VJk/Y8VtFO/BTUUwriNNFC+WsVUv9xYtT8/0pcBar2OE5EZ/lRZhHbGLLarTY49Uji7gxXfMhbForaQyxUDjDKtvEcswFw29tHdVYclyBP2DMIzjMO4Pumv6D0lCB3ES4gHpNuh/nRNRUoZ+X8JYS2EXmdNDLKVgON8WA2D78arK00oMnUeKwRmcGmqSISMRXIuYIYxWkKzRgBYqZPANG8Q10pB3H91KxF1UjRMtNJMlyqCUwDYDTzZk5K8l9j+/daXb3unq1tHOWUd7OfkqhP0SAsYpdKb4T0ZMQ7sXgilzjsauZaH5/FMB0BiN2j4plbKUsecXC8ugXE7RJ5sadMPuOJvuCv/Z/h4qGX16qGMy0igZ41W0+zLgaoSGy8wnWyVivDS68hAeLg91a9ytDrVON3tecLrq+c7FEUs6ayoDLee4P8og6Aw0gncnEqol5ABpKIsMpVgj8CRYjoA4QGZbdE2qmE6loAgYYi1cIW2wKXW1P2awm6Q4nzBq63ST/z76DRqWZlB27bJyt0SxnKMqp/gbs1VfyQIyY+B7nbc9etyMIvyhO/zplUTyUCXABytB0mlUgl/qq925a1cDUpOJrQrw6+37d2v9D544HuwWgLDf74ZvFeDZc28xpR0KpClcbFVzf4nCUHO1URf2dLTFYld4RxC4d5DAhG78+KumsZslmG1wjshUkrJKN6dbfB65J+h6tKZ18Kyp90JrSaxmdWPWnHKTwvS4M6wet3klk25nUyMwsfKKkPu1cr1+fAKaqceBR0gmGTOsSHrFmbC8yMssrki+KSUCBVVFWwR2Q+2pNNrGPxDHtFwjG8ICzKCnKo6fAXSB85kPn7vS+veNDw6Ph/9uwU3FyY2GUSF9zMjYfRsZT6phUCZ4xitqvFyzAKIQ8qReQA8ykwUNZl5ebjCzeuFjmNn7z4aZN2q+KmrGT+Rm+/BP7rA5aG+RM340O/tv7Pxu2Pn1H3kGoAyJGQAA&lt;/values&gt;
+    &lt;/sys_hub_action_instance_v2&gt;
+    &lt;sys_hub_alias_mapping action="delete_multiple" query="source_id=c8b4d6ad619143b2ad290468ac5a7ee2"/&gt;
+    &lt;sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_hub_pill_compound action="delete_multiple" query="attached_to=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_hub_flow_variable action="delete_multiple" query="model=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_documentation action="INSERT_OR_UPDATE"&gt;
+        &lt;element&gt;changed_fields&lt;/element&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;label&gt;Changed Fields&lt;/label&gt;
+        &lt;language&gt;en&lt;/language&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81&lt;/name&gt;
+        &lt;plural/&gt;
+        &lt;sys_class_name&gt;sys_documentation&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:23&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;31d97333832f8310dd8c9610feaad33c&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;Changed Fields&lt;/sys_name&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_documentation_var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81_changed_fields_en&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:23&lt;/sys_updated_on&gt;
+        &lt;url/&gt;
+        &lt;url_target/&gt;
+    &lt;/sys_documentation&gt;
+    &lt;sys_documentation action="INSERT_OR_UPDATE"&gt;
+        &lt;element&gt;current&lt;/element&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;label&gt;Record&lt;/label&gt;
+        &lt;language&gt;en&lt;/language&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81&lt;/name&gt;
+        &lt;plural/&gt;
+        &lt;sys_class_name&gt;sys_documentation&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:23&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;3dd97333832f8310dd8c9610feaad341&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;Record&lt;/sys_name&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_documentation_var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81_current_en&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:23&lt;/sys_updated_on&gt;
+        &lt;url/&gt;
+        &lt;url_target/&gt;
+    &lt;/sys_documentation&gt;
+    &lt;sys_documentation action="INSERT_OR_UPDATE"&gt;
+        &lt;element&gt;table_name&lt;/element&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;label&gt;Table Name&lt;/label&gt;
+        &lt;language&gt;en&lt;/language&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81&lt;/name&gt;
+        &lt;plural/&gt;
+        &lt;sys_class_name&gt;sys_documentation&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:23&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;7dd97333832f8310dd8c9610feaad360&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;Table Name&lt;/sys_name&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_documentation_var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81_table_name_en&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:23&lt;/sys_updated_on&gt;
+        &lt;url/&gt;
+        &lt;url_target/&gt;
+    &lt;/sys_documentation&gt;
+    &lt;sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_d7284949209d49d88e89c5bd1a6fad81"/&gt;
+    &lt;sys_hub_flow_snapshot action="INSERT_OR_UPDATE"&gt;
+        &lt;access&gt;public&lt;/access&gt;
+        &lt;acls/&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;allow_high_security_roles&gt;false&lt;/allow_high_security_roles&gt;
+        &lt;annotation/&gt;
+        &lt;attributes&gt;timeFromCreateToActivate=9000&lt;/attributes&gt;
+        &lt;authored_on_release_version&gt;-1&lt;/authored_on_release_version&gt;
+        &lt;callable_by_client_api&gt;false&lt;/callable_by_client_api&gt;
+        &lt;category/&gt;
+        &lt;copied_from/&gt;
+        &lt;copied_from_name/&gt;
+        &lt;description/&gt;
+        &lt;flow_priority&gt;MEDIUM&lt;/flow_priority&gt;
+        &lt;internal_name&gt;supplier_low_score_alert&lt;/internal_name&gt;
+        &lt;label_cache&gt;[{"name":"Updated_1.current.name","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Name","type":"string","base_type":"string","usedInstances":{"620587ae-7863-4603-8bf3-201be59e1f3a":["log_message"],"c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2":["ah_subject"]},"attributes":{}},{"name":"Updated_1.current.cumulative_score","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Cumulative Score","type":"string","base_type":"string","usedInstances":{"620587ae-7863-4603-8bf3-201be59e1f3a":["log_message"]},"attributes":{}},{"name":"Updated_1.current","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record","type":"reference","base_type":"reference","usedInstances":{"097d07f9-5dd8-4822-ac04-6cd70e7e0552":["record"],"c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2":["record"]},"attributes":{}},{"name":"Updated_1.current.contact_email","label":"Trigger - Record Updated➛x_2056099_indust_0_supplier Record➛Contact Email","type":"string","base_type":"string","usedInstances":{"097d07f9-5dd8-4822-ac04-6cd70e7e0552":["ah_to"]},"attributes":{}}]&lt;/label_cache&gt;
+        &lt;master&gt;true&lt;/master&gt;
+        &lt;name&gt;Supplier Low Score Alert&lt;/name&gt;
+        &lt;natlang/&gt;
+        &lt;outputs/&gt;
+        &lt;parent_flow display_value="Supplier Low Score Alert"&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/parent_flow&gt;
+        &lt;remote_trigger_id/&gt;
+        &lt;run_as&gt;system&lt;/run_as&gt;
+        &lt;run_with_roles/&gt;
+        &lt;sc_callable&gt;false&lt;/sc_callable&gt;
+        &lt;status&gt;published&lt;/status&gt;
+        &lt;sys_class_name&gt;sys_hub_flow_snapshot&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:26&lt;/sys_created_on&gt;
+        &lt;sys_domain&gt;global&lt;/sys_domain&gt;
+        &lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;
+        &lt;sys_id&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name/&gt;
+        &lt;sys_overrides/&gt;
+        &lt;sys_package/&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name/&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:26&lt;/sys_updated_on&gt;
+        &lt;type&gt;flow&lt;/type&gt;
+        &lt;version&gt;2&lt;/version&gt;
+    &lt;/sys_hub_flow_snapshot&gt;
+    &lt;sys_translated_text action="delete_multiple" query="documentkey=5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_variable_value action="delete_multiple" query="document_key=5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_hub_flow_stage action="delete_multiple" query="flow=5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_flow_cat_variable_model action="delete_multiple" query="id=5b9cd523c3eb4310239a32f1b40131b6^sys_idNOT IN979cd523c3eb4310239a32f1b40131b7"/&gt;
+    &lt;sys_flow_cat_variable_model action="INSERT_OR_UPDATE"&gt;
+        &lt;id&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/id&gt;
+        &lt;name&gt;Supplier Low Score Alert&lt;/name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:26&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;979cd523c3eb4310239a32f1b40131b7&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_scope/&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:26&lt;/sys_updated_on&gt;
+    &lt;/sys_flow_cat_variable_model&gt;
+    &lt;sys_flow_cat_variable action="delete_multiple" query="flow_catalog_model=979cd523c3eb4310239a32f1b40131b7"/&gt;
+    &lt;sys_hub_flow_input action="delete_multiple" query="model=5b9cd523c3eb4310239a32f1b40131b6^sys_idNOT IN179cd523c3eb4310239a32f1b40131e0,6b9cd523c3eb4310239a32f1b40131eb,939cd523c3eb4310239a32f1b40131c5"/&gt;
+    &lt;sys_hub_flow_input action="INSERT_OR_UPDATE"&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;array&gt;false&lt;/array&gt;
+        &lt;array_denormalized&gt;false&lt;/array_denormalized&gt;
+        &lt;attributes&gt;child_label=FDChangeDetails,child_name=FDChangeDetails,child_type=object,child_type_label=Object,element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,pwd2droppable=true,uiType=array.object,uiTypeLabel=Array.Object&lt;/attributes&gt;
+        &lt;audit&gt;false&lt;/audit&gt;
+        &lt;calculation&gt;&lt;![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]&gt;&lt;/calculation&gt;
+        &lt;choice/&gt;
+        &lt;choice_field/&gt;
+        &lt;choice_table/&gt;
+        &lt;column_label/&gt;
+        &lt;comments/&gt;
+        &lt;create_roles/&gt;
+        &lt;default_value/&gt;
+        &lt;defaultsort/&gt;
+        &lt;delete_roles/&gt;
+        &lt;dependent/&gt;
+        &lt;dependent_on_field/&gt;
+        &lt;display&gt;false&lt;/display&gt;
+        &lt;dynamic_creation&gt;false&lt;/dynamic_creation&gt;
+        &lt;dynamic_creation_script/&gt;
+        &lt;dynamic_default_value/&gt;
+        &lt;dynamic_ref_qual/&gt;
+        &lt;element&gt;changed_fields&lt;/element&gt;
+        &lt;element_reference&gt;false&lt;/element_reference&gt;
+        &lt;foreign_database/&gt;
+        &lt;formula/&gt;
+        &lt;function_definition/&gt;
+        &lt;function_field&gt;false&lt;/function_field&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;internal_type display_value="String"&gt;string&lt;/internal_type&gt;
+        &lt;label&gt;Changed Fields&lt;/label&gt;
+        &lt;mandatory&gt;false&lt;/mandatory&gt;
+        &lt;max_length&gt;4000&lt;/max_length&gt;
+        &lt;model display_value="Supplier Low Score Alert"&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/model&gt;
+        &lt;model_id&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/model_id&gt;
+        &lt;model_table&gt;sys_hub_flow_snapshot&lt;/model_table&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6&lt;/name&gt;
+        &lt;next_element/&gt;
+        &lt;order&gt;100&lt;/order&gt;
+        &lt;primary&gt;false&lt;/primary&gt;
+        &lt;read_only&gt;false&lt;/read_only&gt;
+        &lt;read_only_option/&gt;
+        &lt;read_roles/&gt;
+        &lt;reference/&gt;
+        &lt;reference_cascade_rule/&gt;
+        &lt;reference_floats&gt;false&lt;/reference_floats&gt;
+        &lt;reference_key/&gt;
+        &lt;reference_qual/&gt;
+        &lt;reference_qual_condition/&gt;
+        &lt;reference_type/&gt;
+        &lt;sizeclass/&gt;
+        &lt;spell_check&gt;false&lt;/spell_check&gt;
+        &lt;staged&gt;false&lt;/staged&gt;
+        &lt;sys_class_name&gt;sys_hub_flow_input&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:26&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;179cd523c3eb4310239a32f1b40131e0&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name/&gt;
+        &lt;sys_package/&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name/&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:26&lt;/sys_updated_on&gt;
+        &lt;table_reference&gt;false&lt;/table_reference&gt;
+        &lt;text_index&gt;false&lt;/text_index&gt;
+        &lt;unique&gt;false&lt;/unique&gt;
+        &lt;use_dependent_field&gt;false&lt;/use_dependent_field&gt;
+        &lt;use_dynamic_default&gt;false&lt;/use_dynamic_default&gt;
+        &lt;use_reference_qualifier&gt;simple&lt;/use_reference_qualifier&gt;
+        &lt;virtual&gt;false&lt;/virtual&gt;
+        &lt;virtual_type&gt;script&lt;/virtual_type&gt;
+        &lt;widget/&gt;
+        &lt;write_roles/&gt;
+        &lt;xml_view&gt;false&lt;/xml_view&gt;
+    &lt;/sys_hub_flow_input&gt;
+    &lt;sys_hub_action_input_action_instance action="delete_multiple" query="action_input=179cd523c3eb4310239a32f1b40131e0"/&gt;
+    &lt;sys_hub_flow_input action="INSERT_OR_UPDATE"&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;array&gt;false&lt;/array&gt;
+        &lt;array_denormalized&gt;false&lt;/array_denormalized&gt;
+        &lt;attributes&gt;element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,test_input_hidden=true,uiType=table_name&lt;/attributes&gt;
+        &lt;audit&gt;false&lt;/audit&gt;
+        &lt;calculation&gt;&lt;![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]&gt;&lt;/calculation&gt;
+        &lt;choice/&gt;
+        &lt;choice_field/&gt;
+        &lt;choice_table/&gt;
+        &lt;column_label/&gt;
+        &lt;comments/&gt;
+        &lt;create_roles/&gt;
+        &lt;default_value/&gt;
+        &lt;defaultsort/&gt;
+        &lt;delete_roles/&gt;
+        &lt;dependent/&gt;
+        &lt;dependent_on_field/&gt;
+        &lt;display&gt;false&lt;/display&gt;
+        &lt;dynamic_creation&gt;false&lt;/dynamic_creation&gt;
+        &lt;dynamic_creation_script/&gt;
+        &lt;dynamic_default_value/&gt;
+        &lt;dynamic_ref_qual/&gt;
+        &lt;element&gt;table_name&lt;/element&gt;
+        &lt;element_reference&gt;false&lt;/element_reference&gt;
+        &lt;foreign_database/&gt;
+        &lt;formula/&gt;
+        &lt;function_definition/&gt;
+        &lt;function_field&gt;false&lt;/function_field&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;internal_type display_value=""&gt;table_name&lt;/internal_type&gt;
+        &lt;label&gt;Table Name&lt;/label&gt;
+        &lt;mandatory&gt;false&lt;/mandatory&gt;
+        &lt;max_length&gt;200&lt;/max_length&gt;
+        &lt;model display_value="Supplier Low Score Alert"&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/model&gt;
+        &lt;model_id&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/model_id&gt;
+        &lt;model_table&gt;sys_hub_flow_snapshot&lt;/model_table&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6&lt;/name&gt;
+        &lt;next_element/&gt;
+        &lt;order&gt;101&lt;/order&gt;
+        &lt;primary&gt;false&lt;/primary&gt;
+        &lt;read_only&gt;false&lt;/read_only&gt;
+        &lt;read_only_option/&gt;
+        &lt;read_roles/&gt;
+        &lt;reference/&gt;
+        &lt;reference_cascade_rule/&gt;
+        &lt;reference_floats&gt;false&lt;/reference_floats&gt;
+        &lt;reference_key/&gt;
+        &lt;reference_qual/&gt;
+        &lt;reference_qual_condition/&gt;
+        &lt;reference_type/&gt;
+        &lt;sizeclass/&gt;
+        &lt;spell_check&gt;false&lt;/spell_check&gt;
+        &lt;staged&gt;false&lt;/staged&gt;
+        &lt;sys_class_name&gt;sys_hub_flow_input&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:26&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;6b9cd523c3eb4310239a32f1b40131eb&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name/&gt;
+        &lt;sys_package/&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name/&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:26&lt;/sys_updated_on&gt;
+        &lt;table_reference&gt;false&lt;/table_reference&gt;
+        &lt;text_index&gt;false&lt;/text_index&gt;
+        &lt;unique&gt;false&lt;/unique&gt;
+        &lt;use_dependent_field&gt;false&lt;/use_dependent_field&gt;
+        &lt;use_dynamic_default&gt;false&lt;/use_dynamic_default&gt;
+        &lt;use_reference_qualifier&gt;simple&lt;/use_reference_qualifier&gt;
+        &lt;virtual&gt;false&lt;/virtual&gt;
+        &lt;virtual_type&gt;script&lt;/virtual_type&gt;
+        &lt;widget/&gt;
+        &lt;write_roles/&gt;
+        &lt;xml_view&gt;false&lt;/xml_view&gt;
+    &lt;/sys_hub_flow_input&gt;
+    &lt;sys_hub_action_input_action_instance action="delete_multiple" query="action_input=6b9cd523c3eb4310239a32f1b40131eb"/&gt;
+    &lt;sys_hub_flow_input action="INSERT_OR_UPDATE"&gt;
+        &lt;active&gt;true&lt;/active&gt;
+        &lt;array&gt;false&lt;/array&gt;
+        &lt;array_denormalized&gt;false&lt;/array_denormalized&gt;
+        &lt;attributes&gt;element_mapping_provider=com.glide.flow_design.action.data.FlowDesignVariableMapper,timeFromCreateToActivate=9000,uiType=document_id&lt;/attributes&gt;
+        &lt;audit&gt;false&lt;/audit&gt;
+        &lt;calculation&gt;&lt;![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]&gt;&lt;/calculation&gt;
+        &lt;choice/&gt;
+        &lt;choice_field/&gt;
+        &lt;choice_table/&gt;
+        &lt;column_label/&gt;
+        &lt;comments/&gt;
+        &lt;create_roles/&gt;
+        &lt;default_value/&gt;
+        &lt;defaultsort/&gt;
+        &lt;delete_roles/&gt;
+        &lt;dependent&gt;table_name&lt;/dependent&gt;
+        &lt;dependent_on_field&gt;table_name&lt;/dependent_on_field&gt;
+        &lt;display&gt;false&lt;/display&gt;
+        &lt;dynamic_creation&gt;false&lt;/dynamic_creation&gt;
+        &lt;dynamic_creation_script/&gt;
+        &lt;dynamic_default_value/&gt;
+        &lt;dynamic_ref_qual/&gt;
+        &lt;element&gt;current&lt;/element&gt;
+        &lt;element_reference&gt;false&lt;/element_reference&gt;
+        &lt;foreign_database/&gt;
+        &lt;formula/&gt;
+        &lt;function_definition/&gt;
+        &lt;function_field&gt;false&lt;/function_field&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;internal_type display_value=""&gt;document_id&lt;/internal_type&gt;
+        &lt;label&gt;Record&lt;/label&gt;
+        &lt;mandatory&gt;true&lt;/mandatory&gt;
+        &lt;max_length&gt;200&lt;/max_length&gt;
+        &lt;model display_value="Supplier Low Score Alert"&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/model&gt;
+        &lt;model_id&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/model_id&gt;
+        &lt;model_table&gt;sys_hub_flow_snapshot&lt;/model_table&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6&lt;/name&gt;
+        &lt;next_element/&gt;
+        &lt;order&gt;100&lt;/order&gt;
+        &lt;primary&gt;false&lt;/primary&gt;
+        &lt;read_only&gt;false&lt;/read_only&gt;
+        &lt;read_only_option/&gt;
+        &lt;read_roles/&gt;
+        &lt;reference/&gt;
+        &lt;reference_cascade_rule/&gt;
+        &lt;reference_floats&gt;false&lt;/reference_floats&gt;
+        &lt;reference_key/&gt;
+        &lt;reference_qual/&gt;
+        &lt;reference_qual_condition/&gt;
+        &lt;reference_type/&gt;
+        &lt;sizeclass/&gt;
+        &lt;spell_check&gt;false&lt;/spell_check&gt;
+        &lt;staged&gt;false&lt;/staged&gt;
+        &lt;sys_class_name&gt;sys_hub_flow_input&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:26&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;939cd523c3eb4310239a32f1b40131c5&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name/&gt;
+        &lt;sys_package/&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name/&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:26&lt;/sys_updated_on&gt;
+        &lt;table_reference&gt;false&lt;/table_reference&gt;
+        &lt;text_index&gt;false&lt;/text_index&gt;
+        &lt;unique&gt;false&lt;/unique&gt;
+        &lt;use_dependent_field&gt;true&lt;/use_dependent_field&gt;
+        &lt;use_dynamic_default&gt;false&lt;/use_dynamic_default&gt;
+        &lt;use_reference_qualifier&gt;simple&lt;/use_reference_qualifier&gt;
+        &lt;virtual&gt;false&lt;/virtual&gt;
+        &lt;virtual_type&gt;script&lt;/virtual_type&gt;
+        &lt;widget/&gt;
+        &lt;write_roles/&gt;
+        &lt;xml_view&gt;false&lt;/xml_view&gt;
+    &lt;/sys_hub_flow_input&gt;
+    &lt;sys_hub_action_input_action_instance action="delete_multiple" query="action_input=939cd523c3eb4310239a32f1b40131c5"/&gt;
+    &lt;sys_hub_flow_output action="delete_multiple" query="model=5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_hub_alias_mapping action="delete_multiple" query="source_id=5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_hub_trigger_instance_v2 action="delete_multiple" query="flow=5b9cd523c3eb4310239a32f1b40131b6^sys_idNOT INab9c1923c3eb4310239a32f1b4013102"/&gt;
+    &lt;sys_hub_trigger_instance_v2 action="INSERT_OR_UPDATE"&gt;
+        &lt;comment/&gt;
+        &lt;display_text/&gt;
+        &lt;flow display_value="Supplier Low Score Alert"&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/flow&gt;
+        &lt;generation_source/&gt;
+        &lt;name&gt;Updated&lt;/name&gt;
+        &lt;published_version/&gt;
+        &lt;remote_sys_id/&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:27&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;ab9c1923c3eb4310239a32f1b4013102&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_scope/&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:27&lt;/sys_updated_on&gt;
+        &lt;trigger_definition display_value="Updated"&gt;bb695e60c31322002841b63b12d3aea5&lt;/trigger_definition&gt;
+        &lt;trigger_inputs&gt;H4sIAAAAAAAA/+1YUW/bNhD+K4KeNsAFvBUd0LxlbbMFyFqgydqHrhNo8WQTo0mNPNpRg/z3HiXKZiS5Vbqo6dA82TqSuu/uvu9I6t1VikYsl2BOlUWmcjiv7ClPj9J0lkq2AEl/L9hCAj0LhWAUkxdVCWRGb84UW/sxDiUoDgqbpflKixzOhKXnd+9n6ZopzlCbKj1C42CWFkavL2BdSob0roJJS0ZtOJj06Kf5fJbW7w1O6IUbJp1/vsx+nj/5Zf70aSYUdxazeWZdWUpBCwmFsPTG6s2oyflKSG5ANQhLZsgjev9Xvcg7YHAgAQE7IYdL9Kngu7Ci4IPFAOOvlKyiKZdWfIB6vbOQRekMM4rzld6+hgIIcQ4nFJB3FwalzpncPTGkmi4cgqVYrq93aTkRIENpbW5Eicc5ik2b/uvZGC68dip5uwKV/GnBJHWBe8RYSsEhk83YeGK0gX6OGTUVImihOMapbEvIMsqfab23tOlzYxwBBsP9lEMcSMG3So2U8Y0vs8+jV2U6FVfOwVqh/S+iUMs+YxpWfIYtVxQo/Ot8jHUyiraU9ctYg4/MZ8G9z2LiMRTaNPU73U9sMfkFp2u2DJQgDxJyjCpU0Mro6Q9ByyiEfR4OgFJaZWOAvdTq0dfEtdC4isG0OH4l+40EETMPgbP/Ed2X6b4rO7tj0+ZmbB2lB+tt1N4n7GHn2KHw96z2QuotkeiuBc5U1aOs9yQUsbRKck3OLnEyyZA8YGm0U/wQipszptEty//5NIj9jOQHDgVzEn+8b6F6bNQGY43GcXSVGo+N1OuecoNuH9S5T9UrlbwIQSf1ydbetVBr5B16UhvNnaF0YL2ltGlPsEUwkWj9eB8L7bwRoPZAf68aoYPCjot7nbT4OxJpzSPVMVjyg74fxNJk7plWXGBzCuvqox2yk9xtQmnyCEBLCEKLzr45Pnv2+/HL316c/90Y/nLz+WPufOoyAxsB2z5pbrN0BLHi9AwAxoFMTcak8DXhS4m0ZQpthjpjnGcR4l0rW2sO8nlU58Ae2l1Khza9jlhAatp9JJjy1j3RNWrolEUXA3/C8jfcyTq1VpDpYvCCJIokJIf616JKcAWESdLuTm+uUU23gSjtC9qF9lwnNJCYrwLubu5J9eeJ/mWpKXenUzTGW38YOXxP6jh/2GH26btoZt21jJ0SZM7yFVPL5nzVcveE1AwsXyXNlKSZMqGu885nj3w6Z7ABU/WC9cbEldxLZSrPTG5ZZXvti7qDbxThpEkGkoRqRHBvLaHduywamrmsom4QitVpB8E6sh/sCX3Y3/+lAYzX+/uPPOztEUQZAAA=&lt;/trigger_inputs&gt;
+        &lt;trigger_outputs/&gt;
+        &lt;trigger_type&gt;record_update&lt;/trigger_type&gt;
+        &lt;updation_source/&gt;
+    &lt;/sys_hub_trigger_instance_v2&gt;
+    &lt;sys_hub_action_instance_v2 action="delete_multiple" query="flow=5b9cd523c3eb4310239a32f1b40131b6^sys_idNOT IN2f9cd523c3eb4310239a32f1b40131ff,a39cd523c3eb4310239a32f1b40131fe,a79c1923c3eb4310239a32f1b4013100"/&gt;
+    &lt;sys_hub_action_instance_v2 action="INSERT_OR_UPDATE"&gt;
+        &lt;action_type display_value="Send Email"&gt;c1806bf4a70323008299b39f087901cb&lt;/action_type&gt;
+        &lt;action_type_parent display_value="Send Email"&gt;98c181d20b100300d97d8bf637673ab5&lt;/action_type_parent&gt;
+        &lt;attributes&gt;timeFromCreateToActivate=9000&lt;/attributes&gt;
+        &lt;comment/&gt;
+        &lt;compiled_snapshot&gt;c1806bf4a70323008299b39f087901cb&lt;/compiled_snapshot&gt;
+        &lt;display_text/&gt;
+        &lt;flow display_value="Supplier Low Score Alert"&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/flow&gt;
+        &lt;generation_source/&gt;
+        &lt;order&gt;2&lt;/order&gt;
+        &lt;parent_ui_id/&gt;
+        &lt;sys_class_name&gt;sys_hub_action_instance_v2&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:27&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;2f9cd523c3eb4310239a32f1b40131ff&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:27&lt;/sys_updated_on&gt;
+        &lt;ui_id&gt;097d07f9-5dd8-4822-ac04-6cd70e7e0552&lt;/ui_id&gt;
+        &lt;updation_source/&gt;
+        &lt;values&gt;H4sIAAAAAAAA/+1YbW/iOBD+K1Y+o1yAAqXf9oqqq7TbPZXunk6rVeTYE+I7J87aTimH+t9vkhgIL6LQXk9U229kYo9nxs/zzIRvcy+jKXgXnqWRhLB6aHn3VBal8SHsBL1+MByGIuOFsWEQmiLPpQCNq7gwuaSzrwctzqlG3xZ/X8w9lgjJNWTexbfvLU9w3N0engf9KD6jg6Db6QbBeWc4jLrDODgfDIM2P0MXkkYgceldGSo+74rczvKdto/NveSmfqE0L+Nptzx4sJBxwEBiKg20vJRmnFqlZ0uLBso/ZxINVhf4nIjMlg4TIJbqCViigaFHYl14Cch874KUPhjxD4Z7HpTuY8CKsDJ6r/EYuirX5nhELR1jAMwW2i1liRIMTF1LDjEtpL1s2uoFn3MrVFZvqSOodytZpNlNXUpv6WBxqWgpDAYBeVmfMmNXjnicqOntIsorvPKylO6lVIzK5RO1VouosGU8cw8kpOgoTGmei2wS5lrdi2ozxpL6E4kPfizVFA81YpL5lJWB+3gd1L9C+6gyf6ValFl8QjcVwIQJDdMiX+RWHe49tjwzM5eSGrPKEYsb/ijKCOuMXW5hXZ5yS+XoAx58Dy6Nx9aSKlOKME6p/juElArZ4Et7mxUlWA6Af9DvR1E/6g26K/gPWcwHUdynA9ZtwP86Y7LgQP5YhLGiwnZkjg+RUhJotkkGjO2Xq6pOSzJ0jiSDMzg21CAjVhG8FjkjlCxDKo0WuVBFhr+oJcIQg3X3yZ0iwmXV2NEiM1WQFKUEl1l8s0Yjf0Wx//nUJW/PTpe3DnbOOtqJyTdB7NcgME2wM0V/AbMN7t4oi9W+IH+qQpNF4yLGUlsYklBDIoCMsIRmE+AlrL6UlSG3cC9gus37l7p7SjB6fF+/BNYQjPEy1135O4UweJXZZEMgxgujE4f+fnGoG+O2NtQsXe94wely5yenRqT4rMGLEVBNxg7AlThqgqfHCtUSq0AMyiJUiEZfEjGN0FHTSnQ1/CiELuGdaDCJkpwgWGoXBzLBJ79j4zJAmMosVoVUx2vFEAplSYkFmhIMhsSFxjM14WBR6o2/Tck3nMlTakD3qkHcaajBr/X1bt2304HEpnJDBX67+/RxpQGDZw4I2yLQ7/W6/XcVePHkm095h2uV5y63qr2/hjjUI1BDG+bzLzlGBzxs+4hjLIh9fNwm3gEAPtsLYMbXPv+qeex2EcxmcA7IHJlVlVvwDTyP3BtyPVrBOnjR3PvBGMUEVsI0ps2psAnOj1vj6mGLlzTpdtY5gjOrqAC5myvXq9cnwJl6JDiCMvEYVZolVwJkiYusSKMK5OtUYiilOtwAsBtrT6XZNv6DOKTtWrWfWL7rG/Wn3S6aHbbpycFy/x8xtMlEtdZIqgyOGSe77+PkSTUSDlKkooLG6zURBApjz+oRfC8yIWgg8/JyDZnVgccg8+w/G3LeofmmoBk9E5vt/Z/j/eYAvgHO6Gh09t7R+dOg8/u/thhErqMZAAA=&lt;/values&gt;
+    &lt;/sys_hub_action_instance_v2&gt;
+    &lt;sys_hub_alias_mapping action="delete_multiple" query="source_id=2f9cd523c3eb4310239a32f1b40131ff"/&gt;
+    &lt;sys_hub_action_instance_v2 action="INSERT_OR_UPDATE"&gt;
+        &lt;action_type display_value="Log"&gt;5bc1bcc6531003003bf1d9109ec587d4&lt;/action_type&gt;
+        &lt;action_type_parent display_value="Log"&gt;0e0ae8c2531003003bf1d9109ec587c8&lt;/action_type_parent&gt;
+        &lt;attributes&gt;timeFromCreateToActivate=9000&lt;/attributes&gt;
+        &lt;comment/&gt;
+        &lt;compiled_snapshot&gt;5bc1bcc6531003003bf1d9109ec587d4&lt;/compiled_snapshot&gt;
+        &lt;display_text/&gt;
+        &lt;flow display_value="Supplier Low Score Alert"&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/flow&gt;
+        &lt;generation_source/&gt;
+        &lt;order&gt;1&lt;/order&gt;
+        &lt;parent_ui_id/&gt;
+        &lt;sys_class_name&gt;sys_hub_action_instance_v2&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:27&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;a39cd523c3eb4310239a32f1b40131fe&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:27&lt;/sys_updated_on&gt;
+        &lt;ui_id&gt;620587ae-7863-4603-8bf3-201be59e1f3a&lt;/ui_id&gt;
+        &lt;updation_source/&gt;
+        &lt;values&gt;H4sIAAAAAAAA/+VUTW/bMAz9K4bOiREnzbrmViQrMKAfwIJ1h6IwFIlOBMiSp4+kWeD/PspWEncNtgXYsMMAH8wnUuR7Ivm0I4qWQCZE6mUuYQ2S9MiaSh+wDTUKTS5sJen2MaJfEBVqiQcVNRjswJDJjrCVkNyAIpOn5x4RHD3HC5YtGHs3HmWDwQi/RZHxq2xwBWz8/pJf4hWSLjDlhNzG1CeqcdsqQGylBYNo38aw6R7UhocyBj0CLw4UB8xfUGmhR0qqOHXabA+IAcoflDwCK6Ec3ob3rEBW7V9JX6z4hpkvBiGiAOTGoD07mHnUpoWLGXV07oxnzpvo2pZtUZXdgWy/n9xrBUm/3xG7Q6LuHX0/qkJ3vERrRs+s63l8lx/eLzoPu84fjNGm4wrRjr6jGt+QQ0G9dNPzGWS/zWB4DoPRGQwuAoNW/IfKCY19SbLQPXQh90+jpS/Vfdtx5MD38XWhEZ29HoJIyltsAahCw4UOiu1UzFd682nfIzdCNRXFQ6kZlQeLOmfEwrug746AhBIvyktaVShEXhm9Fk0wFlumS4lGWki9waRWLFVKWaCWYn/T9AbxWQM/UiMCzTu8BoPrHrFbO5XU2iNZbOH8qw+VtNQjh7wRqglhRlTuGhOsIZYb5O8MaAnW0iV03mDuq0oKMMlu97nCooDnWcq8QR1cGiLrOrFMG0i40VgbT5w+6ct86SUNqfPGv67TZO6o8zZhK6qWbaQPwuYG1gI26dtF9Y+r+dV2HI5+th1h3NmOdwelT8ofN6TFVmqmp7sh53twP5p/YUMOx+M/syJPLZ23Y3zWFP9/Q/r8Habk5RnVBwAA&lt;/values&gt;
+    &lt;/sys_hub_action_instance_v2&gt;
+    &lt;sys_hub_alias_mapping action="delete_multiple" query="source_id=a39cd523c3eb4310239a32f1b40131fe"/&gt;
+    &lt;sys_hub_action_instance_v2 action="INSERT_OR_UPDATE"&gt;
+        &lt;action_type display_value="Send Email"&gt;c1806bf4a70323008299b39f087901cb&lt;/action_type&gt;
+        &lt;action_type_parent display_value="Send Email"&gt;98c181d20b100300d97d8bf637673ab5&lt;/action_type_parent&gt;
+        &lt;attributes&gt;timeFromCreateToActivate=9000&lt;/attributes&gt;
+        &lt;comment/&gt;
+        &lt;compiled_snapshot&gt;c1806bf4a70323008299b39f087901cb&lt;/compiled_snapshot&gt;
+        &lt;display_text/&gt;
+        &lt;flow display_value="Supplier Low Score Alert"&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/flow&gt;
+        &lt;generation_source/&gt;
+        &lt;order&gt;3&lt;/order&gt;
+        &lt;parent_ui_id/&gt;
+        &lt;sys_class_name&gt;sys_hub_action_instance_v2&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:27&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;a79c1923c3eb4310239a32f1b4013100&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:27&lt;/sys_updated_on&gt;
+        &lt;ui_id&gt;c8b4d6ad-6191-43b2-ad29-0468ac5a7ee2&lt;/ui_id&gt;
+        &lt;updation_source/&gt;
+        &lt;values&gt;H4sIAAAAAAAA/+1Y227jNhD9FUJ9NVT5JsfpS9MYQQPspYiz24ftQqBIymKXElWSiuMa/vcOJdqWL3WcpCkcbJ5sjsjRmeE5M2N/mXs5zph37hkcCxZVi5Z3h0VpjfdRJ+iHwXAY8ZyW2kRBpMuiEJwp2EW5LgSefT5qc4EV+Dbw/XzukZQLqljunX/52vI4hdPt4VkQxkkPD4JupxsEZ53hMO4Ok+BsMAzatAcuBI6ZgK23Fiqs9yE3s2Kv7V3zLPpQP5CKWjztlsfuDcspAyAJFpq1vAznFBupZiuLYph+zAUYjCphnfLcWIcpQwarCTNIMQIekXHwUiaKgxsyfK/53wD3LLDuEwYZIRa911hGLsu1ORlhg8cAgJhSua0klZwwXeeSsgSXwlw2bfWGj4XhMq+P1Ajq01KUWf6hTqW3crC8VLCUGkCwwubHRuzSkYxTOb1ZoryCK7epdA+FJFisVtgYxePSWDxzjwmWgaMow0XB80lUKHnHq8OAJfMnAhZ+IuQUXqr5JPcxscB9uA7sX4F9VJk/Y8VtFO/BTUUwriNNFC+WsVUv9xYtT8/0pcBar2OE5EZ/lRZhHbGLLarTY49Uji7gxXfMhbForaQyxUDjDKtvEcswFw29tHdVYclyBP2DMIzjMO4Pumv6D0lCB3ES4gHpNuh/nRNRUoZ+X8JYS2EXmdNDLKVgON8WA2D78arK00oMnUeKwRmcGmqSISMRXIuYIYxWkKzRgBYqZPANG8Q10pB3H91KxF1UjRMtNJMlyqCUwDYDTzZk5K8l9j+/daXb3unq1tHOWUd7OfkqhP0SAsYpdKb4T0ZMQ7sXgilzjsauZaH5/FMB0BiN2j4plbKUsecXC8ugXE7RJ5sadMPuOJvuCv/Z/h4qGX16qGMy0igZ41W0+zLgaoSGy8wnWyVivDS68hAeLg91a9ytDrVON3tecLrq+c7FEUs6ayoDLee4P8og6Aw0gncnEqol5ABpKIsMpVgj8CRYjoA4QGZbdE2qmE6loAgYYi1cIW2wKXW1P2awm6Q4nzBq63ST/z76DRqWZlB27bJyt0SxnKMqp/gbs1VfyQIyY+B7nbc9etyMIvyhO/zplUTyUCXABytB0mlUgl/qq925a1cDUpOJrQrw6+37d2v9D544HuwWgLDf74ZvFeDZc28xpR0KpClcbFVzf4nCUHO1URf2dLTFYld4RxC4d5DAhG78+KumsZslmG1wjshUkrJKN6dbfB65J+h6tKZ18Kyp90JrSaxmdWPWnHKTwvS4M6wet3klk25nUyMwsfKKkPu1cr1+fAKaqceBR0gmGTOsSHrFmbC8yMssrki+KSUCBVVFWwR2Q+2pNNrGPxDHtFwjG8ICzKCnKo6fAXSB85kPn7vS+veNDw6Ph/9uwU3FyY2GUSF9zMjYfRsZT6phUCZ4xitqvFyzAKIQ8qReQA8ykwUNZl5ebjCzeuFjmNn7z4aZN2q+KmrGT+Rm+/BP7rA5aG+RM340O/tv7Pxu2Pn1H3kGoAyJGQAA&lt;/values&gt;
+    &lt;/sys_hub_action_instance_v2&gt;
+    &lt;sys_hub_alias_mapping action="delete_multiple" query="source_id=a79c1923c3eb4310239a32f1b4013100"/&gt;
+    &lt;sys_hub_sub_flow_instance_v2 action="delete_multiple" query="flow=5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_hub_flow_logic_instance_v2 action="delete_multiple" query="flow=5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_hub_pill_compound action="delete_multiple" query="attached_to=5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_hub_flow_variable action="delete_multiple" query="model=5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_documentation action="INSERT_OR_UPDATE"&gt;
+        &lt;element&gt;changed_fields&lt;/element&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;label&gt;Changed Fields&lt;/label&gt;
+        &lt;language&gt;en&lt;/language&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6&lt;/name&gt;
+        &lt;plural/&gt;
+        &lt;sys_class_name&gt;sys_documentation&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:26&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;53c97bff83eb8310dd8c9610feaad399&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;Changed Fields&lt;/sys_name&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_documentation_var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6_changed_fields_en&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:26&lt;/sys_updated_on&gt;
+        &lt;url/&gt;
+        &lt;url_target/&gt;
+    &lt;/sys_documentation&gt;
+    &lt;sys_documentation action="INSERT_OR_UPDATE"&gt;
+        &lt;element&gt;current&lt;/element&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;label&gt;Record&lt;/label&gt;
+        &lt;language&gt;en&lt;/language&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6&lt;/name&gt;
+        &lt;plural/&gt;
+        &lt;sys_class_name&gt;sys_documentation&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:26&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;5fc97bff83eb8310dd8c9610feaad39e&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;Record&lt;/sys_name&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_documentation_var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6_current_en&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:26&lt;/sys_updated_on&gt;
+        &lt;url/&gt;
+        &lt;url_target/&gt;
+    &lt;/sys_documentation&gt;
+    &lt;sys_documentation action="INSERT_OR_UPDATE"&gt;
+        &lt;element&gt;table_name&lt;/element&gt;
+        &lt;help/&gt;
+        &lt;hint/&gt;
+        &lt;label&gt;Table Name&lt;/label&gt;
+        &lt;language&gt;en&lt;/language&gt;
+        &lt;name&gt;var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6&lt;/name&gt;
+        &lt;plural/&gt;
+        &lt;sys_class_name&gt;sys_documentation&lt;/sys_class_name&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:27&lt;/sys_created_on&gt;
+        &lt;sys_id&gt;d3c97bff83eb8310dd8c9610feaad3bd&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_name&gt;Table Name&lt;/sys_name&gt;
+        &lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;
+        &lt;sys_policy/&gt;
+        &lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;
+        &lt;sys_update_name&gt;sys_documentation_var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6_table_name_en&lt;/sys_update_name&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:27&lt;/sys_updated_on&gt;
+        &lt;url/&gt;
+        &lt;url_target/&gt;
+    &lt;/sys_documentation&gt;
+    &lt;sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_output_5b9cd523c3eb4310239a32f1b40131b6"/&gt;
+    &lt;sys_hub_flow action="UPDATE"&gt;
+        &lt;sys_id&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/sys_id&gt;
+        &lt;latest_snapshot&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/latest_snapshot&gt;
+        &lt;compiler_build/&gt;
+        &lt;version_record/&gt;
+    &lt;/sys_hub_flow&gt;
+    &lt;sys_flow_trigger_plan action="delete_multiple" query="plan_id=d7284949209d49d88e89c5bd1a6fad81^sys_idNOT INf79c1923c3eb4310239a32f1b401315a"/&gt;
+    &lt;sys_flow_trigger_plan action="INSERT_OR_UPDATE"&gt;
+        &lt;binding_strategy&gt;com.snc.process_flow.engine.binding.OncePerRecord&lt;/binding_strategy&gt;
+        &lt;plan/&gt;
+        &lt;plan_id&gt;d7284949209d49d88e89c5bd1a6fad81&lt;/plan_id&gt;
+        &lt;snapshot&gt;5b9cd523c3eb4310239a32f1b40131b6&lt;/snapshot&gt;
+        &lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;
+        &lt;sys_created_on&gt;2026-10-01 16:35:28&lt;/sys_created_on&gt;
+        &lt;sys_domain&gt;global&lt;/sys_domain&gt;
+        &lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;
+        &lt;sys_id&gt;f79c1923c3eb4310239a32f1b401315a&lt;/sys_id&gt;
+        &lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;
+        &lt;sys_overrides/&gt;
+        &lt;sys_scope/&gt;
+        &lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;
+        &lt;sys_updated_on&gt;2026-10-01 16:35:28&lt;/sys_updated_on&gt;
+        &lt;trigger display_value=""&gt;bf9c1923c3eb4310239a32f1b4013133&lt;/trigger&gt;
+    &lt;/sys_flow_trigger_plan&gt;
+    &lt;sys_flow_subflow_plan action="delete_multiple" query="plan_id=d7284949209d49d88e89c5bd1a6fad81"/&gt;
+&lt;/record_update&gt;</payload>
+        <payload_hash>730514255</payload_hash>
+        <record_name>Supplier Low Score Alert</record_name>
+        <reverted_from/>
+        <source>21e1cb0093370710e61e3b277bba10f4</source>
+        <source_table>sys_upgrade_history</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-03 13:26:44</sys_created_on>
+        <sys_id>f694074893770710e61e3b277bba1023</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a101f214410000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-03 13:26:44</sys_updated_on>
+        <type>Flow</type>
+        <update_guid>329407489d7707104644c4dcddf45723</update_guid>
+        <update_guid_history>329407489d7707104644c4dcddf45723:0,fe9407483e7707106b80dabe6101d41e:1035222954</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-03 17:10:05</sys_created_on>
+        <sys_db_object display_value="" name="sys_hub_flow">sys_hub_flow</sys_db_object>
+        <sys_id>0d0eb325f2ef4b00a9edc6adc8185440</sys_id>
+        <sys_metadata>d7284949209d49d88e89c5bd1a6fad81</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Supplier Low Score Alert</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_scope_delete display_value="">3325c354032d4b36a9e117288ded1fc4</sys_scope_delete>
+        <sys_update_name>sys_hub_flow_d7284949209d49d88e89c5bd1a6fad81</sys_update_name>
+        <sys_update_version display_value="sys_hub_flow_d7284949209d49d88e89c5bd1a6fad81">f694074893770710e61e3b277bba1023</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-03 17:10:05</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>
