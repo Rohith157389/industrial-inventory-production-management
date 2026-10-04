@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>POST</http_method>
+        <name>Material Fulfillment Feasibility</name>
+        <operation_script><![CDATA[// RBAC Authorization Check — read-only Material Fulfillment Feasibility
+// Mirrors the Simulation API /simulate authorization pattern. Planning/operations
+// roles only; customer roles and ordinary users are denied with 403.
+(function () {
+    if (gs.hasRole('admin')) return;
+    var roles = [
+        'x_2056099_indust_0.production_planner',
+        'x_2056099_indust_0.production_manager',
+        'x_2056099_indust_0.production_supervisor',
+        'x_2056099_indust_0.plant_manager',
+        'x_2056099_indust_0.operations_manager',
+        'x_2056099_indust_0.warehouse_manager',
+        'x_2056099_indust_0.inventory_manager',
+        'x_2056099_indust_0.material_planner'
+    ];
+    for (var _i = 0; _i < roles.length; _i++) {
+        if (gs.hasRole(roles[_i])) return;
+    }
+    response.setStatus(403);
+    response.setBody({ success: false, error: 'Unauthorized', message: 'Insufficient role for fulfillment feasibility operations' });
+})();
+
+if (response.getStatus() == 403) { /* unauthorized — early exit */ }
+else
+(function process(request, response) {
+    var P = 'x_2056099_indust_0_';
+
+    // --- Parse request body safely ---
+    var body;
+    try {
+        body = request.body ? request.body.data : null;
+        if (typeof body === 'string') { body = JSON.parse(body); }
+    } catch (e) {
+        response.setStatus(400);
+        response.setBody({ success: false, error: 'Malformed request body' });
+        return;
+    }
+    if (!body || typeof body !== 'object') {
+        response.setStatus(400);
+        response.setBody({ success: false, error: 'Malformed request body' });
+        return;
+    }
+
+    var poId = body.production_order ? body.production_order.toString() : '';
+    var matFilter = body.material ? body.material.toString() : '';
+    var qtyOverrideRaw = body.quantity;
+
+    if (!poId) {
+        response.setStatus(400);
+        response.setBody({ success: false, error: 'production_order is required' });
+        return;
+    }
+
+    // --- Resolve production order (READ-ONLY) ---
+    var po = new GlideRecord(P + 'production_order');
+    if (!po.get(poId)) {
+        response.setStatus(404);
+        response.setBody({ success: false, error: 'Production order not found' });
+        return;
+    }
+    if (po.getValue('active') != '1') {
+        response.setStatus(409);
+        response.setBody({ success: false, error: 'Production order is not active' });
+        return;
+    }
+
+    var whId = po.getValue('fulfillment_location') || '';
+    if (!whId) {
+        response.setStatus(422);
+        response.setBody({
+            success: false,
+            production_order: poId,
+            production_order_number: po.getValue('number'),
+            error: 'Production order has no fulfillment_location'
+        });
+        return;
+    }
+
+    // --- Customer deadline context (READ-ONLY) ---
+    var coId = po.getValue('customer_order') || '';
+    var custDate = '';
+    if (coId) {
+        var co = new GlideRecord(P + 'cust_order');
+        if (co.get(coId)) { custDate = co.getValue('requested_delivery_date') || ''; }
+    }
+    if (!custDate) { custDate = po.getValue('planned_end_date') || ''; }
+
+    // --- Gather production materials (active only) ---
+    var pm = new GlideRecord(P + 'production_material');
+    pm.addQuery('production_order', poId);
+    pm.addActiveQuery();
+    if (matFilter) { pm.addQuery('material_product', matFilter); }
+    pm.query();
+
+    if (matFilter && !pm.hasNext()) {
+        response.setStatus(400);
+        response.setBody({
+            success: false,
+            production_order: poId,
+            production_order_number: po.getValue('number'),
+            error: 'Specified material does not belong to this production order (or is not active)'
+        });
+        return;
+    }
+
+    var singleMaterial = !!matFilter;
+    var engine = new x_2056099_indust_0.MaterialFulfillmentDecision();
+    var results = [];
+
+    while (pm.next()) {
+        var matId = pm.getValue('material_product');
+        var matName = pm.getDisplayValue('material_product');
+
+        // Required quantity from production_material (remaining preferred, else required)
+        var reqQty = parseFloat(pm.getValue('remaining_quantity'));
+        if (isNaN(reqQty) || reqQty <= 0) { reqQty = parseFloat(pm.getValue('required_quantity')) || 0; }
+
+        // Quantity override honored only in single-material mode
+        if (singleMaterial && qtyOverrideRaw !== undefined && qtyOverrideRaw !== null && qtyOverrideRaw !== '') {
+            var ov = parseFloat(qtyOverrideRaw);
+            if (!isNaN(ov) && ov > 0) { reqQty = ov; }
+        }
+
+        // ONLY the pure, side-effect-free evaluation is invoked.
+        var r = engine.evaluateReadOnly({
+            materialSysId: matId,
+            quantityRequired: reqQty,
+            warehouseSysId: whId,
+            customerRequiredDate: custDate,
+            customerOrderSysId: coId,
+            productionOrderSysId: poId
+        });
+
+        if (r && r.success) {
+            var supplierName = '';
+            if (r.supplier) {
+                var sg = new GlideRecord('core_company');
+                if (sg.get(r.supplier)) { supplierName = sg.getValue('name'); }
+            }
+            results.push({
+                material: matId,
+                material_name: matName,
+                required_quantity: r.required_quantity,
+                available_quantity: r.available_quantity,
+                reserved_quantity: r.reserved_quantity,
+                incoming_quantity: r.incoming_quantity,
+                shortage_quantity: r.shortage_quantity,
+                decision_type: r.decision_type,
+                feasible: r.feasible,
+                expected_fulfillment_date: r.expected_fulfillment_date,
+                supplier: supplierName,
+                reason: r.reason,
+                recommended_action: r.recommended_action
+            });
+        } else {
+            results.push({
+                material: matId,
+                material_name: matName,
+                required_quantity: reqQty,
+                decision_type: 'EVALUATION_FAILED',
+                feasible: false,
+                reason: (r && r.error) ? r.error : 'Evaluation failed'
+            });
+        }
+    }
+
+    if (results.length === 0) {
+        response.setStatus(200);
+        response.setBody({
+            success: false,
+            production_order: poId,
+            production_order_number: po.getValue('number'),
+            fulfillment_location: po.getDisplayValue('fulfillment_location'),
+            error: 'Production order has no active production materials',
+            results: []
+        });
+        return;
+    }
+
+    response.setStatus(200);
+    response.setBody({
+        success: true,
+        production_order: poId,
+        production_order_number: po.getValue('number'),
+        fulfillment_location: po.getDisplayValue('fulfillment_location'),
+        results: results
+    });
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/simulation_api/feasibility</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/feasibility</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description>Read-only material fulfillment feasibility for a production order. Calls Materia</short_description>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 12:24:02</sys_created_on>
+        <sys_id>5662b3ec31984c0dbc2a4d0299c93a41</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Material Fulfillment Feasibility</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_5662b3ec31984c0dbc2a4d0299c93a41</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 12:24:02</sys_updated_on>
+        <web_service_definition display_value="Simulation API">12a078fac3af0710239a32f1b4013114</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

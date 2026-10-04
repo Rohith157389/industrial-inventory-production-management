@@ -40,8 +40,10 @@ MaterialFulfillmentDecision.prototype = {
     },
 
     /**
-     * Evaluates the fulfillment strategy for a single material requirement.
-     * Creates a decision record. Does NOT modify inventory.
+     * PERSISTING entry point (unchanged behavior).
+     * Delegates ALL decision calculation to evaluateReadOnly() (pure, no writes),
+     * then persists exactly as before: creates the safety-stock alert when the
+     * read-only result directs it, then creates the fulfill_dec decision record.
      *
      * @param {object} params
      *   materialSysId, quantityRequired, warehouseSysId,
@@ -50,6 +52,41 @@ MaterialFulfillmentDecision.prototype = {
      * @returns {object} { success, decision_type, decision_sys_id, reason, details }
      */
     evaluate: function (params) {
+        var decision = this.evaluateReadOnly(params);
+        // Validation / resolution failures pass straight through, unchanged.
+        if (!decision || !decision.success) return decision;
+
+        // Persist the safety-stock alert BEFORE the decision record, preserving the
+        // original ordering and behavior of the LOCAL_SAFETY_STOCK branch.
+        if (decision.alert && decision.alert.stock_sys_id) {
+            this._createSafetyStockAlert(
+                decision.alert.material,
+                decision.alert.warehouse,
+                decision.alert.consumed,
+                decision.alert.stock_sys_id
+            );
+        }
+
+        // Persist the decision record and return the same shape as before.
+        return this._createDecision(decision.decision_data);
+    },
+
+    /**
+     * PURE, SIDE-EFFECT-FREE evaluation (BLOCKER 3).
+     * Performs the identical validation, warehouse resolution, stock / safety /
+     * incoming calculations and decision branching as before, but DOES NOT write
+     * to the database: it never calls insert(), update(), deleteRecord(),
+     * deleteMultiple(), _createDecision(), or _createSafetyStockAlert(), and runs
+     * no Flow/coordination/simulation mutation.
+     *
+     * When the LOCAL_SAFETY_STOCK branch is selected it returns an `alert`
+     * directive describing the alert the persisting caller should create — it does
+     * NOT create it here.
+     *
+     * @param {object} params - same inputs as evaluate()
+     * @returns {object} decision object (see _result) or { success:false, error }
+     */
+    evaluateReadOnly: function (params) {
         if (!params) return this._fail('Parameters required');
         if (!params.materialSysId) return this._fail('materialSysId required');
         if (!params.quantityRequired || params.quantityRequired <= 0)
@@ -82,6 +119,7 @@ MaterialFulfillmentDecision.prototype = {
         var localStock = this._getStock(matId, whId);
         var availQty = localStock.available;
         var safetyQty = localStock.safety_stock;
+        var reservedQty = localStock.reserved;
 
         // Determine urgency from customer date
         var urgency = this._calcUrgency(custDate);
@@ -94,7 +132,7 @@ MaterialFulfillmentDecision.prototype = {
                           assignedWh.location_name + ' (' + availQty +
                           ' available). No other warehouses needed. Safety stock (' +
                           safetyQty + ') preserved.';
-            return this._createDecision({
+            return this._result({
                 decision_type: 'LOCAL_AVAILABLE_STOCK',
                 material_product: matId,
                 required_quantity: qtyReq,
@@ -106,6 +144,10 @@ MaterialFulfillmentDecision.prototype = {
                 production_order: poId,
                 urgency: urgency,
                 decision_reason: reason5
+            }, {
+                feasible: true,
+                reserved_quantity: reservedQty,
+                recommended_action: 'Fulfill from on-hand available stock at ' + assignedWh.location_name + '.'
             });
         }
 
@@ -127,10 +169,7 @@ MaterialFulfillmentDecision.prototype = {
                           '). Safety stock NOT permanently reduced — ' +
                           'replenishment/procurement request recommended.';
 
-            // Create safety stock alert (Step 9)
-            this._createSafetyStockAlert(matId, whId, safetyConsumed, localStock.stock_sys_id);
-
-            return this._createDecision({
+            return this._result({
                 decision_type: 'LOCAL_SAFETY_STOCK',
                 material_product: matId,
                 required_quantity: qtyReq,
@@ -144,7 +183,66 @@ MaterialFulfillmentDecision.prototype = {
                 production_order: poId,
                 urgency: urgency,
                 decision_reason: reason9
+            }, {
+                feasible: true,
+                reserved_quantity: reservedQty,
+                recommended_action: 'Consume safety stock and raise a replenishment request.',
+                // Directive only — the persisting caller (evaluate) creates the alert.
+                // evaluateReadOnly itself creates NO alert.
+                alert: {
+                    material: matId,
+                    warehouse: whId,
+                    consumed: safetyConsumed,
+                    stock_sys_id: localStock.stock_sys_id
+                }
             });
+        }
+
+        // ========================================
+        // Step 9b (BLOCKER 2): Available With Incoming Supply
+        // On-hand + safety stock cannot cover the requirement, but qualifying
+        // incoming procurement (pending/ordered/partially_received, remaining > 0 —
+        // the same eligibility rules already applied by _getIncomingProcurement)
+        // already covers the shortage. Only classify when an expected delivery date
+        // exists AND, if a customer/required date is set, the delivery is on or
+        // before it. If there is no expected delivery date, or it misses the
+        // deadline, DO NOT claim on-time arrival — fall through to the existing
+        // transfer / procurement / unfulfillable paths. Creates no transfer,
+        // procurement, alert, or inventory change.
+        // ========================================
+        var incomingQty = incomingProcurement.total_incoming || 0;
+        var earliestIncoming = incomingProcurement.earliest_expected || '';
+        if (incomingQty > 0 && (availQty + incomingQty) >= qtyReq && earliestIncoming) {
+            var incomingMeetsDeadline = !custDate ||
+                new GlideDateTime(earliestIncoming).compareTo(new GlideDateTime(custDate)) <= 0;
+            if (incomingMeetsDeadline) {
+                var reasonIncoming = matName + ': ' + qtyReq + ' units needed at ' +
+                    assignedWh.location_name + '. Available: ' + availQty +
+                    ', shortage: ' + shortage + '. Covered by incoming procurement of ' +
+                    incomingQty + ' unit(s) expected by ' + earliestIncoming +
+                    (custDate ? ' (on or before required date ' + custDate + ')' : '') +
+                    '. No new procurement or inter-warehouse transfer required.';
+                return this._result({
+                    decision_type: 'AVAILABLE_WITH_INCOMING_SUPPLY',
+                    material_product: matId,
+                    required_quantity: qtyReq,
+                    available_quantity: availQty,
+                    shortage_quantity: shortage,
+                    incoming_quantity: incomingQty,
+                    assigned_warehouse: whId,
+                    supplier: supplierSysId,
+                    expected_fulfillment_date: earliestIncoming,
+                    customer_required_date: custDate,
+                    customer_order: coId,
+                    production_order: poId,
+                    urgency: urgency,
+                    decision_reason: reasonIncoming
+                }, {
+                    feasible: true,
+                    reserved_quantity: reservedQty,
+                    recommended_action: 'Await incoming procurement; no new order or transfer required.'
+                });
+            }
         }
 
         // ========================================
@@ -210,7 +308,7 @@ MaterialFulfillmentDecision.prototype = {
                             ' other warehouse(s) based on lead time and stock.';
             }
 
-            return this._createDecision({
+            return this._result({
                 decision_type: 'INTER_WAREHOUSE_TRANSFER',
                 material_product: matId,
                 required_quantity: qtyReq,
@@ -225,6 +323,11 @@ MaterialFulfillmentDecision.prototype = {
                 production_order: poId,
                 urgency: urgency,
                 decision_reason: reason14
+            }, {
+                feasible: true,
+                reserved_quantity: reservedQty,
+                recommended_action: 'Initiate inter-warehouse transfer from ' +
+                    bestCandidate.warehouse.location_name + '.'
             });
         }
 
@@ -246,7 +349,7 @@ MaterialFulfillmentDecision.prototype = {
                                '. No alternate warehouse can supply. ' +
                                'Local supplier can deliver in ~' + defaultSupplierLeadDays +
                                ' days — within customer deadline. Recommend normal procurement.';
-                return this._createDecision({
+                return this._result({
                     decision_type: 'PROCUREMENT_LOCAL_SUPPLIER',
                     material_product: matId,
                     required_quantity: qtyReq,
@@ -261,6 +364,10 @@ MaterialFulfillmentDecision.prototype = {
                     production_order: poId,
                     urgency: urgency,
                     decision_reason: reason17
+                }, {
+                    feasible: true,
+                    reserved_quantity: reservedQty,
+                    recommended_action: 'Raise a procurement order with the local supplier.'
                 });
             }
 
@@ -277,7 +384,7 @@ MaterialFulfillmentDecision.prototype = {
                                    '. Supplier → alt WH (' + altProcLead +
                                    'd) → transfer (' + altTransferLead +
                                    'd) = ' + totalAltLead + 'd total. Meets deadline.';
-                    return this._createDecision({
+                    return this._result({
                         decision_type: 'PROCUREMENT_ALTERNATE_WAREHOUSE_SUPPLIER',
                         material_product: matId,
                         required_quantity: qtyReq,
@@ -294,6 +401,11 @@ MaterialFulfillmentDecision.prototype = {
                         production_order: poId,
                         urgency: urgency,
                         decision_reason: reason18
+                    }, {
+                        feasible: true,
+                        reserved_quantity: reservedQty,
+                        recommended_action: 'Procure via alternate-warehouse supplier route through ' +
+                            candidates[p].warehouse.location_name + '.'
                     });
                 }
             }
@@ -309,7 +421,7 @@ MaterialFulfillmentDecision.prototype = {
             '. No supplier or procurement route can meet the deadline. ' +
             'Manual review required.';
 
-        return this._createDecision({
+        return this._result({
             decision_type: 'UNFULFILLABLE',
             material_product: matId,
             required_quantity: qtyReq,
@@ -322,12 +434,54 @@ MaterialFulfillmentDecision.prototype = {
             production_order: poId,
             urgency: urgency,
             decision_reason: reasonUnfulfillable
+        }, {
+            feasible: false,
+            reserved_quantity: reservedQty,
+            recommended_action: 'Escalate for manual review; no automated route meets the deadline.'
         });
+    },
+
+    /**
+     * Build the standardized, NON-PERSISTED decision result object returned by
+     * evaluateReadOnly(). `decision_data` is the exact object the persisting path
+     * (evaluate -> _createDecision) consumes, guaranteeing behavioral equivalence.
+     * This helper performs NO database operations.
+     */
+    _result: function (data, meta) {
+        meta = meta || {};
+        return {
+            success: true,
+            decision_type: data.decision_type,
+            feasible: (meta.feasible === undefined ? true : meta.feasible),
+            material: data.material_product || '',
+            warehouse: data.assigned_warehouse || '',
+            required_quantity: (data.required_quantity === undefined ? 0 : data.required_quantity),
+            available_quantity: (data.available_quantity === undefined ? 0 : data.available_quantity),
+            reserved_quantity: (meta.reserved_quantity === undefined ? 0 : meta.reserved_quantity),
+            incoming_quantity: (data.incoming_quantity === undefined ? 0 : data.incoming_quantity),
+            shortage_quantity: (data.shortage_quantity === undefined ? 0 : data.shortage_quantity),
+            safety_stock_consumed: (data.safety_stock_consumed === undefined ? 0 : data.safety_stock_consumed),
+            expected_fulfillment_date: data.expected_fulfillment_date || '',
+            source_warehouse: data.source_warehouse || '',
+            transfer_lead_time_days: (data.transfer_lead_time_days === undefined ? 0 : data.transfer_lead_time_days),
+            supplier_lead_time_days: (data.supplier_lead_time_days === undefined ? 0 : data.supplier_lead_time_days),
+            supplier: data.supplier || '',
+            urgency: data.urgency || '',
+            customer_required_date: data.customer_required_date || '',
+            customer_order: data.customer_order || '',
+            production_order: data.production_order || '',
+            reason: data.decision_reason || '',
+            recommended_action: meta.recommended_action || '',
+            // Exact payload for the persisting path; keeps evaluate() equivalent.
+            decision_data: data,
+            // Directive only (e.g. safety-stock alert). evaluateReadOnly never acts on it.
+            alert: meta.alert || null
+        };
     },
 
     /** Aggregate stock at a warehouse. READ-ONLY. */
     _getStock: function (matId, whId) {
-        var result = { available: 0, safety_stock: 0, stock_sys_id: '' };
+        var result = { available: 0, safety_stock: 0, reserved: 0, stock_sys_id: '' };
         var ga = new GlideAggregate(this.STOCK);
         ga.addQuery('material_product', matId);
         ga.addQuery('location', whId);
@@ -335,10 +489,12 @@ MaterialFulfillmentDecision.prototype = {
         ga.addQuery('status', 'available');
         ga.addAggregate('SUM', 'available_quantity');
         ga.addAggregate('SUM', 'safety_stock');
+        ga.addAggregate('SUM', 'reserved_quantity');
         ga.query();
         if (ga.next()) {
             result.available = parseFloat(ga.getAggregate('SUM', 'available_quantity')) || 0;
             result.safety_stock = parseFloat(ga.getAggregate('SUM', 'safety_stock')) || 0;
+            result.reserved = parseFloat(ga.getAggregate('SUM', 'reserved_quantity')) || 0;
         }
         // Get a specific stock record sys_id for alerts
         var sg = new GlideRecord(this.STOCK);
@@ -385,7 +541,7 @@ MaterialFulfillmentDecision.prototype = {
         return result;
     },
 
-    /** Create safety stock consumption alert (Step 9). */
+    /** Create safety stock consumption alert (Step 9). PERSISTS — called only from evaluate(). */
     _createSafetyStockAlert: function (matId, whId, consumed, stockSysId) {
         if (!stockSysId) return;
         try {
@@ -406,7 +562,7 @@ MaterialFulfillmentDecision.prototype = {
         }
     },
 
-    /** Persist the decision record. */
+    /** Persist the decision record. PERSISTS — called only from evaluate(). */
     _createDecision: function (data) {
         var dec = new GlideRecord(this.DEC);
         dec.initialize();

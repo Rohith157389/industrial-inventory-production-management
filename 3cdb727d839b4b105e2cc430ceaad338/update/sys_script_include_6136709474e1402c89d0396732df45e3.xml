@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.InterWarehouseTransferExecutor</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Corrected inter-warehouse stock transfer executor. Validates source, finds or creates available destination stock, updates quantities, creates audit records, marks fulfill_dec executed.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>InterWarehouseTransferExecutor</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var InterWarehouseTransferExecutor = Class.create();
+InterWarehouseTransferExecutor.prototype = {
+    initialize: function () {
+        this.STOCK = 'x_2056099_indust_0_inv_stock';
+        this.REQ = 'x_2056099_indust_0_inv_req';
+        this.TXN = 'x_2056099_indust_0_inv_txn';
+        this.DEC = 'x_2056099_indust_0_fulfill_dec';
+        this.LOC = 'x_2056099_indust_0_inv_loc';
+    },
+
+    /**
+     * Execute an approved inter-warehouse stock transfer for a single fulfill_dec.
+     *
+     * Safe behaviour:
+     *   - Validates source (active, status=available, sufficient available_quantity).
+     *   - Finds or CREATES an available destination inv_stock (never reuses quarantined).
+     *   - Updates source stock (total and available decreased by transfer qty).
+     *   - Updates destination stock (total and available increased by transfer qty).
+     *   - Creates exactly one inv_req (inventory_transfer) and two inv_txn (transfer)
+     *     audit records through the existing lifecycle.
+     *   - Updates fulfill_dec to status=executed.
+     *   - Never modifies reserved_quantity, production_material, or production_order.
+     *   - Never creates a second fulfill_dec.
+     *
+     * @param {string} fulfillDecSysId - sys_id of the approved fulfill_dec
+     * @returns {object} { success, message, inv_req_sys_id, inv_txn_source_sys_id,
+     *                      inv_txn_dest_sys_id, dest_stock_sys_id, dest_stock_created }
+     */
+    execute: function (fulfillDecSysId) {
+        if (!fulfillDecSysId) return this._fail('fulfill_dec sys_id is required');
+
+        // ----------------------------------------------------------------
+        // 1. Load and validate the fulfill_dec record
+        // ----------------------------------------------------------------
+        var dec = new GlideRecord(this.DEC);
+        if (!dec.get(fulfillDecSysId))
+            return this._fail('Fulfillment decision not found: ' + fulfillDecSysId);
+
+        if (dec.getValue('decision_type') !== 'INTER_WAREHOUSE_TRANSFER')
+            return this._fail('Decision type is not INTER_WAREHOUSE_TRANSFER');
+
+        var decStatus = dec.getValue('status');
+        if (decStatus === 'executed')
+            return this._fail('Decision already executed');
+        if (decStatus !== 'approved' && decStatus !== 'pending')
+            return this._fail('Decision status must be approved or pending (is: ' + decStatus + ')');
+
+        var matId = dec.getValue('material_product');
+        var srcWhId = dec.getValue('source_warehouse');
+        var destWhId = dec.getValue('assigned_warehouse');
+        var qty = parseFloat(dec.getValue('required_quantity'));
+        var poId = dec.getValue('production_order') || '';
+
+        if (!matId) return this._fail('fulfill_dec.material_product is empty');
+        if (!srcWhId) return this._fail('fulfill_dec.source_warehouse is empty — cannot determine source');
+        if (!destWhId) return this._fail('fulfill_dec.assigned_warehouse is empty');
+        if (!qty || qty <= 0) return this._fail('required_quantity must be positive');
+
+        // Verify warehouses exist and are valid inventory_warehouse
+        var router = new x_2056099_indust_0.WarehouseRouter();
+        var srcCheck = router.resolveWarehouse(srcWhId);
+        if (!srcCheck.success) return this._fail('Source warehouse invalid: ' + srcCheck.error);
+        var destCheck = router.resolveWarehouse(destWhId);
+        if (!destCheck.success) return this._fail('Destination warehouse invalid: ' + destCheck.error);
+
+        // ----------------------------------------------------------------
+        // 2. SOURCE VALIDATION (Requirement A)
+        // ----------------------------------------------------------------
+        var srcStock = this._findAvailableStock(matId, srcWhId);
+        if (!srcStock)
+            return this._fail('No active, available source stock found for material at ' +
+                              srcCheck.warehouse.location_name);
+
+        var srcAvail = parseFloat(srcStock.getValue('available_quantity')) || 0;
+        var srcTotal = parseFloat(srcStock.getValue('total_quantity')) || 0;
+        if (srcAvail < qty)
+            return this._fail('Insufficient source available quantity: need ' + qty +
+                              ', available ' + srcAvail + ' at ' + srcCheck.warehouse.location_name);
+
+        var srcInvType = srcStock.getValue('inventory_type') || 'raw_materials';
+
+        // ----------------------------------------------------------------
+        // 3. DESTINATION HANDLING (Requirement B)
+        //    Find active, available dest stock — or create a new one.
+        //    NEVER reuse a quarantined/blocked/expired record.
+        // ----------------------------------------------------------------
+        var destStock = this._findAvailableStock(matId, destWhId);
+        var destStockCreated = false;
+
+        if (!destStock) {
+            // Create a new available destination stock record.
+            // Uniqueness BR enforces material + location + inventory_type + batch_lot.
+            // We use null batch_lot (transfers are not batch-specific),
+            // which avoids collision with any existing quarantined batch record.
+            var newDest = new GlideRecord(this.STOCK);
+            newDest.initialize();
+            newDest.setValue('material_product', matId);
+            newDest.setValue('location', destWhId);
+            newDest.setValue('inventory_type', srcInvType);
+            newDest.setValue('status', 'available');
+            newDest.setValue('active', true);
+            newDest.setValue('total_quantity', qty);
+            newDest.setValue('available_quantity', qty);
+            newDest.setValue('reserved_quantity', 0);
+            newDest.setValue('safety_stock', 0);
+            newDest.setValue('reorder_level', 0);
+            newDest.setValue('last_updated', new GlideDateTime().getValue());
+            // number is auto-generated (INV prefix)
+
+            var newDestId = newDest.insert();
+            if (!newDestId)
+                return this._fail('Failed to create destination stock record — ' +
+                                  'the Prevent Duplicate BR may have blocked it');
+
+            destStock = new GlideRecord(this.STOCK);
+            destStock.get(newDestId);
+            destStockCreated = true;
+        }
+
+        var destStockSysId = destStock.getUniqueValue();
+
+        // ----------------------------------------------------------------
+        // 4. Check for duplicate inv_req (prevent double-execution)
+        // ----------------------------------------------------------------
+        var dupCheck = new GlideRecord(this.REQ);
+        dupCheck.addQuery('request_type', 'inventory_transfer');
+        dupCheck.addQuery('material_product', matId);
+        dupCheck.addQuery('source_location', srcWhId);
+        dupCheck.addQuery('destination_location', destWhId);
+        dupCheck.addQuery('quantity_requested', qty);
+        dupCheck.addQuery('status', 'IN', 'approved,in_progress,completed');
+        if (poId) dupCheck.addQuery('related_production_order', poId);
+        dupCheck.setLimit(1);
+        dupCheck.query();
+        if (dupCheck.hasNext())
+            return this._fail('Duplicate transfer request already exists for this material/route/quantity');
+
+        // ----------------------------------------------------------------
+        // 5. SOURCE STOCK UPDATE (Requirement C)
+        // ----------------------------------------------------------------
+        var newSrcTotal = srcTotal - qty;
+        var newSrcAvail = srcAvail - qty;
+        if (newSrcTotal < 0 || newSrcAvail < 0)
+            return this._fail('Transfer would result in negative source stock');
+
+        srcStock.setValue('total_quantity', newSrcTotal);
+        srcStock.setValue('available_quantity', newSrcAvail);
+        srcStock.setValue('last_updated', new GlideDateTime().getValue());
+        srcStock.update();
+
+        // ----------------------------------------------------------------
+        // 6. DESTINATION STOCK UPDATE (if using existing record)
+        // ----------------------------------------------------------------
+        if (!destStockCreated) {
+            var destTotal = parseFloat(destStock.getValue('total_quantity')) || 0;
+            var destAvail = parseFloat(destStock.getValue('available_quantity')) || 0;
+            destStock.setValue('total_quantity', destTotal + qty);
+            destStock.setValue('available_quantity', destAvail + qty);
+            destStock.setValue('last_updated', new GlideDateTime().getValue());
+            destStock.update();
+        }
+        // If created, quantities were already set at creation time.
+
+        // ----------------------------------------------------------------
+        // 7. CREATE INV_REQ (Requirement D)
+        // ----------------------------------------------------------------
+        var now = new GlideDateTime().getValue();
+        var userId = gs.getUserID();
+
+        var req = new GlideRecord(this.REQ);
+        req.initialize();
+        req.setValue('request_type', 'inventory_transfer');
+        req.setValue('material_product', matId);
+        req.setValue('source_location', srcWhId);
+        req.setValue('destination_location', destWhId);
+        req.setValue('quantity_requested', qty);
+        req.setValue('inventory_type', srcInvType);
+        req.setValue('status', 'completed');
+        req.setValue('priority', dec.getValue('urgency') || 'medium');
+        req.setValue('requested_by', userId);
+        req.setValue('requested_date', now);
+        req.setValue('completed_date', now);
+        req.setValue('related_inventory_stock', srcStock.getUniqueValue());
+        if (poId) req.setValue('related_production_order', poId);
+        req.setValue('reason', 'Inter-warehouse transfer executed for fulfillment decision ' +
+                     fulfillDecSysId);
+        var reqId = req.insert();
+        if (!reqId) return this._fail('Failed to create inventory request');
+
+        // ----------------------------------------------------------------
+        // 8. CREATE INV_TXN — source deduction (Requirement D)
+        // ----------------------------------------------------------------
+        var txnSrc = new GlideRecord(this.TXN);
+        txnSrc.initialize();
+        txnSrc.setValue('transaction_type', 'transfer');
+        txnSrc.setValue('material_product', matId);
+        txnSrc.setValue('inventory_stock', srcStock.getUniqueValue());
+        txnSrc.setValue('quantity', qty);
+        txnSrc.setValue('source_location', srcWhId);
+        txnSrc.setValue('destination_location', destWhId);
+        txnSrc.setValue('status', 'completed');
+        txnSrc.setValue('transaction_date', now);
+        txnSrc.setValue('requested_by', userId);
+        txnSrc.setValue('reason', 'Transfer OUT: ' + qty + ' unit(s) from ' +
+                        srcCheck.warehouse.location_name + ' to ' +
+                        destCheck.warehouse.location_name);
+        if (poId) txnSrc.setValue('related_production_order', poId);
+        var txnSrcId = txnSrc.insert();
+        if (!txnSrcId) return this._fail('Failed to create source transfer transaction');
+
+        // ----------------------------------------------------------------
+        // 9. CREATE INV_TXN — destination receipt (Requirement D)
+        // ----------------------------------------------------------------
+        var txnDest = new GlideRecord(this.TXN);
+        txnDest.initialize();
+        txnDest.setValue('transaction_type', 'transfer');
+        txnDest.setValue('material_product', matId);
+        txnDest.setValue('inventory_stock', destStockSysId);
+        txnDest.setValue('quantity', qty);
+        txnDest.setValue('source_location', srcWhId);
+        txnDest.setValue('destination_location', destWhId);
+        txnDest.setValue('status', 'completed');
+        txnDest.setValue('transaction_date', now);
+        txnDest.setValue('requested_by', userId);
+        txnDest.setValue('reason', 'Transfer IN: ' + qty + ' unit(s) from ' +
+                        srcCheck.warehouse.location_name + ' to ' +
+                        destCheck.warehouse.location_name);
+        if (poId) txnDest.setValue('related_production_order', poId);
+        var txnDestId = txnDest.insert();
+        if (!txnDestId) return this._fail('Failed to create destination transfer transaction');
+
+        // ----------------------------------------------------------------
+        // 10. UPDATE FULFILL_DEC to executed (Requirement E)
+        // ----------------------------------------------------------------
+        dec.setValue('status', 'executed');
+        dec.update();
+
+        return {
+            success: true,
+            message: 'Transfer of ' + qty + ' unit(s) executed: ' +
+                     srcCheck.warehouse.location_name + ' → ' +
+                     destCheck.warehouse.location_name,
+            inv_req_sys_id: reqId,
+            inv_txn_source_sys_id: txnSrcId,
+            inv_txn_dest_sys_id: txnDestId,
+            dest_stock_sys_id: destStockSysId,
+            dest_stock_created: destStockCreated
+        };
+    },
+
+    /**
+     * Find an active inv_stock record with status=available for a material at a location.
+     * Returns the GlideRecord positioned on the first match, or null if none found.
+     * This ensures quarantined/blocked/expired records are never used as transfer targets.
+     */
+    _findAvailableStock: function (matId, locId) {
+        var gr = new GlideRecord(this.STOCK);
+        gr.addQuery('material_product', matId);
+        gr.addQuery('location', locId);
+        gr.addQuery('active', true);
+        gr.addQuery('status', 'available');
+        gr.orderByDesc('available_quantity');
+        gr.setLimit(1);
+        gr.query();
+        if (gr.next()) return gr;
+        return null;
+    },
+
+    _fail: function (reason) {
+        gs.error('InterWarehouseTransferExecutor: ' + reason);
+        return { success: false, error: reason };
+    },
+
+    type: 'InterWarehouseTransferExecutor'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 15:42:25</sys_created_on>
+        <sys_id>6136709474e1402c89d0396732df45e3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>InterWarehouseTransferExecutor</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_6136709474e1402c89d0396732df45e3</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 15:42:25</sys_updated_on>
+    </sys_script_include>
+</record_update>

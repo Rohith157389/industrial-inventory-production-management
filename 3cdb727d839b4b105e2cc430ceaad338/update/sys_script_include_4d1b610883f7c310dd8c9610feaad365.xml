@@ -60,7 +60,7 @@ WhatIfSimulationEngine.prototype = {
         // Find alternate resources (READ-ONLY)
         var alternates = this._findAlternateResources(resId);
 
-        // Build adaptive proposals
+        // Build adaptive proposals with proposed dates and delivery feasibility
         var proposals = [];
         for (var i = 0; i < affected.length; i++) {
             var sched = affected[i];
@@ -72,9 +72,44 @@ WhatIfSimulationEngine.prototype = {
                 proposal.proposed_resource_id = alt.sys_id;
                 proposal.simulated_duration_days = newDays;
                 proposal.capacity_available = alt.capacity_per_day;
+
+                // Virtual proposed schedule dates (in-memory only, never written to prod_sched)
+                if (sched.planned_start) {
+                    var pStart = new GlideDateTime(sched.planned_start);
+                    var pEnd = new GlideDateTime(sched.planned_start);
+                    pEnd.addDaysLocalTime(newDays);
+                    proposal.proposed_start = pStart.getValue();
+                    proposal.proposed_end = pEnd.getValue();
+                }
+
+                // Delivery deadline: customer_order.requested_delivery_date, else PO planned_end
+                var deadline = sched.delivery_deadline || "";
+                proposal.delivery_deadline = deadline;
+
+                // Delivery feasibility
+                if (deadline && proposal.proposed_end) {
+                    var deadlineGdt = new GlideDateTime(deadline);
+                    var proposedEndGdt = new GlideDateTime(proposal.proposed_end);
+                    var onTime = proposedEndGdt.compareTo(deadlineGdt) <= 0;
+                    proposal.delivery_feasible = onTime;
+                    proposal.delivery_status = onTime ? "On Time" : "Late";
+                    if (onTime) {
+                        proposal.delay_days = 0;
+                    } else {
+                        var diffMs = GlideDateTime.subtract(deadlineGdt, proposedEndGdt).getNumericValue();
+                        proposal.delay_days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+                    }
+                } else {
+                    proposal.delivery_feasible = null;
+                    proposal.delivery_status = "No Deadline";
+                    proposal.delay_days = 0;
+                }
             } else {
                 proposal.proposed_resource = "NONE_AVAILABLE";
                 proposal.proposed_action = "manual_review";
+                proposal.delivery_feasible = null;
+                proposal.delivery_status = "No Deadline";
+                proposal.delay_days = 0;
             }
             proposals.push(proposal);
         }
@@ -294,13 +329,101 @@ WhatIfSimulationEngine.prototype = {
 
         var simulatedAvailable = Math.max(0, totalAvailable - shortageQty);
 
+        // ═══════════════════════════════════════
+        // Per-order fulfillment impact via evaluateReadOnly (READ-ONLY)
+        // ═══════════════════════════════════════
+        var fulfillmentImpacts = [];
+        var feasibleCount = 0, unfulfillableCount = 0, transferCount = 0;
+        var procurementCount = 0, manualReviewCount = 0;
+        var decisionEngine = new x_2056099_indust_0.MaterialFulfillmentDecision();
+
+        for (var fi = 0; fi < affectedPOs.length; fi++) {
+            var apo = affectedPOs[fi];
+            // Resolve fulfillment_location and customer deadline from the PO
+            var fiPo = new GlideRecord(this.PO);
+            if (!fiPo.get(apo.po_sys_id)) continue;
+            var fiWhId = fiPo.getValue("fulfillment_location") || "";
+            if (!fiWhId) continue;
+            var fiCoId = fiPo.getValue("customer_order") || "";
+            var fiCustDate = "";
+            if (fiCoId) {
+                var fiCo = new GlideRecord("x_2056099_indust_0_cust_order");
+                if (fiCo.get(fiCoId)) fiCustDate = fiCo.getValue("requested_delivery_date") || "";
+            }
+            if (!fiCustDate) fiCustDate = fiPo.getValue("planned_end_date") || "";
+
+            // ONLY evaluateReadOnly — never evaluate()
+            var roResult = decisionEngine.evaluateReadOnly({
+                materialSysId: materialId,
+                quantityRequired: apo.required_qty || 1,
+                warehouseSysId: fiWhId,
+                customerRequiredDate: fiCustDate,
+                customerOrderSysId: fiCoId,
+                productionOrderSysId: apo.po_sys_id
+            });
+
+            var impact = {
+                production_order: apo.po_number,
+                production_order_sys_id: apo.po_sys_id,
+                material: matName,
+                material_sys_id: materialId,
+                required_quantity: apo.required_qty,
+                fulfillment_warehouse: fiPo.getDisplayValue("fulfillment_location")
+            };
+
+            if (roResult && roResult.success) {
+                impact.available_quantity = roResult.available_quantity;
+                impact.reserved_quantity = roResult.reserved_quantity;
+                impact.incoming_quantity = roResult.incoming_quantity;
+                impact.shortage_quantity = roResult.shortage_quantity;
+                impact.decision_type = roResult.decision_type;
+                impact.feasible = roResult.feasible;
+                impact.source_warehouse = roResult.source_warehouse || "";
+                impact.supplier = roResult.supplier || "";
+                impact.transfer_lead_time_days = roResult.transfer_lead_time_days || 0;
+                impact.supplier_lead_time_days = roResult.supplier_lead_time_days || 0;
+                impact.expected_fulfillment_date = roResult.expected_fulfillment_date || "";
+                impact.customer_required_date = fiCustDate;
+                impact.reason = roResult.reason || "";
+                impact.recommended_action = roResult.recommended_action || "";
+
+                if (roResult.feasible) feasibleCount++;
+                var dt = roResult.decision_type || "";
+                if (dt === "UNFULFILLABLE") unfulfillableCount++;
+                else if (dt === "INTER_WAREHOUSE_TRANSFER") transferCount++;
+                else if (dt === "PROCUREMENT_LOCAL_SUPPLIER" || dt === "PROCUREMENT_ALTERNATE_WAREHOUSE_SUPPLIER") procurementCount++;
+                else if (dt === "MANUAL_REVIEW") manualReviewCount++;
+            } else {
+                impact.decision_type = "EVALUATION_FAILED";
+                impact.feasible = false;
+                impact.reason = (roResult && roResult.error) ? roResult.error : "evaluateReadOnly failed";
+                impact.recommended_action = "Manual review required";
+                manualReviewCount++;
+            }
+            fulfillmentImpacts.push(impact);
+        }
+
+        // Determine recommended strategy from read-only results
+        var strategy;
+        if (unfulfillableCount > 0 || manualReviewCount > 0) {
+            strategy = unfulfillableCount + " unfulfillable, " + manualReviewCount + " manual review — procurement or substitution required";
+        } else if (transferCount > 0 && transferCount === fulfillmentImpacts.length) {
+            strategy = "All " + transferCount + " order(s) fulfillable via inter-warehouse transfer";
+        } else if (feasibleCount === fulfillmentImpacts.length) {
+            strategy = "All " + feasibleCount + " order(s) fulfillable from existing stock or supply";
+        } else if (procurementCount > 0) {
+            strategy = procurementCount + " order(s) require procurement; " + feasibleCount + " feasible";
+        } else {
+            strategy = simulatedAvailable > 0 ? "Partial fulfillment possible" : "Procurement or substitution required";
+        }
+
         var scenarioId = this._createScenario({
             scenario_name: "Material Shortage: " + matName + " (-" + shortageQty + " units)",
             disruption_category: "material_shortage",
             target_entity: matName,
             disruption_parameter: "Shortage of " + shortageQty + " units. Available: " + totalAvailable + " -> Simulated: " + simulatedAvailable,
             impacted_order_count: affectedPOs.length,
-            recommended_strategy: simulatedAvailable > 0 ? "Partial fulfillment possible" : "Procurement or substitution required"
+            recommended_strategy: strategy
         });
 
         return {
@@ -314,7 +437,14 @@ WhatIfSimulationEngine.prototype = {
             simulated_available: simulatedAvailable,
             affected_production_orders: affectedPOs,
             impacted_order_count: affectedPOs.length,
-            message: "Material shortage of " + shortageQty + " units for " + matName + ". " + affectedPOs.length + " production order(s) potentially affected."
+            fulfillment_impacts: fulfillmentImpacts,
+            fulfillment_impact_count: fulfillmentImpacts.length,
+            feasible_impact_count: feasibleCount,
+            unfulfillable_impact_count: unfulfillableCount,
+            transfer_impact_count: transferCount,
+            procurement_impact_count: procurementCount,
+            manual_review_impact_count: manualReviewCount,
+            message: "Material shortage of " + shortageQty + " units for " + matName + ". " + affectedPOs.length + " production order(s) potentially affected. " + feasibleCount + " feasible, " + transferCount + " via transfer."
         };
     },
 
@@ -401,7 +531,17 @@ WhatIfSimulationEngine.prototype = {
         while (gr.next()) {
             var poGr = new GlideRecord(this.PO);
             var poNum = "";
-            if (poGr.get(gr.getValue("production_order"))) poNum = poGr.getValue("number");
+            var deliveryDeadline = "";
+            if (poGr.get(gr.getValue("production_order"))) {
+                poNum = poGr.getValue("number");
+                // Resolve delivery deadline: customer date first, else PO planned_end
+                var coId = poGr.getValue("customer_order");
+                if (coId) {
+                    var co = new GlideRecord("x_2056099_indust_0_cust_order");
+                    if (co.get(coId)) deliveryDeadline = co.getValue("requested_delivery_date") || "";
+                }
+                if (!deliveryDeadline) deliveryDeadline = poGr.getValue("planned_end_date") || "";
+            }
             results.push({
                 sys_id: gr.getValue("sys_id"),
                 status: gr.getValue("status"),
@@ -409,7 +549,8 @@ WhatIfSimulationEngine.prototype = {
                 po_sys_id: gr.getValue("production_order"),
                 planned_quantity: parseFloat(gr.getValue("planned_quantity")) || 0,
                 planned_start: gr.getValue("planned_start"),
-                planned_end: gr.getValue("planned_end")
+                planned_end: gr.getValue("planned_end"),
+                delivery_deadline: deliveryDeadline
             });
         }
         return results;
@@ -464,8 +605,39 @@ WhatIfSimulationEngine.prototype = {
         gr.setValue("customer_order_ref", schedData.po_number || "");
         gr.setValue("order_qty", schedData.planned_quantity || 0);
         gr.setValue("assigned_machine", proposal.current_resource || "");
-        gr.setValue("adaptive_strategy", proposal.proposed_resource ? "Reschedule to " + proposal.proposed_resource : "Manual review");
+        // Determine adaptive_strategy: prefer resource_name, fall back to resource_id
+        var strategyLabel = "";
+        if (proposal.proposed_resource) {
+            strategyLabel = "Reschedule to " + proposal.proposed_resource;
+        } else if (proposal.proposed_resource_id) {
+            var altRes = new GlideRecord(this.RES);
+            if (altRes.get(proposal.proposed_resource_id)) {
+                strategyLabel = "Reschedule to " + (altRes.getValue("resource_id") || proposal.proposed_resource_id);
+            }
+        }
+        gr.setValue("adaptive_strategy", strategyLabel || "Manual review");
         gr.setValue("material_status", "in_stock");
+        // Populate date/delivery fields from the virtual proposal calculation
+        if (schedData.planned_end) gr.setValue("baseline_planned_finish", schedData.planned_end);
+        if (proposal.proposed_end) {
+            gr.setValue("simulated_finish", proposal.proposed_end);
+            gr.setValue("adapted_finish", proposal.proposed_end);
+        }
+        if (proposal.delivery_status) {
+            gr.setValue("final_otd_status", proposal.delivery_status);
+        }
+        if (typeof proposal.delay_days === "number") {
+            // net_delay_recovered = original duration minus simulated (positive = faster)
+            gr.setValue("delay_unmitigated", proposal.delay_days > 0 ? proposal.delay_days : 0);
+            // If the proposal is on time, any original schedule slip is recovered
+            var origEnd = schedData.planned_end ? new GlideDateTime(schedData.planned_end) : null;
+            var propEnd = proposal.proposed_end ? new GlideDateTime(proposal.proposed_end) : null;
+            if (origEnd && propEnd) {
+                var recoveredMs = GlideDateTime.subtract(propEnd, origEnd).getNumericValue();
+                var recoveredDays = Math.max(0, Math.ceil(recoveredMs / (1000 * 60 * 60 * 24)));
+                gr.setValue("net_delay_recovered", recoveredDays);
+            }
+        }
         return gr.insert() || "";
     },
 

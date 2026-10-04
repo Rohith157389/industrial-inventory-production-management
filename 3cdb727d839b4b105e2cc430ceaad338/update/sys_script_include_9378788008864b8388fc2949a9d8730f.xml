@@ -66,7 +66,16 @@ MultiMaterialFulfillmentCoordinator.prototype = {
         }
 
         // 3. Resolve destination warehouse
-        var warehouseSysId = po.getValue('production_location') || preferredLocation || '';
+        // BLOCKER 1 fix: resolve to the valid fulfillment warehouse first. Priority:
+        //   1. production_order.fulfillment_location (a real inventory_warehouse)
+        //   2. customer_order.preferred_delivery_location
+        //   3. production_order.production_location (retained for backward compatibility only;
+        //      WarehouseRouter.resolveWarehouse() will still reject it if it is not an inventory_warehouse)
+        var warehouseSysId =
+            po.getValue('fulfillment_location') ||
+            preferredLocation ||
+            po.getValue('production_location') ||
+            '';
         if (!warehouseSysId) {
             return this._fail('No destination warehouse could be resolved');
         }
