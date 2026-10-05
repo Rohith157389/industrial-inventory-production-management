@@ -308,8 +308,6 @@
         unscheduledOrders: unscheduledPOs.length
       }
     };
-    // Attach self-reference so both json.result.success and json.result.result.success work
-    payload.result = payload;
 
     response.setStatus(200);
     response.setBody(payload);
@@ -331,7 +329,6 @@
       },
       warning: String(err.message || err)
     };
-    fallback.result = fallback;
     response.setStatus(200);
     response.setBody(fallback);
   }
