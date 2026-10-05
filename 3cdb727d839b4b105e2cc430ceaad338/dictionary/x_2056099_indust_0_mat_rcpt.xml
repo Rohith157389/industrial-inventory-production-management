@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="397eae6ff85c4ee5b7d22d66ec511dcc" label="Material Receipt" name="x_2056099_indust_0_mat_rcpt" type="collection">
-        <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="x_2056099_indust_0_supplier" type="reference"/>
-        <element label="Received Date" mandatory="true" max_length="40" name="received_date" type="glide_date_time"/>
-        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
-        <element label="Received By" max_length="32" name="received_by" reference="sys_user" type="reference"/>
         <element default="0" label="Quantity Rejected" max_length="40" name="quantity_rejected" type="integer"/>
+        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
         <element label="Procurement Order" mandatory="true" max_length="32" name="procurement_order" reference="x_2056099_indust_0_proc_ord" type="reference"/>
-        <element display="true" label="Receipt Number" max_length="20" name="receipt_number" type="string"/>
-        <element default="0" label="Quantity Accepted" max_length="40" name="quantity_accepted" type="integer"/>
         <element default="pending_qc" label="Status" max_length="40" name="status" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Partial Pass" sequence="4" value="partial"/>
                 <element inactive_on_update="false" label="Failed" sequence="3" value="failed"/>
                 <element inactive_on_update="false" label="Passed" sequence="2" value="passed"/>
-                <element inactive_on_update="false" label="Partial Pass" sequence="4" value="partial"/>
                 <element inactive_on_update="false" label="Pending QC" sequence="1" value="pending_qc"/>
             </choice>
         </element>
+        <element display="true" label="Receipt Number" max_length="20" name="receipt_number" type="string"/>
+        <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="x_2056099_indust_0_supplier" type="reference"/>
+        <element label="Received Date" mandatory="true" max_length="40" name="received_date" type="glide_date_time"/>
         <element label="Quantity Received" mandatory="true" max_length="40" name="quantity_received" type="integer"/>
+        <element label="Received By" max_length="32" name="received_by" reference="sys_user" type="reference"/>
+        <element default="0" label="Quantity Accepted" max_length="40" name="quantity_accepted" type="integer"/>
         <index name="index">
             <element name="procurement_order"/>
         </index>

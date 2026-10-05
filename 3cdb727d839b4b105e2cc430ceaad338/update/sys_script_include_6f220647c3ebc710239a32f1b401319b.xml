@@ -485,32 +485,38 @@ MaterialFulfillmentDecision.prototype = {
         };
     },
 
-    /** Aggregate stock at a warehouse. READ-ONLY. */
+    /**
+     * Aggregate stock at a warehouse across ALL eligible batches. READ-ONLY.
+     *
+     * FIX: Replaced GlideAggregate with GlideRecord iteration.
+     * GlideAggregate's addAggregate('SUM', field) implicitly GROUP-BYs the
+     * aggregated column. When multiple inv_stock rows for the same material
+     * and warehouse have different available_quantity values (i.e. separate
+     * batches), the query produces multiple result rows — one per distinct
+     * quantity value — and the original `if (ga.next())` read only the first
+     * group, silently dropping the remaining batches.
+     *
+     * The replacement iterates all matching rows with GlideRecord and sums
+     * the values explicitly, guaranteeing that every eligible batch is
+     * included exactly once regardless of value distribution.
+     */
     _getStock: function (matId, whId) {
         var result = { available: 0, safety_stock: 0, reserved: 0, stock_sys_id: '' };
-        var ga = new GlideAggregate(this.STOCK);
-        ga.addQuery('material_product', matId);
-        ga.addQuery('location', whId);
-        ga.addQuery('active', true);
-        ga.addQuery('status', 'available');
-        ga.addAggregate('SUM', 'available_quantity');
-        ga.addAggregate('SUM', 'safety_stock');
-        ga.addAggregate('SUM', 'reserved_quantity');
-        ga.query();
-        if (ga.next()) {
-            result.available = parseFloat(ga.getAggregate('SUM', 'available_quantity')) || 0;
-            result.safety_stock = parseFloat(ga.getAggregate('SUM', 'safety_stock')) || 0;
-            result.reserved = parseFloat(ga.getAggregate('SUM', 'reserved_quantity')) || 0;
+        var gr = new GlideRecord(this.STOCK);
+        gr.addQuery('material_product', matId);
+        gr.addQuery('location', whId);
+        gr.addQuery('active', true);
+        gr.addQuery('status', 'available');
+        gr.query();
+        while (gr.next()) {
+            result.available += parseFloat(gr.getValue('available_quantity')) || 0;
+            result.safety_stock += parseFloat(gr.getValue('safety_stock')) || 0;
+            result.reserved += parseFloat(gr.getValue('reserved_quantity')) || 0;
+            // Capture the first stock record sys_id for safety-stock alerts
+            if (!result.stock_sys_id) {
+                result.stock_sys_id = gr.getValue('sys_id');
+            }
         }
-        // Get a specific stock record sys_id for alerts
-        var sg = new GlideRecord(this.STOCK);
-        sg.addQuery('material_product', matId);
-        sg.addQuery('location', whId);
-        sg.addQuery('active', true);
-        sg.addQuery('status', 'available');
-        sg.setLimit(1);
-        sg.query();
-        if (sg.next()) result.stock_sys_id = sg.getValue('sys_id');
         return result;
     },
 

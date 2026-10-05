@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.GlobalMaterialAllocationEngine</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Global Material Allocation Engine — read-only, priority-ordered sequential allocation across production orders. Prevents double-counting of source inventory across competing POs.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>GlobalMaterialAllocationEngine</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var GlobalMaterialAllocationEngine = Class.create();
+GlobalMaterialAllocationEngine.prototype = {
+    initialize: function () {
+        this.PO_TABLE = 'x_2056099_indust_0_production_order';
+        this.PM_TABLE = 'x_2056099_indust_0_production_material';
+        this.STOCK_TABLE = 'x_2056099_indust_0_inv_stock';
+        this.PRIORITY_MAP = { 'high': 1, 'medium': 2, 'low': 3 };
+    },
+
+    /**
+     * Read-only global material allocation across production orders.
+     * ZERO writes to any table. Uses evaluateReadOnly() exclusively.
+     *
+     * @param {object} params
+     *   params.productionOrderNumbers: string[]
+     * @returns {object} { success, allocations[], ledger_snapshot, summary }
+     */
+    allocateReadOnly: function (params) {
+        if (!params || !params.productionOrderNumbers || !params.productionOrderNumbers.length) {
+            return { success: false, error: 'productionOrderNumbers array required' };
+        }
+
+        // PHASE 1: DATA COLLECTION
+        var poMap = this._queryProductionOrders(params.productionOrderNumbers);
+        var poIds = Object.keys(poMap);
+        if (poIds.length === 0) {
+            return { success: false, error: 'No production orders found' };
+        }
+
+        var pmList = this._queryProductionMaterials(poIds, poMap);
+        if (pmList.length === 0) {
+            return { success: false, error: 'No production materials found' };
+        }
+
+        this._sortByPriority(pmList);
+
+        // PHASE 2: BUILD INVENTORY LEDGER
+        var engine = new x_2056099_indust_0.MaterialFulfillmentDecision();
+        var ledger = this._buildLedger(pmList, engine);
+
+        // PHASE 3: SEQUENTIAL ALLOCATION
+        var allocations = [];
+        for (var i = 0; i < pmList.length; i++) {
+            var allocation = this._allocateSinglePM(pmList[i], engine, ledger);
+            allocations.push(allocation);
+        }
+
+        // PHASE 4: BUILD RESULTS
+        return this._buildResults(allocations, ledger);
+    },
+
+    // ---- PHASE 1 HELPERS ----
+
+    _queryProductionOrders: function (numbers) {
+        var poMap = {};
+        var gr = new GlideRecord(this.PO_TABLE);
+        gr.addQuery('number', 'IN', numbers.join(','));
+        gr.query();
+        while (gr.next()) {
+            var sysId = gr.getUniqueValue();
+            poMap[sysId] = {
+                sys_id: sysId,
+                number: gr.getValue('number'),
+                fulfillment_location: gr.getValue('fulfillment_location') || '',
+                planned_end_date: gr.getValue('planned_end_date') || '',
+                customer_order: gr.getValue('customer_order') || '',
+                priority: gr.getValue('priority') || 'medium'
+            };
+        }
+        return poMap;
+    },
+
+    _queryProductionMaterials: function (poIds, poMap) {
+        var pmList = [];
+        var gr = new GlideRecord(this.PM_TABLE);
+        gr.addQuery('production_order', 'IN', poIds.join(','));
+        gr.query();
+        while (gr.next()) {
+            var poId = gr.getValue('production_order');
+            var po = poMap[poId] || {};
+            pmList.push({
+                sys_id: gr.getUniqueValue(),
+                production_order: poId,
+                material_product: gr.getValue('material_product') || '',
+                required_quantity: parseFloat(gr.getValue('required_quantity')) || 0,
+                source_location: gr.getValue('source_location') || '',
+                po_number: po.number || '',
+                po_planned_end_date: po.planned_end_date || '',
+                po_priority: po.priority || 'medium',
+                po_fulfillment_location: po.fulfillment_location || '',
+                po_customer_order: po.customer_order || ''
+            });
+        }
+        return pmList;
+    },
+
+    _sortByPriority: function (pmList) {
+        var priorityMap = this.PRIORITY_MAP;
+        pmList.sort(function (a, b) {
+            var dateA = a.po_planned_end_date;
+            var dateB = b.po_planned_end_date;
+            if (dateA !== dateB) {
+                if (!dateA) return 1;
+                if (!dateB) return -1;
+                if (dateA < dateB) return -1;
+                if (dateA > dateB) return 1;
+            }
+            var pa = priorityMap[a.po_priority] || 99;
+            var pb = priorityMap[b.po_priority] || 99;
+            if (pa !== pb) return pa - pb;
+            if (a.po_number < b.po_number) return -1;
+            if (a.po_number > b.po_number) return 1;
+            return 0;
+        });
+    },
+
+    // ---- PHASE 2 HELPERS ----
+
+    _buildLedger: function (pmList, engine) {
+        var ledger = {};
+        var materials = {};
+        for (var i = 0; i < pmList.length; i++) {
+            materials[pmList[i].material_product] = true;
+        }
+
+        for (var matId in materials) {
+            if (!materials.hasOwnProperty(matId)) continue;
+            var stockGr = new GlideRecord(this.STOCK_TABLE);
+            stockGr.addQuery('material_product', matId);
+            stockGr.addQuery('active', true);
+            stockGr.addQuery('status', 'available');
+            stockGr.query();
+
+            var seenWarehouses = {};
+            while (stockGr.next()) {
+                var whId = stockGr.getValue('location');
+                if (!whId || seenWarehouses[whId]) continue;
+                seenWarehouses[whId] = true;
+
+                var stock = engine._getStock(matId, whId);
+                var key = matId + '|' + whId;
+                ledger[key] = {
+                    material: matId,
+                    warehouse: whId,
+                    initial_available: stock.available,
+                    initial_safety: stock.safety_stock,
+                    initial_reserved: stock.reserved,
+                    allocated_local: 0,
+                    allocated_safety: 0,
+                    allocated_transfer_out: 0,
+                    remaining_available: stock.available,
+                    remaining_safety: stock.safety_stock
+                };
+            }
+        }
+
+        // Ensure every PM's destination warehouse has a ledger entry
+        for (var j = 0; j < pmList.length; j++) {
+            var pm = pmList[j];
+            var destWhId = pm.po_fulfillment_location;
+            if (!destWhId) continue;
+            var mId = pm.material_product;
+            var dKey = mId + '|' + destWhId;
+            if (!ledger[dKey]) {
+                ledger[dKey] = {
+                    material: mId, warehouse: destWhId,
+                    initial_available: 0, initial_safety: 0, initial_reserved: 0,
+                    allocated_local: 0, allocated_safety: 0, allocated_transfer_out: 0,
+                    remaining_available: 0, remaining_safety: 0
+                };
+            }
+        }
+        return ledger;
+    },
+
+    // ---- PHASE 3: SINGLE PM ALLOCATION ----
+
+    _allocateSinglePM: function (pm, engine, ledger) {
+        var matId = pm.material_product;
+        var destWhId = pm.po_fulfillment_location;
+        var destKey = matId + '|' + destWhId;
+        var reqQty = pm.required_quantity;
+
+        var result = {
+            production_order: pm.po_number,
+            production_order_sys_id: pm.production_order,
+            material: matId,
+            pm_sys_id: pm.sys_id,
+            dest_warehouse: destWhId,
+            required_qty: reqQty,
+            allocated_local: 0,
+            allocated_safety: 0,
+            allocated_transfer: 0,
+            transfer_source: '',
+            procurement_qty: 0,
+            remaining_shortage: reqQty,
+            status: 'BLOCKED',
+            deadline_risk: false,
+            reason: '',
+            engine_decision: '',
+            supplier: '',
+            supplier_lead_time: 0,
+            transfer_lead_time: 0,
+            expected_fulfillment_date: ''
+        };
+
+        if (!destWhId) {
+            result.reason = 'No fulfillment_location on PO ' + pm.po_number;
+            result.engine_decision = 'SKIPPED';
+            return result;
+        }
+
+        var decision = engine.evaluateReadOnly({
+            materialSysId: matId,
+            quantityRequired: reqQty,
+            warehouseSysId: destWhId,
+            customerRequiredDate: pm.po_planned_end_date,
+            customerOrderSysId: pm.po_customer_order,
+            productionOrderSysId: pm.production_order
+        });
+
+        if (!decision || !decision.success) {
+            result.reason = decision ? decision.error : 'Engine returned null';
+            result.engine_decision = 'ERROR';
+            return result;
+        }
+
+        result.engine_decision = decision.decision_type;
+        result.supplier = decision.supplier || '';
+        result.supplier_lead_time = decision.supplier_lead_time_days || 0;
+        result.transfer_lead_time = decision.transfer_lead_time_days || 0;
+        result.expected_fulfillment_date = decision.expected_fulfillment_date || '';
+
+        switch (decision.decision_type) {
+
+            case 'LOCAL_AVAILABLE_STOCK':
+                this._deductLocal(result, ledger, destKey, reqQty);
+                if (result.remaining_shortage <= 0) {
+                    result.status = 'FULLY_ALLOCATED';
+                    result.reason = decision.reason;
+                } else {
+                    result.status = result.allocated_local > 0 ? 'PARTIALLY_ALLOCATED' : 'BLOCKED';
+                    result.reason = 'Ledger depleted by prior allocations. Allocated ' +
+                        result.allocated_local + ' of ' + reqQty + '. Shortage: ' + result.remaining_shortage;
+                    result.deadline_risk = true;
+                }
+                break;
+
+            case 'LOCAL_SAFETY_STOCK':
+                this._deductLocal(result, ledger, destKey, reqQty);
+                if (result.remaining_shortage > 0 && ledger[destKey]) {
+                    var safetyAvail = ledger[destKey].remaining_safety;
+                    var safetyAlloc = Math.min(result.remaining_shortage, safetyAvail);
+                    if (safetyAlloc > 0) {
+                        ledger[destKey].remaining_safety -= safetyAlloc;
+                        ledger[destKey].allocated_safety += safetyAlloc;
+                        result.allocated_safety = safetyAlloc;
+                        result.remaining_shortage -= safetyAlloc;
+                    }
+                }
+                if (result.remaining_shortage <= 0) {
+                    result.status = 'ALLOCATED_WITH_SAFETY';
+                    result.reason = decision.reason;
+                } else {
+                    result.status = (result.allocated_local + result.allocated_safety) > 0
+                        ? 'PARTIALLY_ALLOCATED' : 'BLOCKED';
+                    result.reason = 'Ledger safety depleted. Allocated ' + result.allocated_local +
+                        ' local + ' + result.allocated_safety + ' safety of ' + reqQty;
+                    result.deadline_risk = true;
+                }
+                break;
+
+            case 'INTER_WAREHOUSE_TRANSFER':
+                this._deductLocal(result, ledger, destKey, reqQty);
+                if (result.remaining_shortage > 0) {
+                    var sourceWhId = decision.source_warehouse;
+                    var sourceKey = matId + '|' + sourceWhId;
+                    var sourceAvail = ledger[sourceKey] ? ledger[sourceKey].remaining_available : 0;
+                    var transferAlloc = Math.min(result.remaining_shortage, sourceAvail);
+                    if (transferAlloc > 0 && ledger[sourceKey]) {
+                        ledger[sourceKey].remaining_available -= transferAlloc;
+                        ledger[sourceKey].allocated_transfer_out += transferAlloc;
+                        result.allocated_transfer = transferAlloc;
+                        result.transfer_source = sourceWhId;
+                        result.remaining_shortage -= transferAlloc;
+                    }
+                }
+                if (result.remaining_shortage <= 0) {
+                    result.status = 'TRANSFER_REQUIRED';
+                    result.reason = decision.reason;
+                    result.deadline_risk = (decision.urgency === 'critical' || decision.urgency === 'high');
+                } else if ((result.allocated_local + result.allocated_transfer) > 0) {
+                    result.procurement_qty = result.remaining_shortage;
+                    result.remaining_shortage = 0;
+                    result.status = 'PROCUREMENT_REQUIRED';
+                    result.reason = 'Transfer source depleted by prior allocations. Allocated ' +
+                        result.allocated_local + ' local + ' + result.allocated_transfer +
+                        ' transfer. Remaining ' + result.procurement_qty + ' requires procurement.';
+                    result.deadline_risk = true;
+                } else {
+                    result.status = 'BLOCKED';
+                    result.reason = 'Both local and transfer source depleted by prior allocations.';
+                    result.deadline_risk = true;
+                }
+                break;
+
+            case 'PROCUREMENT_LOCAL_SUPPLIER':
+            case 'PROCUREMENT_ALTERNATE_WAREHOUSE_SUPPLIER':
+                this._deductLocal(result, ledger, destKey, reqQty);
+                result.procurement_qty = result.remaining_shortage;
+                result.remaining_shortage = 0;
+                result.status = 'PROCUREMENT_REQUIRED';
+                result.reason = decision.reason;
+                result.deadline_risk = (decision.urgency === 'critical' || decision.urgency === 'high');
+                break;
+
+            case 'AVAILABLE_WITH_INCOMING_SUPPLY':
+                this._deductLocal(result, ledger, destKey, reqQty);
+                result.status = 'FULLY_ALLOCATED';
+                result.reason = decision.reason;
+                break;
+
+            default:
+                result.status = 'BLOCKED';
+                result.reason = decision.reason || 'No viable fulfillment strategy';
+                result.deadline_risk = true;
+                break;
+        }
+        return result;
+    },
+
+    _deductLocal: function (result, ledger, destKey, reqQty) {
+        if (!ledger[destKey]) return;
+        var localAvail = ledger[destKey].remaining_available;
+        var localAlloc = Math.min(reqQty, localAvail);
+        if (localAlloc > 0) {
+            ledger[destKey].remaining_available -= localAlloc;
+            ledger[destKey].allocated_local += localAlloc;
+            result.allocated_local = localAlloc;
+            result.remaining_shortage = reqQty - localAlloc;
+        }
+    },
+
+    // ---- PHASE 4: RESULTS ----
+
+    _buildResults: function (allocations, ledger) {
+        var summary = {
+            total_pms: allocations.length,
+            fully_allocated: 0, allocated_with_safety: 0,
+            transfer_required: 0, procurement_required: 0,
+            partially_allocated: 0, blocked: 0,
+            transfers_by_material: {}, procurement_by_supplier: {},
+            deadline_risks: []
+        };
+        for (var i = 0; i < allocations.length; i++) {
+            var a = allocations[i];
+            switch (a.status) {
+                case 'FULLY_ALLOCATED': summary.fully_allocated++; break;
+                case 'ALLOCATED_WITH_SAFETY': summary.allocated_with_safety++; break;
+                case 'TRANSFER_REQUIRED': summary.transfer_required++; break;
+                case 'PROCUREMENT_REQUIRED': summary.procurement_required++; break;
+                case 'PARTIALLY_ALLOCATED': summary.partially_allocated++; break;
+                case 'BLOCKED': summary.blocked++; break;
+            }
+            if (a.allocated_transfer > 0 && a.transfer_source) {
+                if (!summary.transfers_by_material[a.material]) summary.transfers_by_material[a.material] = [];
+                summary.transfers_by_material[a.material].push({
+                    from: a.transfer_source, to: a.dest_warehouse,
+                    qty: a.allocated_transfer, po: a.production_order
+                });
+            }
+            if (a.procurement_qty > 0 && a.supplier) {
+                if (!summary.procurement_by_supplier[a.supplier]) summary.procurement_by_supplier[a.supplier] = [];
+                summary.procurement_by_supplier[a.supplier].push({
+                    material: a.material, qty: a.procurement_qty, po: a.production_order
+                });
+            }
+            if (a.deadline_risk) {
+                summary.deadline_risks.push({ po: a.production_order, material: a.material, status: a.status });
+            }
+        }
+        return { success: true, allocations: allocations, ledger_snapshot: ledger, summary: summary };
+    },
+
+    type: 'GlobalMaterialAllocationEngine'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 08:42:14</sys_created_on>
+        <sys_id>d940838be3904773922c495a8a0db78b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>GlobalMaterialAllocationEngine</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_d940838be3904773922c495a8a0db78b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 08:42:14</sys_updated_on>
+    </sys_script_include>
+</record_update>
