@@ -177,9 +177,21 @@ All artifacts are formatted for ServiceNow Git Source Control under `3cdb727d839
 - `sys_ws_operation_e1a078fac3af0710239a32f1b4010010.xml` (IoT Ingest REST)
 - `sys_script_e1a078fac3af0710239a32f1b4010006.xml` (Auto-Calibration Business Rule)
 - `sys_sg_applet_e1a078fac3af0710239a32f1b4011001-1005.xml` (5 Mobile Applets)
-- `sys_atf_test_e1a078fac3af0710239a32f1b4012001.xml` (ATF Test Definition)
-- `sys_atf_step_e1a078fac3af0710239a32f1b4012002.xml` (ATF Test Step & Jasmine Spec)
+- `sys_atf_test_e1a078fac3af0710239a32f1b4012001.xml` (ATF-DT-07 Digital Twin Advanced Engine Test)
+- `sys_atf_step_e1a078fac3af0710239a32f1b4012002.xml` (ATF-DT-07 Step & Jasmine Spec)
 - `sys_atf_test_suite_test_e1a078fac3af0710239a32f1b4012003.xml` (Suite Membership)
-- `sys_ui_page_db5c52a80d0948f2bcdf2a903e2a037c.xml` (whatif_planner with Command Bar)
+- `sys_atf_test_e1a078fac3af0710239a32f1b4013001.xml` (Order Lifecycle E2E: Create Customer Order to Production Schedule)
+- `sys_atf_step_e1a078fac3af0710239a32f1b4013002.xml` (Order Lifecycle E2E Step & Jasmine Spec)
+- `sys_atf_test_suite_test_e1a078fac3af0710239a32f1b4013003.xml` (Order Lifecycle Suite Link)
+- `sys_ui_page_db5c52a80d0948f2bcdf2a903e2a037c.xml` (whatif_planner)
 
-Everything is syntax verified (0 errors), non-breaking, and ready for deployment.
+---
+
+## 🎯 Direct Test Run Links on dev445625
+
+1. **Order Lifecycle E2E Test (Customer Order -> Items -> Production Order -> AI Scheduling):**  
+   `https://dev445625.service-now.com/sys_atf_test.do?sys_id=e1a078fac3af0710239a32f1b4013001`
+2. **All Tests List (filter by x_2056099_indust_0):**  
+   `https://dev445625.service-now.com/sys_atf_test_list.do?sysparm_query=sys_package%3D3cdb727d839b4b105e2cc430ceaad338`
+
+Everything is syntax verified (0 errors), committed to `inventorymanagementversion1.2(oct5th)-replica`, and pushed to remote origin.
