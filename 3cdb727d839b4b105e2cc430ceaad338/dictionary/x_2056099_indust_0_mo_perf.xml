@@ -2,32 +2,32 @@
     <element attributes="enforce_dot_walk_cross_scope_access=true" audit="true" db_object_id="109a07b67919495189f9258a9c41ecc3" label="Monthly Worker Performance Snapshot" name="x_2056099_indust_0_mo_perf" type="collection">
         <element choice="3" default="draft" label="Snapshot Status" max_length="40" name="snapshot_status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Finalized" sequence="2" value="finalized"/>
                 <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="Finalized" sequence="2" value="finalized"/>
             </choice>
         </element>
-        <element label="Report Month" mandatory="true" max_length="7" name="report_month" type="string"/>
-        <element label="Month Start Date" mandatory="true" max_length="40" name="month_start_date" type="glide_date"/>
-        <element label="Month-over-Month Change" max_length="15" name="month_over_month" type="decimal"/>
-        <element label="Number Maintained" max_length="40" name="maintained_count" type="integer"/>
-        <element label="Manager Summaries" max_length="4000" name="manager_summaries" type="multi_two_lines"/>
-        <element label="Month End Date" mandatory="true" max_length="40" name="month_end_date" type="glide_date"/>
-        <element label="Previous Month Average" max_length="15" name="previous_month_avg" type="decimal"/>
         <element label="Number of Increases" max_length="40" name="increases_count" type="integer"/>
-        <element label="Highest Rating" max_length="15" name="highest_rating" type="decimal"/>
-        <element label="Manager" max_length="32" name="manager" reference="sys_user" type="reference"/>
-        <element label="Lowest Rating" max_length="15" name="lowest_rating" type="decimal"/>
-        <element label="Primary Rating Reasons" max_length="2000" name="primary_reasons" type="multi_two_lines"/>
+        <element label="Month Start Date" mandatory="true" max_length="40" name="month_start_date" type="glide_date"/>
+        <element label="Month End Date" mandatory="true" max_length="40" name="month_end_date" type="glide_date"/>
         <element label="Number of Decreases" max_length="40" name="decreases_count" type="integer"/>
-        <element label="Employee Profile" max_length="32" name="employee_profile" reference="x_2056099_indust_0_hr_profile" type="reference"/>
-        <element label="Snapshot Date" max_length="40" name="snapshot_date" type="glide_date_time"/>
-        <element label="Rating Trend" max_length="15" name="rating_trend" type="decimal"/>
-        <element display="true" label="Snapshot ID" mandatory="true" max_length="20" name="snapshot_id" read_only="true" read_only_option="instance_configured" type="string"/>
         <element label="HR Escalations" max_length="40" name="hr_escalations" type="integer"/>
-        <element label="Worker" mandatory="true" max_length="32" name="worker" reference="sys_user" type="reference"/>
-        <element label="Department" max_length="32" name="department" reference="cmn_department" type="reference"/>
-        <element label="Monthly Average Rating" max_length="15" name="monthly_average" type="decimal"/>
         <element label="Weeks Rated" max_length="40" name="weeks_rated" type="integer"/>
+        <element label="Highest Rating" max_length="15" name="highest_rating" type="decimal"/>
+        <element label="Month-over-Month Change" max_length="15" name="month_over_month" type="decimal"/>
+        <element label="Employee Profile" max_length="32" name="employee_profile" reference="x_2056099_indust_0_hr_profile" type="reference"/>
+        <element label="Worker" mandatory="true" max_length="32" name="worker" reference="sys_user" type="reference"/>
+        <element label="Number Maintained" max_length="40" name="maintained_count" type="integer"/>
+        <element label="Manager" max_length="32" name="manager" reference="sys_user" type="reference"/>
+        <element label="Snapshot Date" max_length="40" name="snapshot_date" type="glide_date_time"/>
+        <element label="Department" max_length="32" name="department" reference="cmn_department" type="reference"/>
+        <element label="Report Month" mandatory="true" max_length="7" name="report_month" type="string"/>
+        <element label="Manager Summaries" max_length="4000" name="manager_summaries" type="multi_two_lines"/>
+        <element label="Previous Month Average" max_length="15" name="previous_month_avg" type="decimal"/>
+        <element label="Lowest Rating" max_length="15" name="lowest_rating" type="decimal"/>
+        <element label="Rating Trend" max_length="15" name="rating_trend" type="decimal"/>
+        <element label="Monthly Average Rating" max_length="15" name="monthly_average" type="decimal"/>
+        <element label="Primary Rating Reasons" max_length="2000" name="primary_reasons" type="multi_two_lines"/>
+        <element display="true" label="Snapshot ID" mandatory="true" max_length="20" name="snapshot_id" read_only="true" read_only_option="instance_configured" type="string"/>
         <index name="index">
             <element name="department"/>
         </index>

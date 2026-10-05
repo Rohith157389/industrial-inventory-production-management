@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="73c1b1221fea4223a4bc25bb3d447286" label="Department Performance Report" name="x_2056099_indust_0_dept_perf" type="collection">
-        <element label="Generated On" max_length="40" name="generated_on" type="glide_date_time"/>
-        <element label="Top Rating Reasons" max_length="2000" name="top_reasons" type="multi_two_lines"/>
-        <element label="Workers Declining" max_length="40" name="declining_count" type="integer"/>
-        <element label="Department" mandatory="true" max_length="32" name="department" reference="cmn_department" type="reference"/>
         <element choice="3" default="draft" label="Report Status" max_length="40" name="report_status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Finalized" sequence="3" value="finalized"/>
                 <element inactive_on_update="false" label="Generated" sequence="2" value="generated"/>
                 <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="Finalized" sequence="3" value="finalized"/>
             </choice>
         </element>
-        <element label="HR Reviews" max_length="40" name="hr_reviews" type="integer"/>
-        <element label="Average Rating" max_length="15" name="average_rating" type="decimal"/>
-        <element label="Period Start" mandatory="true" max_length="40" name="period_start" type="glide_date"/>
         <element label="Workers Rated" max_length="40" name="workers_rated" type="integer"/>
-        <element label="Workers Stable" max_length="40" name="stable_count" type="integer"/>
-        <element display="true" label="Report ID" mandatory="true" max_length="20" name="report_id" read_only="true" read_only_option="instance_configured" type="string"/>
-        <element label="Total Workers" max_length="40" name="total_workers" type="integer"/>
-        <element label="Workers Improving" max_length="40" name="improving_count" type="integer"/>
-        <element label="Period End" mandatory="true" max_length="40" name="period_end" type="glide_date"/>
         <element choice="3" label="Report Period" max_length="40" name="report_period" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Monthly" sequence="2" value="monthly"/>
                 <element inactive_on_update="false" label="Weekly" sequence="1" value="weekly"/>
             </choice>
         </element>
+        <element label="Generated On" max_length="40" name="generated_on" type="glide_date_time"/>
+        <element label="Top Rating Reasons" max_length="2000" name="top_reasons" type="multi_two_lines"/>
+        <element label="HR Reviews" max_length="40" name="hr_reviews" type="integer"/>
+        <element label="Total Workers" max_length="40" name="total_workers" type="integer"/>
+        <element label="Workers Stable" max_length="40" name="stable_count" type="integer"/>
+        <element label="Workers Declining" max_length="40" name="declining_count" type="integer"/>
+        <element label="Average Rating" max_length="15" name="average_rating" type="decimal"/>
+        <element label="Workers Improving" max_length="40" name="improving_count" type="integer"/>
+        <element display="true" label="Report ID" mandatory="true" max_length="20" name="report_id" read_only="true" read_only_option="instance_configured" type="string"/>
+        <element label="Department" mandatory="true" max_length="32" name="department" reference="cmn_department" type="reference"/>
+        <element label="Period Start" mandatory="true" max_length="40" name="period_start" type="glide_date"/>
+        <element label="Period End" mandatory="true" max_length="40" name="period_end" type="glide_date"/>
         <index name="index">
             <element name="department"/>
         </index>
