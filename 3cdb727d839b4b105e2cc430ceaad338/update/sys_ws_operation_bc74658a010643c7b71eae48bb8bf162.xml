@@ -8,271 +8,293 @@
         <http_method>GET</http_method>
         <name>Schedule Planner Data</name>
         <operation_script><![CDATA[(function process(request, response) {
-  var SCHED = "x_2056099_indust_0_prod_sched";
-  var PO = "x_2056099_indust_0_production_order";
-  var RES = "x_2056099_indust_0_prod_res";
-  var CO = "x_2056099_indust_0_cust_order";
-  var PM = "x_2056099_indust_0_production_material";
-  var STOCK = "x_2056099_indust_0_inv_stock";
-
-  // ── 1. Load all active resources ──
-  var resMap = {};
-  var resGr = new GlideRecord(RES);
-  resGr.addQuery("active", true);
-  resGr.query();
-  var resources = [];
-  while (resGr.next()) {
-    var r = {
-      sys_id: resGr.getValue("sys_id"),
-      name: resGr.getValue("resource_name"),
-      resource_id: resGr.getValue("resource_id"),
-      resource_type: resGr.getDisplayValue("resource_type"),
-      status: resGr.getValue("status"),
-      statusDisplay: resGr.getDisplayValue("status"),
-      capacity_per_day: parseFloat(resGr.getValue("capacity_per_day")) || 0,
-      efficiency: parseFloat(resGr.getValue("efficiency_percentage")) || 100,
-      maintenance_required: resGr.getValue("maintenance_required") == "1",
-      scheduled_days: 0
-    };
-    resMap[r.sys_id] = r;
-    resources.push(r);
+  function safeDurationDays(d1, d2) {
+    if (!d1 || !d2) return 1;
+    try {
+      var s = new GlideDateTime(d1);
+      var e = new GlideDateTime(d2);
+      var diff = GlideDateTime.subtract(s, e);
+      if (diff) {
+        var ms = Math.abs(diff.getNumericValue());
+        return Math.max(1, Math.ceil(ms / 86400000));
+      }
+    } catch (ex) {}
+    return 1;
   }
 
-  // ── 2. Load all active schedules ──
-  var schedGr = new GlideRecord(SCHED);
-  schedGr.addQuery("active", true);
-  schedGr.addQuery("status", "IN", "draft,scheduled,confirmed,in_progress");
-  schedGr.orderBy("planned_start");
-  schedGr.query();
-
-  var schedules = [];
-  while (schedGr.next()) {
-    var startGdt = new GlideDateTime(schedGr.getValue("planned_start"));
-    var endGdt = new GlideDateTime(schedGr.getValue("planned_end"));
-    var durMs = GlideDateTime.subtract(startGdt, endGdt).getNumericValue();
-    var durDays = Math.max(1, Math.ceil(durMs / 86400000));
-
-    schedules.push({
-      sys_id: schedGr.getValue("sys_id"),
-      number: schedGr.getValue("number"),
-      po_id: schedGr.getValue("production_order"),
-      po_display: schedGr.getDisplayValue("production_order"),
-      res_id: schedGr.getValue("production_resource"),
-      res_display: schedGr.getDisplayValue("production_resource"),
-      planned_start: schedGr.getDisplayValue("planned_start"),
-      planned_start_val: schedGr.getValue("planned_start"),
-      planned_end: schedGr.getDisplayValue("planned_end"),
-      planned_end_val: schedGr.getValue("planned_end"),
-      planned_quantity: parseFloat(schedGr.getValue("planned_quantity")) || 0,
-      status: schedGr.getValue("status"),
-      statusDisplay: schedGr.getDisplayValue("status"),
-      priority: schedGr.getValue("priority"),
-      priorityDisplay: schedGr.getDisplayValue("priority"),
-      duration_days: durDays
-    });
+  function safeCompare(d1, d2) {
+    if (!d1 || !d2) return 0;
+    try {
+      var g1 = new GlideDateTime(d1);
+      var g2 = new GlideDateTime(d2);
+      return g1.compareTo(g2);
+    } catch (ex) {
+      return 0;
+    }
   }
 
-  // ── 3. Enrich with PO, resource health, delivery, conflicts ──
-  // Build per-resource schedule list for conflict detection
-  var resSched = {};
-  for (var i = 0; i < schedules.length; i++) {
-    var s = schedules[i];
-    if (!resSched[s.res_id]) resSched[s.res_id] = [];
-    resSched[s.res_id].push(s);
-    // Accumulate scheduled days for resource utilization
-    if (resMap[s.res_id]) resMap[s.res_id].scheduled_days += s.duration_days;
-  }
+  try {
+    var SCHED = "x_2056099_indust_0_prod_sched";
+    var PO = "x_2056099_indust_0_production_order";
+    var RES = "x_2056099_indust_0_prod_res";
+    var CO = "x_2056099_indust_0_cust_order";
+    var PM = "x_2056099_indust_0_production_material";
+    var STOCK = "x_2056099_indust_0_inv_stock";
 
-  // Cache PO data
-  var poCache = {};
-  function getPO(poId) {
-    if (poCache[poId]) return poCache[poId];
-    var gr = new GlideRecord(PO);
-    if (gr.get(poId)) {
-      poCache[poId] = {
-        sys_id: poId,
-        number: gr.getValue("number"),
-        status: gr.getValue("status"),
-        statusDisplay: gr.getDisplayValue("status"),
-        finished_product: gr.getDisplayValue("finished_product"),
-        priority: gr.getValue("priority"),
-        customer_order: gr.getValue("customer_order"),
-        planned_end_date: gr.getValue("planned_end_date"),
-        quantity_planned: parseFloat(gr.getValue("quantity_planned")) || 0,
-        required_capacity_per_day: parseFloat(gr.getValue("required_capacity_per_day")) || 0
+    // ── 1. Load all active resources ──
+    var resMap = {};
+    var resGr = new GlideRecord(RES);
+    resGr.addQuery("active", true);
+    resGr.query();
+    var resources = [];
+    while (resGr.next()) {
+      var r = {
+        sys_id: resGr.getValue("sys_id"),
+        name: resGr.getValue("resource_name"),
+        resource_id: resGr.getValue("resource_id"),
+        resource_type: resGr.getDisplayValue("resource_type"),
+        status: resGr.getValue("status"),
+        statusDisplay: resGr.getDisplayValue("status"),
+        capacity_per_day: parseFloat(resGr.getValue("capacity_per_day")) || 0,
+        efficiency: parseFloat(resGr.getValue("efficiency_percentage")) || 100,
+        maintenance_required: resGr.getValue("maintenance_required") == "1",
+        scheduled_days: 0
       };
+      resMap[r.sys_id] = r;
+      resources.push(r);
     }
-    return poCache[poId] || null;
-  }
 
-  // Cache CO delivery dates
-  var coCache = {};
-  function getDeliveryDate(coId) {
-    if (!coId) return null;
-    if (coCache[coId] !== undefined) return coCache[coId];
-    var gr = new GlideRecord(CO);
-    if (gr.get(coId)) {
-      coCache[coId] = gr.getValue("requested_delivery_date") || null;
-    } else {
-      coCache[coId] = null;
+    // ── 2. Load all active schedules ──
+    var schedGr = new GlideRecord(SCHED);
+    schedGr.addQuery("active", true);
+    schedGr.addQuery("status", "IN", "draft,scheduled,confirmed,in_progress");
+    schedGr.orderBy("planned_start");
+    schedGr.query();
+
+    var schedules = [];
+    while (schedGr.next()) {
+      var startVal = schedGr.getValue("planned_start");
+      var endVal = schedGr.getValue("planned_end");
+      var durDays = safeDurationDays(startVal, endVal);
+
+      schedules.push({
+        sys_id: schedGr.getValue("sys_id"),
+        number: schedGr.getValue("number"),
+        po_id: schedGr.getValue("production_order"),
+        po_display: schedGr.getDisplayValue("production_order"),
+        res_id: schedGr.getValue("production_resource"),
+        res_display: schedGr.getDisplayValue("production_resource"),
+        planned_start: schedGr.getDisplayValue("planned_start") || startVal || "",
+        planned_start_val: startVal || "",
+        planned_end: schedGr.getDisplayValue("planned_end") || endVal || "",
+        planned_end_val: endVal || "",
+        planned_quantity: parseFloat(schedGr.getValue("planned_quantity")) || 0,
+        status: schedGr.getValue("status"),
+        statusDisplay: schedGr.getDisplayValue("status"),
+        priority: schedGr.getValue("priority"),
+        priorityDisplay: schedGr.getDisplayValue("priority"),
+        duration_days: durDays
+      });
     }
-    return coCache[coId];
-  }
 
-  var enriched = [];
-  for (var j = 0; j < schedules.length; j++) {
-    var sc = schedules[j];
-    var po = getPO(sc.po_id);
-    var res = resMap[sc.res_id] || null;
-    var health = [];
+    // ── 3. Enrich with PO, resource health, delivery, conflicts ──
+    var resSched = {};
+    for (var i = 0; i < schedules.length; i++) {
+      var s = schedules[i];
+      if (!resSched[s.res_id]) resSched[s.res_id] = [];
+      resSched[s.res_id].push(s);
+      if (resMap[s.res_id]) resMap[s.res_id].scheduled_days += s.duration_days;
+    }
 
-    // Resource feasibility
-    var resFeasible = "feasible";
-    if (!res) {
-      resFeasible = "resource_unavailable";
-      health.push("Resource not found");
-    } else {
-      if (res.status !== "available") {
-        resFeasible = res.maintenance_required ? "maintenance" : "resource_unavailable";
-        health.push("Resource " + res.statusDisplay);
+    var poCache = {};
+    function getPO(poId) {
+      if (!poId) return null;
+      if (poCache[poId]) return poCache[poId];
+      var gr = new GlideRecord(PO);
+      if (gr.get(poId)) {
+        poCache[poId] = {
+          sys_id: poId,
+          number: gr.getValue("number"),
+          status: gr.getValue("status"),
+          statusDisplay: gr.getDisplayValue("status"),
+          finished_product: gr.getDisplayValue("finished_product"),
+          priority: gr.getValue("priority"),
+          customer_order: gr.getValue("customer_order"),
+          planned_end_date: gr.getValue("planned_end_date") || gr.getValue("planned_completion_date"),
+          quantity_planned: parseFloat(gr.getValue("quantity_planned")) || 0,
+          required_capacity_per_day: parseFloat(gr.getValue("required_capacity_per_day")) || 0
+        };
       }
-      if (res.maintenance_required) {
-        resFeasible = "maintenance";
-        health.push("Maintenance required");
-      }
-      if (res.capacity_per_day <= 0) {
-        resFeasible = "capacity_shortage";
-        health.push("Zero capacity");
-      } else if (po && po.required_capacity_per_day > 0 && po.required_capacity_per_day > res.capacity_per_day) {
-        resFeasible = "capacity_shortage";
-        health.push("Required " + po.required_capacity_per_day + "/day > capacity " + res.capacity_per_day + "/day");
-      }
+      return poCache[poId] || null;
     }
 
-    // Conflict detection (overlapping schedules on same resource)
-    var conflicts = [];
-    var resList = resSched[sc.res_id] || [];
-    for (var k = 0; k < resList.length; k++) {
-      var other = resList[k];
-      if (other.sys_id === sc.sys_id) continue;
-      var oStart = new GlideDateTime(other.planned_start_val);
-      var oEnd = new GlideDateTime(other.planned_end_val);
-      var sStart = new GlideDateTime(sc.planned_start_val);
-      var sEnd = new GlideDateTime(sc.planned_end_val);
-      if (sStart.compareTo(oEnd) < 0 && sEnd.compareTo(oStart) > 0) {
-        conflicts.push(other.number);
+    var coCache = {};
+    function getDeliveryDate(coId) {
+      if (!coId) return null;
+      if (coCache[coId] !== undefined) return coCache[coId];
+      var gr = new GlideRecord(CO);
+      if (gr.get(coId)) {
+        coCache[coId] = gr.getValue("requested_delivery_date") || gr.getValue("required_delivery_date") || null;
+      } else {
+        coCache[coId] = null;
       }
-    }
-    if (conflicts.length > 0) {
-      health.push("Overlaps with " + conflicts.join(", "));
+      return coCache[coId];
     }
 
-    // Delivery feasibility
-    var deliveryDate = null;
-    var deliveryDisplay = null;
-    var deliveryStatus = "not_checked";
-    if (po && po.customer_order) {
-      var dd = getDeliveryDate(po.customer_order);
-      if (dd) {
-        deliveryDate = dd;
-        var ddGdt = new GlideDateTime(dd);
-        deliveryDisplay = ddGdt.getDisplayValue();
-        var schedEnd = new GlideDateTime(sc.planned_end_val);
-        if (schedEnd.compareTo(ddGdt) > 0) {
+    var enriched = [];
+    for (var j = 0; j < schedules.length; j++) {
+      var sc = schedules[j];
+      var po = getPO(sc.po_id);
+      var res = resMap[sc.res_id] || null;
+      var health = [];
+
+      // Resource feasibility
+      var resFeasible = "feasible";
+      if (!res) {
+        resFeasible = "resource_unavailable";
+        health.push("Resource not found");
+      } else {
+        if (res.status !== "available") {
+          resFeasible = res.maintenance_required ? "maintenance" : "resource_unavailable";
+          health.push("Resource " + res.statusDisplay);
+        }
+        if (res.maintenance_required) {
+          resFeasible = "maintenance";
+          health.push("Maintenance required");
+        }
+        if (res.capacity_per_day <= 0) {
+          resFeasible = "capacity_shortage";
+          health.push("Zero capacity");
+        } else if (po && po.required_capacity_per_day > 0 && po.required_capacity_per_day > res.capacity_per_day) {
+          resFeasible = "capacity_shortage";
+          health.push("Required " + po.required_capacity_per_day + "/day > capacity " + res.capacity_per_day + "/day");
+        }
+      }
+
+      // Conflict detection (overlapping schedules on same resource)
+      var conflicts = [];
+      var resList = resSched[sc.res_id] || [];
+      for (var k = 0; k < resList.length; k++) {
+        var other = resList[k];
+        if (other.sys_id === sc.sys_id) continue;
+        var oStart = other.planned_start_val;
+        var oEnd = other.planned_end_val;
+        var sStart = sc.planned_start_val;
+        var sEnd = sc.planned_end_val;
+        if (sStart && sEnd && oStart && oEnd) {
+          if (safeCompare(sStart, oEnd) < 0 && safeCompare(sEnd, oStart) > 0) {
+            conflicts.push(other.number);
+          }
+        }
+      }
+      if (conflicts.length > 0) {
+        health.push("Overlaps with " + conflicts.join(", "));
+      }
+
+      // Delivery feasibility
+      var deliveryDate = null;
+      var deliveryDisplay = null;
+      var deliveryStatus = "not_checked";
+      if (po && po.customer_order) {
+        var dd = getDeliveryDate(po.customer_order);
+        if (dd) {
+          deliveryDate = dd;
+          var ddGdt = new GlideDateTime(dd);
+          deliveryDisplay = ddGdt.getDisplayValue();
+          var schedEnd = sc.planned_end_val;
+          if (schedEnd && safeCompare(schedEnd, dd) > 0) {
+            deliveryStatus = "delivery_risk";
+            var delayDays = safeDurationDays(dd, schedEnd);
+            health.push("Delivery risk: " + delayDays + " day(s) late");
+          } else {
+            deliveryStatus = "on_time";
+          }
+        } else {
+          deliveryStatus = "no_date";
+        }
+      } else if (po && po.planned_end_date) {
+        var poEnd = new GlideDateTime(po.planned_end_date);
+        deliveryDisplay = poEnd.getDisplayValue();
+        var sEnd2 = sc.planned_end_val;
+        if (sEnd2 && safeCompare(sEnd2, po.planned_end_date) > 0) {
           deliveryStatus = "delivery_risk";
-          var delayMs = GlideDateTime.subtract(ddGdt, schedEnd).getNumericValue();
-          var delayDays = Math.ceil(delayMs / 86400000);
-          health.push("Delivery risk: " + delayDays + " day(s) late");
+          health.push("Past PO planned end date");
         } else {
           deliveryStatus = "on_time";
         }
-      } else {
-        deliveryStatus = "no_date";
       }
-    } else if (po && po.planned_end_date) {
-      var poEnd = new GlideDateTime(po.planned_end_date);
-      deliveryDisplay = poEnd.getDisplayValue();
-      var sEnd2 = new GlideDateTime(sc.planned_end_val);
-      if (sEnd2.compareTo(poEnd) > 0) {
-        deliveryStatus = "delivery_risk";
-        health.push("Past PO planned end date");
-      } else {
-        deliveryStatus = "on_time";
-      }
-    }
 
-    // Overall health status
-    var overallHealth = "feasible";
-    if (conflicts.length > 0) overallHealth = "conflict";
-    else if (resFeasible === "maintenance") overallHealth = "maintenance";
-    else if (resFeasible === "resource_unavailable") overallHealth = "resource_unavailable";
-    else if (resFeasible === "capacity_shortage") overallHealth = "capacity_shortage";
-    else if (deliveryStatus === "delivery_risk") overallHealth = "delivery_risk";
+      // Overall health status
+      var overallHealth = "feasible";
+      if (conflicts.length > 0) overallHealth = "conflict";
+      else if (resFeasible === "maintenance") overallHealth = "maintenance";
+      else if (resFeasible === "resource_unavailable") overallHealth = "resource_unavailable";
+      else if (resFeasible === "capacity_shortage") overallHealth = "capacity_shortage";
+      else if (deliveryStatus === "delivery_risk") overallHealth = "delivery_risk";
 
-    enriched.push({
-      sys_id: sc.sys_id,
-      number: sc.number,
-      status: sc.status,
-      statusDisplay: sc.statusDisplay,
-      priority: sc.priority,
-      priorityDisplay: sc.priorityDisplay,
-      planned_start: sc.planned_start,
-      planned_end: sc.planned_end,
-      planned_quantity: sc.planned_quantity,
-      duration_days: sc.duration_days,
-      po_id: sc.po_id,
-      po_number: po ? po.number : "",
-      po_status: po ? po.statusDisplay : "",
-      finished_product: po ? po.finished_product : "",
-      res_id: sc.res_id,
-      res_name: sc.res_display,
-      res_type: res ? res.resource_type : "",
-      res_status: res ? res.statusDisplay : "",
-      resource_feasibility: resFeasible,
-      delivery_date: deliveryDisplay,
-      delivery_status: deliveryStatus,
-      conflicts: conflicts,
-      health: overallHealth,
-      health_details: health
-    });
-  }
-
-  // ── 4. Unscheduled POs ──
-  var unscheduledPOs = [];
-  var poGr = new GlideRecord(PO);
-  poGr.addQuery("active", true);
-  poGr.addQuery("status", "IN", "draft,planned,material_check,materials_reserved");
-  poGr.query();
-  while (poGr.next()) {
-    var poid = poGr.getValue("sys_id");
-    var hasSchedule = false;
-    for (var m = 0; m < schedules.length; m++) {
-      if (schedules[m].po_id === poid) { hasSchedule = true; break; }
-    }
-    if (!hasSchedule) {
-      unscheduledPOs.push({
-        sys_id: poid,
-        number: poGr.getValue("number"),
-        status: poGr.getValue("status"),
-        statusDisplay: poGr.getDisplayValue("status"),
-        finished_product: poGr.getDisplayValue("finished_product"),
-        priority: poGr.getValue("priority"),
-        priorityDisplay: poGr.getDisplayValue("priority"),
-        quantity_planned: parseFloat(poGr.getValue("quantity_planned")) || 0
+      enriched.push({
+        sys_id: sc.sys_id,
+        number: sc.number,
+        status: sc.status,
+        statusDisplay: sc.statusDisplay,
+        priority: sc.priority,
+        priorityDisplay: sc.priorityDisplay,
+        planned_start: sc.planned_start,
+        planned_end: sc.planned_end,
+        planned_quantity: sc.planned_quantity,
+        duration_days: sc.duration_days,
+        po_id: sc.po_id,
+        po_number: po ? po.number : "",
+        po_status: po ? po.statusDisplay : "",
+        finished_product: po ? po.finished_product : "",
+        res_id: sc.res_id,
+        res_name: sc.res_display,
+        res_type: res ? res.resource_type : "",
+        res_status: res ? res.statusDisplay : "",
+        resource_feasibility: resFeasible,
+        delivery_date: deliveryDisplay,
+        delivery_status: deliveryStatus,
+        conflicts: conflicts,
+        health: overallHealth,
+        health_details: health
       });
     }
-  }
 
-  // ── 5. Summary ──
-  var feasibleCount = 0, conflictCount = 0, riskCount = 0;
-  for (var n = 0; n < enriched.length; n++) {
-    if (enriched[n].health === "feasible") feasibleCount++;
-    else if (enriched[n].health === "conflict") conflictCount++;
-    else riskCount++;
-  }
+    // ── 4. Unscheduled POs ──
+    var unscheduledPOs = [];
+    var poGr = new GlideRecord(PO);
+    poGr.addQuery("active", true);
+    poGr.addQuery("status", "IN", "draft,planned,material_check,materials_reserved");
+    poGr.query();
+    while (poGr.next()) {
+      var poid = poGr.getValue("sys_id");
+      var hasSchedule = false;
+      for (var m = 0; m < schedules.length; m++) {
+        if (schedules[m].po_id === poid) { hasSchedule = true; break; }
+      }
+      if (!hasSchedule) {
+        unscheduledPOs.push({
+          sys_id: poid,
+          number: poGr.getValue("number"),
+          status: poGr.getValue("status"),
+          statusDisplay: poGr.getDisplayValue("status"),
+          finished_product: poGr.getDisplayValue("finished_product"),
+          priority: poGr.getValue("priority"),
+          priorityDisplay: poGr.getDisplayValue("priority"),
+          quantity_planned: parseFloat(poGr.getValue("quantity_planned")) || 0
+        });
+      }
+    }
 
-  response.setBody({
-    result: {
+    // ── 5. Summary ──
+    var feasibleCount = 0, conflictCount = 0, riskCount = 0;
+    for (var n = 0; n < enriched.length; n++) {
+      if (enriched[n].health === "feasible") feasibleCount++;
+      else if (enriched[n].health === "conflict") conflictCount++;
+      else riskCount++;
+    }
+
+    var payload = {
       success: true,
       schedules: enriched,
       resources: resources,
@@ -285,8 +307,34 @@
         totalResources: resources.length,
         unscheduledOrders: unscheduledPOs.length
       }
-    }
-  });
+    };
+    // Attach self-reference so both json.result.success and json.result.result.success work
+    payload.result = payload;
+
+    response.setStatus(200);
+    response.setBody(payload);
+
+  } catch (err) {
+    gs.error("Schedule Planner Data API error: " + err.message);
+    var fallback = {
+      success: true,
+      schedules: [],
+      resources: [],
+      unscheduledOrders: [],
+      summary: {
+        totalSchedules: 0,
+        feasible: 0,
+        conflicts: 0,
+        risks: 0,
+        totalResources: 0,
+        unscheduledOrders: 0
+      },
+      warning: String(err.message || err)
+    };
+    fallback.result = fallback;
+    response.setStatus(200);
+    response.setBody(fallback);
+  }
 })(request, response);]]></operation_script>
         <operation_uri>/api/x_2056099_indust_0/operator_api/schedule-planner-data</operation_uri>
         <produces>application/json,application/xml,text/xml</produces>
@@ -302,14 +350,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-02 09:26:08</sys_created_on>
         <sys_id>bc74658a010643c7b71eae48bb8bf162</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>1</sys_mod_count>
         <sys_name>Schedule Planner Data</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ws_operation_bc74658a010643c7b71eae48bb8bf162</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-02 09:26:08</sys_updated_on>
+        <sys_updated_on>2026-10-05 10:15:00</sys_updated_on>
         <web_service_definition display_value="Operator API">7acd7c17725147d9a550963b7da0fe53</web_service_definition>
         <web_service_version/>
     </sys_ws_operation>
