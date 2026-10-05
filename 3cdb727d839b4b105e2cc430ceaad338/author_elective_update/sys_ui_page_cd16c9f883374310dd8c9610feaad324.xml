@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="DELETE">
+        <category>general</category>
+        <client_script/>
+        <description>Industrial Production Mobile - Operator mobile experience for production and material workflows. React SPA using existing Operator API, Inventory API, Alert API. Does not replace operator_mobile.</description>
+        <direct>false</direct>
+        <endpoint>x_2056099_indust_0_industrial_production_mobile.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:g2="null">
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>Industrial Production Mobile</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f1f3f5;color:#1d1d1d;-webkit-tap-highlight-color:transparent}
+:root{--pri:#0b6e99;--ok:#2e7d32;--warn:#e65100;--err:#c62828;--bg:#f1f3f5;--card:#fff;--border:#dee2e6;--txt:#1d1d1d;--txt2:#555;--radius:12px}
+.app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;background:var(--bg)}
+.header{background:var(--pri);color:#fff;padding:14px 16px;font-size:17px;font-weight:600;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.header .back{font-size:22px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.header .back:active{background:rgba(255,255,255,.2)}
+.content{flex:1;overflow-y:auto;padding:12px;padding-bottom:80px}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:#fff;border-top:1px solid var(--border);z-index:10}
+.tab{flex:1;text-align:center;padding:8px 2px;font-size:11px;color:var(--txt2);cursor:pointer;transition:.15s}
+.tab.active{color:var(--pri);font-weight:600}
+.tab .icon{font-size:22px;display:block;line-height:1}
+.card{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);cursor:pointer}
+.card:active{background:#f8f9fa}
+.card h3{font-size:15px;margin-bottom:4px}
+.card .meta{font-size:12px;color:var(--txt2);display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;color:#fff}
+.badge.ok{background:var(--ok)}.badge.warn{background:var(--warn)}.badge.err{background:var(--err)}.badge.info{background:var(--pri)}.badge.gray{background:#868e96}
+.stat-row{display:flex;gap:10px;margin-bottom:10px}
+.stat{flex:1;background:var(--card);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.stat .val{font-size:28px;font-weight:700;color:var(--pri)}
+.stat .lbl{font-size:11px;color:var(--txt2);margin-top:2px}
+.detail-section{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.detail-section h4{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--pri)}
+.detail-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f3f5;font-size:13px}
+.detail-row:last-child{border:none}
+.detail-row .label{color:var(--txt2)}
+.detail-row .value{font-weight:500;text-align:right;max-width:60%}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{padding:12px 18px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;flex:1;min-width:120px;text-align:center;transition:.15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--pri);color:#fff}
+.btn.success{background:var(--ok);color:#fff}
+.btn.danger{background:var(--err);color:#fff}
+.btn.secondary{background:#e9ecef;color:var(--txt)}
+.btn:disabled{opacity:.5}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:17px;margin-bottom:14px}
+.modal .field{margin-bottom:12px}
+.modal .field label{display:block;font-size:12px;color:var(--txt2);margin-bottom:4px}
+.modal .field input,.modal .field textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:15px}
+.modal .field textarea{min-height:60px;resize:vertical}
+.modal .btn-row{display:flex;gap:8px;margin-top:16px}
+.msg{padding:12px;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:500}
+.msg.ok{background:#e8f5e9;color:var(--ok)}.msg.err{background:#ffebee;color:var(--err)}
+.loading{text-align:center;padding:40px;color:var(--txt2)}
+.empty{text-align:center;padding:40px;color:var(--txt2)}
+</style>
+</head><body><div id="root"></div>
+<script>
+"use strict";
+var e=React.createElement,us=React.useState,ue=React.useEffect;
+var API="/api/x_2056099_indust_0/";
+function api(p,o){return fetch(API+p,Object.assign({headers:{"Content-Type":"application/json","Accept":"application/json","X-UserToken":window.g_ck||""}},o||{})).then(function(r){return r.json()}).catch(function(er){return{error:er.message}})}
+function post(p,b){return api(p,{method:"POST",body:JSON.stringify(b)})}
+function B(s){var m={in_production:"ok",completed:"ok",reserved:"ok",scheduled:"ok",confirmed:"ok",feasible:"ok",material_check:"info",draft:"gray",shortage:"err",cancelled:"gray",critical:"err",high:"warn",medium:"info",low:"gray"};return e("span",{className:"badge "+(m[s]||"gray")},s?(s+"").replace(/_/g," "):"-")}
+
+function App(){
+var _t=us("home"),tab=_t[0],setTab=_t[1];
+var _s=us(null),sel=_s[0],setSel=_s[1];
+var _m=us(null),modal=_m[0],setModal=_m[1];
+var _d=us({}),data=_d[0],setData=_d[1];
+var _l=us(true),loading=_l[0],setLoading=_l[1];
+var _msg=us(null),msg=_msg[0],setMsg=_msg[1];
+var _q=us("1"),qty=_q[0],setQty=_q[1];
+var _n=us(""),notes=_n[0],setNotes=_n[1];
+
+function load(){setLoading(true);setMsg(null);
+Promise.all([api("operator_api/summary"),api("operator_api/schedule-planner-data"),api("inventory_api/data"),api("alert_center_api/alerts"),api("dashboard_api/kpis")])
+.then(function(r){setData({summary:r[0],schedule:r[1],inventory:r[2],alerts:r[3],kpis:r[4]});setLoading(false)})
+.catch(function(){setLoading(false)})}
+ue(load,[]);
+
+function doAction(ep,body,label){setMsg(null);
+post("operator_api/"+ep,body).then(function(r){
+if(r.error||(r.result&&r.result.error)){setMsg({type:"err",text:label+" failed: "+(r.error||(r.result&&r.result.error)||"Unknown")})}
+else{setMsg({type:"ok",text:label+" successful"});setModal(null);load();setSel(null)}})}
+
+var orders=[];try{var sr=data.summary&&data.summary.result;orders=(sr&&(sr.production_orders||sr.orders||sr))||[];if(!Array.isArray(orders))orders=[]}catch(ex){}
+var scheds=[];try{var scr=data.schedule&&data.schedule.result;scheds=(scr&&(scr.schedules||scr))||[];if(!Array.isArray(scheds))scheds=[]}catch(ex){}
+var stocks=[];try{var ir=data.inventory&&data.inventory.result;stocks=(ir&&(ir.inventory||ir.stocks||ir))||[];if(!Array.isArray(stocks))stocks=[]}catch(ex){}
+var alerts=[];try{var ar=data.alerts&&data.alerts.result;alerts=(ar&&(ar.alerts||ar))||[];if(!Array.isArray(alerts))alerts=[]}catch(ex){}
+
+var header=e("div",{className:"header"},sel?e("span",{className:"back",onClick:function(){setSel(null);setMsg(null)}},"\u2190"):null,sel?"Order Detail":"\uD83C\uDFED Industrial Production Mobile");
+var msgEl=msg?e("div",{className:"msg "+msg.type},msg.text):null;
+
+var modalEl=null;
+if(modal){
+var mBody;
+if(modal.type==="issue-material"){mBody=e("div",null,e("div",{className:"field"},e("label",null,"Material"),e("input",{value:modal.matName||"",readOnly:true})),e("div",{className:"field"},e("label",null,"Issue Quantity"),e("input",{type:"number",min:"1",value:qty,onChange:function(ev){setQty(ev.target.value)}})),e("div",{className:"btn-row"},e("button",{className:"btn secondary",onClick:function(){setModal(null)}},"Cancel"),e("button",{className:"btn primary",onClick:function(){doAction("issue-material",{production_order_id:modal.poId,production_material_id:modal.matId,quantity:parseInt(qty)},"Issue Material")}},"Confirm Issue")))}
+else if(modal.type==="record-production"){mBody=e("div",null,e("div",{className:"field"},e("label",null,"Produced Quantity"),e("input",{type:"number",min:"1",value:qty,onChange:function(ev){setQty(ev.target.value)}})),e("div",{className:"field"},e("label",null,"Notes"),e("textarea",{value:notes,onChange:function(ev){setNotes(ev.target.value)}})),e("div",{className:"btn-row"},e("button",{className:"btn secondary",onClick:function(){setModal(null)}},"Cancel"),e("button",{className:"btn success",onClick:function(){doAction("record-production",{production_order_id:modal.poId,quantity:parseInt(qty),notes:notes},"Record Production")}},"Confirm")))}
+else{mBody=e("div",null,e("p",{style:{marginBottom:16,fontSize:14}},"Are you sure you want to "+modal.label+"?"),e("div",{className:"btn-row"},e("button",{className:"btn secondary",onClick:function(){setModal(null)}},"Cancel"),e("button",{className:"btn "+(modal.type==="cancel-production"?"danger":"primary"),onClick:function(){doAction(modal.type,{production_order_id:modal.poId},modal.label)}},"Confirm")))}
+modalEl=e("div",{className:"modal-overlay",onClick:function(ev){if(ev.target.className==="modal-overlay")setModal(null)}},e("div",{className:"modal"},e("h3",null,modal.label),mBody))}
+
+function HomeTab(){var active=orders.filter(function(o){return o.status==="in_production"}).length;var overdue=orders.filter(function(o){return o.planned_end_date&&o.planned_end_date<"2026-10-05"}).length;
+return e("div",null,e("div",{className:"stat-row"},e("div",{className:"stat"},e("div",{className:"val"},orders.length),e("div",{className:"lbl"},"Total Orders")),e("div",{className:"stat"},e("div",{className:"val",style:{color:"var(--ok)"}},active),e("div",{className:"lbl"},"In Production"))),e("div",{className:"stat-row"},e("div",{className:"stat"},e("div",{className:"val"},scheds.length),e("div",{className:"lbl"},"Schedules")),e("div",{className:"stat"},e("div",{className:"val",style:{color:overdue?"var(--err)":"var(--ok)"}},overdue),e("div",{className:"lbl"},"Overdue"))),e("div",{className:"stat-row"},e("div",{className:"stat"},e("div",{className:"val"},alerts.length),e("div",{className:"lbl"},"Alerts")),e("div",{className:"stat"},e("div",{className:"val"},stocks.length),e("div",{className:"lbl"},"Stock Records"))),orders.filter(function(o){return o.priority==="high"||o.priority==="critical"}).slice(0,5).map(function(o,i){return e("div",{className:"card",key:i,onClick:function(){setSel(o);setTab("orders")}},e("h3",null,o.number||o.production_order_number||"PO"),e("div",{className:"meta"},B(o.status),B(o.priority),e("span",null,"Due: "+(o.planned_end_date||"").substring(0,10))))}))}
+
+function OrdersTab(){if(sel)return OrderDetail();return e("div",null,orders.length===0?e("div",{className:"empty"},"No production orders"):orders.map(function(o,i){return e("div",{className:"card",key:i,onClick:function(){setSel(o);setMsg(null)}},e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},e("h3",null,o.number||o.production_order_number||"PO"),B(o.status)),e("div",{className:"meta"},B(o.priority),e("span",null,"Qty: "+(o.quantity_planned||1)),e("span",null,"Due: "+(o.planned_end_date||"").substring(0,10))))}))}
+
+function OrderDetail(){var o=sel;if(!o)return null;var st=o.status;var poId=o.sys_id||o.production_order_id||"";
+var mats=o.materials||o.production_materials||[];
+return e("div",null,e("div",{className:"detail-section"},e("h4",null,"Production Order"),e("div",{className:"detail-row"},e("span",{className:"label"},"Number"),e("span",{className:"value"},o.number||o.production_order_number)),e("div",{className:"detail-row"},e("span",{className:"label"},"Status"),e("span",{className:"value"},B(st))),e("div",{className:"detail-row"},e("span",{className:"label"},"Priority"),e("span",{className:"value"},B(o.priority))),e("div",{className:"detail-row"},e("span",{className:"label"},"Planned"),e("span",{className:"value"},o.quantity_planned||1)),e("div",{className:"detail-row"},e("span",{className:"label"},"Produced"),e("span",{className:"value"},o.quantity_produced||0)),e("div",{className:"detail-row"},e("span",{className:"label"},"Remaining"),e("span",{className:"value"},o.quantity_remaining||0)),e("div",{className:"detail-row"},e("span",{className:"label"},"Resource"),e("span",{className:"value"},o.assigned_resource||o.resource||"-")),e("div",{className:"detail-row"},e("span",{className:"label"},"Deadline"),e("span",{className:"value"},(o.planned_end_date||"").substring(0,10)))),mats.length>0?e("div",{className:"detail-section"},e("h4",null,"Materials ("+mats.length+")"),mats.map(function(m,i){return e("div",{key:i,style:{padding:"8px 0",borderBottom:"1px solid #f1f3f5"}},e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},e("div",null,e("div",{style:{fontSize:13,fontWeight:500}},m.material||m.material_product||"Material"),e("div",{style:{fontSize:11,color:"var(--txt2)"}},"Req:"+(m.required_quantity||1)+" Res:"+(m.reserved_quantity||0))),e("div",{style:{display:"flex",gap:6,alignItems:"center"}},B(m.status),st==="in_production"?e("button",{className:"btn primary",style:{padding:"6px 10px",fontSize:11,minWidth:"auto"},onClick:function(){setQty("1");setModal({type:"issue-material",poId:poId,matId:m.sys_id||m.production_material_id,matName:m.material||m.material_product,label:"Issue Material"})}},"Issue"):null)))})):null,e("div",{className:"actions"},(st==="material_check"||st==="materials_reserved"||st==="planned")?e("button",{className:"btn primary",onClick:function(){setModal({type:"start-production",poId:poId,label:"Start Production"})}},"Start"):null,st==="in_production"?e("button",{className:"btn success",onClick:function(){setQty("1");setNotes("");setModal({type:"record-production",poId:poId,label:"Record Production"})}},"Record"):null,st==="in_production"?e("button",{className:"btn primary",onClick:function(){setModal({type:"complete-production",poId:poId,label:"Complete Production"})}},"Complete"):null,st==="on_hold"?e("button",{className:"btn primary",onClick:function(){setModal({type:"resume-production",poId:poId,label:"Resume Production"})}},"Resume"):null,(st!=="completed"&&st!=="cancelled")?e("button",{className:"btn danger",onClick:function(){setModal({type:"cancel-production",poId:poId,label:"Cancel Production"})}},"Cancel"):null))}
+
+function ScheduleTab(){return e("div",null,scheds.length===0?e("div",{className:"empty"},"No schedules"):scheds.map(function(s,i){return e("div",{className:"card",key:i},e("div",{style:{display:"flex",justifyContent:"space-between"}},e("h3",null,s.production_order||s.po||"Schedule"),B(s.status)),e("div",{className:"meta"},e("span",null,"Res: "+(s.production_resource||s.resource||"-")),e("span",null,(s.planned_start||"").substring(0,10)+" - "+(s.planned_end||"").substring(0,10)),B(s.priority||"medium")))}))}
+
+function InventoryTab(){return e("div",null,stocks.length===0?e("div",{className:"empty"},"No inventory"):stocks.map(function(s,i){return e("div",{className:"card",key:i},e("h3",null,s.material_product||s.material||"Stock"),e("div",{className:"meta"},e("span",null,s.location||"-"),e("span",null,"Avail:"+(s.available_quantity||0)),e("span",null,"Res:"+(s.reserved_quantity||0)),e("span",null,"Tot:"+(s.total_quantity||0)),B(s.status||"available")))}))}
+
+function AlertsTab(){return e("div",null,alerts.length===0?e("div",{className:"empty"},"No alerts"):alerts.map(function(a,i){return e("div",{className:"card",key:i},e("div",{style:{display:"flex",justifyContent:"space-between"}},e("h3",null,a.material_product||a.type||"Alert"),B(a.severity||a.urgency||"medium")),e("div",{style:{fontSize:13,color:"var(--txt2)",marginTop:4}},a.message||a.description||""),e("div",{className:"meta"},e("span",null,a.location||""),e("span",null,(a.sys_created_on||"").substring(0,10))))}))}
+
+var tabContent;
+if(loading)tabContent=e("div",{className:"loading"},"Loading...");
+else if(tab==="home")tabContent=HomeTab();
+else if(tab==="orders")tabContent=OrdersTab();
+else if(tab==="schedule")tabContent=ScheduleTab();
+else if(tab==="inventory")tabContent=InventoryTab();
+else if(tab==="alerts")tabContent=AlertsTab();
+
+return e("div",{className:"app"},header,e("div",{className:"content"},msgEl,tabContent),!sel?e("div",{className:"tabs"},["home","orders","schedule","inventory","alerts"].map(function(t){var icons={home:"\uD83C\uDFE0",orders:"\uD83D\uDCCB",schedule:"\uD83D\uDCC5",inventory:"\uD83D\uDCE6",alerts:"\uD83D\uDD14"};return e("div",{key:t,className:"tab"+(tab===t?" active":""),onClick:function(){setTab(t);setSel(null);setMsg(null)}},e("span",{className:"icon"},icons[t]),t.charAt(0).toUpperCase()+t.slice(1))})):null,modalEl)}
+
+ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+</script></body></html>
+</j:jelly>]]></html>
+        <name>industrial_production_mobile</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 12:09:22</sys_created_on>
+        <sys_id>cd16c9f883374310dd8c9610feaad324</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>industrial_production_mobile</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ui_page_cd16c9f883374310dd8c9610feaad324</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 12:09:22</sys_updated_on>
+    </sys_ui_page>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</application>
+        <file_path/>
+        <instance_id>639efacf3ba30f1016e44a8aa4e45a12</instance_id>
+        <instance_name>dev449562</instance_name>
+        <merge_base/>
+        <name>sys_ui_page_cd16c9f883374310dd8c9610feaad324</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_ui_page"&gt;&lt;sys_ui_page action="INSERT_OR_UPDATE"&gt;&lt;category&gt;general&lt;/category&gt;&lt;client_script/&gt;&lt;description&gt;Industrial Production Mobile - Operator mobile experience for production and material workflows. React SPA using existing Operator API, Inventory API, Alert API. Does not replace operator_mobile.&lt;/description&gt;&lt;direct&gt;false&lt;/direct&gt;&lt;endpoint&gt;x_2056099_indust_0_industrial_production_mobile.do&lt;/endpoint&gt;&lt;html&gt;&lt;![CDATA[&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:g2="null"&gt;
+&lt;!DOCTYPE html&gt;&lt;html lang="en"&gt;&lt;head&gt;
+&lt;meta charset="utf-8"/&gt;&lt;meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/&gt;
+&lt;title&gt;Industrial Production Mobile&lt;/title&gt;
+&lt;script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"&gt;&lt;/script&gt;
+&lt;script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"&gt;&lt;/script&gt;
+&lt;style&gt;
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f1f3f5;color:#1d1d1d;-webkit-tap-highlight-color:transparent}
+:root{--pri:#0b6e99;--ok:#2e7d32;--warn:#e65100;--err:#c62828;--bg:#f1f3f5;--card:#fff;--border:#dee2e6;--txt:#1d1d1d;--txt2:#555;--radius:12px}
+.app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;background:var(--bg)}
+.header{background:var(--pri);color:#fff;padding:14px 16px;font-size:17px;font-weight:600;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10}
+.header .back{font-size:22px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.header .back:active{background:rgba(255,255,255,.2)}
+.content{flex:1;overflow-y:auto;padding:12px;padding-bottom:80px}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:#fff;border-top:1px solid var(--border);z-index:10}
+.tab{flex:1;text-align:center;padding:8px 2px;font-size:11px;color:var(--txt2);cursor:pointer;transition:.15s}
+.tab.active{color:var(--pri);font-weight:600}
+.tab .icon{font-size:22px;display:block;line-height:1}
+.card{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);cursor:pointer}
+.card:active{background:#f8f9fa}
+.card h3{font-size:15px;margin-bottom:4px}
+.card .meta{font-size:12px;color:var(--txt2);display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;color:#fff}
+.badge.ok{background:var(--ok)}.badge.warn{background:var(--warn)}.badge.err{background:var(--err)}.badge.info{background:var(--pri)}.badge.gray{background:#868e96}
+.stat-row{display:flex;gap:10px;margin-bottom:10px}
+.stat{flex:1;background:var(--card);border-radius:var(--radius);padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.stat .val{font-size:28px;font-weight:700;color:var(--pri)}
+.stat .lbl{font-size:11px;color:var(--txt2);margin-top:2px}
+.detail-section{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.detail-section h4{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--pri)}
+.detail-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f3f5;font-size:13px}
+.detail-row:last-child{border:none}
+.detail-row .label{color:var(--txt2)}
+.detail-row .value{font-weight:500;text-align:right;max-width:60%}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{padding:12px 18px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;flex:1;min-width:120px;text-align:center;transition:.15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--pri);color:#fff}
+.btn.success{background:var(--ok);color:#fff}
+.btn.danger{background:var(--err);color:#fff}
+.btn.secondary{background:#e9ecef;color:var(--txt)}
+.btn:disabled{opacity:.5}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:#fff;border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:17px;margin-bottom:14px}
+.modal .field{margin-bottom:12px}
+.modal .field label{display:block;font-size:12px;color:var(--txt2);margin-bottom:4px}
+.modal .field input,.modal .field textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:15px}
+.modal .field textarea{min-height:60px;resize:vertical}
+.modal .btn-row{display:flex;gap:8px;margin-top:16px}
+.msg{padding:12px;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:500}
+.msg.ok{background:#e8f5e9;color:var(--ok)}.msg.err{background:#ffebee;color:var(--err)}
+.loading{text-align:center;padding:40px;color:var(--txt2)}
+.empty{text-align:center;padding:40px;color:var(--txt2)}
+&lt;/style&gt;
+&lt;/head&gt;&lt;body&gt;&lt;div id="root"&gt;&lt;/div&gt;
+&lt;script&gt;
+"use strict";
+var e=React.createElement,us=React.useState,ue=React.useEffect;
+var API="/api/x_2056099_indust_0/";
+function api(p,o){return fetch(API+p,Object.assign({headers:{"Content-Type":"application/json","Accept":"application/json","X-UserToken":window.g_ck||""}},o||{})).then(function(r){return r.json()}).catch(function(er){return{error:er.message}})}
+function post(p,b){return api(p,{method:"POST",body:JSON.stringify(b)})}
+function B(s){var m={in_production:"ok",completed:"ok",reserved:"ok",scheduled:"ok",confirmed:"ok",feasible:"ok",material_check:"info",draft:"gray",shortage:"err",cancelled:"gray",critical:"err",high:"warn",medium:"info",low:"gray"};return e("span",{className:"badge "+(m[s]||"gray")},s?(s+"").replace(/_/g," "):"-")}
+
+function App(){
+var _t=us("home"),tab=_t[0],setTab=_t[1];
+var _s=us(null),sel=_s[0],setSel=_s[1];
+var _m=us(null),modal=_m[0],setModal=_m[1];
+var _d=us({}),data=_d[0],setData=_d[1];
+var _l=us(true),loading=_l[0],setLoading=_l[1];
+var _msg=us(null),msg=_msg[0],setMsg=_msg[1];
+var _q=us("1"),qty=_q[0],setQty=_q[1];
+var _n=us(""),notes=_n[0],setNotes=_n[1];
+
+function load(){setLoading(true);setMsg(null);
+Promise.all([api("operator_api/summary"),api("operator_api/schedule-planner-data"),api("inventory_api/data"),api("alert_center_api/alerts"),api("dashboard_api/kpis")])
+.then(function(r){setData({summary:r[0],schedule:r[1],inventory:r[2],alerts:r[3],kpis:r[4]});setLoading(false)})
+.catch(function(){setLoading(false)})}
+ue(load,[]);
+
+function doAction(ep,body,label){setMsg(null);
+post("operator_api/"+ep,body).then(function(r){
+if(r.error||(r.result&amp;&amp;r.result.error)){setMsg({type:"err",text:label+" failed: "+(r.error||(r.result&amp;&amp;r.result.error)||"Unknown")})}
+else{setMsg({type:"ok",text:label+" successful"});setModal(null);load();setSel(null)}})}
+
+var orders=[];try{var sr=data.summary&amp;&amp;data.summary.result;orders=(sr&amp;&amp;(sr.production_orders||sr.orders||sr))||[];if(!Array.isArray(orders))orders=[]}catch(ex){}
+var scheds=[];try{var scr=data.schedule&amp;&amp;data.schedule.result;scheds=(scr&amp;&amp;(scr.schedules||scr))||[];if(!Array.isArray(scheds))scheds=[]}catch(ex){}
+var stocks=[];try{var ir=data.inventory&amp;&amp;data.inventory.result;stocks=(ir&amp;&amp;(ir.inventory||ir.stocks||ir))||[];if(!Array.isArray(stocks))stocks=[]}catch(ex){}
+var alerts=[];try{var ar=data.alerts&amp;&amp;data.alerts.result;alerts=(ar&amp;&amp;(ar.alerts||ar))||[];if(!Array.isArray(alerts))alerts=[]}catch(ex){}
+
+var header=e("div",{className:"header"},sel?e("span",{className:"back",onClick:function(){setSel(null);setMsg(null)}},"\u2190"):null,sel?"Order Detail":"\uD83C\uDFED Industrial Production Mobile");
+var msgEl=msg?e("div",{className:"msg "+msg.type},msg.text):null;
+
+var modalEl=null;
+if(modal){
+var mBody;
+if(modal.type==="issue-material"){mBody=e("div",null,e("div",{className:"field"},e("label",null,"Material"),e("input",{value:modal.matName||"",readOnly:true})),e("div",{className:"field"},e("label",null,"Issue Quantity"),e("input",{type:"number",min:"1",value:qty,onChange:function(ev){setQty(ev.target.value)}})),e("div",{className:"btn-row"},e("button",{className:"btn secondary",onClick:function(){setModal(null)}},"Cancel"),e("button",{className:"btn primary",onClick:function(){doAction("issue-material",{production_order_id:modal.poId,production_material_id:modal.matId,quantity:parseInt(qty)},"Issue Material")}},"Confirm Issue")))}
+else if(modal.type==="record-production"){mBody=e("div",null,e("div",{className:"field"},e("label",null,"Produced Quantity"),e("input",{type:"number",min:"1",value:qty,onChange:function(ev){setQty(ev.target.value)}})),e("div",{className:"field"},e("label",null,"Notes"),e("textarea",{value:notes,onChange:function(ev){setNotes(ev.target.value)}})),e("div",{className:"btn-row"},e("button",{className:"btn secondary",onClick:function(){setModal(null)}},"Cancel"),e("button",{className:"btn success",onClick:function(){doAction("record-production",{production_order_id:modal.poId,quantity:parseInt(qty),notes:notes},"Record Production")}},"Confirm")))}
+else{mBody=e("div",null,e("p",{style:{marginBottom:16,fontSize:14}},"Are you sure you want to "+modal.label+"?"),e("div",{className:"btn-row"},e("button",{className:"btn secondary",onClick:function(){setModal(null)}},"Cancel"),e("button",{className:"btn "+(modal.type==="cancel-production"?"danger":"primary"),onClick:function(){doAction(modal.type,{production_order_id:modal.poId},modal.label)}},"Confirm")))}
+modalEl=e("div",{className:"modal-overlay",onClick:function(ev){if(ev.target.className==="modal-overlay")setModal(null)}},e("div",{className:"modal"},e("h3",null,modal.label),mBody))}
+
+function HomeTab(){var active=orders.filter(function(o){return o.status==="in_production"}).length;var overdue=orders.filter(function(o){return o.planned_end_date&amp;&amp;o.planned_end_date&lt;"2026-10-05"}).length;
+return e("div",null,e("div",{className:"stat-row"},e("div",{className:"stat"},e("div",{className:"val"},orders.length),e("div",{className:"lbl"},"Total Orders")),e("div",{className:"stat"},e("div",{className:"val",style:{color:"var(--ok)"}},active),e("div",{className:"lbl"},"In Production"))),e("div",{className:"stat-row"},e("div",{className:"stat"},e("div",{className:"val"},scheds.length),e("div",{className:"lbl"},"Schedules")),e("div",{className:"stat"},e("div",{className:"val",style:{color:overdue?"var(--err)":"var(--ok)"}},overdue),e("div",{className:"lbl"},"Overdue"))),e("div",{className:"stat-row"},e("div",{className:"stat"},e("div",{className:"val"},alerts.length),e("div",{className:"lbl"},"Alerts")),e("div",{className:"stat"},e("div",{className:"val"},stocks.length),e("div",{className:"lbl"},"Stock Records"))),orders.filter(function(o){return o.priority==="high"||o.priority==="critical"}).slice(0,5).map(function(o,i){return e("div",{className:"card",key:i,onClick:function(){setSel(o);setTab("orders")}},e("h3",null,o.number||o.production_order_number||"PO"),e("div",{className:"meta"},B(o.status),B(o.priority),e("span",null,"Due: "+(o.planned_end_date||"").substring(0,10))))}))}
+
+function OrdersTab(){if(sel)return OrderDetail();return e("div",null,orders.length===0?e("div",{className:"empty"},"No production orders"):orders.map(function(o,i){return e("div",{className:"card",key:i,onClick:function(){setSel(o);setMsg(null)}},e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},e("h3",null,o.number||o.production_order_number||"PO"),B(o.status)),e("div",{className:"meta"},B(o.priority),e("span",null,"Qty: "+(o.quantity_planned||1)),e("span",null,"Due: "+(o.planned_end_date||"").substring(0,10))))}))}
+
+function OrderDetail(){var o=sel;if(!o)return null;var st=o.status;var poId=o.sys_id||o.production_order_id||"";
+var mats=o.materials||o.production_materials||[];
+return e("div",null,e("div",{className:"detail-section"},e("h4",null,"Production Order"),e("div",{className:"detail-row"},e("span",{className:"label"},"Number"),e("span",{className:"value"},o.number||o.production_order_number)),e("div",{className:"detail-row"},e("span",{className:"label"},"Status"),e("span",{className:"value"},B(st))),e("div",{className:"detail-row"},e("span",{className:"label"},"Priority"),e("span",{className:"value"},B(o.priority))),e("div",{className:"detail-row"},e("span",{className:"label"},"Planned"),e("span",{className:"value"},o.quantity_planned||1)),e("div",{className:"detail-row"},e("span",{className:"label"},"Produced"),e("span",{className:"value"},o.quantity_produced||0)),e("div",{className:"detail-row"},e("span",{className:"label"},"Remaining"),e("span",{className:"value"},o.quantity_remaining||0)),e("div",{className:"detail-row"},e("span",{className:"label"},"Resource"),e("span",{className:"value"},o.assigned_resource||o.resource||"-")),e("div",{className:"detail-row"},e("span",{className:"label"},"Deadline"),e("span",{className:"value"},(o.planned_end_date||"").substring(0,10)))),mats.length&gt;0?e("div",{className:"detail-section"},e("h4",null,"Materials ("+mats.length+")"),mats.map(function(m,i){return e("div",{key:i,style:{padding:"8px 0",borderBottom:"1px solid #f1f3f5"}},e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},e("div",null,e("div",{style:{fontSize:13,fontWeight:500}},m.material||m.material_product||"Material"),e("div",{style:{fontSize:11,color:"var(--txt2)"}},"Req:"+(m.required_quantity||1)+" Res:"+(m.reserved_quantity||0))),e("div",{style:{display:"flex",gap:6,alignItems:"center"}},B(m.status),st==="in_production"?e("button",{className:"btn primary",style:{padding:"6px 10px",fontSize:11,minWidth:"auto"},onClick:function(){setQty("1");setModal({type:"issue-material",poId:poId,matId:m.sys_id||m.production_material_id,matName:m.material||m.material_product,label:"Issue Material"})}},"Issue"):null)))})):null,e("div",{className:"actions"},(st==="material_check"||st==="materials_reserved"||st==="planned")?e("button",{className:"btn primary",onClick:function(){setModal({type:"start-production",poId:poId,label:"Start Production"})}},"Start"):null,st==="in_production"?e("button",{className:"btn success",onClick:function(){setQty("1");setNotes("");setModal({type:"record-production",poId:poId,label:"Record Production"})}},"Record"):null,st==="in_production"?e("button",{className:"btn primary",onClick:function(){setModal({type:"complete-production",poId:poId,label:"Complete Production"})}},"Complete"):null,st==="on_hold"?e("button",{className:"btn primary",onClick:function(){setModal({type:"resume-production",poId:poId,label:"Resume Production"})}},"Resume"):null,(st!=="completed"&amp;&amp;st!=="cancelled")?e("button",{className:"btn danger",onClick:function(){setModal({type:"cancel-production",poId:poId,label:"Cancel Production"})}},"Cancel"):null))}
+
+function ScheduleTab(){return e("div",null,scheds.length===0?e("div",{className:"empty"},"No schedules"):scheds.map(function(s,i){return e("div",{className:"card",key:i},e("div",{style:{display:"flex",justifyContent:"space-between"}},e("h3",null,s.production_order||s.po||"Schedule"),B(s.status)),e("div",{className:"meta"},e("span",null,"Res: "+(s.production_resource||s.resource||"-")),e("span",null,(s.planned_start||"").substring(0,10)+" - "+(s.planned_end||"").substring(0,10)),B(s.priority||"medium")))}))}
+
+function InventoryTab(){return e("div",null,stocks.length===0?e("div",{className:"empty"},"No inventory"):stocks.map(function(s,i){return e("div",{className:"card",key:i},e("h3",null,s.material_product||s.material||"Stock"),e("div",{className:"meta"},e("span",null,s.location||"-"),e("span",null,"Avail:"+(s.available_quantity||0)),e("span",null,"Res:"+(s.reserved_quantity||0)),e("span",null,"Tot:"+(s.total_quantity||0)),B(s.status||"available")))}))}
+
+function AlertsTab(){return e("div",null,alerts.length===0?e("div",{className:"empty"},"No alerts"):alerts.map(function(a,i){return e("div",{className:"card",key:i},e("div",{style:{display:"flex",justifyContent:"space-between"}},e("h3",null,a.material_product||a.type||"Alert"),B(a.severity||a.urgency||"medium")),e("div",{style:{fontSize:13,color:"var(--txt2)",marginTop:4}},a.message||a.description||""),e("div",{className:"meta"},e("span",null,a.location||""),e("span",null,(a.sys_created_on||"").substring(0,10))))}))}
+
+var tabContent;
+if(loading)tabContent=e("div",{className:"loading"},"Loading...");
+else if(tab==="home")tabContent=HomeTab();
+else if(tab==="orders")tabContent=OrdersTab();
+else if(tab==="schedule")tabContent=ScheduleTab();
+else if(tab==="inventory")tabContent=InventoryTab();
+else if(tab==="alerts")tabContent=AlertsTab();
+
+return e("div",{className:"app"},header,e("div",{className:"content"},msgEl,tabContent),!sel?e("div",{className:"tabs"},["home","orders","schedule","inventory","alerts"].map(function(t){var icons={home:"\uD83C\uDFE0",orders:"\uD83D\uDCCB",schedule:"\uD83D\uDCC5",inventory:"\uD83D\uDCE6",alerts:"\uD83D\uDD14"};return e("div",{key:t,className:"tab"+(tab===t?" active":""),onClick:function(){setTab(t);setSel(null);setMsg(null)}},e("span",{className:"icon"},icons[t]),t.charAt(0).toUpperCase()+t.slice(1))})):null,modalEl)}
+
+ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+&lt;/j:jelly&gt;]]&gt;&lt;/html&gt;&lt;name&gt;industrial_production_mobile&lt;/name&gt;&lt;processing_script/&gt;&lt;sys_class_name&gt;sys_ui_page&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2026-10-05 12:09:22&lt;/sys_created_on&gt;&lt;sys_id&gt;cd16c9f883374310dd8c9610feaad324&lt;/sys_id&gt;&lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;&lt;sys_name&gt;industrial_production_mobile&lt;/sys_name&gt;&lt;sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Industrial Inventory and Production Management"&gt;3cdb727d839b4b105e2cc430ceaad338&lt;/sys_scope&gt;&lt;sys_update_name&gt;sys_ui_page_cd16c9f883374310dd8c9610feaad324&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-10-05 12:09:22&lt;/sys_updated_on&gt;&lt;/sys_ui_page&gt;&lt;/record_update&gt;</payload>
+        <payload_hash>564602672</payload_hash>
+        <record_name>industrial_production_mobile</record_name>
+        <reverted_from/>
+        <source>37d4d5b03da7031074a2476226988e43</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 12:09:22</sys_created_on>
+        <sys_id>89168df883774310dd8c9610feaad383</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>1a10bf7f7760000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 12:09:22</sys_updated_on>
+        <type>UI Page</type>
+        <update_guid>4d16c9f8fe37431076041a23bcb0a72a</update_guid>
+        <update_guid_history>4d16c9f8fe37431076041a23bcb0a72a:564602672</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 12:19:55</sys_created_on>
+        <sys_db_object display_value="" name="sys_ui_page">sys_ui_page</sys_db_object>
+        <sys_id>592aee10309d405e997da6d3bee32669</sys_id>
+        <sys_metadata>cd16c9f883374310dd8c9610feaad324</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>industrial_production_mobile</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_scope_delete display_value="">3325c354032d4b36a9e117288ded1fc4</sys_scope_delete>
+        <sys_update_name>sys_ui_page_cd16c9f883374310dd8c9610feaad324</sys_update_name>
+        <sys_update_version display_value="sys_ui_page_cd16c9f883374310dd8c9610feaad324">89168df883774310dd8c9610feaad383</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 12:19:55</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

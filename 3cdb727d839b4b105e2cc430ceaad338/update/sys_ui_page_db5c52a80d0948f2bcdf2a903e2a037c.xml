@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
     <sys_ui_page action="INSERT_OR_UPDATE">
         <category>general</category>
-        <client_script><![CDATA[
-    // Rich SVG Machine Illustration Templates
+        <client_script><![CDATA[// Rich SVG Machine Illustration Templates
     var machineSVGs = {
         'CNC_MILL': '<svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="200" height="70" rx="6" fill="#0f2438" stroke="#1e3a5f" stroke-width="1.5"/><rect x="25" y="18" width="115" height="52" rx="4" fill="#0b1727" stroke="#334155"/><rect x="35" y="24" width="95" height="40" rx="2" fill="#1e3a5f" opacity="0.4"/><rect x="75" y="24" width="16" height="18" fill="#64748b"/><path d="M83 42 L79 52 L87 52 Z" fill="#38bdf8"/><rect x="55" y="54" width="55" height="8" rx="2" fill="#475569"/><rect x="70" y="48" width="25" height="6" fill="#f59e0b"/><rect x="150" y="18" width="50" height="52" rx="4" fill="#0f172a" stroke="#334155"/><circle cx="175" cy="32" r="7" fill="#10b981"/><rect x="158" y="45" width="34" height="4" rx="2" fill="#38bdf8"/><rect x="158" y="53" width="34" height="4" rx="2" fill="#94a3b8"/><circle cx="195" cy="14" r="3" fill="#10b981"/></svg>',
         'CNC_LATHE': '<svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="200" height="70" rx="6" fill="#1e293b" stroke="#b91c1c" stroke-width="1.5"/><rect x="25" y="18" width="125" height="52" rx="4" fill="#0f172a" stroke="#475569"/><rect x="35" y="28" width="28" height="32" rx="3" fill="#475569"/><circle cx="49" cy="44" r="10" fill="#334155" stroke="#94a3b8" stroke-width="1.5"/><rect x="63" y="40" width="50" height="8" fill="#cbd5e1"/><path d="M110 34 L125 40 L110 46 Z" fill="#ef4444"/><rect x="95" y="50" width="35" height="12" rx="2" fill="#64748b"/><rect x="160" y="18" width="40" height="52" rx="4" fill="#450a0a" stroke="#b91c1c"/><circle cx="180" cy="32" r="7" fill="#ef4444"/><text x="164" y="52" fill="#fca5a5" font-size="8" font-family="monospace" font-weight="bold">DOWN</text><text x="164" y="62" fill="#fca5a5" font-size="8" font-family="monospace">86.4&#176;C</text></svg>',
@@ -246,6 +245,131 @@
     }
 
     /* ── INTERACTIVE MACHINE PARAMETER STEPPERS ── */
+    
+    /* == PRODUCT-SPECIFIC DIGITAL TWIN PIPELINE ROUTING & BOM SWITCHER == */
+    var productBOMCatalog = {
+        'FG-001': {
+            name: '4-inch Industrial Gate Valve (Manual)',
+            sku: 'FG-001',
+            body: 'SS CF8M Gate Body',
+            bodySku: 'MAT-001',
+            closure: 'SS316 Gate Wedge',
+            closureSku: 'MAT-003',
+            operator: 'Cast Iron Handwheel',
+            operatorSku: 'MAT-005',
+            path: 'Castings &rarr; Turning &rarr; Milling &rarr; Lapping &rarr; Assembly &rarr; Hydrotest &rarr; Epoxy Coat &rarr; Crating',
+            bodies: 140, stems: 95, seats: 180, actuator: 75, bolts: 650
+        },
+        'FG-004': {
+            name: '4-inch Gate Valve - Pneumatic Actuated',
+            sku: 'FG-004',
+            body: 'SS CF8M Gate Body',
+            bodySku: 'MAT-001',
+            closure: 'SS316 Gate Wedge',
+            closureSku: 'MAT-003',
+            operator: 'Pneumatic Actuator (ISO 5211)',
+            operatorSku: 'MAT-040',
+            path: 'Castings &rarr; Turning &rarr; Milling &rarr; Lapping &rarr; Assembly &rarr; Actuator Mount &rarr; Proof &rarr; Coat &rarr; Crate',
+            bodies: 110, stems: 85, seats: 140, actuator: 45, bolts: 520
+        },
+        'FG-002': {
+            name: '6-inch Industrial Ball Valve (Manual)',
+            sku: 'FG-002',
+            body: 'SS CF8M Ball Body',
+            bodySku: 'MAT-015',
+            closure: 'SS316 Precision Ball',
+            closureSku: 'MAT-016',
+            operator: 'Lever Handle Assembly',
+            operatorSku: 'MAT-017',
+            path: 'Castings &rarr; Flange Turning &rarr; Lathe Bore &rarr; Lapping &rarr; Seat Fit &rarr; Hydro Proof &rarr; Coat &rarr; Crate',
+            bodies: 125, stems: 110, seats: 210, actuator: 80, bolts: 700
+        },
+        'FG-005': {
+            name: '6-inch Ball Valve - Pneumatic Actuated',
+            sku: 'FG-005',
+            body: 'SS CF8M Ball Body',
+            bodySku: 'MAT-015',
+            closure: 'SS316 Precision Ball',
+            closureSku: 'MAT-016',
+            operator: 'Pneumatic Actuator (ISO 5211)',
+            operatorSku: 'MAT-040',
+            path: 'Castings &rarr; Flange Facing &rarr; CNC Bore &rarr; Lapping &rarr; Actuator Bench &rarr; Gas Test &rarr; Coat &rarr; Crate',
+            bodies: 90, stems: 70, seats: 130, actuator: 40, bolts: 450
+        },
+        'FG-003': {
+            name: '8-inch Industrial Butterfly Valve (Manual)',
+            sku: 'FG-003',
+            body: 'WCB Carbon Steel Body',
+            bodySku: 'MAT-028',
+            closure: 'SS304 Butterfly Disc',
+            closureSku: 'MAT-029',
+            operator: 'Cast Iron Handwheel',
+            operatorSku: 'MAT-005',
+            path: 'Castings &rarr; Flange Serration &rarr; Turning &rarr; Lapping &rarr; Assembly &rarr; Seat Proof &rarr; Coat &rarr; Crate',
+            bodies: 160, stems: 130, seats: 190, actuator: 90, bolts: 850
+        },
+        'FG-006': {
+            name: '8-inch Butterfly Valve - Pneumatic Actuated',
+            sku: 'FG-006',
+            body: 'WCB Carbon Steel Body',
+            bodySku: 'MAT-028',
+            closure: 'SS304 Butterfly Disc',
+            closureSku: 'MAT-029',
+            operator: 'Pneumatic Double Acting Actuator',
+            operatorSku: 'MAT-040',
+            path: 'Castings &rarr; Flange Facing &rarr; Turning &rarr; Lapping &rarr; Actuator Fit &rarr; Cryo Test &rarr; Coat &rarr; Crate',
+            bodies: 105, stems: 80, seats: 120, actuator: 35, bolts: 600
+        }
+    };
+
+    function switchPipelineProduct(prodKey) {
+        var p = productBOMCatalog[prodKey];
+        if (!p) return;
+
+        var skuEl = document.getElementById('productSkuBadge');
+        if (skuEl) skuEl.innerText = 'SKU: ' + p.sku;
+
+        var pathEl = document.getElementById('flowRoutingPath');
+        if (pathEl) pathEl.innerHTML = p.path;
+
+        var bNameEl = document.getElementById('bomName_body');
+        if (bNameEl) bNameEl.innerText = p.body;
+        var bSkuEl = document.getElementById('bomSku_body');
+        if (bSkuEl) bSkuEl.innerText = p.bodySku;
+
+        var cNameEl = document.getElementById('bomName_closure');
+        if (cNameEl) cNameEl.innerText = p.closure;
+        var cSkuEl = document.getElementById('bomSku_closure');
+        if (cSkuEl) cSkuEl.innerText = p.closureSku;
+
+        var oNameEl = document.getElementById('bomName_operator');
+        if (oNameEl) oNameEl.innerText = p.operator;
+        var oSkuEl = document.getElementById('bomSku_operator');
+        if (oSkuEl) oSkuEl.innerText = p.operatorSku;
+
+        // Update BOM quantities
+        bomParams.bodies = p.bodies;
+        bomParams.stems = p.stems;
+        bomParams.seats = p.seats;
+        bomParams.actuator = p.actuator;
+        bomParams.bolts = p.bolts;
+
+        var elB = document.getElementById('val_bom_bodies');
+        if (elB) elB.innerText = p.bodies + ' U';
+        var elS = document.getElementById('val_bom_stems');
+        if (elS) elS.innerText = p.stems + ' U';
+        var elSe = document.getElementById('val_bom_seats');
+        if (elSe) elSe.innerText = p.seats + ' U';
+        var elA = document.getElementById('val_bom_actuator');
+        if (elA) elA.innerText = p.actuator + ' U';
+        var elBo = document.getElementById('val_bom_bolts');
+        if (elBo) elBo.innerText = p.bolts + ' U';
+
+        updateDigitalTwinMetrics();
+        showToast('Active Production Stream: ' + p.name + ' (' + p.sku + ')');
+    }
+
+
     function adjustMachineParam(paramId, delta, unit) {
         if (typeof pipelineParams[paramId] === 'undefined') return;
         pipelineParams[paramId] += delta;
@@ -1324,9 +1448,8 @@
         updateDigitalTwinMetrics();
         recalculateLiveImpact();
         startTelemetry();
-    }
-]]></client_script>
-        <description>Executive operations dashboard, visual production pipeline, AI disruption modeling, and adaptive schedule recovery.</description>
+    }]]></client_script>
+        <description>Executive operations dashboard, visual production pipeline with animated conduits, machine SVG cards, interactive steppers, AI disruption modeling, and adaptive schedule recovery.</description>
         <direct>false</direct>
         <endpoint>x_2056099_indust_0_whatif_planner.do</endpoint>
         <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
@@ -2637,8 +2760,7 @@
         display: none;
     }
 
-</style>
-
+    </style>
 
 <div id="whatif_app">
 
@@ -2660,7 +2782,7 @@
                 <span id="telemetryLabel">Live Telemetry (2.5s)</span>
             </div>
             <div class="scope-tag-pill">
-                dev445625 &#8226; Industrial Scope
+                dev449562 &#8226; Industrial Scope
             </div>
         </div>
     </header>
@@ -3005,317 +3127,374 @@
             <!-- ======================================================================= -->
             <!-- VIEW 2: FULL PRODUCTION PIPELINE (CONNECTED MACHINES + PARAMETERS)    -->
             <!-- ======================================================================= -->
-            <section id="view-pipeline" class="page-view">
+                        <section id="view-pipeline" class="page-view">
                 <div class="content-header">
                     <div>
-                        <h1 class="page-title">Shop-Floor Production Pipeline &amp; Machine Topology</h1>
-                        <p class="page-subtitle">Interactive machine-to-machine flow, dynamic reroute bypasses, visible industrial assets &amp; component parameter controllers.</p>
+                        <h1 class="page-title">Digital Twin: Visual Production Pipeline &amp; Machine Flow</h1>
+                        <p class="page-subtitle">End-to-end synchronized manufacturing topology: Raw Castings &#8594; CNC Turning &#8594; 5-Axis Milling &amp; Lapping &#8594; Core Assembly &amp; Actuators &#8594; API 598 Proof Testing &#8594; Epoxy Coating &amp; Wooden Crating.</p>
                     </div>
-                    <div style="display: flex; gap: 10px;">
+                    <div style="display: flex; gap: 10px; align-items: center;">
                         <button class="btn-solid-blue" onclick="openStockRebalanceModal('WH-MAA', 'Cast Steel Valve Body - DN50')" style="padding: 7px 14px; font-size: 12px;">&#8644; Sourcing Buffer Rebalance</button>
                         <button class="btn-print-nav" onclick="exportExecutiveReport()" style="padding: 7px 14px; font-size: 12px;">&#128438; Export Brief (PDF)</button>
                     </div>
                 </div>
 
-                <!-- 1. CONNECTED MACHINE FLOW PIPELINE (WITH REAL MACHINE SVGS &amp; CONDUITS) -->
-                <div class="dashboard-section">
-                    <div class="section-head">
+                <!-- PRODUCT SELECTION &amp; PIPELINE ROUTING SELECTOR -->
+                <div style="background: #ffffff; border: 1.5px solid var(--border-medium); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 22px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--brand-blue-subtle); border: 1px solid var(--brand-blue-border); display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--brand-blue);">&#9881;</div>
                         <div>
-                            <div class="section-title">Real-Time Machine-to-Machine Conduits &amp; Throughput Flow</div>
-                            <div class="section-desc">Active material transport connecting ingot feed, CNC machining, robotic assembly, pressure testing &amp; QA</div>
+                            <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Active Finished Product Stream</div>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-top: 2px;">
+                                <select id="pipelineProductSelect" onchange="switchPipelineProduct(this.value)" style="font-weight: 700; font-size: 14px; color: var(--brand-navy); border: 1px solid var(--border-medium); border-radius: 6px; padding: 4px 10px; background: #f8fafc; cursor: pointer;">
+                                    <option value="FG-001">4-inch Industrial Gate Valve (Manual Handwheel)</option>
+                                    <option value="FG-004">4-inch Gate Valve - Pneumatic Actuated (ISO 5211)</option>
+                                    <option value="FG-002">6-inch Industrial Ball Valve (Manual Lever)</option>
+                                    <option value="FG-005">6-inch Ball Valve - Pneumatic Actuated (ISO 5211)</option>
+                                    <option value="FG-003">8-inch Industrial Butterfly Valve (Manual Handwheel)</option>
+                                    <option value="FG-006">8-inch Butterfly Valve - Pneumatic Actuated (ISO 5211)</option>
+                                </select>
+                                <span class="tag-cell" id="productSkuBadge">SKU: FG-001</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 18px; align-items: center;">
+                        <div style="text-align: right;">
+                            <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Active Flow Routing</div>
+                            <div style="font-size: 12px; font-weight: 700; color: var(--status-normal);" id="flowRoutingPath">Castings &#8594; Turning &#8594; Milling &#8594; Lapping &#8594; Assembly &#8594; Hydrotest &#8594; Epoxy Coating &#8594; Crating</div>
                         </div>
                         <span class="safe-badge-pill" id="pipelineFlowRatePill">&#10004; Flow Rate: 120 U/day &#8226; Steady</span>
                     </div>
+                </div>
 
-                    <!-- DIGITAL TWIN LIVE PERFORMANCE &amp; OPERATIONAL COST IMPACT HUB -->
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;">
-                        <div style="background: #ffffff; border: 1.5px solid var(--border-medium); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm);">
-                            <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between;">
-                                <span>Daily Finished Output</span>
-                                <span id="badgeThroughputDelta" style="font-family: var(--font-mono); font-size: 11px; color: var(--status-normal); font-weight: 700;">100% Pace</span>
-                            </div>
-                            <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--brand-navy); margin: 6px 0 2px 0;" id="dtThroughput">120 Valves / Day</div>
-                            <div style="font-size: 11px; color: var(--text-muted);">Paced by Feed Rate &amp; Spindle Speed</div>
+                <!-- DIGITAL TWIN LIVE PERFORMANCE &amp; OPERATIONAL COST IMPACT HUB -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px;">
+                    <div style="background: #ffffff; border: 1.5px solid var(--border-medium); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm);">
+                        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between;">
+                            <span>Daily Finished Output</span>
+                            <span id="badgeThroughputDelta" style="font-family: var(--font-mono); font-size: 11px; color: var(--status-normal); font-weight: 700;">100% Pace</span>
                         </div>
+                        <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--brand-navy); margin: 6px 0 2px 0;" id="dtThroughput">120 Valves / Day</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">Paced by Feed Rate &amp; Spindle Speed</div>
+                    </div>
 
-                        <div style="background: #ffffff; border: 1.5px solid var(--border-medium); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm);">
-                            <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between;">
-                                <span>Operating &amp; Power Cost</span>
-                                <span id="badgeCostDelta" style="font-family: var(--font-mono); font-size: 11px; color: var(--brand-blue); font-weight: 700;">Baseline</span>
-                            </div>
-                            <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--text-primary); margin: 6px 0 2px 0;" id="dtShiftCost">&#8377;88,400 / Shift</div>
-                            <div style="font-size: 11px; color: var(--text-muted);">CNC Spindle Power &amp; Tooling Wear</div>
+                    <div style="background: #ffffff; border: 1.5px solid var(--border-medium); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm);">
+                        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between;">
+                            <span>Operating &amp; Power Cost</span>
+                            <span id="badgeCostDelta" style="font-family: var(--font-mono); font-size: 11px; color: var(--brand-blue); font-weight: 700;">Baseline</span>
                         </div>
+                        <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--text-primary); margin: 6px 0 2px 0;" id="dtShiftCost">&#8377;88,400 / Shift</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">CNC Spindle Power &amp; Tooling Wear</div>
+                    </div>
 
-                        <div style="background: #ffffff; border: 1.5px solid var(--border-medium); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm);">
-                            <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between;">
-                                <span>Buffer Inventory Capital</span>
-                                <span id="badgeInventoryDelta" style="font-family: var(--font-mono); font-size: 11px; color: var(--status-normal); font-weight: 700;">Safe Reserve</span>
-                            </div>
-                            <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--brand-blue); margin: 6px 0 2px 0;" id="dtInventoryValue">&#8377;33.28 Lakhs</div>
-                            <div style="font-size: 11px; color: var(--text-muted);" id="dtInventoryBreakdown">Bodies, Stems, Seats &amp; Bolts</div>
+                    <div style="background: #ffffff; border: 1.5px solid var(--border-medium); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm);">
+                        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between;">
+                            <span>Buffer Inventory Capital</span>
+                            <span id="badgeInventoryDelta" style="font-family: var(--font-mono); font-size: 11px; color: var(--status-normal); font-weight: 700;">Safe Reserve</span>
                         </div>
+                        <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--brand-blue); margin: 6px 0 2px 0;" id="dtInventoryValue">&#8377;33.28 Lakhs</div>
+                        <div style="font-size: 11px; color: var(--text-muted);" id="dtInventoryBreakdown">Bodies, Stems, Seats &amp; Bolts</div>
+                    </div>
 
-                        <div style="background: #ffffff; border: 1.5px solid var(--border-medium); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm);">
-                            <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between;">
-                                <span>Buffer Runout Horizon</span>
-                                <span id="badgeHorizonDelta" style="font-family: var(--font-mono); font-size: 11px; color: var(--status-normal); font-weight: 700;">Optimal</span>
+                    <div style="background: #ffffff; border: 1.5px solid var(--border-medium); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm);">
+                        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between;">
+                            <span>Buffer Runout Horizon</span>
+                            <span id="badgeHorizonDelta" style="font-family: var(--font-mono); font-size: 11px; color: var(--status-normal); font-weight: 700;">Optimal</span>
+                        </div>
+                        <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--status-normal); margin: 6px 0 2px 0;" id="dtRunoutHorizon">1.17 Days Buffer</div>
+                        <div style="font-size: 11px; color: var(--text-muted);" id="dtBottleneckItem">Bottleneck: SS 316 Stems (95 U)</div>
+                    </div>
+                </div>
+
+                <!-- 1. FULL 6-STAGE PRODUCTION PIPELINE VISUAL (SVG INDUSTRIAL ARTWORK &amp; REAL-TIME CONDUITS) -->
+                <div class="dashboard-section">
+                    <div class="section-head">
+                        <div>
+                            <div class="section-title">End-to-End Machine-to-Machine Conduits &amp; Throughput Flow</div>
+                            <div class="section-desc">Active material pulses connecting Raw Inbound &#8594; Turning &#8594; 5-Axis Milling &amp; Lapping &#8594; Assembly &#8594; API 598 Hydrotest &#8594; Epoxy Coating &amp; Dispatch</div>
+                        </div>
+                        <span class="safe-badge-pill" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">6 Process Stations &#8226; 5 Active Conduits</span>
+                    </div>
+
+                    <div class="pipeline-network-wrap">
+                        <div class="machine-flow-row" style="display: flex; align-items: stretch; gap: 8px; overflow-x: auto; padding-bottom: 12px;">
+
+                            <!-- STAGE 1: RAW INBOUND &amp; QC RIG -->
+                            <div class="machine-flow-node" style="min-width: 220px; flex: 1;">
+                                <div class="node-header">
+                                    <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">MC-HYD-01</span>
+                                    <span class="stage-status-chip chip-ok">INBOUND QC</span>
+                                </div>
+                                <div class="node-title-box">
+                                    <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Raw Castings Receiving</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Ultrasonic Flaw &amp; Wall NDT</div>
+                                </div>
+                                <div class="node-image-box">
+                                    <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect x="8" y="8" width="204" height="74" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+                                      <path d="M35 18 L65 18 L60 48 L40 48 Z" fill="#64748b" stroke="#94a3b8" stroke-width="1.5"/>
+                                      <rect x="70" y="40" width="115" height="14" rx="3" fill="#0f172a" stroke="#475569"/>
+                                      <circle cx="82" cy="47" r="4" fill="#38bdf8"/>
+                                      <circle cx="102" cy="47" r="4" fill="#38bdf8"/>
+                                      <circle cx="122" cy="47" r="4" fill="#38bdf8"/>
+                                      <circle cx="142" cy="47" r="4" fill="#38bdf8"/>
+                                      <circle cx="162" cy="47" r="4" fill="#38bdf8"/>
+                                      <path d="M105 26 Q122 18 138 26 L140 36 Q122 40 104 36 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
+                                      <rect x="30" y="54" width="45" height="18" rx="3" fill="#334155"/>
+                                      <circle cx="44" cy="63" r="3" fill="#10b981"/>
+                                      <rect x="54" y="60" width="14" height="6" rx="1" fill="#38bdf8"/>
+                                      <text x="130" y="70" fill="#94a3b8" font-size="8.5" font-family="monospace">FEED: CF8M/WCB</text>
+                                    </svg>
+                                </div>
+                                <div class="node-meta-grid">
+                                    <div><span style="color: var(--text-muted);">Inflow:</span> <strong>120 U/d</strong></div>
+                                    <div><span style="color: var(--text-muted);">NDT Pass:</span> <strong style="color: var(--status-normal);">99.4%</strong></div>
+                                </div>
+                                <div class="param-stepper-box">
+                                    <span class="stepper-name-lbl">Inflow Feed:</span>
+                                    <div class="stepper-btn-group">
+                                        <button class="btn-step" onclick="adjustMachineParam('feed_rate', -10, ' U/d')">&#8722;</button>
+                                        <span class="step-val-readout" id="val_feed_rate">120 U/d</span>
+                                        <button class="btn-step" onclick="adjustMachineParam('feed_rate', 10, ' U/d')">&#43;</button>
+                                    </div>
+                                </div>
                             </div>
-                            <div style="font-size: 24px; font-weight: 800; font-family: var(--font-mono); color: var(--status-normal); margin: 6px 0 2px 0;" id="dtRunoutHorizon">1.17 Days Buffer</div>
-                            <div style="font-size: 11px; color: var(--text-muted);" id="dtBottleneckItem">Bottleneck: SS 316 Stems (95 U)</div>
+
+                            <!-- CONDUIT 1 -->
+                            <div class="pipe-conduit-vessel">
+                                <div class="pipe-cylinder"><div class="pipe-pulse-stream"></div></div>
+                                <div class="pipe-rate-label">&#8594; Castings</div>
+                            </div>
+
+                            <!-- STAGE 2: CNC TURNING &amp; FLANGE FACING (WITH REROUTE BYPASS) -->
+                            <div class="machine-flow-node node-rerouted" style="min-width: 220px; flex: 1;">
+                                <div class="node-header">
+                                    <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">MC-HYD-02 / 03</span>
+                                    <span class="stage-status-chip chip-active">TURNING &#8226; +4h OT</span>
+                                </div>
+                                <div class="node-title-box">
+                                    <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">CNC Turning &amp; Flange Facing</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Body Cavity &amp; Neck Boring</div>
+                                </div>
+                                <div class="node-image-box">
+                                    <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect x="8" y="8" width="204" height="74" rx="6" fill="#0f172a" stroke="#1e40af" stroke-width="1.5"/>
+                                      <circle cx="50" cy="45" r="24" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+                                      <circle cx="50" cy="45" r="14" fill="#0f172a" stroke="#64748b"/>
+                                      <circle cx="50" cy="45" r="4" fill="#38bdf8"/>
+                                      <rect x="47" y="23" width="6" height="8" rx="1" fill="#f59e0b"/>
+                                      <rect x="47" y="59" width="6" height="8" rx="1" fill="#f59e0b"/>
+                                      <rect x="28" y="42" width="8" height="6" rx="1" fill="#f59e0b"/>
+                                      <rect x="64" y="42" width="8" height="6" rx="1" fill="#f59e0b"/>
+                                      <rect x="90" y="25" width="45" height="40" rx="3" fill="#1e293b" stroke="#475569"/>
+                                      <rect x="100" y="32" width="25" height="26" rx="2" fill="#0ea5e9"/>
+                                      <path d="M140 40 L165 32 L165 58 Z" fill="#ef4444"/>
+                                      <path d="M165 45 L185 45" stroke="#f87171" stroke-width="2" stroke-dasharray="2 2"/>
+                                      <circle cx="178" cy="42" r="1.5" fill="#f59e0b"/>
+                                      <circle cx="182" cy="48" r="1" fill="#f59e0b"/>
+                                      <text x="135" y="72" fill="#38bdf8" font-size="8.5" font-family="monospace">2,400 RPM</text>
+                                    </svg>
+                                </div>
+                                <div class="node-meta-grid">
+                                    <div><span style="color: var(--text-muted);">Spindle:</span> <strong id="disp_spindle">2,400 RPM</strong></div>
+                                    <div><span style="color: var(--text-muted);">Load:</span> <strong>92% &#8226; Alert Safe</strong></div>
+                                </div>
+                                <div class="param-stepper-box">
+                                    <span class="stepper-name-lbl">Spindle RPM:</span>
+                                    <div class="stepper-btn-group">
+                                        <button class="btn-step" onclick="adjustMachineParam('cnc_speed', -5, ' RPM')">&#8722;</button>
+                                        <span class="step-val-readout" id="val_cnc_speed">2400 RPM</span>
+                                        <button class="btn-step" onclick="adjustMachineParam('cnc_speed', 5, ' RPM')">&#43;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CONDUIT 2 -->
+                            <div class="pipe-conduit-vessel">
+                                <div class="pipe-cylinder"><div class="pipe-pulse-stream"></div></div>
+                                <div class="pipe-rate-label">&#8594; Turned Shells</div>
+                            </div>
+
+                            <!-- STAGE 3: 5-AXIS MILLING &amp; MIRROR LAPPING -->
+                            <div class="machine-flow-node" style="min-width: 220px; flex: 1;">
+                                <div class="node-header">
+                                    <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">MC-MAA-02 / 06</span>
+                                    <span class="stage-status-chip chip-ok">LAPPING Ra 0.05</span>
+                                </div>
+                                <div class="node-title-box">
+                                    <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Milling &amp; Precision Lapping</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Flange Holes &amp; Wedges/Balls</div>
+                                </div>
+                                <div class="node-image-box">
+                                    <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect x="8" y="8" width="204" height="74" rx="6" fill="#1e1b4b" stroke="#4338ca" stroke-width="1.5"/>
+                                      <ellipse cx="65" cy="52" rx="35" ry="18" fill="#312e81" stroke="#818cf8" stroke-width="1.5"/>
+                                      <ellipse cx="65" cy="52" rx="20" ry="10" fill="#1e1b4b" stroke="#c7d2fe"/>
+                                      <rect x="62" y="16" width="6" height="26" fill="#a5b4fc"/>
+                                      <circle cx="65" cy="18" r="8" fill="#4f46e5"/>
+                                      <circle cx="140" cy="45" r="16" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+                                      <circle cx="140" cy="45" r="8" fill="#047857"/>
+                                      <path d="M130 45 Q140 38 150 45" stroke="#34d399" stroke-width="1.5"/>
+                                      <text x="125" y="72" fill="#a7f3d0" font-size="8.5" font-family="monospace">MIRROR LAP</text>
+                                    </svg>
+                                </div>
+                                <div class="node-meta-grid">
+                                    <div><span style="color: var(--text-muted);">Surface:</span> <strong id="disp_lapping">Ra 0.05 &#181;m</strong></div>
+                                    <div><span style="color: var(--text-muted);">Flatness:</span> <strong>2 Light Bands</strong></div>
+                                </div>
+                                <div class="param-stepper-box">
+                                    <span class="stepper-name-lbl">Lapping Cycle:</span>
+                                    <div class="stepper-btn-group">
+                                        <button class="btn-step" onclick="adjustMachineParam('lapping_time', -2, ' min')">&#8722;</button>
+                                        <span class="step-val-readout" id="val_lapping_time">14 min</span>
+                                        <button class="btn-step" onclick="adjustMachineParam('lapping_time', 2, ' min')">&#43;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CONDUIT 3 -->
+                            <div class="pipe-conduit-vessel">
+                                <div class="pipe-cylinder"><div class="pipe-pulse-stream"></div></div>
+                                <div class="pipe-rate-label">&#8594; Lapped Trim</div>
+                            </div>
+
+                            <!-- STAGE 4: VALVE TRIM &amp; ACTUATOR ASSEMBLY -->
+                            <div class="machine-flow-node" style="min-width: 220px; flex: 1;">
+                                <div class="node-header">
+                                    <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">MC-HYD-04 / BLR-01</span>
+                                    <span class="stage-status-chip chip-ok">TRIM &amp; ACTUATOR</span>
+                                </div>
+                                <div class="node-title-box">
+                                    <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Core Assembly &amp; Actuators</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Stem, Seats &amp; Pneumatics</div>
+                                </div>
+                                <div class="node-image-box">
+                                    <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect x="8" y="8" width="204" height="74" rx="6" fill="#132a13" stroke="#2d6a4f" stroke-width="1.5"/>
+                                      <rect x="25" y="24" width="40" height="42" rx="4" fill="#1b4332" stroke="#52b788"/>
+                                      <circle cx="45" cy="45" r="12" fill="#081c15" stroke="#74c69d"/>
+                                      <rect x="42" y="14" width="6" height="14" fill="#d8f3dc"/>
+                                      <rect x="85" y="20" width="34" height="24" rx="3" fill="#1e3a5f" stroke="#38bdf8"/>
+                                      <circle cx="102" cy="32" r="6" fill="#0284c7"/>
+                                      <rect x="140" y="32" width="55" height="26" rx="4" fill="#0f172a" stroke="#52b788"/>
+                                      <text x="145" y="48" fill="#74c69d" font-size="8.5" font-family="monospace">TORQUE: 185Nm</text>
+                                    </svg>
+                                </div>
+                                <div class="node-meta-grid">
+                                    <div><span style="color: var(--text-muted);">Bolt Torque:</span> <strong id="disp_torque">185 Nm</strong></div>
+                                    <div><span style="color: var(--text-muted);">Actuator Stroke:</span> <strong>2.4 sec</strong></div>
+                                </div>
+                                <div class="param-stepper-box">
+                                    <span class="stepper-name-lbl">Torque Lim:</span>
+                                    <div class="stepper-btn-group">
+                                        <button class="btn-step" onclick="adjustMachineParam('torque', -5, ' Nm')">&#8722;</button>
+                                        <span class="step-val-readout" id="val_torque">185 Nm</span>
+                                        <button class="btn-step" onclick="adjustMachineParam('torque', 5, ' Nm')">&#43;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CONDUIT 4 -->
+                            <div class="pipe-conduit-vessel">
+                                <div class="pipe-cylinder"><div class="pipe-pulse-stream"></div></div>
+                                <div class="pipe-rate-label">&#8594; Proof Line</div>
+                            </div>
+
+                            <!-- STAGE 5: HIGH-PRESSURE HYDROSTATIC &amp; GAS TEST STAND (API 598) -->
+                            <div class="machine-flow-node" style="min-width: 220px; flex: 1;">
+                                <div class="node-header">
+                                    <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">MC-HYD-05 / MAA-03</span>
+                                    <span class="stage-status-chip chip-ok">API 598 350 BAR</span>
+                                </div>
+                                <div class="node-title-box">
+                                    <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Hydrostatic &amp; Gas Test</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">1.5x Shell &amp; Helium Sniffer</div>
+                                </div>
+                                <div class="node-image-box">
+                                    <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect x="8" y="8" width="204" height="74" rx="6" fill="#0f2438" stroke="#1e3a5f" stroke-width="1.5"/>
+                                      <rect x="25" y="18" width="12" height="54" fill="#475569"/>
+                                      <rect x="105" y="18" width="12" height="54" fill="#475569"/>
+                                      <rect x="25" y="18" width="92" height="8" fill="#334155"/>
+                                      <rect x="25" y="64" width="92" height="8" fill="#334155"/>
+                                      <rect x="48" y="32" width="46" height="24" rx="3" fill="#1e3a5f" stroke="#0ea5e9"/>
+                                      <circle cx="160" cy="42" r="18" fill="#0f172a" stroke="#0ea5e9" stroke-width="2"/>
+                                      <circle cx="160" cy="42" r="2.5" fill="#38bdf8"/>
+                                      <line x1="160" y1="42" x2="172" y2="32" stroke="#ef4444" stroke-width="2"/>
+                                      <text x="140" y="72" fill="#38bdf8" font-size="8.5" font-family="monospace">350 BAR</text>
+                                    </svg>
+                                </div>
+                                <div class="node-meta-grid">
+                                    <div><span style="color: var(--text-muted);">Hold Press:</span> <strong id="disp_pressure">350 Bar</strong></div>
+                                    <div><span style="color: var(--text-muted);">Leakage:</span> <strong style="color: var(--status-normal);">0 Drops (Cl. VI)</strong></div>
+                                </div>
+                                <div class="param-stepper-box">
+                                    <span class="stepper-name-lbl">Hold Press:</span>
+                                    <div class="stepper-btn-group">
+                                        <button class="btn-step" onclick="adjustMachineParam('pressure', -25, ' Bar')">&#8722;</button>
+                                        <span class="step-val-readout" id="val_pressure">350 Bar</span>
+                                        <button class="btn-step" onclick="adjustMachineParam('pressure', 25, ' Bar')">&#43;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CONDUIT 5 -->
+                            <div class="pipe-conduit-vessel">
+                                <div class="pipe-cylinder"><div class="pipe-pulse-stream"></div></div>
+                                <div class="pipe-rate-label">&#8594; Certified</div>
+                            </div>
+
+                            <!-- STAGE 6: EPOXY COATING, LASER MARKING &amp; WOODEN CRATING -->
+                            <div class="machine-flow-node" style="min-width: 220px; flex: 1;">
+                                <div class="node-header">
+                                    <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">MC-MAA-04 / BLR-03</span>
+                                    <span class="stage-status-chip chip-ok">COAT &amp; CRATE</span>
+                                </div>
+                                <div class="node-title-box">
+                                    <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Epoxy Coating &amp; Dispatch</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">250&#181;m Primer &amp; Export Crates</div>
+                                </div>
+                                <div class="node-image-box">
+                                    <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <rect x="8" y="8" width="204" height="74" rx="6" fill="#312e81" stroke="#4338ca" stroke-width="1.5"/>
+                                      <rect x="25" y="22" width="30" height="46" rx="3" fill="#475569" stroke="#94a3b8"/>
+                                      <path d="M70 28 L95 28 L95 38 L70 38 Z" fill="#64748b"/>
+                                      <circle cx="82" cy="48" r="7" fill="#38bdf8"/>
+                                      <path d="M82 55 L75 70 L89 70 Z" fill="#38bdf8" opacity="0.6"/>
+                                      <rect x="120" y="24" width="70" height="42" rx="4" fill="#78350f" stroke="#b45309" stroke-width="1.5"/>
+                                      <line x1="120" y1="24" x2="190" y2="66" stroke="#b45309" stroke-width="1.5"/>
+                                      <line x1="120" y1="66" x2="190" y2="24" stroke="#b45309" stroke-width="1.5"/>
+                                      <text x="126" y="72" fill="#fde68a" font-size="8.5" font-family="monospace">CRATE PASS</text>
+                                    </svg>
+                                </div>
+                                <div class="node-meta-grid">
+                                    <div><span style="color: var(--text-muted);">Cure Temp:</span> <strong id="disp_cure">180 &#176;C</strong></div>
+                                    <div><span style="color: var(--text-muted);">DFT Spec:</span> <strong>250 &#181;m</strong></div>
+                                </div>
+                                <div class="param-stepper-box">
+                                    <span class="stepper-name-lbl">Cure Temp:</span>
+                                    <div class="stepper-btn-group">
+                                        <button class="btn-step" onclick="adjustMachineParam('cure_temp', -10, ' C')">&#8722;</button>
+                                        <span class="step-val-readout" id="val_cure_temp">180 C</span>
+                                        <button class="btn-step" onclick="adjustMachineParam('cure_temp', 10, ' C')">&#43;</button>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
-                    <!-- INTERACTIVE MACHINE PIPELINE ROW -->
-                    <div class="machine-flow-row">
-
-                        <!-- STATION 1: RAW INGESTION -->
-                        <div class="machine-flow-node">
-                            <div class="node-header">
-                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">FEED-HOPPER-01</span>
-                                <span class="stage-status-chip chip-ok">100% FLOW</span>
-                            </div>
-                            <div class="node-title-box">
-                                <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Raw Castings Hopper</div>
-                                <div style="font-size: 11px; color: var(--text-muted);">Foundry Feed &#8226; DN50-DN300</div>
-                            </div>
-                            <div class="node-image-box">
-                                <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <rect x="10" y="10" width="200" height="70" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
-                                  <path d="M40 20 L70 20 L65 50 L45 50 Z" fill="#64748b" stroke="#94a3b8" stroke-width="1.5"/>
-                                  <rect x="75" y="42" width="110" height="12" rx="3" fill="#0f172a" stroke="#475569"/>
-                                  <circle cx="85" cy="48" r="4" fill="#38bdf8"/>
-                                  <circle cx="105" cy="48" r="4" fill="#38bdf8"/>
-                                  <circle cx="125" cy="48" r="4" fill="#38bdf8"/>
-                                  <circle cx="145" cy="48" r="4" fill="#38bdf8"/>
-                                  <circle cx="165" cy="48" r="4" fill="#38bdf8"/>
-                                  <path d="M110 28 Q125 20 140 28 L142 38 Q125 42 108 38 Z" fill="#f59e0b" stroke="#d97706" stroke-width="1.5"/>
-                                  <rect x="35" y="55" width="40" height="16" rx="3" fill="#334155"/>
-                                  <circle cx="48" cy="63" r="3" fill="#10b981"/>
-                                  <rect x="58" y="60" width="12" height="6" rx="1" fill="#38bdf8"/>
-                                  <text x="135" y="70" fill="#94a3b8" font-size="9" font-family="monospace">120 U/day</text>
-                                </svg>
-                            </div>
-                            <div class="node-meta-grid">
-                                <div><span style="color: var(--text-muted);">Inflow:</span> <strong>120 U/d</strong></div>
-                                <div><span style="color: var(--text-muted);">Hopper:</span> <strong>85% Full</strong></div>
-                            </div>
-                            <!-- PARAMETER STEPPER -->
-                            <div class="param-stepper-box">
-                                <span class="stepper-name-lbl">Feed Rate:</span>
-                                <div class="stepper-btn-group">
-                                    <button class="btn-step" onclick="adjustMachineParam('feed_rate', -10, ' U/d')">&#8722;</button>
-                                    <span class="step-val-readout" id="val_feed_rate">120 U/d</span>
-                                    <button class="btn-step" onclick="adjustMachineParam('feed_rate', 10, ' U/d')">&#43;</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- CONDUIT 1 -->
-                        <div class="pipe-conduit-vessel">
-                            <div class="pipe-cylinder">
-                                <div class="pipe-pulse-stream"></div>
-                            </div>
-                            <div class="pipe-rate-label">&#8594; 120 U/d</div>
-                        </div>
-
-                        <!-- STATION 2: MACHINING JUNCTION (LATHE DOWN + REROUTE TO CNC 01) -->
-                        <div class="machine-flow-node node-rerouted">
-                            <div class="node-header">
-                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">MC-HYD-CNC-01</span>
-                                <span class="stage-status-chip chip-active">REROUTE (+4h OT)</span>
-                            </div>
-                            <div class="node-title-box">
-                                <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">5-Axis CNC Machining</div>
-                                <div style="font-size: 11px; color: #1e40af;">Receiving Rerouted Trim Work</div>
-                            </div>
-                            <div class="node-image-box">
-                                <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <rect x="10" y="10" width="200" height="70" rx="6" fill="#0f2438" stroke="#1e3a5f" stroke-width="1.5"/>
-                                  <rect x="25" y="18" width="115" height="52" rx="4" fill="#0b1727" stroke="#334155"/>
-                                  <rect x="35" y="24" width="95" height="40" rx="2" fill="#1e3a5f" opacity="0.4"/>
-                                  <rect x="75" y="24" width="16" height="18" fill="#64748b"/>
-                                  <path d="M83 42 L79 52 L87 52 Z" fill="#38bdf8"/>
-                                  <rect x="55" y="54" width="55" height="8" rx="2" fill="#475569"/>
-                                  <rect x="70" y="48" width="25" height="6" fill="#f59e0b"/>
-                                  <rect x="150" y="18" width="50" height="52" rx="4" fill="#0f172a" stroke="#334155"/>
-                                  <circle cx="175" cy="32" r="7" fill="#10b981"/>
-                                  <rect x="158" y="45" width="34" height="4" rx="2" fill="#38bdf8"/>
-                                  <rect x="158" y="53" width="34" height="4" rx="2" fill="#94a3b8"/>
-                                  <circle cx="195" cy="14" r="3" fill="#10b981"/>
-                                </svg>
-                            </div>
-                            <div class="node-meta-grid">
-                                <div><span style="color: var(--text-muted);">Spindle:</span> <strong id="param_cnc01_rpm">3,400 RPM</strong></div>
-                                <div><span style="color: var(--text-muted);">Load:</span> <strong>92.0% (+4h OT)</strong></div>
-                            </div>
-                            <!-- PARAMETER STEPPER -->
-                            <div class="param-stepper-box">
-                                <span class="stepper-name-lbl">Speed Rate:</span>
-                                <div class="stepper-btn-group">
-                                    <button class="btn-step" onclick="adjustMachineParam('cnc_speed', -5, '%')">&#8722;</button>
-                                    <span class="step-val-readout" id="val_cnc_speed">92%</span>
-                                    <button class="btn-step" onclick="adjustMachineParam('cnc_speed', 5, '%')">&#43;</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- CONDUIT 2 -->
-                        <div class="pipe-conduit-vessel">
-                            <div class="pipe-cylinder">
-                                <div class="pipe-pulse-stream"></div>
-                            </div>
-                            <div class="pipe-rate-label">&#8594; Active Reroute</div>
-                        </div>
-
-                        <!-- STATION 3: VALVE ASSEMBLY -->
-                        <div class="machine-flow-node">
-                            <div class="node-header">
-                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">MC-HYD-ASY-01</span>
-                                <span class="stage-status-chip chip-ok">OPTIMAL FLOW</span>
-                            </div>
-                            <div class="node-title-box">
-                                <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Robotic Stem &amp; Trim Fit</div>
-                                <div style="font-size: 11px; color: var(--text-muted);">Body + Stem + Seat Rings</div>
-                            </div>
-                            <div class="node-image-box">
-                                <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <rect x="10" y="10" width="200" height="70" rx="6" fill="#0f2438" stroke="#1e3a5f" stroke-width="1.5"/>
-                                  <rect x="25" y="60" width="170" height="10" rx="2" fill="#334155"/>
-                                  <rect x="45" y="36" width="50" height="24" rx="4" fill="#1e3a5f" stroke="#38bdf8"/>
-                                  <circle cx="70" cy="48" r="7" fill="#0f172a" stroke="#38bdf8"/>
-                                  <rect x="67" y="20" width="6" height="20" fill="#94a3b8"/>
-                                  <rect x="58" y="16" width="24" height="6" rx="2" fill="#e2e8f0"/>
-                                  <path d="M125 22 L145 32 L135 50 L115 45 Z" fill="#475569" stroke="#64748b"/>
-                                  <circle cx="145" cy="32" r="4" fill="#38bdf8"/>
-                                  <rect x="105" y="44" width="12" height="16" fill="#38bdf8"/>
-                                  <text x="140" y="66" fill="#38bdf8" font-size="8.5" font-family="monospace">TORQUE: 185Nm</text>
-                                </svg>
-                            </div>
-                            <div class="node-meta-grid">
-                                <div><span style="color: var(--text-muted);">Torque:</span> <strong id="disp_torque">185 Nm</strong></div>
-                                <div><span style="color: var(--text-muted);">Crew:</span> <strong>Gamma (10T)</strong></div>
-                            </div>
-                            <!-- PARAMETER STEPPER -->
-                            <div class="param-stepper-box">
-                                <span class="stepper-name-lbl">Torque Lim:</span>
-                                <div class="stepper-btn-group">
-                                    <button class="btn-step" onclick="adjustMachineParam('torque', -5, ' Nm')">&#8722;</button>
-                                    <span class="step-val-readout" id="val_torque">185 Nm</span>
-                                    <button class="btn-step" onclick="adjustMachineParam('torque', 5, ' Nm')">&#43;</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- CONDUIT 3 -->
-                        <div class="pipe-conduit-vessel">
-                            <div class="pipe-cylinder">
-                                <div class="pipe-pulse-stream"></div>
-                            </div>
-                            <div class="pipe-rate-label">&#8594; Pressure Line</div>
-                        </div>
-
-                        <!-- STATION 4: PRESSURE TEST RIG -->
-                        <div class="machine-flow-node">
-                            <div class="node-header">
-                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">MC-HYD-TST-01</span>
-                                <span class="stage-status-chip chip-ok">API 598 PASS</span>
-                            </div>
-                            <div class="node-title-box">
-                                <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Hydrostatic Pressure Rig</div>
-                                <div style="font-size: 11px; color: var(--text-muted);">350 Bar Proof Pressure</div>
-                            </div>
-                            <div class="node-image-box">
-                                <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <rect x="10" y="10" width="200" height="70" rx="6" fill="#0f2438" stroke="#1e3a5f" stroke-width="1.5"/>
-                                  <rect x="30" y="18" width="14" height="52" fill="#475569"/>
-                                  <rect x="110" y="18" width="14" height="52" fill="#475569"/>
-                                  <rect x="30" y="18" width="94" height="10" fill="#334155"/>
-                                  <rect x="30" y="60" width="94" height="10" fill="#334155"/>
-                                  <rect x="55" y="34" width="44" height="20" rx="3" fill="#1e3a5f" stroke="#0ea5e9"/>
-                                  <circle cx="165" cy="40" r="17" fill="#0f172a" stroke="#0ea5e9" stroke-width="2"/>
-                                  <circle cx="165" cy="40" r="2" fill="#38bdf8"/>
-                                  <line x1="165" y1="40" x2="175" y2="32" stroke="#ef4444" stroke-width="2"/>
-                                  <text x="145" y="68" fill="#38bdf8" font-size="9" font-family="monospace">350 BAR</text>
-                                </svg>
-                            </div>
-                            <div class="node-meta-grid">
-                                <div><span style="color: var(--text-muted);">Pressure:</span> <strong id="disp_pressure">350 Bar</strong></div>
-                                <div><span style="color: var(--text-muted);">Cycle:</span> <strong>12 min/test</strong></div>
-                            </div>
-                            <!-- PARAMETER STEPPER -->
-                            <div class="param-stepper-box">
-                                <span class="stepper-name-lbl">Hold Press:</span>
-                                <div class="stepper-btn-group">
-                                    <button class="btn-step" onclick="adjustMachineParam('pressure', -25, ' Bar')">&#8722;</button>
-                                    <span class="step-val-readout" id="val_pressure">350 Bar</span>
-                                    <button class="btn-step" onclick="adjustMachineParam('pressure', 25, ' Bar')">&#43;</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- CONDUIT 4 -->
-                        <div class="pipe-conduit-vessel">
-                            <div class="pipe-cylinder">
-                                <div class="pipe-pulse-stream"></div>
-                            </div>
-                            <div class="pipe-rate-label">&#8594; Certified</div>
-                        </div>
-
-                        <!-- STATION 5: QA CERT &amp; DISPATCH -->
-                        <div class="machine-flow-node">
-                            <div class="node-header">
-                                <span style="font-family: var(--font-mono); font-weight: 700; color: var(--brand-navy); font-size: 11px;">QA-DISPATCH-01</span>
-                                <span class="stage-status-chip chip-ok">95.0% OTD</span>
-                            </div>
-                            <div class="node-title-box">
-                                <div style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Packaging &amp; Dispatch</div>
-                                <div style="font-size: 11px; color: var(--text-muted);">ISO 9001 Laser Verified</div>
-                            </div>
-                            <div class="node-image-box">
-                                <svg width="100%" height="90" viewBox="0 0 220 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <rect x="10" y="10" width="200" height="70" rx="6" fill="#0f2438" stroke="#1e3a5f" stroke-width="1.5"/>
-                                  <rect x="35" y="60" width="150" height="12" rx="2" fill="#78350f"/>
-                                  <rect x="45" y="72" width="20" height="4" fill="#451a03"/>
-                                  <rect x="100" y="72" width="20" height="4" fill="#451a03"/>
-                                  <rect x="155" y="72" width="20" height="4" fill="#451a03"/>
-                                  <rect x="50" y="26" width="55" height="35" rx="4" fill="#1e3a5f" stroke="#38bdf8"/>
-                                  <circle cx="77" cy="43" r="9" fill="#0f172a" stroke="#eab308" stroke-width="2"/>
-                                  <rect x="74" y="16" width="6" height="12" fill="#94a3b8"/>
-                                  <circle cx="77" cy="14" r="8" fill="none" stroke="#eab308" stroke-width="3"/>
-                                  <path d="M125 30 L145 20 L165 30 L165 50 L145 60 L125 50 Z" fill="#047857" stroke="#10b981" stroke-width="1.5"/>
-                                  <path d="M137 40 L143 46 L153 34" stroke="#ffffff" stroke-width="2" fill="none"/>
-                                  <text x="120" y="70" fill="#34d399" font-size="8.5" font-family="monospace" font-weight="bold">ISO 5208 PASS</text>
-                                </svg>
-                            </div>
-                            <div class="node-meta-grid">
-                                <div><span style="color: var(--text-muted);">SLA Saved:</span> <strong>&#8377;4.8L</strong></div>
-                                <div><span style="color: var(--text-muted);">Protected:</span> <strong>3 VIP POs</strong></div>
-                            </div>
-                            <!-- PARAMETER STEPPER -->
-                            <div class="param-stepper-box">
-                                <span class="stepper-name-lbl">Batch Qty:</span>
-                                <div class="stepper-btn-group">
-                                    <button class="btn-step" onclick="adjustMachineParam('dispatch_batch', -5, ' U')">&#8722;</button>
-                                    <span class="step-val-readout" id="val_dispatch_batch">40 U</span>
-                                    <button class="btn-step" onclick="adjustMachineParam('dispatch_batch', 5, ' U')">&#43;</button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- DYNAMIC BYPASS VISUAL JUNCTION: SHOWS BROKEN MC-HYD-CNC-02 DIVERTING TO MC-HYD-CNC-01 -->
-                    <div class="bypass-junction-container">
-                        <div style="background: var(--status-alert-bg); border: 1px solid var(--status-alert-border); border-radius: var(--radius-sm); padding: 12px 16px; display: flex; align-items: center; gap: 14px;">
-                            <div style="width: 50px; height: 50px; flex-shrink: 0; background: #fee2e2; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 22px;">&#9888;</div>
+                    <!-- DYNAMIC REROUTE BYPASS JUNCTION -->
+                    <div class="bypass-junction-container" style="margin-top: 14px;">
+                        <div style="background: #fff; border: 1.5px solid #fca5a5; border-radius: var(--radius-sm); padding: 12px 16px; display: flex; align-items: center; gap: 14px;">
+                            <div style="width: 50px; height: 50px; flex-shrink: 0; background: #fee2e2; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #b91c1c;">&#9888;</div>
                             <div>
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <strong style="color: var(--status-alert); font-size: 13px;">MC-HYD-CNC-02 (Precision Lathe 02)</strong>
-                                    <span class="stage-status-chip chip-bottleneck">OUTAGE (48h)</span>
+                                    <strong style="color: #991b1b; font-size: 13px;">MC-HYD-03 (CNC Lathe Cell 02)</strong>
+                                    <span class="stage-status-chip chip-bottleneck">DOWNTIME (DWN-2026-001)</span>
                                 </div>
-                                <div style="font-size: 12px; color: #991b1b; margin-top: 3px;">
-                                    Spindle Bearing Failure: <strong>86.4&#176;C</strong> temp &#8226; <strong>4.8 mm/s</strong> vibration &#8226; Main sleeve seizure
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px;">
+                                    Spindle Motor Bearing Overheating &#8226; <strong>86.4&#176;C</strong> temp &#8226; <strong>4.8 mm/s</strong> vibration &#8226; Bearing service MNT-2026-001
                                 </div>
                             </div>
                         </div>
@@ -3330,11 +3509,11 @@
                             <div style="width: 50px; height: 50px; flex-shrink: 0; background: #dcfce7; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #166534;">&#10004;</div>
                             <div>
                                 <div style="display: flex; align-items: center; gap: 8px;">
-                                    <strong style="color: #166534; font-size: 13px;">MC-HYD-CNC-01 (5-Axis CNC Center)</strong>
+                                    <strong style="color: #166534; font-size: 13px;">MC-HYD-02 (CNC Lathe Cell 01)</strong>
                                     <span class="stage-status-chip chip-ok">ACTIVE ADAPTATION</span>
                                 </div>
                                 <div style="font-size: 12px; color: #15803d; margin-top: 3px;">
-                                    Absorbing 100% of BHEL &amp; Thermax valve trim turning &#8226; <strong>+4h Overtime shift</strong> enabled
+                                    Absorbing 100% of valve trim turning &#8226; <strong>+4h Overtime shift</strong> enabled &#8226; Zero contract slippage
                                 </div>
                             </div>
                         </div>
@@ -3346,21 +3525,21 @@
                     <div class="section-head">
                         <div>
                             <div class="section-title">Pipeline Component Inventory &amp; Bill of Materials (BOM) Steppers</div>
-                            <div class="section-desc">Increase or decrease stage buffer stock to evaluate inventory sensitivity and material shortages</div>
+                            <div class="section-desc">Active material buffers for valve bodies, stems, wedges/balls, seats, actuators, and hardware</div>
                         </div>
                         <button class="btn-outline-green" onclick="resetBOMParams()" style="padding: 5px 12px; font-size: 11.5px;">Reset to Standard BOM</button>
                     </div>
 
-                    <div class="bom-component-grid">
+                    <div class="bom-component-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;">
 
-                        <!-- COMPONENT 1: RAW CASTINGS -->
+                        <!-- COMPONENT 1: RAW CAST BODY -->
                         <div class="bom-component-card">
                             <div>
                                 <div class="bom-card-top">
-                                    <div class="bom-item-name">Cast Steel Bodies</div>
-                                    <span class="tag-cell">MAT-VLV-CS-50</span>
+                                    <div class="bom-item-name" id="bomName_body">SS CF8M Gate Body</div>
+                                    <span class="tag-cell" id="bomSku_body">MAT-001</span>
                                 </div>
-                                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">DN50 WCB Castings</div>
+                                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Raw Cast Valve Body</div>
                                 <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
                                     <span>Stock Buffer</span><strong id="bom_status_bodies" style="color: var(--status-normal);">Safe (+35)</strong>
                                 </div>
@@ -3375,14 +3554,14 @@
                             </div>
                         </div>
 
-                        <!-- COMPONENT 2: STEMS -->
+                        <!-- COMPONENT 2: VALVE STEM -->
                         <div class="bom-component-card">
                             <div>
                                 <div class="bom-card-top">
-                                    <div class="bom-item-name">SS 316 Valve Stems</div>
-                                    <span class="tag-cell">MAT-STM-316</span>
+                                    <div class="bom-item-name">SS410 Stem 25mm</div>
+                                    <span class="tag-cell">MAT-004</span>
                                 </div>
-                                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Precision Ground Rods</div>
+                                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Precision Ground Stem</div>
                                 <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
                                     <span>Stock Buffer</span><strong id="bom_status_stems" style="color: var(--status-normal);">Adequate</strong>
                                 </div>
@@ -3390,125 +3569,84 @@
                             <div class="param-stepper-box" style="margin: 6px 0 0 0;">
                                 <span class="stepper-name-lbl">Qty:</span>
                                 <div class="stepper-btn-group">
-                                    <button class="btn-step" onclick="adjustBOMParam('stems', -5, ' U')">&#8722;</button>
+                                    <button class="btn-step" onclick="adjustBOMParam('stems', -10, ' U')">&#8722;</button>
                                     <span class="step-val-readout" id="val_bom_stems">95 U</span>
-                                    <button class="btn-step" onclick="adjustBOMParam('stems', 5, ' U')">&#43;</button>
+                                    <button class="btn-step" onclick="adjustBOMParam('stems', 10, ' U')">&#43;</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- COMPONENT 3: SEATS -->
+                        <!-- COMPONENT 3: WEDGE / BALL / DISC -->
                         <div class="bom-component-card">
                             <div>
                                 <div class="bom-card-top">
-                                    <div class="bom-item-name">Stellite Seat Rings</div>
-                                    <span class="tag-cell">MAT-STR-50</span>
+                                    <div class="bom-item-name" id="bomName_closure">SS316 Gate Wedge</div>
+                                    <span class="tag-cell" id="bomSku_closure">MAT-003</span>
                                 </div>
-                                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Hard-Faced Trim Sets</div>
+                                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Lapped Sealing Element</div>
                                 <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-                                    <span>Stock Buffer</span><strong id="bom_status_seats" style="color: var(--status-normal);">Surplus</strong>
+                                    <span>Stock Buffer</span><strong id="bom_status_seats" style="color: var(--status-normal);">Healthy</strong>
                                 </div>
                             </div>
                             <div class="param-stepper-box" style="margin: 6px 0 0 0;">
                                 <span class="stepper-name-lbl">Qty:</span>
                                 <div class="stepper-btn-group">
-                                    <button class="btn-step" onclick="adjustBOMParam('seats', -15, ' U')">&#8722;</button>
-                                    <span class="step-val-readout" id="val_bom_seats">210 U</span>
-                                    <button class="btn-step" onclick="adjustBOMParam('seats', 15, ' U')">&#43;</button>
+                                    <button class="btn-step" onclick="adjustBOMParam('seats', -10, ' U')">&#8722;</button>
+                                    <span class="step-val-readout" id="val_bom_seats">180 U</span>
+                                    <button class="btn-step" onclick="adjustBOMParam('seats', 10, ' U')">&#43;</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- COMPONENT 4: BOLTS -->
+                        <!-- COMPONENT 4: ACTUATOR / OPERATOR -->
                         <div class="bom-component-card">
                             <div>
                                 <div class="bom-card-top">
-                                    <div class="bom-item-name">Class 600 Body Bolting</div>
-                                    <span class="tag-cell">MAT-BLT-B7</span>
+                                    <div class="bom-item-name" id="bomName_operator">Handwheel / Actuator</div>
+                                    <span class="tag-cell" id="bomSku_operator">MAT-005</span>
                                 </div>
-                                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">A193-B7 Stud &amp; Nuts</div>
+                                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Operator / Drive Unit</div>
                                 <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-                                    <span>Stock Buffer</span><strong id="bom_status_bolts" style="color: var(--status-normal);">Full Reserve</strong>
+                                    <span>Stock Buffer</span><strong id="bom_status_actuator" style="color: var(--status-normal);">Optimal</strong>
                                 </div>
                             </div>
                             <div class="param-stepper-box" style="margin: 6px 0 0 0;">
                                 <span class="stepper-name-lbl">Qty:</span>
                                 <div class="stepper-btn-group">
-                                    <button class="btn-step" onclick="adjustBOMParam('bolts', -20, ' Sets')">&#8722;</button>
-                                    <span class="step-val-readout" id="val_bom_bolts">320 Sets</span>
-                                    <button class="btn-step" onclick="adjustBOMParam('bolts', 20, ' Sets')">&#43;</button>
+                                    <button class="btn-step" onclick="adjustBOMParam('actuator', -5, ' U')">&#8722;</button>
+                                    <span class="step-val-readout" id="val_bom_actuator">75 U</span>
+                                    <button class="btn-step" onclick="adjustBOMParam('actuator', 5, ' U')">&#43;</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- COMPONENT 5: TAKT TIME -->
+                        <!-- COMPONENT 5: GASKETS &amp; FASTENERS -->
                         <div class="bom-component-card">
                             <div>
                                 <div class="bom-card-top">
-                                    <div class="bom-item-name">Line Takt Pace</div>
-                                    <span class="tag-cell">CYCLE-TIME</span>
+                                    <div class="bom-item-name">PTFE / B7 Bolting</div>
+                                    <span class="tag-cell">MAT-010</span>
                                 </div>
-                                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Minutes per Completed Valve</div>
+                                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Gaskets &amp; Stud Hardware</div>
                                 <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px;">
-                                    <span>Target Pace</span><strong>18 min/valve</strong>
+                                    <span>Stock Buffer</span><strong id="bom_status_bolts" style="color: var(--status-normal);">High Buffer</strong>
                                 </div>
                             </div>
                             <div class="param-stepper-box" style="margin: 6px 0 0 0;">
-                                <span class="stepper-name-lbl">Takt:</span>
+                                <span class="stepper-name-lbl">Qty:</span>
                                 <div class="stepper-btn-group">
-                                    <button class="btn-step" onclick="adjustBOMParam('takt', -2, ' min')">&#8722;</button>
-                                    <span class="step-val-readout" id="val_bom_takt">18 min</span>
-                                    <button class="btn-step" onclick="adjustBOMParam('takt', 2, ' min')">&#43;</button>
+                                    <button class="btn-step" onclick="adjustBOMParam('bolts', -25, ' U')">&#8722;</button>
+                                    <span class="step-val-readout" id="val_bom_bolts">650 U</span>
+                                    <button class="btn-step" onclick="adjustBOMParam('bolts', 25, ' U')">&#43;</button>
                                 </div>
                             </div>
                         </div>
 
-                    </div>
-                </div>
-
-                <div class="two-col-grid">
-                    <div class="dashboard-section">
-                        <div class="section-title">Critical Path Bottleneck Analysis</div>
-                        <div class="section-desc" style="margin-bottom: 16px;">Root causes and operational telemetry for Stage 02 slowdown</div>
-                        <ul style="padding-left: 20px; line-height: 1.8; color: var(--text-secondary);">
-                            <li><strong>Machine:</strong> MC-HYD-CNC-02 (Precision Lathe Cell 02)</li>
-                            <li><strong>Telemetry:</strong> Spindle Bearing Vibration Spike (4.8 mm/s vs 1.8 normal threshold)</li>
-                            <li><strong>Temperature:</strong> 86.4&#176;C (Overheat alarm threshold: 80.0&#176;C)</li>
-                            <li><strong>Estimated Outage:</strong> 48 hours for main bearing sleeve replacement</li>
-                            <li><strong>Direct Mitigation:</strong> 100% of valve trim turning shifted to Cell 01 with 4h overtime</li>
-                        </ul>
-                    </div>
-                    <div class="dashboard-section">
-                        <div class="section-title">Shop-Floor Capacity Buffer Allocation</div>
-                        <div class="section-desc" style="margin-bottom: 16px;">Real-time buffer capacity across auxiliary machining cells</div>
-                        <div style="display: flex; flex-direction: column; gap: 14px;">
-                            <div>
-                                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
-                                    <span>MC-HYD-CNC-01 (5-Axis CNC Center)</span><strong>84.5% &#8594; 92.0% (+4h OT)</strong>
-                                </div>
-                                <div class="bar-rail-track"><div class="bar-fill-indicator bar-fill-mitigated" style="width: 92%;"></div></div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
-                                    <span>MC-HYD-CNC-03 (Vertical Boring Mill)</span><strong>70.0% (Normal)</strong>
-                                </div>
-                                <div class="bar-rail-track"><div class="bar-fill-indicator bar-fill-baseline" style="width: 70%;"></div></div>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
-                                    <span>MC-CHN-LAT-01 (Heavy Duty Lathe)</span><strong>95.0% (Standby)</strong>
-                                </div>
-                                <div class="bar-rail-track"><div class="bar-fill-indicator bar-fill-baseline" style="width: 95%;"></div></div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ======================================================================= -->
-            <!-- VIEW 3: DEDICATED WHAT-IF SIMULATOR                                    -->
-            <!-- ======================================================================= -->
-            <section id="view-simulator" class="page-view">
+<section id="view-simulator" class="page-view">
                 <div class="content-header">
                     <div>
                         <h1 class="page-title">Digital Twin What-If Disruption Simulator</h1>
@@ -3856,7 +3994,7 @@
             <div class="drawer-title">
                 <span>&#9881;</span> Create Custom Disruption Scenario
             </div>
-            <button class="drawer-close-btn" onclick="closeCustomScenarioDrawer()">&amp;times;</button>
+            <button class="drawer-close-btn" onclick="closeCustomScenarioDrawer()">&#215;</button>
         </div>
         <div class="drawer-body">
             <div class="sim-form-group">
@@ -3956,7 +4094,7 @@
                     <span style="color: var(--status-alert); font-size: 18px;">&#9889;</span>
                     Dispatch Emergency Maintenance Work Order
                 </div>
-                <button class="drawer-close-btn" onclick="closeMaintenanceModal()">&amp;times;</button>
+                <button class="drawer-close-btn" onclick="closeMaintenanceModal()">&#215;</button>
             </div>
             <div class="modal-body">
                 <div style="display: flex; align-items: center; gap: 10px; background: var(--status-alert-bg); border: 1px solid var(--status-alert-border); padding: 12px 16px; border-radius: var(--radius-sm); margin-bottom: 16px;">
@@ -4011,7 +4149,7 @@
                     <span style="color: var(--brand-blue); font-size: 18px;">&#8644;</span>
                     Sourcing Engine: Inter-Plant Buffer Stock Rebalancing
                 </div>
-                <button class="drawer-close-btn" onclick="closeStockRebalanceModal()">&amp;times;</button>
+                <button class="drawer-close-btn" onclick="closeStockRebalanceModal()">&#215;</button>
             </div>
             <div class="modal-body">
                 <div style="background: #fffbeb; border: 1px solid #fde68a; padding: 12px 16px; border-radius: var(--radius-sm); margin-bottom: 16px;">
@@ -4077,7 +4215,7 @@
             <div style="text-align: right; font-size: 11px; color: #64748b; font-family: monospace;">
                 <div>DOC REF: <strong id="printDocRef">DOC-DT-SIM-2026-001</strong></div>
                 <div>GENERATED: <span id="printTimestamp"></span></div>
-                <div>INSTANCE: dev445625 (ServiceNow Instance)</div>
+                <div>INSTANCE: dev449562 (ServiceNow Production)</div>
             </div>
         </div>
 
@@ -4151,8 +4289,6 @@
     </div>
 
 </div>
-
-
 </j:jelly>
 ]]></html>
         <name>whatif_planner</name>
@@ -4161,14 +4297,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-02 07:58:38</sys_created_on>
         <sys_id>db5c52a80d0948f2bcdf2a903e2a037c</sys_id>
-        <sys_mod_count>2</sys_mod_count>
+        <sys_mod_count>3</sys_mod_count>
         <sys_name>whatif_planner</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ui_page_db5c52a80d0948f2bcdf2a903e2a037c</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-04 06:52:16</sys_updated_on>
+        <sys_updated_on>2026-10-05 10:04:08</sys_updated_on>
     </sys_ui_page>
     <sn_glider_source_artifact_m2m action="INSERT_OR_UPDATE">
         <application_file display_value="whatif_planner">db5c52a80d0948f2bcdf2a903e2a037c</application_file>
