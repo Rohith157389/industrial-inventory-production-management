@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description>Run Server Side Validation Script for Order Creation to Production Scheduling</description>
+        <display_name>Run Server Side Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>1</order>
+        <step_config display_value="Run Server Side Script">41de4a935332120028bc29cac2dc349a</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 10:30:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b4013002</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Run Server Side Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_e1a078fac3af0710239a32f1b4013002</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 10:30:00</sys_updated_on>
+        <table/>
+        <test display_value="Order Lifecycle E2E: Create Customer Order to Production Schedule">e1a078fac3af0710239a32f1b4013001</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=e1a078fac3af0710239a32f1b4013002"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>e1a078fac3af0710239a32f1b4013002</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 10:30:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b4013010</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 10:30:00</sys_updated_on>
+        <value>v1</value>
+        <variable display_value="Jasmine version">42f2564b73031300440211d8faf6a777</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>e1a078fac3af0710239a32f1b4013002</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 10:30:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b4013011</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 10:30:00</sys_updated_on>
+        <value>(function(outputs, steps, params, stepResult, assertEqual) {
+    describe('Order Lifecycle E2E: Create Customer Order to Production Schedule', function() {
+        var createdOrderSysId = null;
+        var createdPoSysId = null;
+        var createdSchedSysId = null;
+
+        it('Step 1: Create a new Customer Order record', function() {
+            var coGr = new GlideRecord('x_2056099_indust_0_cust_order');
+            coGr.initialize();
+            coGr.setValue('customer_name', 'ATF Aerospace Solutions');
+            coGr.setValue('order_status', 'new');
+            coGr.setValue('total_quantity', 250);
+            
+            var futureDate = new GlideDateTime();
+            futureDate.addDaysLocalTime(14);
+            coGr.setValue('required_delivery_date', futureDate.getDate().getValue());
+            coGr.setValue('notes', 'Automated ATF Order Flow Validation');
+
+            createdOrderSysId = coGr.insert();
+            expect(createdOrderSysId).not.toBeNull();
+
+            // Verify record in database
+            var verifyCo = new GlideRecord('x_2056099_indust_0_cust_order');
+            expect(verifyCo.get(createdOrderSysId)).toBe(true);
+            expect(verifyCo.getValue('order_status')).toBe('new');
+            expect(parseInt(verifyCo.getValue('total_quantity'), 10)).toBe(250);
+        });
+
+        it('Step 2: Add line items to the Customer Order', function() {
+            expect(createdOrderSysId).not.toBeNull();
+
+            // Query an active material to link
+            var matGr = new GlideRecord('x_2056099_indust_0_mat_master');
+            matGr.setLimit(1);
+            matGr.query();
+
+            var matSysId = matGr.next() ? matGr.getUniqueValue() : null;
+
+            var itemGr = new GlideRecord('x_2056099_indust_0_cust_ord_item');
+            itemGr.initialize();
+            itemGr.setValue('customer_order', createdOrderSysId);
+            if (matSysId) itemGr.setValue('material', matSysId);
+            itemGr.setValue('quantity', 250);
+            itemGr.setValue('unit_price', 45.0);
+
+            var itemId = itemGr.insert();
+            expect(itemId).not.toBeNull();
+        });
+
+        it('Step 3: Create linked Production Order', function() {
+            expect(createdOrderSysId).not.toBeNull();
+
+            var poGr = new GlideRecord('x_2056099_indust_0_production_order');
+            poGr.initialize();
+            poGr.setValue('customer_order', createdOrderSysId);
+            poGr.setValue('status', 'planned');
+            poGr.setValue('quantity_planned', 250);
+            poGr.setValue('priority', '2');
+
+            var plannedDue = new GlideDateTime();
+            plannedDue.addDaysLocalTime(10);
+            poGr.setValue('planned_completion_date', plannedDue.getDate().getValue());
+
+            createdPoSysId = poGr.insert();
+            expect(createdPoSysId).not.toBeNull();
+
+            var verifyPo = new GlideRecord('x_2056099_indust_0_production_order');
+            expect(verifyPo.get(createdPoSysId)).toBe(true);
+            expect(verifyPo.getValue('status')).toBe('planned');
+        });
+
+        it('Step 4: Execute AI Production Scheduling for the Order', function() {
+            expect(createdPoSysId).not.toBeNull();
+
+            var scheduler = new x_2056099_indust_0.ProductionScheduler();
+            var schedResult = scheduler.createDraftSchedule(createdPoSysId);
+
+            expect(schedResult).toBeDefined();
+            expect(schedResult.success).toBe(true);
+            expect(schedResult.schedule).toBeDefined();
+
+            createdSchedSysId = schedResult.schedule.sys_id;
+            expect(createdSchedSysId).not.toBeNull();
+
+            // Verify Schedule record created in prod_sched table
+            var schedRecord = new GlideRecord('x_2056099_indust_0_prod_sched');
+            expect(schedRecord.get(createdSchedSysId)).toBe(true);
+            expect(schedRecord.getValue('status')).toBe('draft');
+            expect(schedRecord.getValue('production_order')).toBe(createdPoSysId);
+            expect(schedRecord.getValue('planned_start')).not.toBeNull();
+            expect(schedRecord.getValue('planned_end')).not.toBeNull();
+        });
+
+        it('Step 5: Clean up created test records', function() {
+            if (createdSchedSysId) {
+                var sGr = new GlideRecord('x_2056099_indust_0_prod_sched');
+                if (sGr.get(createdSchedSysId)) sGr.deleteRecord();
+            }
+            if (createdPoSysId) {
+                var pGr = new GlideRecord('x_2056099_indust_0_production_order');
+                if (pGr.get(createdPoSysId)) pGr.deleteRecord();
+            }
+            if (createdOrderSysId) {
+                var cGr = new GlideRecord('x_2056099_indust_0_cust_order');
+                if (cGr.get(createdOrderSysId)) cGr.deleteRecord();
+            }
+            expect(true).toBe(true);
+        });
+    });
+})(outputs, steps, params, stepResult, assertEqual);</value>
+        <variable display_value="Test script">989d9e235324220002c6435723dc3484</variable>
+    </sys_variable_value>
+</record_update>
