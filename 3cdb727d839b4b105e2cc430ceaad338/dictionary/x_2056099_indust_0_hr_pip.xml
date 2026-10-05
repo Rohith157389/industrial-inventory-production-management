@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" audit="true" db_object_id="113eba929635458abe5b8f82bb469376" label="Performance Improvement Plan" name="x_2056099_indust_0_hr_pip" type="collection">
-        <element label="Source HR Action" max_length="32" name="hr_action" reference="x_2056099_indust_0_hr_action" type="reference"/>
-        <element label="Review Dates" max_length="500" name="review_dates" type="string"/>
-        <element label="Manager" mandatory="true" max_length="32" name="manager" reference="sys_user" type="reference"/>
-        <element display="true" label="PIP ID" mandatory="true" max_length="20" name="pip_id" read_only="true" read_only_option="instance_configured" type="string"/>
         <element label="End Date" mandatory="true" max_length="40" name="end_date" type="glide_date"/>
-        <element label="Target Rating" max_length="15" name="target_rating" type="decimal"/>
-        <element label="Current Rating at Start" max_length="15" name="current_rating" type="decimal"/>
-        <element label="Improvement Objectives" mandatory="true" max_length="4000" name="improvement_objectives" type="multi_two_lines"/>
-        <element label="Final Outcome" max_length="2000" name="final_outcome" type="multi_two_lines"/>
-        <element label="Start Date" mandatory="true" max_length="40" name="start_date" type="glide_date"/>
         <element label="Progress Notes" max_length="40" name="progress_notes" type="journal_input"/>
+        <element label="Performance Issue" mandatory="true" max_length="4000" name="performance_issue" type="multi_two_lines"/>
+        <element label="Review Dates" max_length="500" name="review_dates" type="string"/>
         <element choice="3" default="draft" label="PIP Status" mandatory="true" max_length="40" name="pip_status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
                 <element inactive_on_update="false" label="Completed - Improved" sequence="5" value="completed_improved"/>
-                <element inactive_on_update="false" label="Extended" sequence="4" value="extended"/>
-                <element inactive_on_update="false" label="Cancelled" sequence="7" value="cancelled"/>
-                <element inactive_on_update="false" label="Under Review" sequence="3" value="under_review"/>
-                <element inactive_on_update="false" label="Completed - Not Improved" sequence="6" value="completed_not_improved"/>
                 <element inactive_on_update="false" label="Active" sequence="2" value="active"/>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="7" value="cancelled"/>
+                <element inactive_on_update="false" label="Extended" sequence="4" value="extended"/>
+                <element inactive_on_update="false" label="Completed - Not Improved" sequence="6" value="completed_not_improved"/>
+                <element inactive_on_update="false" label="Under Review" sequence="3" value="under_review"/>
             </choice>
         </element>
-        <element label="HR Owner" mandatory="true" max_length="32" name="hr_owner" reference="sys_user" type="reference"/>
-        <element label="Actions Required" max_length="4000" name="actions_required" type="multi_two_lines"/>
-        <element label="Employee Profile" max_length="32" name="employee_profile" reference="x_2056099_indust_0_hr_profile" type="reference"/>
-        <element label="Performance Issue" mandatory="true" max_length="4000" name="performance_issue" type="multi_two_lines"/>
         <element label="Worker" mandatory="true" max_length="32" name="worker" reference="sys_user" type="reference"/>
+        <element label="Target Rating" max_length="15" name="target_rating" type="decimal"/>
+        <element label="Improvement Objectives" mandatory="true" max_length="4000" name="improvement_objectives" type="multi_two_lines"/>
+        <element label="HR Owner" mandatory="true" max_length="32" name="hr_owner" reference="sys_user" type="reference"/>
+        <element label="Final Outcome" max_length="2000" name="final_outcome" type="multi_two_lines"/>
+        <element label="Actions Required" max_length="4000" name="actions_required" type="multi_two_lines"/>
+        <element label="Manager" mandatory="true" max_length="32" name="manager" reference="sys_user" type="reference"/>
+        <element label="Current Rating at Start" max_length="15" name="current_rating" type="decimal"/>
+        <element label="Source HR Action" max_length="32" name="hr_action" reference="x_2056099_indust_0_hr_action" type="reference"/>
+        <element label="Start Date" mandatory="true" max_length="40" name="start_date" type="glide_date"/>
+        <element label="Employee Profile" max_length="32" name="employee_profile" reference="x_2056099_indust_0_hr_profile" type="reference"/>
+        <element display="true" label="PIP ID" mandatory="true" max_length="20" name="pip_id" read_only="true" read_only_option="instance_configured" type="string"/>
         <index name="index">
             <element name="employee_profile"/>
         </index>

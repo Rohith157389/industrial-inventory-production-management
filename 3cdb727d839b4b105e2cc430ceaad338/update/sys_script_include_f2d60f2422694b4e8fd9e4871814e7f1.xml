@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.ProductionOrderCreator</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Creates a Production Order from a Customer Order Item with validation, duplicate prevention, and structured result. Enforces mandatory fields, generates PO numbers, and integrates with existing quantity_remaining BR.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>ProductionOrderCreator</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * ProductionOrderCreator
+ *
+ * Server-side Script Include that creates a Production Order from a
+ * Customer Order Item. Validates inputs, prevents duplicates, and
+ * returns a structured result.
+ *
+ * Usage:
+ *   var creator = new x_2056099_indust_0.ProductionOrderCreator();
+ *   var result = creator.createFromItem('<customer_order_item_sys_id>');
+ *
+ * Number generation note:
+ *   No auto-number (sys_number) mechanism exists for Production Orders.
+ *   The number field is mandatory and unique. This service generates
+ *   numbers following the established pattern: PROD-YYYY-NNN, where
+ *   NNN increments from the current maximum.
+ *
+ * production_location note:
+ *   The field is mandatory. All 17 existing POs use a single location
+ *   (sys_id: 337551e883ffc310dd8c9610feaad36f, "Production Floor").
+ *   This service uses that established default.
+ */
+var ProductionOrderCreator = Class.create();
+ProductionOrderCreator.prototype = {
+
+    PRODUCTION_ORDER_TABLE: 'x_2056099_indust_0_production_order',
+    CUST_ORDER_ITEM_TABLE: 'x_2056099_indust_0_cust_ord_item',
+    CUST_ORDER_TABLE: 'x_2056099_indust_0_cust_order',
+
+    // Established default production location used by all existing POs
+    DEFAULT_PRODUCTION_LOCATION: '337551e883ffc310dd8c9610feaad36f',
+
+    initialize: function() {},
+
+    /**
+     * Create a Production Order from a Customer Order Item.
+     *
+     * @param {string} customerOrderItemSysId - sys_id of the Customer Order Item
+     * @returns {object} Structured result with success, production_order, number,
+     *                   customer_order_item, and message fields.
+     */
+    createFromItem: function(customerOrderItemSysId) {
+        // --- Input validation ---
+        if (!customerOrderItemSysId || customerOrderItemSysId === '') {
+            return this._failure('Customer Order Item sys_id is required.', customerOrderItemSysId);
+        }
+
+        // 1. Customer Order Item must exist and be active
+        var itemGr = new GlideRecord(this.CUST_ORDER_ITEM_TABLE);
+        if (!itemGr.get(customerOrderItemSysId)) {
+            return this._failure('Customer Order Item not found: ' + customerOrderItemSysId, customerOrderItemSysId);
+        }
+        if (itemGr.getValue('active') !== '1') {
+            return this._failure('Customer Order Item is not active: ' + customerOrderItemSysId, customerOrderItemSysId);
+        }
+
+        // 2. Its Customer Order must exist and be active
+        var customerOrderSysId = itemGr.getValue('customer_order');
+        if (!customerOrderSysId) {
+            return this._failure('Customer Order Item has no linked Customer Order.', customerOrderItemSysId);
+        }
+        var orderGr = new GlideRecord(this.CUST_ORDER_TABLE);
+        if (!orderGr.get(customerOrderSysId)) {
+            return this._failure('Linked Customer Order not found: ' + customerOrderSysId, customerOrderItemSysId);
+        }
+        if (orderGr.getValue('active') !== '1') {
+            return this._failure('Linked Customer Order is not active.', customerOrderItemSysId);
+        }
+
+        // 3. material_product must be populated
+        var materialProduct = itemGr.getValue('material_product');
+        if (!materialProduct || materialProduct === '') {
+            return this._failure('Customer Order Item has no material_product.', customerOrderItemSysId);
+        }
+
+        // 4. quantity_ordered must be > 0
+        var quantityOrdered = parseFloat(itemGr.getValue('quantity_ordered'));
+        if (isNaN(quantityOrdered) || quantityOrdered <= 0) {
+            return this._failure('Customer Order Item quantity_ordered must be greater than 0. Current: ' + itemGr.getValue('quantity_ordered'), customerOrderItemSysId);
+        }
+
+        // 5. No duplicate: check for existing active PO with same customer_order_item
+        var dupCheck = new GlideRecord(this.PRODUCTION_ORDER_TABLE);
+        dupCheck.addQuery('customer_order_item', customerOrderItemSysId);
+        dupCheck.addQuery('active', true);
+        dupCheck.setLimit(1);
+        dupCheck.query();
+        if (dupCheck.hasNext()) {
+            dupCheck.next();
+            return this._failure(
+                'An active Production Order already exists for this item: ' + dupCheck.getValue('number'),
+                customerOrderItemSysId
+            );
+        }
+
+        // --- Generate number ---
+        var poNumber = this._generateNumber();
+        if (!poNumber) {
+            return this._failure('Failed to generate a unique Production Order number.', customerOrderItemSysId);
+        }
+
+        // --- Resolve priority ---
+        var priority = itemGr.getValue('priority');
+        if (!priority || priority === '') {
+            priority = 'medium'; // existing default from schema
+        }
+
+        // --- Create Production Order ---
+        var poGr = new GlideRecord(this.PRODUCTION_ORDER_TABLE);
+        poGr.initialize();
+        poGr.setValue('number', poNumber);
+        poGr.setValue('customer_order', customerOrderSysId);
+        poGr.setValue('customer_order_item', customerOrderItemSysId);
+        poGr.setValue('finished_product', materialProduct);
+        poGr.setValue('quantity_planned', quantityOrdered.toString());
+        poGr.setValue('quantity_produced', '0');
+        // quantity_remaining will be set by the Business Rule, but set explicitly for clarity
+        poGr.setValue('quantity_remaining', quantityOrdered.toString());
+        poGr.setValue('priority', priority);
+        poGr.setValue('status', 'draft');
+        poGr.setValue('active', true);
+        poGr.setValue('production_location', this.DEFAULT_PRODUCTION_LOCATION);
+        // fulfillment_location: left empty — the existing BR
+        // "Propagate Warehouse from Customer Order" handles this on insert
+
+        var insertedSysId = poGr.insert();
+        if (!insertedSysId || insertedSysId === '') {
+            return this._failure('Production Order insert was rejected by a server-side rule.', customerOrderItemSysId);
+        }
+
+        // Read back to confirm the BR-enforced values
+        var verifyGr = new GlideRecord(this.PRODUCTION_ORDER_TABLE);
+        if (verifyGr.get(insertedSysId)) {
+            return {
+                success: true,
+                production_order: insertedSysId,
+                number: verifyGr.getValue('number'),
+                customer_order_item: customerOrderItemSysId,
+                customer_order: customerOrderSysId,
+                finished_product: materialProduct,
+                quantity_planned: verifyGr.getValue('quantity_planned'),
+                quantity_produced: verifyGr.getValue('quantity_produced'),
+                quantity_remaining: verifyGr.getValue('quantity_remaining'),
+                status: verifyGr.getValue('status'),
+                message: 'Production Order created successfully.'
+            };
+        }
+
+        return {
+            success: true,
+            production_order: insertedSysId,
+            number: poNumber,
+            customer_order_item: customerOrderItemSysId,
+            customer_order: customerOrderSysId,
+            message: 'Production Order created (read-back unavailable).'
+        };
+    },
+
+    /**
+     * Generate a unique Production Order number following the
+     * established pattern: PROD-YYYY-NNN.
+     *
+     * @returns {string|null} Generated number or null on failure.
+     */
+    _generateNumber: function() {
+        var now = new GlideDateTime();
+        var year = now.getYearLocalTime();
+        var prefix = 'PROD-' + year + '-';
+
+        // Find the highest existing number with this prefix
+        var gr = new GlideRecord(this.PRODUCTION_ORDER_TABLE);
+        gr.addQuery('number', 'STARTSWITH', prefix);
+        gr.orderByDesc('number');
+        gr.setLimit(1);
+        gr.query();
+
+        var nextSeq = 1;
+        if (gr.next()) {
+            var existingNum = gr.getValue('number');
+            var seqPart = existingNum.replace(prefix, '');
+            var parsed = parseInt(seqPart, 10);
+            if (!isNaN(parsed)) {
+                nextSeq = parsed + 1;
+            }
+        }
+
+        // Pad to 3 digits minimum
+        var seqStr = nextSeq.toString();
+        while (seqStr.length < 3) {
+            seqStr = '0' + seqStr;
+        }
+
+        var candidate = prefix + seqStr;
+
+        // Verify uniqueness
+        var check = new GlideRecord(this.PRODUCTION_ORDER_TABLE);
+        check.addQuery('number', candidate);
+        check.setLimit(1);
+        check.query();
+        if (check.hasNext()) {
+            // Collision — try incrementing
+            nextSeq++;
+            seqStr = nextSeq.toString();
+            while (seqStr.length < 3) {
+                seqStr = '0' + seqStr;
+            }
+            candidate = prefix + seqStr;
+        }
+
+        return candidate;
+    },
+
+    /**
+     * Build a failure result.
+     */
+    _failure: function(message, customerOrderItemSysId) {
+        return {
+            success: false,
+            production_order: null,
+            number: null,
+            customer_order_item: customerOrderItemSysId || null,
+            message: message
+        };
+    },
+
+    type: 'ProductionOrderCreator'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 19:20:58</sys_created_on>
+        <sys_id>f2d60f2422694b4e8fd9e4871814e7f1</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>ProductionOrderCreator</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_f2d60f2422694b4e8fd9e4871814e7f1</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 19:20:58</sys_updated_on>
+    </sys_script_include>
+</record_update>

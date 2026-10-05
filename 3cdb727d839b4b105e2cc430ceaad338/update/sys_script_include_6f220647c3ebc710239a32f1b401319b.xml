@@ -335,10 +335,13 @@ MaterialFulfillmentDecision.prototype = {
         // Steps 15-18: Evaluate procurement
         // ========================================
         if (supplierSysId) {
-            // Note: no supplier_lead_time field exists yet on mat_master.
-            // Use a default estimate. When the supplier price comparison
-            // table is implemented, this will read actual lead times.
-            var defaultSupplierLeadDays = 7;
+            // Resolve supplier lead time from supp_mat when a valid profile
+            // exists; otherwise fall back to the 7-day default estimate.
+            // supp_mat.lead_time_days is the authoritative configured
+            // supplier lead time.  7 days is only the fallback estimate.
+            var supplierLeadInfo = this._getSupplierLeadTimeDays(matId, supplierSysId);
+            var defaultSupplierLeadDays = supplierLeadInfo.days;
+            var supplierLeadTimeSource = supplierLeadInfo.source;
             var procArrival = this._addDays(new GlideDateTime(), defaultSupplierLeadDays);
             var meetsProcDeadline = !custDate || procArrival.compareTo(new GlideDateTime(custDate)) <= 0;
 
@@ -358,6 +361,7 @@ MaterialFulfillmentDecision.prototype = {
                     assigned_warehouse: whId,
                     supplier: supplierSysId,
                     supplier_lead_time_days: defaultSupplierLeadDays,
+                    supplier_lead_time_source: supplierLeadTimeSource,
                     expected_fulfillment_date: procArrival.getValue(),
                     customer_required_date: custDate,
                     customer_order: coId,
@@ -394,6 +398,7 @@ MaterialFulfillmentDecision.prototype = {
                         source_warehouse: candidates[p].warehouse.sys_id,
                         supplier: supplierSysId,
                         supplier_lead_time_days: altProcLead,
+                        supplier_lead_time_source: supplierLeadTimeSource,
                         transfer_lead_time_days: altTransferLead,
                         expected_fulfillment_date: altArrival.getValue(),
                         customer_required_date: custDate,
@@ -465,6 +470,7 @@ MaterialFulfillmentDecision.prototype = {
             source_warehouse: data.source_warehouse || '',
             transfer_lead_time_days: (data.transfer_lead_time_days === undefined ? 0 : data.transfer_lead_time_days),
             supplier_lead_time_days: (data.supplier_lead_time_days === undefined ? 0 : data.supplier_lead_time_days),
+            supplier_lead_time_source: data.supplier_lead_time_source || '',
             supplier: data.supplier || '',
             urgency: data.urgency || '',
             customer_required_date: data.customer_required_date || '',
@@ -616,6 +622,53 @@ MaterialFulfillmentDecision.prototype = {
             }
         }
         return result;
+    },
+
+    /**
+     * Resolve supplier lead time from supp_mat profile. READ-ONLY.
+     *
+     * supp_mat.lead_time_days is the authoritative configured supplier lead
+     * time when a valid profile exists. 7 days is only the fallback estimate
+     * used when no usable profile is found.
+     *
+     * Selection precedence when multiple profiles exist:
+     *   1. preferred = true first
+     *   2. effective_from most recent (descending)
+     *   3. sys_id ascending (deterministic tiebreaker)
+     *
+     * @param {string} materialSysId - mat_master sys_id
+     * @param {string} supplierSysId - core_company sys_id (preferred_supplier)
+     * @returns {object} { days: number, source: 'SUPPLIER_PROFILE'|'DEFAULT_FALLBACK' }
+     */
+    _getSupplierLeadTimeDays: function (materialSysId, supplierSysId) {
+        var DEFAULT_LEAD_DAYS = 7;
+        var FALLBACK = 'DEFAULT_FALLBACK';
+        var PROFILE  = 'SUPPLIER_PROFILE';
+
+        if (!materialSysId || !supplierSysId) {
+            return { days: DEFAULT_LEAD_DAYS, source: FALLBACK };
+        }
+
+        var SUPP_MAT = 'x_2056099_indust_0_supp_mat';
+        var gr = new GlideRecord(SUPP_MAT);
+        gr.addQuery('material_product', materialSysId);
+        gr.addQuery('supplier', supplierSysId);
+        gr.addQuery('active', true);
+        // Deterministic ordering: preferred first, then most recent effective_from, then sys_id
+        gr.orderByDesc('preferred');
+        gr.orderByDesc('effective_from');
+        gr.orderBy('sys_id');
+        gr.setLimit(1);
+        gr.query();
+
+        if (gr.next()) {
+            var lt = parseInt(gr.getValue('lead_time_days'), 10);
+            if (!isNaN(lt) && lt > 0) {
+                return { days: lt, source: PROFILE };
+            }
+        }
+
+        return { days: DEFAULT_LEAD_DAYS, source: FALLBACK };
     },
 
     _fail: function (reason) {

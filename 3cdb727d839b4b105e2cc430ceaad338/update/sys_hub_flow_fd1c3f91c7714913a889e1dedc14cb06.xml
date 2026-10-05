@@ -37,7 +37,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>fd1c3f91c7714913a889e1dedc14cb06</sys_id>
-        <sys_mod_count>8</sys_mod_count>
+        <sys_mod_count>0</sys_mod_count>
         <sys_name>FD - Customer Order - Multi Material Fulfillment Coordinator</sys_name>
         <sys_overrides/>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -45,7 +45,7 @@
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_hub_flow_fd1c3f91c7714913a889e1dedc14cb06</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-04 17:29:45</sys_updated_on>
+        <sys_updated_on>2026-10-04 17:55:50</sys_updated_on>
         <type>subflow</type>
         <updation_source/>
         <version>2</version>
@@ -868,9 +868,9 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 08:29:14</sys_created_on>
-        <sys_id>501603d847770710527276a4416d4363</sys_id>
+        <sys_id>1cd9cda8833fc310dd8c9610feaad328</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
+        <sys_name>Production Order Sys ID</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
@@ -892,9 +892,9 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 08:29:14</sys_created_on>
-        <sys_id>0916c3d847770710527276a4416d432a</sys_id>
+        <sys_id>39d981e8833fc310dd8c9610feaad36f</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
+        <sys_name>Material Ready Date</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
@@ -905,19 +905,42 @@
         <url_target/>
     </sys_documentation>
     <sys_documentation action="INSERT_OR_UPDATE">
-        <element>feasibleMaterials</element>
+        <element>totalMaterials</element>
         <help/>
         <hint/>
-        <label>Feasible Materials</label>
+        <label>Total Materials</label>
         <language>en</language>
         <name>var__m_sys_hub_flow_output_fd1c3f91c7714913a889e1dedc14cb06</name>
-        <plural>Feasible Materials</plural>
+        <plural>Total Materials</plural>
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 08:29:15</sys_created_on>
-        <sys_id>0d16c3d847770710527276a4416d4317</sys_id>
+        <sys_id>3dd981e8833fc310dd8c9610feaad39a</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
+        <sys_name>Total Materials</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 08:29:15</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>requiresReview</element>
+        <help/>
+        <hint/>
+        <label>Requires Review</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_output_fd1c3f91c7714913a889e1dedc14cb06</name>
+        <plural>Requires Reviews</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 08:29:15</sys_created_on>
+        <sys_id>b9d981e8833fc310dd8c9610feaad375</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Requires Review</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
@@ -938,9 +961,9 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 08:29:14</sys_created_on>
-        <sys_id>1916c3d847770710527276a4416d434f</sys_id>
+        <sys_id>b9d981e8833fc310dd8c9610feaad394</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
+        <sys_name>Success</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
@@ -951,42 +974,19 @@
         <url_target/>
     </sys_documentation>
     <sys_documentation action="INSERT_OR_UPDATE">
-        <element>requiresReview</element>
+        <element>feasibleMaterials</element>
         <help/>
         <hint/>
-        <label>Requires Review</label>
+        <label>Feasible Materials</label>
         <language>en</language>
         <name>var__m_sys_hub_flow_output_fd1c3f91c7714913a889e1dedc14cb06</name>
-        <plural>Requires Reviews</plural>
+        <plural>Feasible Materials</plural>
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 08:29:15</sys_created_on>
-        <sys_id>4916c3d847770710527276a4416d4330</sys_id>
+        <sys_id>e9d981e8833fc310dd8c9610feaad35c</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
-        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-        <sys_policy/>
-        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name/>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 08:29:15</sys_updated_on>
-        <url/>
-        <url_target/>
-    </sys_documentation>
-    <sys_documentation action="INSERT_OR_UPDATE">
-        <element>totalMaterials</element>
-        <help/>
-        <hint/>
-        <label>Total Materials</label>
-        <language>en</language>
-        <name>var__m_sys_hub_flow_output_fd1c3f91c7714913a889e1dedc14cb06</name>
-        <plural>Total Materials</plural>
-        <sys_class_name>sys_documentation</sys_class_name>
-        <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-01 08:29:15</sys_created_on>
-        <sys_id>5916c3d847770710527276a4416d4355</sys_id>
-        <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
+        <sys_name>Feasible Materials</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
@@ -1870,9 +1870,9 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 08:30:04</sys_created_on>
-        <sys_id>0306cb9847770710527276a4416d43ca</sys_id>
+        <sys_id>f6c949a8833fc310dd8c9610feaad3c4</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
+        <sys_name>Production Order Sys ID</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
@@ -1884,25 +1884,25 @@
     </sys_documentation>
     <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_b08da39b93678310e61e3b277bba10b5"/>
     <sys_documentation action="INSERT_OR_UPDATE">
-        <element>feasibleMaterials</element>
+        <element>materialReadyDate</element>
         <help/>
         <hint/>
-        <label>Feasible Materials</label>
+        <label>Material Ready Date</label>
         <language>en</language>
         <name>var__m_sys_hub_flow_output_b08da39b93678310e61e3b277bba10b5</name>
-        <plural>Feasible Materials</plural>
+        <plural>Material Ready Dates</plural>
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-01 08:30:12</sys_created_on>
-        <sys_id>851683d847770710527276a4416d4389</sys_id>
+        <sys_created_on>2026-10-01 08:30:08</sys_created_on>
+        <sys_id>11d941e8833fc310dd8c9610feaad3ed</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
+        <sys_name>Material Ready Date</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name/>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 08:30:12</sys_updated_on>
+        <sys_updated_on>2026-10-01 08:30:08</sys_updated_on>
         <url/>
         <url_target/>
     </sys_documentation>
@@ -1917,9 +1917,9 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 08:30:09</sys_created_on>
-        <sys_id>891683d847770710527276a4416d43ae</sys_id>
+        <sys_id>21d981e8833fc310dd8c9610feaad30c</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
+        <sys_name>Requires Review</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
@@ -1930,48 +1930,25 @@
         <url_target/>
     </sys_documentation>
     <sys_documentation action="INSERT_OR_UPDATE">
-        <element>totalMaterials</element>
+        <element>feasibleMaterials</element>
         <help/>
         <hint/>
-        <label>Total Materials</label>
+        <label>Feasible Materials</label>
         <language>en</language>
         <name>var__m_sys_hub_flow_output_b08da39b93678310e61e3b277bba10b5</name>
-        <plural>Total Materials</plural>
+        <plural>Feasible Materials</plural>
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-01 08:30:10</sys_created_on>
-        <sys_id>891683d847770710527276a4416d43d3</sys_id>
+        <sys_created_on>2026-10-01 08:30:12</sys_created_on>
+        <sys_id>99d941e8833fc310dd8c9610feaad3e6</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
+        <sys_name>Feasible Materials</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name/>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 08:30:10</sys_updated_on>
-        <url/>
-        <url_target/>
-    </sys_documentation>
-    <sys_documentation action="INSERT_OR_UPDATE">
-        <element>materialReadyDate</element>
-        <help/>
-        <hint/>
-        <label>Material Ready Date</label>
-        <language>en</language>
-        <name>var__m_sys_hub_flow_output_b08da39b93678310e61e3b277bba10b5</name>
-        <plural>Material Ready Dates</plural>
-        <sys_class_name>sys_documentation</sys_class_name>
-        <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-01 08:30:08</sys_created_on>
-        <sys_id>c91683d847770710527276a4416d438f</sys_id>
-        <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
-        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-        <sys_policy/>
-        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name/>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 08:30:08</sys_updated_on>
+        <sys_updated_on>2026-10-01 08:30:12</sys_updated_on>
         <url/>
         <url_target/>
     </sys_documentation>
@@ -1986,15 +1963,38 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 08:30:06</sys_created_on>
-        <sys_id>c91683d847770710527276a4416d43b4</sys_id>
+        <sys_id>a1d981e8833fc310dd8c9610feaad312</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name/>
+        <sys_name>Success</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name/>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-01 08:30:06</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>totalMaterials</element>
+        <help/>
+        <hint/>
+        <label>Total Materials</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_output_b08da39b93678310e61e3b277bba10b5</name>
+        <plural>Total Materials</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 08:30:10</sys_created_on>
+        <sys_id>a1d981e8833fc310dd8c9610feaad331</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Total Materials</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name/>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 08:30:10</sys_updated_on>
         <url/>
         <url_target/>
     </sys_documentation>

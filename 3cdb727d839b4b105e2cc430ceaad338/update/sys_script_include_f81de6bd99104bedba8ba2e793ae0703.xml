@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.BomResolver</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Deterministic BOM resolution for Production Orders. Resolves by finished_product with broken-BOM exclusion, structural equivalence checks for multi-BOM products, and structured result objects.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>BomResolver</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * BomResolver
+ *
+ * Deterministic BOM resolution for Production Orders.
+ *
+ * Resolution precedence:
+ * 1. Customer-specific BOM (only if a valid cust_master → core_company bridge exists)
+ * 2. Product-level fallback: active customer_bom by finished_product with valid active lines
+ * 3. Structural equivalence check when multiple BOMs exist for same product
+ *
+ * Exclusions:
+ * - Inactive BOMs (active != true)
+ * - BOMs with zero active lines
+ * - BOMs with invalid reference fields (display-value strings instead of sys_ids)
+ *
+ * This Script Include is READ-ONLY. It queries customer_bom and
+ * customer_bom_line but never creates, updates, or deletes any record.
+ */
+var BomResolver = Class.create();
+BomResolver.prototype = {
+
+    BOM_TABLE: 'x_2056099_indust_0_customer_bom',
+    BOM_LINE_TABLE: 'x_2056099_indust_0_customer_bom_line',
+    MAT_MASTER_TABLE: 'x_2056099_indust_0_mat_master',
+    PRODUCTION_ORDER_TABLE: 'x_2056099_indust_0_production_order',
+
+    initialize: function() {},
+
+    /**
+     * Resolve the best BOM for a Production Order.
+     *
+     * @param {string} productionOrderSysId - sys_id of the Production Order
+     * @returns {object} Structured result:
+     *   { success, bom_sys_id, bom_name, bom_number, finished_product,
+     *     resolution_mode, line_count, lines[], message }
+     */
+    resolveForProductionOrder: function(productionOrderSysId) {
+        if (!productionOrderSysId) {
+            return this._failure('Production Order sys_id is required.');
+        }
+
+        var poGr = new GlideRecord(this.PRODUCTION_ORDER_TABLE);
+        if (!poGr.get(productionOrderSysId)) {
+            return this._failure('Production Order not found: ' + productionOrderSysId);
+        }
+
+        var finishedProduct = poGr.getValue('finished_product');
+        if (!finishedProduct) {
+            return this._failure('Production Order has no finished_product.');
+        }
+
+        return this.resolveByProduct(finishedProduct);
+    },
+
+    /**
+     * Resolve the best BOM for a given finished product sys_id.
+     *
+     * @param {string} finishedProductSysId - sys_id from mat_master
+     * @returns {object} Structured result
+     */
+    resolveByProduct: function(finishedProductSysId) {
+        if (!finishedProductSysId) {
+            return this._failure('finished_product sys_id is required.');
+        }
+
+        // Validate the finished product exists in mat_master
+        var matGr = new GlideRecord(this.MAT_MASTER_TABLE);
+        if (!matGr.get(finishedProductSysId)) {
+            return this._failure('finished_product not found in mat_master: ' + finishedProductSysId);
+        }
+
+        // Find all active BOMs for this product
+        var bomGr = new GlideRecord(this.BOM_TABLE);
+        bomGr.addQuery('finished_product', finishedProductSysId);
+        bomGr.addQuery('active', true);
+        bomGr.orderBy('sys_id'); // deterministic ordering
+        bomGr.query();
+
+        var candidateBoms = [];
+        while (bomGr.next()) {
+            var bomSid = bomGr.getValue('sys_id');
+            var bomCustomer = bomGr.getValue('customer');
+
+            // Exclude BOMs with invalid reference fields
+            // Invalid = display-value string instead of sys_id (32-char hex)
+            if (!this._isValidSysId(bomCustomer)) {
+                continue; // skip broken seed BOMs
+            }
+
+            // Count active BOM lines
+            var lineCount = this._countActiveLines(bomSid);
+            if (lineCount === 0) {
+                continue; // skip BOMs with no active lines
+            }
+
+            candidateBoms.push({
+                bom_sys_id: bomSid,
+                bom_name: bomGr.getValue('bom_name'),
+                bom_number: bomGr.getValue('number'),
+                customer_sid: bomCustomer,
+                customer_name: bomGr.getDisplayValue('customer'),
+                line_count: lineCount,
+                status: bomGr.getValue('status')
+            });
+        }
+
+        if (candidateBoms.length === 0) {
+            return this._failure('No valid active BOM with active lines found for product: ' + finishedProductSysId);
+        }
+
+        // Single candidate: use it directly
+        if (candidateBoms.length === 1) {
+            return this._buildSuccess(candidateBoms[0], 'PRODUCT_UNIQUE', finishedProductSysId);
+        }
+
+        // Multiple candidates: check structural equivalence
+        var structCheck = this._checkStructuralEquivalence(candidateBoms);
+
+        if (structCheck.equivalent) {
+            // All BOMs have identical component structures — select lowest sys_id deterministically
+            candidateBoms.sort(function(a, b) { return a.bom_sys_id < b.bom_sys_id ? -1 : 1; });
+            return this._buildSuccess(candidateBoms[0], 'PRODUCT_EQUIVALENT_MULTI',
+                finishedProductSysId,
+                candidateBoms.length + ' BOMs found with identical structures; selected lowest sys_id deterministically.');
+        }
+
+        // Non-equivalent structures — report error
+        return {
+            success: false,
+            bom_sys_id: null,
+            bom_name: null,
+            resolution_mode: 'MULTIPLE_BOM_STRUCTURES',
+            finished_product: finishedProductSysId,
+            candidate_count: candidateBoms.length,
+            candidates: candidateBoms.map(function(c) {
+                return { bom_sys_id: c.bom_sys_id, bom_name: c.bom_name, customer: c.customer_name, lines: c.line_count };
+            }),
+            structural_diff: structCheck.diff,
+            message: 'Multiple BOMs with DIFFERENT component structures exist for this product. Manual review required.',
+            line_count: 0,
+            lines: []
+        };
+    },
+
+    /**
+     * Check whether all candidate BOMs have structurally identical BOM lines.
+     * Compares: material_product, quantity_required, source_location,
+     *           critical_component, scrap_percentage.
+     *
+     * @param {Array} candidates - Array of BOM candidates
+     * @returns {object} { equivalent: boolean, diff: string|null }
+     */
+    _checkStructuralEquivalence: function(candidates) {
+        if (candidates.length < 2) return { equivalent: true, diff: null };
+
+        // Get the fingerprint (sorted component signature) for each BOM
+        var fingerprints = [];
+        for (var i = 0; i < candidates.length; i++) {
+            var fp = this._getBomFingerprint(candidates[i].bom_sys_id);
+            fingerprints.push({ bom: candidates[i].bom_name, fingerprint: fp });
+        }
+
+        // Compare all against the first
+        var reference = fingerprints[0].fingerprint;
+        for (var j = 1; j < fingerprints.length; j++) {
+            if (fingerprints[j].fingerprint !== reference) {
+                return {
+                    equivalent: false,
+                    diff: 'BOM "' + fingerprints[0].bom + '" differs from "' + fingerprints[j].bom + '"'
+                };
+            }
+        }
+
+        return { equivalent: true, diff: null };
+    },
+
+    /**
+     * Generate a deterministic fingerprint of a BOM's active lines.
+     * Sorts lines by material_product sys_id, then concatenates key fields.
+     */
+    _getBomFingerprint: function(bomSysId) {
+        var lines = [];
+        var lineGr = new GlideRecord(this.BOM_LINE_TABLE);
+        lineGr.addQuery('customer_bom', bomSysId);
+        lineGr.addQuery('active', true);
+        lineGr.orderBy('material_product');
+        lineGr.query();
+
+        while (lineGr.next()) {
+            lines.push(
+                lineGr.getValue('material_product') + '|' +
+                lineGr.getValue('quantity_required') + '|' +
+                (lineGr.getValue('source_location') || 'null') + '|' +
+                (lineGr.getValue('critical_component') || '0') + '|' +
+                (lineGr.getValue('scrap_percentage') || '0')
+            );
+        }
+
+        return lines.join(';;');
+    },
+
+    /**
+     * Count active BOM lines for a given BOM.
+     */
+    _countActiveLines: function(bomSysId) {
+        var lineGA = new GlideAggregate(this.BOM_LINE_TABLE);
+        lineGA.addQuery('customer_bom', bomSysId);
+        lineGA.addQuery('active', true);
+        lineGA.addAggregate('COUNT');
+        lineGA.query();
+        return lineGA.next() ? parseInt(lineGA.getAggregate('COUNT')) : 0;
+    },
+
+    /**
+     * Validate a sys_id looks like a real 32-character hex identifier.
+     * Returns false for display-value strings like "AquaPure Water Systems".
+     */
+    _isValidSysId: function(value) {
+        if (!value || value === '') return false;
+        // sys_ids are 32 hex characters
+        return /^[0-9a-f]{32}$/.test(value);
+    },
+
+    /**
+     * Build a success result with BOM lines.
+     */
+    _buildSuccess: function(bom, mode, finishedProduct, extraMessage) {
+        var lines = [];
+        var lineGr = new GlideRecord(this.BOM_LINE_TABLE);
+        lineGr.addQuery('customer_bom', bom.bom_sys_id);
+        lineGr.addQuery('active', true);
+        lineGr.orderBy('material_product');
+        lineGr.query();
+
+        while (lineGr.next()) {
+            lines.push({
+                material_product: lineGr.getValue('material_product'),
+                material_name: lineGr.getDisplayValue('material_product'),
+                quantity_required: lineGr.getValue('quantity_required'),
+                unit_of_measure: lineGr.getValue('unit_of_measure'),
+                source_location: lineGr.getValue('source_location'),
+                source_location_name: lineGr.getDisplayValue('source_location'),
+                critical_component: lineGr.getValue('critical_component') === '1',
+                scrap_percentage: lineGr.getValue('scrap_percentage')
+            });
+        }
+
+        return {
+            success: true,
+            bom_sys_id: bom.bom_sys_id,
+            bom_name: bom.bom_name,
+            bom_number: bom.bom_number,
+            bom_customer: bom.customer_name,
+            finished_product: finishedProduct,
+            resolution_mode: mode,
+            line_count: lines.length,
+            lines: lines,
+            message: extraMessage || 'BOM resolved successfully.'
+        };
+    },
+
+    /**
+     * Build a failure result.
+     */
+    _failure: function(message) {
+        return {
+            success: false,
+            bom_sys_id: null,
+            bom_name: null,
+            resolution_mode: 'FAILED',
+            line_count: 0,
+            lines: [],
+            message: message
+        };
+    },
+
+    type: 'BomResolver'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-04 19:51:48</sys_created_on>
+        <sys_id>f81de6bd99104bedba8ba2e793ae0703</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>BomResolver</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_f81de6bd99104bedba8ba2e793ae0703</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-04 19:51:48</sys_updated_on>
+    </sys_script_include>
+</record_update>
