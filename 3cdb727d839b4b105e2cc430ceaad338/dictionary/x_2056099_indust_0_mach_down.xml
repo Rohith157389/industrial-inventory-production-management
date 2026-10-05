@@ -1,49 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="49b4d2d2273a4defaba6a119a800d10b" label="Machine Downtime" name="x_2056099_indust_0_mach_down" type="collection">
-        <element label="Start Time" mandatory="true" max_length="40" name="start_time" type="glide_date_time"/>
-        <element display="true" label="Downtime ID" mandatory="true" max_length="40" name="number" type="string"/>
+        <element label="End Time" max_length="40" name="end_time" type="glide_date_time"/>
         <element label="Reported By" max_length="32" name="reported_by" reference="sys_user" type="reference"/>
-        <element label="Machine" mandatory="true" max_length="32" name="machine" reference="x_2056099_indust_0_machine" type="reference"/>
-        <element label="Root Cause" max_length="4000" name="root_cause" type="string"/>
-        <element label="Severity" max_length="40" name="severity" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Major" sequence="2" value="major"/>
-                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
-                <element inactive_on_update="false" label="Minor" sequence="3" value="minor"/>
-            </choice>
-        </element>
-        <element label="Related Maintenance" max_length="32" name="related_maintenance" reference="x_2056099_indust_0_mach_maint" type="reference"/>
         <element label="Downtime Category" max_length="40" name="downtime_category" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Electrical Failure" sequence="2" value="electrical_failure"/>
-                <element inactive_on_update="false" label="Unknown" sequence="14" value="unknown"/>
-                <element inactive_on_update="false" label="Material-Related Issue" sequence="10" value="material_related"/>
+                <element inactive_on_update="false" label="Preventive Maintenance" sequence="8" value="preventive_maintenance"/>
+                <element inactive_on_update="false" label="Lubrication Problem" sequence="4" value="lubrication_problem"/>
+                <element inactive_on_update="false" label="Power Failure" sequence="12" value="power_failure"/>
+                <element inactive_on_update="false" label="Operator Issue" sequence="11" value="operator_issue"/>
+                <element inactive_on_update="false" label="Sensor Failure" sequence="7" value="sensor_failure"/>
+                <element inactive_on_update="false" label="Hydraulic Failure" sequence="3" value="hydraulic_failure"/>
                 <element inactive_on_update="false" label="Overheating" sequence="6" value="overheating"/>
+                <element inactive_on_update="false" label="Electrical Failure" sequence="2" value="electrical_failure"/>
+                <element inactive_on_update="false" label="Material-Related Issue" sequence="10" value="material_related"/>
+                <element inactive_on_update="false" label="Unknown" sequence="14" value="unknown"/>
+                <element inactive_on_update="false" label="Corrective Maintenance" sequence="9" value="corrective_maintenance"/>
                 <element inactive_on_update="false" label="Tool Failure" sequence="5" value="tool_failure"/>
                 <element inactive_on_update="false" label="Mechanical Failure" sequence="1" value="mechanical_failure"/>
                 <element inactive_on_update="false" label="Major Equipment Failure" sequence="13" value="major_equipment_failure"/>
-                <element inactive_on_update="false" label="Corrective Maintenance" sequence="9" value="corrective_maintenance"/>
-                <element inactive_on_update="false" label="Power Failure" sequence="12" value="power_failure"/>
-                <element inactive_on_update="false" label="Preventive Maintenance" sequence="8" value="preventive_maintenance"/>
-                <element inactive_on_update="false" label="Lubrication Problem" sequence="4" value="lubrication_problem"/>
-                <element inactive_on_update="false" label="Sensor Failure" sequence="7" value="sensor_failure"/>
-                <element inactive_on_update="false" label="Hydraulic Failure" sequence="3" value="hydraulic_failure"/>
-                <element inactive_on_update="false" label="Operator Issue" sequence="11" value="operator_issue"/>
             </choice>
         </element>
-        <element label="Reason" max_length="500" name="reason" type="string"/>
-        <element label="Notes" max_length="4000" name="notes" type="string"/>
         <element label="Downtime Type" max_length="40" name="downtime_type" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Emergency" sequence="3" value="emergency"/>
+                <element inactive_on_update="false" label="Scheduled Maintenance" sequence="4" value="scheduled_maintenance"/>
                 <element inactive_on_update="false" label="Unplanned" sequence="2" value="unplanned"/>
                 <element inactive_on_update="false" label="Planned" sequence="1" value="planned"/>
-                <element inactive_on_update="false" label="Scheduled Maintenance" sequence="4" value="scheduled_maintenance"/>
+                <element inactive_on_update="false" label="Emergency" sequence="3" value="emergency"/>
             </choice>
         </element>
-        <element label="Resolution" max_length="4000" name="resolution" type="string"/>
-        <element label="Related Production Order" max_length="32" name="related_prod_order" reference="x_2056099_indust_0_production_order" type="reference"/>
-        <element label="End Time" max_length="40" name="end_time" type="glide_date_time"/>
+        <element label="Duration" max_length="40" name="duration" type="glide_duration"/>
         <element label="Production Impact" max_length="40" name="production_impact" type="choice">
             <choice>
                 <element inactive_on_update="false" label="No Impact" sequence="3" value="no_impact"/>
@@ -51,15 +36,30 @@
                 <element inactive_on_update="false" label="Production Stopped" sequence="1" value="stopped"/>
             </choice>
         </element>
-        <element label="Duration" max_length="40" name="duration" type="glide_duration"/>
+        <element label="Machine" mandatory="true" max_length="32" name="machine" reference="x_2056099_indust_0_machine" type="reference"/>
+        <element label="Reason" max_length="500" name="reason" type="string"/>
+        <element label="Resolution" max_length="4000" name="resolution" type="string"/>
         <element label="Replacement Required" max_length="40" name="replacement_required" type="boolean"/>
+        <element label="Start Time" mandatory="true" max_length="40" name="start_time" type="glide_date_time"/>
+        <element label="Severity" max_length="40" name="severity" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Minor" sequence="3" value="minor"/>
+                <element inactive_on_update="false" label="Major" sequence="2" value="major"/>
+                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
+            </choice>
+        </element>
+        <element label="Root Cause" max_length="4000" name="root_cause" type="string"/>
+        <element label="Notes" max_length="4000" name="notes" type="string"/>
+        <element label="Related Production Order" max_length="32" name="related_prod_order" reference="x_2056099_indust_0_production_order" type="reference"/>
         <element default="active" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Closed" sequence="3" value="closed"/>
-                <element inactive_on_update="false" label="Active" sequence="1" value="active"/>
                 <element inactive_on_update="false" label="Resolved" sequence="2" value="resolved"/>
+                <element inactive_on_update="false" label="Active" sequence="1" value="active"/>
             </choice>
         </element>
+        <element display="true" label="Downtime ID" mandatory="true" max_length="40" name="number" type="string"/>
+        <element label="Related Maintenance" max_length="32" name="related_maintenance" reference="x_2056099_indust_0_mach_maint" type="reference"/>
         <index name="index">
             <element name="machine"/>
         </index>

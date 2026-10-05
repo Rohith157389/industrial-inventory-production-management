@@ -62,8 +62,8 @@
             var res = parser.processPrompt('Create order for 200 units of SKU-0010 for Honda by 2026-11-15', gs.getUserID());
             expect(res.success).toBe(true);
             expect(res.intent).toBe('CREATE_ORDER');
-            expect(res.confidence >= 50).toBe(true);
-            expect(res.actions.length > 0).toBe(true);
+            expect(res.confidence &gt;= 50).toBe(true);
+            expect(res.actions.length &gt; 0).toBe(true);
         });
 
         it('should correctly detect downtime intent and machine entity from prompt', function() {
@@ -86,7 +86,7 @@
                 ids.push(poGr.getUniqueValue());
             }
 
-            if (ids.length > 0) {
+            if (ids.length &gt; 0) {
                 var multiRes = scheduler.scheduleMultipleOrders(ids);
                 expect(multiRes.total_orders).toBe(ids.length);
                 expect(multiRes.resequenced_results.length).toBe(ids.length);
@@ -106,7 +106,7 @@
 
             expect(ingestRes.success).toBe(true);
             expect(ingestRes.machine_condition).toBe('critical');
-            expect(ingestRes.alerts_generated >= 0).toBe(true);
+            expect(ingestRes.alerts_generated &gt;= 0).toBe(true);
         });
 
         it('should calibrate resource efficiency percentage with EMA feedback', function() {

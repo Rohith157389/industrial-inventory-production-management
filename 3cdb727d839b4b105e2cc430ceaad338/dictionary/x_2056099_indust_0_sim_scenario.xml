@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="23f66c7e5363471045b132a0a0490e2e" label="Simulation Scenario" max_length="40" name="x_2056099_indust_0_sim_scenario" type="collection">
-        <element default="javascript:current.getTableName();" label="Class" max_length="80" name="sys_class_name" type="sys_class_name"/>
+        <element label="Impacted Orders" max_length="40" name="impacted_order_count" type="integer"/>
         <element choice="1" label="Disruption Category" max_length="40" name="disruption_category" type="string">
             <choice>
-                <element inactive_on_update="false" label="Supplier Delay" sequence="600" value="supplier_delay"/>
-                <element inactive_on_update="false" label="Material Shortage" sequence="200" value="material_shortage"/>
-                <element inactive_on_update="false" label="Machine Breakdown" sequence="100" value="machine_breakdown"/>
                 <element inactive_on_update="false" label="Workforce Constraint" sequence="500" value="workforce_constraint"/>
+                <element inactive_on_update="false" label="Machine Breakdown" sequence="100" value="machine_breakdown"/>
                 <element inactive_on_update="false" label="Quality Disruption" sequence="400" value="quality_disruption"/>
                 <element inactive_on_update="false" label="Multi-Factor Complex" sequence="700" value="multi_factor_complex"/>
                 <element inactive_on_update="false" label="Urgent Order Ingestion" sequence="300" value="urgent_order_ingestion"/>
+                <element inactive_on_update="false" label="Material Shortage" sequence="200" value="material_shortage"/>
+                <element inactive_on_update="false" label="Supplier Delay" sequence="600" value="supplier_delay"/>
             </choice>
         </element>
-        <element label="Cost Delta" max_length="20" name="cost_delta" type="decimal"/>
-        <element label="Approved By" max_length="32" name="approved_by" reference="sys_user" type="reference"/>
-        <element label="Disruption Parameter" max_length="500" name="disruption_parameter" type="string"/>
         <element label="Scenario Name" mandatory="true" max_length="200" name="scenario_name" type="string"/>
+        <element label="Simulated OTD (Unmitigated) %" max_length="15" name="simulated_otd_unmitigated" type="decimal"/>
         <element label="Recommended Mitigation Strategy" max_length="1000" name="recommended_strategy" type="string"/>
+        <element label="Target Facility" max_length="32" name="target_facility" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Cost Delta" max_length="20" name="cost_delta" type="decimal"/>
         <element label="Baseline OTD %" max_length="15" name="baseline_otd" type="decimal"/>
+        <element label="Approved By" max_length="32" name="approved_by" reference="sys_user" type="reference"/>
         <element label="Optimized OTD (Digital Twin) %" max_length="15" name="optimized_otd" type="decimal"/>
+        <element label="Target Entity / Asset" max_length="200" name="target_entity" type="string"/>
+        <element default="javascript:current.getTableName();" label="Class" max_length="80" name="sys_class_name" type="sys_class_name"/>
+        <element label="Disruption Parameter" max_length="500" name="disruption_parameter" type="string"/>
         <element choice="1" default="draft" label="Simulation Status" max_length="40" name="simulation_status" type="string">
             <choice>
+                <element inactive_on_update="false" label="Evaluated" sequence="300" value="evaluated"/>
+                <element inactive_on_update="false" label="Expired" sequence="600" value="expired"/>
+                <element inactive_on_update="false" label="Running" sequence="200" value="running"/>
                 <element inactive_on_update="false" label="Rejected" sequence="500" value="rejected"/>
                 <element inactive_on_update="false" label="Approved &amp; Released" sequence="400" value="approved_released"/>
                 <element inactive_on_update="false" label="Draft" sequence="100" value="draft"/>
-                <element inactive_on_update="false" label="Evaluated" sequence="300" value="evaluated"/>
-                <element inactive_on_update="false" label="Running" sequence="200" value="running"/>
-                <element inactive_on_update="false" label="Expired" sequence="600" value="expired"/>
             </choice>
         </element>
-        <element label="Simulated OTD (Unmitigated) %" max_length="15" name="simulated_otd_unmitigated" type="decimal"/>
-        <element label="Target Facility" max_length="32" name="target_facility" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Target Entity / Asset" max_length="200" name="target_entity" type="string"/>
         <element label="Scenario ID" mandatory="true" max_length="20" name="scenario_id" type="string" unique="true"/>
-        <element label="Impacted Orders" max_length="40" name="impacted_order_count" type="integer"/>
         <index name="index">
             <element name="approved_by"/>
         </index>
