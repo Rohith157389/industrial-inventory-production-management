@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element db_object_id="7fbb779c315f4f108c7d86ced8128b7f" label="Supplier Material Lead Time" name="x_2056099_indust_0_supp_lead_time" type="collection">
-        <element label="Lead Time (Days)" mandatory="true" max_length="15" name="lead_time_days" type="decimal"/>
-        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
-        <element label="Delivery Warehouse" mandatory="true" max_length="32" name="delivery_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
         <element label="Material / Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
         <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="core_company" type="reference"/>
+        <element label="Lead Time (Days)" mandatory="true" max_length="15" name="lead_time_days" type="decimal"/>
+        <element label="Delivery Warehouse" mandatory="true" max_length="32" name="delivery_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
         <index name="index">
             <element name="delivery_warehouse"/>
         </index>

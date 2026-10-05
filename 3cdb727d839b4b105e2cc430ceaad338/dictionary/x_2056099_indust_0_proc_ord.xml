@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="b26c0b015c4741c38387ddc0da0c3d0d" label="Procurement Order" name="x_2056099_indust_0_proc_ord" type="collection">
-        <element label="Unit Price" max_length="15" name="unit_price" type="decimal"/>
-        <element label="Total Amount" max_length="15" name="total_amount" type="decimal"/>
-        <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="x_2056099_indust_0_supplier" type="reference"/>
-        <element label="Materials Ordered" mandatory="true" max_length="500" name="materials_ordered" type="string"/>
-        <element label="Order Date" mandatory="true" max_length="40" name="order_date" type="glide_date_time"/>
-        <element display="true" label="Order Number" max_length="20" name="order_number" type="string"/>
         <element label="Expected Delivery Date" max_length="40" name="expected_delivery" type="glide_date"/>
-        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
-        <element label="Quantity" mandatory="true" max_length="40" name="quantity" type="integer"/>
-        <element default="draft" label="Status" max_length="40" name="status" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Delivered" sequence="4" value="delivered"/>
-                <element inactive_on_update="false" label="In Transit" sequence="3" value="in_transit"/>
-                <element inactive_on_update="false" label="Ordered" sequence="2" value="ordered"/>
-                <element inactive_on_update="false" label="Cancelled" sequence="5" value="cancelled"/>
-                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
-            </choice>
-        </element>
         <element default="medium" label="Urgency" max_length="40" name="urgency" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Medium" sequence="2" value="medium"/>
                 <element inactive_on_update="false" label="Low" sequence="1" value="low"/>
                 <element inactive_on_update="false" label="Critical" sequence="4" value="critical"/>
                 <element inactive_on_update="false" label="High" sequence="3" value="high"/>
+                <element inactive_on_update="false" label="Medium" sequence="2" value="medium"/>
+            </choice>
+        </element>
+        <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="x_2056099_indust_0_supplier" type="reference"/>
+        <element label="Materials Ordered" mandatory="true" max_length="500" name="materials_ordered" type="string"/>
+        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
+        <element label="Unit Price" max_length="15" name="unit_price" type="decimal"/>
+        <element label="Order Date" mandatory="true" max_length="40" name="order_date" type="glide_date_time"/>
+        <element label="Quantity" mandatory="true" max_length="40" name="quantity" type="integer"/>
+        <element label="Total Amount" max_length="15" name="total_amount" type="decimal"/>
+        <element display="true" label="Order Number" max_length="20" name="order_number" type="string"/>
+        <element default="draft" label="Status" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="5" value="cancelled"/>
+                <element inactive_on_update="false" label="Delivered" sequence="4" value="delivered"/>
+                <element inactive_on_update="false" label="In Transit" sequence="3" value="in_transit"/>
+                <element inactive_on_update="false" label="Ordered" sequence="2" value="ordered"/>
             </choice>
         </element>
         <index name="index">
