@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_machine</collection>
+        <condition/>
+        <description>Safely synchronizes Machine status and condition updates into the Digital Twin Work Center record without disrupting machine operations.</description>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Sync Machine Telemetry to Digital Twin</name>
+        <order>200</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+    // Non-blocking Digital Twin Synchronization
+    try {
+        var machineName = current.getValue("name") || "";
+        var machineStatus = current.getValue("status") || "operational";
+        var machineCond = current.getValue("machine_condition") || "good";
+        var machineLoc = current.getValue("location") || "";
+
+        // Query matching Digital Twin Work Center
+        var dtGr = new GlideRecord("x_2056099_indust_0_dt_work_center");
+        dtGr.addQuery("work_center_name", machineName);
+        dtGr.query();
+
+        if (!dtGr.next()) {
+            // Fallback match by facility location if exact name doesn't match
+            if (machineLoc) {
+                dtGr.initialize();
+                dtGr.addQuery("facility_location", machineLoc);
+                dtGr.query();
+                if (!dtGr.next()) return;
+            } else {
+                return;
+            }
+        }
+
+        // Map status
+        if (machineStatus === "maintenance" || machineStatus === "offline" || machineStatus === "breakdown") {
+            dtGr.setValue("operational_status", "maintenance");
+        } else if (machineStatus === "standby") {
+            dtGr.setValue("operational_status", "standby");
+        } else {
+            dtGr.setValue("operational_status", "online");
+        }
+
+        // Map Health Index %
+        var health = 95;
+        if (machineCond === "critical") health = 35;
+        else if (machineCond === "poor") health = 60;
+        else if (machineCond === "fair") health = 80;
+        else health = 95;
+
+        dtGr.setValue("health_index_pct", health);
+        dtGr.setValue("calibration_date", new GlideDateTime().getValue());
+        dtGr.update();
+    } catch (e) {
+        // Defensive: never block machine transaction
+        gs.warn("Sync Machine Telemetry to Digital Twin non-fatal error: " + e.message);
+    }
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 08:35:00</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>a8b2c3d4e5f60718293a4b5c6d7e8f90</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Sync Machine Telemetry to Digital Twin</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_a8b2c3d4e5f60718293a4b5c6d7e8f90</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 08:35:00</sys_updated_on>
+        <template/>
+        <when>after</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=a8b2c3d4e5f60718293a4b5c6d7e8f90"/>
+</record_update>

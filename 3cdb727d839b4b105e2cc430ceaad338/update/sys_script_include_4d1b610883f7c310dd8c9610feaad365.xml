@@ -641,6 +641,101 @@ WhatIfSimulationEngine.prototype = {
         return gr.insert() || "";
     },
 
+    /**
+     * Safely applies a What-If simulation proposal to live production schedules and orders.
+     * Non-destructive fallback: If anything fails, aborts cleanly without corrupting state.
+     *
+     * @param {object} params - {
+     *   schedule_sys_id: string,
+     *   production_order_sys_id: string,
+     *   proposed_resource_id: string,
+     *   proposed_start: string,
+     *   proposed_end: string,
+     *   simulation_run_sys_id: string (optional)
+     * }
+     */
+    applyProposal: function(params) {
+        if (!params) {
+            return this._fail("Parameters required to apply proposal.");
+        }
+        var schedSysId = params.schedule_sys_id || "";
+        var poSysId = params.production_order_sys_id || "";
+        
+        try {
+            // Set session transition flag for lifecycle guard BR
+            gs.getSession().putClientData("x_2056099_indust_0_api_transition", "confirm");
+
+            var schedGr = new GlideRecord(this.SCHED);
+            var found = false;
+            if (schedSysId && schedGr.get(schedSysId)) {
+                found = true;
+            } else if (poSysId) {
+                schedGr.addQuery("production_order", poSysId);
+                schedGr.addQuery("status", "IN", "draft,scheduled,confirmed");
+                schedGr.setLimit(1);
+                schedGr.query();
+                if (schedGr.next()) found = true;
+            }
+
+            if (!found) {
+                return this._fail("Active Production Schedule not found for target parameters.");
+            }
+
+            var schedNum = schedGr.getValue("number") || schedGr.getUniqueValue();
+            var currStatus = schedGr.getValue("status");
+
+            if (currStatus === "completed" || currStatus === "cancelled") {
+                return this._fail("Cannot modify schedule " + schedNum + " in terminal status: " + currStatus);
+            }
+
+            var newResName = "";
+            if (params.proposed_resource_id) {
+                var resGr = new GlideRecord(this.RES);
+                if (resGr.get(params.proposed_resource_id)) {
+                    schedGr.setValue("production_resource", params.proposed_resource_id);
+                    newResName = resGr.getValue("resource_name") || resGr.getValue("resource_id");
+                }
+            }
+
+            if (params.proposed_start) schedGr.setValue("planned_start", params.proposed_start);
+            if (params.proposed_end) schedGr.setValue("planned_end", params.proposed_end);
+
+            if (currStatus === "draft") {
+                schedGr.setValue("status", "scheduled");
+            }
+            schedGr.setValue("reschedule_reason", "Adaptive What-If Plan Applied");
+            schedGr.update();
+
+            // Safely sync with linked production order
+            var linkedPo = schedGr.getValue("production_order");
+            if (linkedPo) {
+                var poGr = new GlideRecord(this.PO);
+                if (poGr.get(linkedPo)) {
+                    if (params.proposed_resource_id) {
+                        poGr.setValue("assigned_resource", params.proposed_resource_id);
+                    }
+                    if (params.proposed_end) {
+                        poGr.setValue("planned_completion_date", params.proposed_end);
+                    }
+                    poGr.update();
+                }
+            }
+
+            return {
+                success: true,
+                message: "Applied What-If proposal to Schedule " + schedNum + (newResName ? " (Reassigned to " + newResName + ")" : ""),
+                schedule_sys_id: schedGr.getUniqueValue(),
+                schedule_number: schedNum,
+                new_resource: newResName,
+                new_start: schedGr.getValue("planned_start"),
+                new_end: schedGr.getValue("planned_end"),
+                status: schedGr.getValue("status")
+            };
+        } catch (ex) {
+            return this._fail("Error applying proposal: " + ex.message);
+        }
+    },
+
     _fail: function(reason) {
         return { success: false, error: reason };
     },

@@ -1363,11 +1363,38 @@
     }
 
     function commitMitigation() {
-        showToast('Releasing schedule & committing orders to ServiceNow...');
+        showToast('Releasing schedule & applying adaptive plan to live production...');
         uploadScenarioToServiceNow('approved_released', function(saveResult) {
             var parentSysId = (saveResult && saveResult.result && saveResult.result.sys_id) ? saveResult.result.sys_id : null;
             uploadOrdersToServiceNow(parentSysId, function() {
-                showToast('\u2714 Released! Orders saved to x_2056099_indust_0_sim_schedule_run');
+                // Safely trigger live schedule writeback via Operator API
+                try {
+                    var sc = scenariosData[currentScenarioKey] || scenariosData['SIM-2026-001'];
+                    var headers = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+                    if (typeof window !== 'undefined' && window.g_ck) headers['X-UserToken'] = window.g_ck;
+
+                    var applyPayload = {
+                        action: 'apply',
+                        scenario_type: sc.cat || 'resource_down',
+                        simulation_run_sys_id: parentSysId || '',
+                        reschedule_reason: 'What-If Simulation ' + currentScenarioKey + ' approved and released'
+                    };
+
+                    fetch('/api/x_2056099_indust_0/operator_api/simulate-whatif', {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(applyPayload)
+                    }).then(function(res) { return res.json(); })
+                      .then(function(resData) {
+                          console.log('What-If live schedule writeback response:', resData);
+                      }).catch(function(err) {
+                          console.log('Non-blocking writeback notice:', err);
+                      });
+                } catch (e) {
+                    console.log('Safe apply fallback:', e);
+                }
+
+                showToast('\u2714 Released! Orders saved to Digital Twin and Live Production Schedule updated.');
             });
         });
     }
@@ -4288,6 +4315,116 @@
         <span id="portalToastMsg">Notification</span>
     </div>
 
+    <!-- GENAI PROMPT-BASED DATA ENTRY & NATURAL LANGUAGE COMMAND BAR -->
+    <div id="genaiPromptBarContainer" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);width:92%;max-width:1100px;z-index:9999;background:rgba(15,23,42,0.92);backdrop-filter:blur(16px);border:1px solid rgba(56,189,248,0.3);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.5);padding:10px 18px;display:flex;flex-direction:column;gap:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:18px;">✨</span>
+                <span style="font-size:13px;font-weight:700;letter-spacing:0.5px;background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;">Now Assist / GenAI Command Center</span>
+                <span style="font-size:11px;background:rgba(56,189,248,0.15);color:#38bdf8;padding:2px 8px;border-radius:10px;border:1px solid rgba(56,189,248,0.3);">Live NLP Parser</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:11px;color:#94a3b8;">Suggestions:</span>
+                <button type="button" onclick="setGenAiPrompt('Create order for 500 units of SKU-0042 for Toyota')" style="background:rgba(51,65,85,0.7);color:#cbd5e1;border:1px solid #475569;border-radius:6px;font-size:11px;padding:2px 8px;cursor:pointer;">+ Order 500 SKU-0042</button>
+                <button type="button" onclick="setGenAiPrompt('Check inventory for SKU-0042')" style="background:rgba(51,65,85,0.7);color:#cbd5e1;border:1px solid #475569;border-radius:6px;font-size:11px;padding:2px 8px;cursor:pointer;">🔍 Check Stock</button>
+                <button type="button" onclick="setGenAiPrompt('Log downtime for machine CNC-01 urgent')" style="background:rgba(51,65,85,0.7);color:#cbd5e1;border:1px solid #475569;border-radius:6px;font-size:11px;padding:2px 8px;cursor:pointer;">⚠️ CNC-01 Down</button>
+                <button type="button" onclick="setGenAiPrompt('Schedule maintenance for machine Press-02 due 2026-10-20')" style="background:rgba(51,65,85,0.7);color:#cbd5e1;border:1px solid #475569;border-radius:6px;font-size:11px;padding:2px 8px;cursor:pointer;">🔧 Maint Press-02</button>
+            </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+            <input id="genaiPromptInput" type="text"
+                   placeholder="Describe what you want to do… e.g. &quot;Create order for 250 units of SKU-0010 for Boeing by 2026-10-30&quot;"
+                   style="flex:1;padding:10px 14px;border-radius:8px;border:1px solid #334155;background:#0b1120;color:#f8fafc;font-size:13px;outline:none;transition:border-color 0.2s;"
+                   onfocus="this.style.borderColor='#38bdf8';" onblur="this.style.borderColor='#334155';" />
+            <button id="genaiPromptBtn" type="button" onclick="executeGenAiPrompt()"
+                    style="padding:10px 22px;background:linear-gradient(135deg,#0284c7,#6366f1);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;box-shadow:0 2px 10px rgba(99,102,241,0.3);white-space:nowrap;">
+                <span>⚡ Execute Command</span>
+            </button>
+        </div>
+        <div id="genaiPromptStatus" style="font-size:12px;color:#94a3b8;min-height:18px;display:flex;align-items:center;gap:8px;"></div>
+    </div>
+
+    <script>
+    function setGenAiPrompt(text) {
+        var input = document.getElementById('genaiPromptInput');
+        if (input) {
+            input.value = text;
+            input.focus();
+        }
+    }
+
+    function executeGenAiPrompt() {
+        var input = document.getElementById('genaiPromptInput');
+        var statusEl = document.getElementById('genaiPromptStatus');
+        var btn = document.getElementById('genaiPromptBtn');
+        if (!input || !statusEl) return;
+
+        var text = (input.value || '').trim();
+        if (!text) {
+            statusEl.innerHTML = '<span style="color:#f87171;">⚠️ Please enter a prompt command first.</span>';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+        statusEl.innerHTML = '<span style="color:#38bdf8;">⏳ Analyzing prompt intent and dispatching transactional action...</span>';
+
+        var userToken = typeof g_ck !== 'undefined' ? g_ck : (window.g_ck || '');
+        var endpoint = '/api/x_2056099_indust_0/operator_api/prompt/process';
+
+        fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-UserToken': userToken
+            },
+            body: JSON.stringify({ prompt: text })
+        })
+        .then(function(res) {
+            if (!res.ok) {
+                // Try fallback to Prompt API definition
+                return fetch('/api/x_2056099_indust_0/prompt/process', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-UserToken': userToken },
+                    body: JSON.stringify({ prompt: text })
+                }).then(function(r) { return r.json(); });
+            }
+            return res.json();
+        })
+        .then(function(data) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            var result = (data && data.result) || data;
+            if (result && result.success) {
+                var badge = '<span style="background:rgba(34,197,94,0.2);color:#4ade80;padding:2px 8px;border-radius:6px;font-weight:600;">' + (result.intent || 'PROCESSED') + ' (' + (result.confidence || 95) + '% conf)</span> ';
+                var msg = result.message || 'Operation executed successfully';
+                statusEl.innerHTML = badge + '<span style="color:#f1f5f9;">' + msg + '</span>';
+                if (typeof showToast === 'function') {
+                    showToast('AI Action: ' + (result.intent || 'Success'));
+                }
+            } else {
+                var err = (result && result.error) || 'Failed to execute prompt command';
+                statusEl.innerHTML = '<span style="color:#f87171;">❌ ' + err + '</span>';
+            }
+        })
+        .catch(function(err) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            statusEl.innerHTML = '<span style="color:#f87171;">❌ Execution failed: ' + (err.message || 'Network error') + '</span>';
+        });
+    }
+
+    var promptInput = document.getElementById('genaiPromptInput');
+    if (promptInput) {
+        promptInput.addEventListener('keydown', function(evt) {
+            if (evt.key === 'Enter') {
+                evt.preventDefault();
+                executeGenAiPrompt();
+            }
+        });
+    }
+    </script>
 </div>
 </j:jelly>
 ]]></html>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>POST</http_method>
+        <name>Ingest IoT Telemetry Stream</name>
+        <operation_script><![CDATA[(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+    var body = {};
+    try {
+        if (request.body && request.body.dataString) {
+            body = JSON.parse(request.body.dataString);
+        } else if (request.body && request.body.data) {
+            body = typeof request.body.data === 'string' ? JSON.parse(request.body.data) : request.body.data;
+        }
+    } catch (e) {
+        response.setStatus(400);
+        response.setBody({ result: { success: false, error: 'Invalid JSON request payload' } });
+        return;
+    }
+
+    var gateway = new x_2056099_indust_0.IoTStreamingGateway();
+    var result;
+
+    if (body.action === 'simulate' || body.simulate === true) {
+        result = gateway.simulateAllMachines();
+    } else {
+        result = gateway.ingest(body);
+    }
+
+    if (!result.success) {
+        response.setStatus(400);
+    }
+    response.setBody({ result: result });
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/operator_api/iot/telemetry</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/iot/telemetry</relative_path>
+        <request_example>{"device_id": "CNC-01", "temperature": 78.5, "vibration": 5.2, "power_consumption": 88.0}</request_example>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description>Receives telemetry streams or triggers live IoT broker simulation</short_description>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 09:50:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b4010010</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Ingest IoT Telemetry Stream</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_e1a078fac3af0710239a32f1b4010010</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 09:50:00</sys_updated_on>
+        <web_service_definition display_value="Operator API">7acd7c17725147d9a550963b7da0fe53</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

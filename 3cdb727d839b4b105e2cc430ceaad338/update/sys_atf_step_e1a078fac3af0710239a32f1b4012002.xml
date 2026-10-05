@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description>Run Server Side Validation Script</description>
+        <display_name>Run Server Side Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>1</order>
+        <step_config display_value="Run Server Side Script">41de4a935332120028bc29cac2dc349a</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 10:00:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b4012002</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Run Server Side Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_e1a078fac3af0710239a32f1b4012002</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 10:00:00</sys_updated_on>
+        <table/>
+        <test display_value="ATF-DT-07: Prompt GenAI, Multi-Resequencing &amp; IoT Streaming Validation">e1a078fac3af0710239a32f1b4012001</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=e1a078fac3af0710239a32f1b4012002"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>e1a078fac3af0710239a32f1b4012002</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 10:00:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b4012010</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 10:00:00</sys_updated_on>
+        <value>v1</value>
+        <variable display_value="Jasmine version">42f2564b73031300440211d8faf6a777</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>e1a078fac3af0710239a32f1b4012002</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 10:00:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b4012011</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 10:00:00</sys_updated_on>
+        <value>(function(outputs, steps, params, stepResult, assertEqual) {
+    describe('ATF-DT-07: Advanced Features End-to-End Validation', function() {
+        var APP = 'x_2056099_indust_0.';
+
+        it('should correctly parse natural language prompt and create customer order', function() {
+            var parser = new x_2056099_indust_0.PromptIntelligentParser();
+            var res = parser.processPrompt('Create order for 200 units of SKU-0010 for Honda by 2026-11-15', gs.getUserID());
+            expect(res.success).toBe(true);
+            expect(res.intent).toBe('CREATE_ORDER');
+            expect(res.confidence).toBeGreaterThanOrEqual(50);
+            expect(res.actions.length).toBeGreaterThan(0);
+        });
+
+        it('should correctly detect downtime intent and machine entity from prompt', function() {
+            var parser = new x_2056099_indust_0.PromptIntelligentParser();
+            var res = parser.processPrompt('Log downtime for machine CNC-01 urgent', gs.getUserID());
+            expect(res.success).toBe(true);
+            expect(res.intent).toBe('LOG_DOWNTIME');
+        });
+
+        it('should execute multi-order resequencing with priority sorting', function() {
+            var scheduler = new x_2056099_indust_0.ProductionScheduler();
+            expect(typeof scheduler.scheduleMultipleOrders).toBe('function');
+
+            // Find at least 1 production order to test
+            var poGr = new GlideRecord('x_2056099_indust_0_production_order');
+            poGr.setLimit(2);
+            poGr.query();
+            var ids = [];
+            while (poGr.next()) {
+                ids.push(poGr.getUniqueValue());
+            }
+
+            if (ids.length &gt; 0) {
+                var multiRes = scheduler.scheduleMultipleOrders(ids);
+                expect(multiRes.total_orders).toBe(ids.length);
+                expect(multiRes.resequenced_results.length).toBe(ids.length);
+            }
+        });
+
+        it('should ingest IoT telemetry and generate alert upon critical temperature threshold breach', function() {
+            var gateway = new x_2056099_indust_0.IoTStreamingGateway();
+            var ingestRes = gateway.ingest({
+                device_id: 'CNC',
+                temperature: 92.5, // Above critical threshold 85°C
+                vibration: 3.2,
+                power_consumption: 75.0
+            });
+
+            expect(ingestRes.success).toBe(true);
+            expect(ingestRes.machine_condition).toBe('critical');
+            expect(ingestRes.alerts_generated).toBeGreaterThan(0);
+        });
+
+        it('should calibrate resource efficiency percentage with EMA feedback', function() {
+            var calEngine = new x_2056099_indust_0.ScheduleCalibrationEngine();
+            var resGr = new GlideRecord('x_2056099_indust_0_prod_res');
+            resGr.addQuery('active', true);
+            resGr.setLimit(1);
+            resGr.query();
+
+            if (resGr.next()) {
+                var calRes = calEngine.calibrate(resGr.getUniqueValue());
+                expect(calRes.success).toBe(true);
+                expect(calRes.new_efficiency).toBeGreaterThan(0);
+            }
+        });
+    });
+})(outputs, steps, params, stepResult, assertEqual);</value>
+        <variable display_value="Test script">989d9e235324220002c6435723dc3484</variable>
+    </sys_variable_value>
+</record_update>
