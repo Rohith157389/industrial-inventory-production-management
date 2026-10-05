@@ -27,6 +27,17 @@ else
     return;
   }
 
+  // Handle Action = Apply Proposal
+  if (body.action === "apply") {
+    var applyEngine = new x_2056099_indust_0.WhatIfSimulationEngine();
+    var applyResult = applyEngine.applyProposal(body);
+    if (!applyResult.success) {
+      response.setStatus(400);
+    }
+    response.setBody({ result: applyResult });
+    return;
+  }
+
   if (!body.scenario_type) {
     response.setStatus(400);
     response.setBody({ result: { success: false, error: "scenario_type is required. Supported: resource_down, capacity_reduction, quantity_change, material_shortage, schedule_shift" } });

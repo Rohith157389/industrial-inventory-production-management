@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.PromptIntelligentParser</api_name>
+        <caller_access/>
+        <client_callable>true</client_callable>
+        <description>Natural language prompt parser and Generative AI command dispatcher for Industrial Inventory and Production Management. Parses intent, extracts entities, enforces RBAC, and executes structured transactional workflows across Orders, Inventory, Machines, Maintenance, QC, and Digital Twin Simulations.</description>
+        <mobile_callable>true</mobile_callable>
+        <name>PromptIntelligentParser</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var PromptIntelligentParser = Class.create();
+PromptIntelligentParser.prototype = {
+    initialize: function() {
+        this.INTENT_MAP = {
+            'CREATE_ORDER': {
+                keywords: ['create order', 'new order', 'place order', 'book order', 'submit order', 'schedule order'],
+                table: 'x_2056099_indust_0_cust_order'
+            },
+            'CHECK_INVENTORY': {
+                keywords: ['check stock', 'inventory level', 'how many', 'available quantity', 'stock status', 'check inventory', 'show stock'],
+                table: 'x_2056099_indust_0_inv_stock'
+            },
+            'LOG_DOWNTIME': {
+                keywords: ['log downtime', 'machine down', 'breakdown', 'offline', 'shutdown', 'machine stopped', 'line stoppage'],
+                table: 'x_2056099_indust_0_mach_down'
+            },
+            'SCHEDULE_MAINT': {
+                keywords: ['schedule maintenance', 'maintenance request', 'service machine', 'repair machine', 'preventive maintenance'],
+                table: 'x_2056099_indust_0_mach_maint'
+            },
+            'REPORT_QUALITY': {
+                keywords: ['quality issue', 'defect found', 'inspection fail', 'reject batch', 'qc fail', 'scrap batch', 'quality defect'],
+                table: 'x_2056099_indust_0_qc_insp'
+            },
+            'TRANSFER_STOCK': {
+                keywords: ['transfer stock', 'move inventory', 'warehouse transfer', 'relocate stock', 'inter-warehouse transfer'],
+                table: 'x_2056099_indust_0_inv_txn'
+            },
+            'RUN_SIMULATION': {
+                keywords: ['simulate', 'what if', 'what-if', 'scenario', 'digital twin', 'run simulation'],
+                table: 'x_2056099_indust_0_sim_scenario'
+            },
+            'CHECK_MACHINE': {
+                keywords: ['machine status', 'machine health', 'equipment status', 'telemetry', 'check machine', 'line status'],
+                table: 'x_2056099_indust_0_machine'
+            }
+        };
+
+        this.ENTITY_PATTERNS = {
+            quantity:    /(\d+)\s*(?:units?|pcs?|pieces?|kg|tons?|boxes?|pallets?|liters?)/i,
+            rawNumber:   /\b(?:quantity|qty|amount)\s*(?:of|:)?\s*(\d+)\b/i,
+            sku:         /(?:sku|part|item|material)[\s#:-]*([A-Z0-9][\w-]{2,15})/i,
+            machine:     /(?:machine|equipment|line|cnc|press|lathe|robot)[\s#:-]*([A-Z0-9][\w-]{1,20})/i,
+            warehouse:   /(?:warehouse|wh|location|facility|plant)[\s#:-]*([A-Z0-9][\w-]{1,15})/i,
+            priority:    /\b(urgent|critical|high|medium|low|emergency)\b/i,
+            customer:    /(?:for|customer|client|buyer)[\s:]*([A-Z][A-Za-z0-9\s&]{2,30}?)(?:\s*,|\s*$|\s+(?:sku|qty|order|machine|with|due))/i,
+            date:        /(?:by|before|due|deadline|date)[\s:]*(\d{4}-\d{2}-\d{2}|\d{1,2}[/-]\d{1,2}[/-]\d{2,4})/i
+        };
+    },
+
+    /**
+     * Main entry point — parse a natural language prompt and execute.
+     * @param {string} promptText - The raw user input
+     * @param {string} userSysId  - sys_id of the current user (for RBAC)
+     * @returns {object} { success, intent, confidence, entities, actions[], message }
+     */
+    processPrompt: function(promptText, userSysId) {
+        if (!promptText || promptText.trim().length < 3) {
+            return this._fail('Prompt text is required (minimum 3 characters).');
+        }
+
+        var normalized = promptText.toLowerCase().trim();
+
+        // 1. Detect Intent
+        var intentResult = this._detectIntent(normalized);
+        if (!intentResult.intent) {
+            return this._fail('Could not determine intent. Example commands:\n- "Create order for 500 units of SKU-0042 for Toyota"\n- "Check inventory for SKU-0042"\n- "Log downtime for machine CNC-01 urgent"\n- "Schedule maintenance for Line-1 due 2026-10-15"');
+        }
+
+        // 2. Extract Entities
+        var entities = this._extractEntities(promptText);
+
+        // 3. RBAC Check
+        var rbacResult = this._checkRBAC(userSysId, intentResult.intent);
+        if (!rbacResult.authorized) {
+            return {
+                success: false,
+                intent: intentResult.intent,
+                confidence: intentResult.confidence,
+                entities: entities,
+                error: 'Access denied: User role (' + (rbacResult.userRole || 'standard') + ') is not permitted to perform intent ' + intentResult.intent
+            };
+        }
+
+        // 4. Execute Action
+        var actions = this._executeIntent(intentResult.intent, entities, userSysId);
+
+        return {
+            success: true,
+            intent: intentResult.intent,
+            confidence: intentResult.confidence,
+            entities: entities,
+            actions: actions,
+            message: this._buildConfirmation(intentResult.intent, entities, actions)
+        };
+    },
+
+    _detectIntent: function(text) {
+        var bestIntent = null;
+        var bestScore = 0;
+
+        for (var intentKey in this.INTENT_MAP) {
+            var keywords = this.INTENT_MAP[intentKey].keywords;
+            var score = 0;
+            for (var i = 0; i < keywords.length; i++) {
+                if (text.indexOf(keywords[i]) > -1) {
+                    score += keywords[i].split(' ').length * 15;
+                }
+            }
+            if (score > bestScore) {
+                bestScore = score;
+                bestIntent = intentKey;
+            }
+        }
+
+        var confidence = bestScore > 0 ? Math.min(99, 50 + bestScore) : 0;
+        return { intent: bestIntent, confidence: confidence };
+    },
+
+    _extractEntities: function(text) {
+        var entities = {};
+        for (var key in this.ENTITY_PATTERNS) {
+            var match = text.match(this.ENTITY_PATTERNS[key]);
+            if (match && match[1]) {
+                entities[key] = match[1].trim();
+            }
+        }
+        if (!entities.quantity && entities.rawNumber) {
+            entities.quantity = entities.rawNumber;
+        }
+        return entities;
+    },
+
+    _checkRBAC: function(userSysId, intent) {
+        if (!userSysId || gs.hasRole('admin')) {
+            return { authorized: true, userRole: 'admin' };
+        }
+        var roles = this._getUserRoles(userSysId);
+        var writeIntents = ['CREATE_ORDER', 'LOG_DOWNTIME', 'SCHEDULE_MAINT', 'TRANSFER_STOCK', 'REPORT_QUALITY', 'RUN_SIMULATION'];
+        var readIntents  = ['CHECK_INVENTORY', 'CHECK_MACHINE'];
+
+        if (readIntents.indexOf(intent) > -1) {
+            return { authorized: true, userRole: roles };
+        }
+
+        var allowedRoles = [
+            'admin',
+            'x_2056099_indust_0.manager',
+            'x_2056099_indust_0.operator',
+            'x_2056099_indust_0.production_planner',
+            'x_2056099_indust_0.production_manager',
+            'x_2056099_indust_0.plant_manager',
+            'x_2056099_indust_0.operations_manager',
+            'itil'
+        ];
+
+        for (var i = 0; i < allowedRoles.length; i++) {
+            if (roles.indexOf(allowedRoles[i]) > -1 || gs.hasRole(allowedRoles[i])) {
+                return { authorized: true, userRole: roles };
+            }
+        }
+        return { authorized: false, userRole: roles };
+    },
+
+    _getUserRoles: function(userSysId) {
+        var roles = [];
+        try {
+            var gr = new GlideRecord('sys_user_has_role');
+            gr.addQuery('user', userSysId);
+            gr.query();
+            while (gr.next()) {
+                roles.push(gr.role.name.toString());
+            }
+        } catch (e) {
+            roles.push('standard_user');
+        }
+        return roles.join(',');
+    },
+
+    _executeIntent: function(intent, entities, userSysId) {
+        var actions = [];
+        switch (intent) {
+            case 'CREATE_ORDER':
+                actions.push(this._createOrder(entities, userSysId));
+                break;
+            case 'CHECK_INVENTORY':
+                actions.push(this._checkInventory(entities));
+                break;
+            case 'LOG_DOWNTIME':
+                actions.push(this._logDowntime(entities));
+                break;
+            case 'SCHEDULE_MAINT':
+                actions.push(this._scheduleMaintenance(entities));
+                break;
+            case 'REPORT_QUALITY':
+                actions.push(this._reportQuality(entities));
+                break;
+            case 'TRANSFER_STOCK':
+                actions.push(this._transferStock(entities));
+                break;
+            case 'CHECK_MACHINE':
+                actions.push(this._checkMachine(entities));
+                break;
+            case 'RUN_SIMULATION':
+                actions.push(this._runSimulation(entities));
+                break;
+            default:
+                actions.push({ action: 'INFO', message: 'Intent recognized: ' + intent });
+        }
+        return actions;
+    },
+
+    _createOrder: function(entities, userSysId) {
+        var gr = new GlideRecord('x_2056099_indust_0_cust_order');
+        gr.initialize();
+        gr.setValue('order_status', 'new');
+        if (entities.customer) gr.setValue('customer_name', entities.customer);
+        if (entities.quantity) gr.setValue('total_quantity', parseInt(entities.quantity, 10));
+        if (entities.date) gr.setValue('required_delivery_date', entities.date);
+        gr.setValue('notes', 'Generated via GenAI Natural Language Prompt Parser');
+        var sysId = gr.insert();
+        var num = gr.getValue('number') || sysId;
+        return { action: 'CREATED', table: 'x_2056099_indust_0_cust_order', sys_id: sysId, number: num };
+    },
+
+    _checkInventory: function(entities) {
+        var gr = new GlideRecord('x_2056099_indust_0_inv_stock');
+        if (entities.sku) {
+            gr.addQuery('material_product.sku_code', entities.sku);
+        }
+        gr.setLimit(5);
+        gr.query();
+        var results = [];
+        while (gr.next()) {
+            results.push({
+                material: gr.getDisplayValue('material_product'),
+                location: gr.getDisplayValue('location'),
+                quantity_on_hand: gr.getValue('quantity_on_hand') || '0',
+                available_quantity: gr.getValue('available_quantity') || gr.getValue('quantity_on_hand') || '0'
+            });
+        }
+        return { action: 'QUERY', table: 'x_2056099_indust_0_inv_stock', count: results.length, results: results };
+    },
+
+    _logDowntime: function(entities) {
+        var gr = new GlideRecord('x_2056099_indust_0_mach_down');
+        gr.initialize();
+        if (entities.machine) {
+            var machGr = new GlideRecord('x_2056099_indust_0_machine');
+            machGr.addQuery('name', 'CONTAINS', entities.machine);
+            machGr.setLimit(1);
+            machGr.query();
+            if (machGr.next()) {
+                gr.setValue('machine', machGr.getUniqueValue());
+            }
+        }
+        gr.setValue('start_time', new GlideDateTime().getValue());
+        gr.setValue('reason', 'Logged via Natural Language Prompt: ' + (entities.priority || 'unplanned'));
+        var sysId = gr.insert();
+        return { action: 'CREATED', table: 'x_2056099_indust_0_mach_down', sys_id: sysId, number: gr.getValue('number') || sysId };
+    },
+
+    _scheduleMaintenance: function(entities) {
+        var gr = new GlideRecord('x_2056099_indust_0_mach_maint');
+        gr.initialize();
+        if (entities.machine) {
+            var machGr = new GlideRecord('x_2056099_indust_0_machine');
+            machGr.addQuery('name', 'CONTAINS', entities.machine);
+            machGr.setLimit(1);
+            machGr.query();
+            if (machGr.next()) {
+                gr.setValue('machine', machGr.getUniqueValue());
+            }
+        }
+        gr.setValue('maintenance_type', 'preventive');
+        gr.setValue('status', 'scheduled');
+        if (entities.date) gr.setValue('scheduled_date', entities.date);
+        gr.setValue('description', 'Maintenance scheduled via AI Natural Language Prompt');
+        var sysId = gr.insert();
+        return { action: 'CREATED', table: 'x_2056099_indust_0_mach_maint', sys_id: sysId, number: gr.getValue('number') || sysId };
+    },
+
+    _reportQuality: function(entities) {
+        var gr = new GlideRecord('x_2056099_indust_0_qc_insp');
+        gr.initialize();
+        gr.setValue('inspection_result', 'fail');
+        gr.setValue('status', 'completed');
+        if (entities.quantity) gr.setValue('defective_quantity', parseInt(entities.quantity, 10));
+        gr.setValue('notes', 'Defect logged via Prompt Command Bar: ' + (entities.priority || 'standard'));
+        var sysId = gr.insert();
+        return { action: 'CREATED', table: 'x_2056099_indust_0_qc_insp', sys_id: sysId, number: gr.getValue('number') || sysId };
+    },
+
+    _transferStock: function(entities) {
+        var gr = new GlideRecord('x_2056099_indust_0_inv_txn');
+        gr.initialize();
+        gr.setValue('transaction_type', 'transfer');
+        if (entities.quantity) gr.setValue('quantity', parseInt(entities.quantity, 10));
+        gr.setValue('notes', 'Inter-warehouse transfer initiated via AI Prompt');
+        var sysId = gr.insert();
+        return { action: 'CREATED', table: 'x_2056099_indust_0_inv_txn', sys_id: sysId, number: gr.getValue('number') || sysId };
+    },
+
+    _checkMachine: function(entities) {
+        var gr = new GlideRecord('x_2056099_indust_0_machine');
+        if (entities.machine) {
+            gr.addQuery('name', 'CONTAINS', entities.machine);
+        }
+        gr.setLimit(5);
+        gr.query();
+        var results = [];
+        while (gr.next()) {
+            results.push({
+                name: gr.getValue('name'),
+                status: gr.getValue('status'),
+                condition: gr.getValue('machine_condition'),
+                location: gr.getDisplayValue('location')
+            });
+        }
+        return { action: 'QUERY', table: 'x_2056099_indust_0_machine', count: results.length, results: results };
+    },
+
+    _runSimulation: function(entities) {
+        var simEngine = new x_2056099_indust_0.WhatIfSimulationEngine();
+        var scenario = {
+            scenario_type: 'capacity_reduction',
+            severity: entities.priority || 'medium',
+            description: 'Simulation triggered via GenAI Prompt'
+        };
+        var result = simEngine.simulate(scenario);
+        return { action: 'SIMULATION', success: result.success, details: result };
+    },
+
+    _buildConfirmation: function(intent, entities, actions) {
+        var parts = ['Success: ' + intent.replace(/_/g, ' ')];
+        if (entities.customer) parts.push('Customer: ' + entities.customer);
+        if (entities.quantity) parts.push('Qty: ' + entities.quantity);
+        if (entities.sku) parts.push('SKU: ' + entities.sku);
+        if (entities.machine) parts.push('Machine: ' + entities.machine);
+        if (actions.length > 0 && actions[0].number) parts.push('Record: ' + actions[0].number);
+        else if (actions.length > 0 && actions[0].sys_id) parts.push('ID: ' + actions[0].sys_id);
+        return parts.join(' | ');
+    },
+
+    _fail: function(reason) {
+        return { success: false, error: reason };
+    },
+
+    type: 'PromptIntelligentParser'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-05 09:00:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b4010001</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>PromptIntelligentParser</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_e1a078fac3af0710239a32f1b4010001</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-05 09:00:00</sys_updated_on>
+    </sys_script_include>
+</record_update>

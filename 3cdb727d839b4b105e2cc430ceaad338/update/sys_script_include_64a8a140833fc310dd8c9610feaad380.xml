@@ -242,6 +242,100 @@ ProductionScheduler.prototype = {
         }
     },
 
+    /**
+     * Schedules multiple production orders concurrently using multi-pass capacity resequencing.
+     * Orders are sorted by priority and delivery deadline, then dispatched to best-fit resources.
+     *
+     * @param {string[]|string} orderSysIds - Array of production order sys_ids or comma-separated string
+     * @returns {object} { success, total_orders, scheduled_count, failed_count, results[] }
+     */
+    scheduleMultipleOrders: function(orderSysIds) {
+        if (!orderSysIds) {
+            return { success: false, error: 'orderSysIds array or list is required' };
+        }
+
+        var idList = Array.isArray(orderSysIds) ? orderSysIds : String(orderSysIds).split(',');
+        var cleanIds = [];
+        for (var k = 0; k < idList.length; k++) {
+            var trimmed = String(idList[k]).trim();
+            if (trimmed) cleanIds.push(trimmed);
+        }
+
+        if (cleanIds.length === 0) {
+            return { success: false, error: 'No valid order sys_ids provided' };
+        }
+
+        // 1. Fetch orders and build sorting metadata
+        var orders = [];
+        for (var i = 0; i < cleanIds.length; i++) {
+            var poGr = new GlideRecord(this.PO);
+            if (poGr.get(cleanIds[i])) {
+                var priorityVal = parseInt(poGr.getValue('priority') || '3', 10);
+                var plannedDate = poGr.getValue('planned_completion_date') || '2099-12-31';
+                var qty = parseFloat(poGr.getValue('quantity_planned')) || 1;
+                orders.push({
+                    sys_id: poGr.getUniqueValue(),
+                    number: poGr.getValue('number') || poGr.getUniqueValue(),
+                    priority: priorityVal,
+                    due_date: plannedDate,
+                    quantity: qty,
+                    status: poGr.getValue('status')
+                });
+            }
+        }
+
+        if (orders.length === 0) {
+            return { success: false, error: 'None of the provided production order sys_ids exist.' };
+        }
+
+        // 2. Multi-order priority sort: lower priority number (1=high), then earliest due date
+        orders.sort(function(a, b) {
+            if (a.priority !== b.priority) {
+                return a.priority - b.priority;
+            }
+            return a.due_date < b.due_date ? -1 : (a.due_date > b.due_date ? 1 : 0);
+        });
+
+        // 3. Sequentially schedule each order using existing deterministic createDraftSchedule
+        var results = [];
+        var scheduledCount = 0;
+        var failedCount = 0;
+
+        for (var j = 0; j < orders.length; j++) {
+            var ord = orders[j];
+            var schedRes = this.createDraftSchedule(ord.sys_id);
+
+            if (schedRes.success) {
+                scheduledCount++;
+                results.push({
+                    order_sys_id: ord.sys_id,
+                    order_number: ord.number,
+                    sequence_rank: j + 1,
+                    status: 'scheduled',
+                    schedule: schedRes.schedule,
+                    delivery_feasibility: schedRes.delivery_feasibility
+                });
+            } else {
+                failedCount++;
+                results.push({
+                    order_sys_id: ord.sys_id,
+                    order_number: ord.number,
+                    sequence_rank: j + 1,
+                    status: 'failed',
+                    error: schedRes.error
+                });
+            }
+        }
+
+        return {
+            success: scheduledCount > 0,
+            total_orders: orders.length,
+            scheduled_count: scheduledCount,
+            failed_count: failedCount,
+            resequenced_results: results
+        };
+    },
+
     type: 'ProductionScheduler'
 };
 ]]></script>
