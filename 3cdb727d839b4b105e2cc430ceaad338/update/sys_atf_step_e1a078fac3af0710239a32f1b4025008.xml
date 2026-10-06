@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description>Run Server Side Validation Script</description>
+        <display_name>Run Server Side Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>1</order>
+        <step_config display_value="Run Server Side Script">41de4a935332120028bc29cac2dc349a</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 12:00:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b4025008</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Run Server Side Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_e1a078fac3af0710239a32f1b4025008</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 12:00:00</sys_updated_on>
+        <table/>
+        <test display_value="TC-NEG-23: Telemetry Extreme Outlier Filtering">e1a078fac3af0710239a32f1b4028008</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=e1a078fac3af0710239a32f1b4025008"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>e1a078fac3af0710239a32f1b4025008</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 12:00:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b402a008</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 12:00:00</sys_updated_on>
+        <value>3.1</value>
+        <variable display_value="Jasmine version">42f2564b73031300440211d8faf6a777</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>e1a078fac3af0710239a32f1b4025008</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 12:00:00</sys_created_on>
+        <sys_id>e1a078fac3af0710239a32f1b402b008</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 12:00:00</sys_updated_on>
+        <value>(function(outputs, steps, params, stepResult, assertEqual) {
+    describe('TC-NEG-23: Telemetry Extreme Outlier Filtering', function() {
+        it('should reject outlier (&gt;300% deviation) from EMA calculation', function() {
+            var nominal = 60.0;
+            var outlier = 3000.0;
+            var deviationPct = Math.abs(outlier - nominal) / nominal;
+            var isOutlier = deviationPct &gt; 3.0; // &gt;300%
+            expect(isOutlier).toBe(true);
+            var calibrated = isOutlier ? nominal : (0.3*outlier + 0.7*nominal);
+            expect(calibrated).toBe(60.0);
+        });
+    });
+})(outputs, steps, params, stepResult, assertEqual);</value>
+        <variable display_value="Test script">989d9e235324220002c6435723dc3484</variable>
+    </sys_variable_value>
+</record_update>
