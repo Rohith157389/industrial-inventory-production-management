@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element db_object_id="99dfadfc901e4204bafd1a985484c39e" label="Fulfillment Simulation" name="x_2056099_indust_0_fulfill_sim" type="collection">
+        <element label="Customer Order" mandatory="true" max_length="32" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
+        <element default="0" label="Feasible Strategies" max_length="40" name="feasible_strategies_count" read_only="true" read_only_option="instance_configured" type="integer"/>
+        <element label="Approved On" max_length="40" name="approved_on" type="glide_date_time"/>
+        <element label="Simulated By" max_length="32" name="simulated_by" reference="sys_user" type="reference"/>
+        <element label="Approved By" max_length="32" name="approved_by" reference="sys_user" type="reference"/>
+        <element label="Production Order" mandatory="true" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
+        <element label="Destination Warehouse" mandatory="true" max_length="32" name="destination_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
         <element label="Notes" max_length="4000" name="notes" type="string"/>
+        <element label="Required Delivery Date" mandatory="true" max_length="40" name="required_delivery_date" type="glide_date"/>
         <element default="medium" label="Urgency" mandatory="true" max_length="40" name="urgency" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Medium" sequence="2" value="medium"/>
                 <element inactive_on_update="false" label="Low" sequence="1" value="low"/>
                 <element inactive_on_update="false" label="Critical" sequence="4" value="critical"/>
                 <element inactive_on_update="false" label="High" sequence="3" value="high"/>
+                <element inactive_on_update="false" label="Medium" sequence="2" value="medium"/>
             </choice>
         </element>
-        <element default="0" label="Total Strategies Evaluated" max_length="40" name="total_strategies_evaluated" read_only="true" read_only_option="instance_configured" type="integer"/>
-        <element label="Simulated By" max_length="32" name="simulated_by" reference="sys_user" type="reference"/>
-        <element label="Approved By" max_length="32" name="approved_by" reference="sys_user" type="reference"/>
         <element label="Best Strategy" max_length="100" name="best_strategy" read_only="true" read_only_option="instance_configured" type="string"/>
+        <element label="Best Strategy Reason" max_length="4000" name="best_strategy_reason" read_only="true" read_only_option="instance_configured" type="string"/>
+        <element label="Simulated On" max_length="40" name="simulated_on" type="glide_date_time"/>
+        <element label="Required Quantity" mandatory="true" max_length="15" name="quantity" type="decimal"/>
+        <element default="0" label="Total Strategies Evaluated" max_length="40" name="total_strategies_evaluated" read_only="true" read_only_option="instance_configured" type="integer"/>
         <element default="draft" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Rejected" sequence="5" value="rejected"/>
+                <element inactive_on_update="false" label="Expired" sequence="6" value="expired"/>
                 <element inactive_on_update="false" label="Simulating" sequence="2" value="simulating"/>
+                <element inactive_on_update="false" label="Rejected" sequence="5" value="rejected"/>
                 <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
                 <element inactive_on_update="false" label="Approved" sequence="4" value="approved"/>
                 <element inactive_on_update="false" label="Completed" sequence="3" value="completed"/>
-                <element inactive_on_update="false" label="Expired" sequence="6" value="expired"/>
             </choice>
         </element>
-        <element label="Customer Order" mandatory="true" max_length="32" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
-        <element label="Production Order" mandatory="true" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
-        <element label="Best Strategy Reason" max_length="4000" name="best_strategy_reason" read_only="true" read_only_option="instance_configured" type="string"/>
         <element label="Required Material" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
-        <element default="0" label="Feasible Strategies" max_length="40" name="feasible_strategies_count" read_only="true" read_only_option="instance_configured" type="integer"/>
-        <element label="Destination Warehouse" mandatory="true" max_length="32" name="destination_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Simulated On" max_length="40" name="simulated_on" type="glide_date_time"/>
-        <element label="Required Quantity" mandatory="true" max_length="15" name="quantity" type="decimal"/>
-        <element label="Approved On" max_length="40" name="approved_on" type="glide_date_time"/>
-        <element label="Required Delivery Date" mandatory="true" max_length="40" name="required_delivery_date" type="glide_date"/>
         <index name="index">
             <element name="approved_by"/>
         </index>

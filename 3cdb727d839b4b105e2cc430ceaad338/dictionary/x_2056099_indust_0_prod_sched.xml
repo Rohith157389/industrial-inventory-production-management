@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element db_object_id="8ff109b7291b4b0085a8f1a53ae81a84" label="Production Schedule" name="x_2056099_indust_0_prod_sched" type="collection">
-        <element label="Actual Start" max_length="40" name="actual_start" type="glide_date_time"/>
-        <element label="Previous Step" max_length="32" name="previous_step" reference="x_2056099_indust_0_prod_sched" type="reference"/>
-        <element display="true" label="Schedule Number" mandatory="true" max_length="40" name="number" read_only="true" read_only_option="instance_configured" type="string"/>
-        <element label="Started By" max_length="32" name="started_by" reference="sys_user" type="reference"/>
-        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
-        <element label="Step Type" max_length="40" name="step_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Assembly" sequence="2" value="assembly"/>
-                <element inactive_on_update="false" label="Machine Processing" sequence="1" value="machine_processing"/>
-                <element inactive_on_update="false" label="Material Transfer" sequence="4" value="material_transfer"/>
-                <element inactive_on_update="false" label="Quality Check" sequence="3" value="quality_check"/>
-            </choice>
-        </element>
-        <element label="Planned End" mandatory="true" max_length="40" name="planned_end" type="glide_date_time"/>
-        <element label="Required Machine Type" max_length="32" name="machine_type" reference="x_2056099_indust_0_mach_type" type="reference"/>
         <element label="Output Quantity" max_length="15" name="output_quantity" type="decimal"/>
-        <element default="0" label="Rejected Quantity" max_length="15" name="rejected_quantity" type="decimal"/>
-        <element label="Description" max_length="2000" name="description" type="string"/>
-        <element label="Production Order" mandatory="true" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
-        <element label="Completion Date" max_length="40" name="completion_date" type="glide_date_time"/>
+        <element display="true" label="Schedule Number" mandatory="true" max_length="40" name="number" read_only="true" read_only_option="instance_configured" type="string"/>
+        <element label="Planned End" mandatory="true" max_length="40" name="planned_end" type="glide_date_time"/>
         <element label="Planned Quantity" mandatory="true" max_length="15" name="planned_quantity" type="decimal"/>
-        <element label="Notes" max_length="4000" name="notes" type="string"/>
-        <element label="Step Sequence" mandatory="true" max_length="40" name="step_sequence" type="integer"/>
-        <element label="Input Quantity" max_length="15" name="input_quantity" type="decimal"/>
+        <element label="Completion Date" max_length="40" name="completion_date" type="glide_date_time"/>
         <element label="Planned Start" mandatory="true" max_length="40" name="planned_start" type="glide_date_time"/>
+        <element label="Confirmation Date" max_length="40" name="confirmation_date" type="glide_date_time"/>
+        <element label="Input Material" max_length="32" name="input_material" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="Started By" max_length="32" name="started_by" reference="sys_user" type="reference"/>
+        <element default="0" label="Rejected Quantity" max_length="15" name="rejected_quantity" type="decimal"/>
+        <element label="Notes" max_length="4000" name="notes" type="string"/>
+        <element label="Machine" max_length="32" name="machine" reference="x_2056099_indust_0_machine" type="reference"/>
+        <element label="Actual End" max_length="40" name="actual_end" type="glide_date_time"/>
+        <element label="Actual Start" max_length="40" name="actual_start" type="glide_date_time"/>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="Start Date" max_length="40" name="start_date" type="glide_date_time"/>
+        <element label="Completed By" max_length="32" name="completed_by" reference="sys_user" type="reference"/>
+        <element label="Description" max_length="2000" name="description" type="string"/>
+        <element label="Step Sequence" mandatory="true" max_length="40" name="step_sequence" type="integer"/>
         <element default="medium" label="Priority" mandatory="true" max_length="40" name="priority" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
                 <element inactive_on_update="false" label="High" sequence="2" value="high"/>
                 <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
                 <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
+                <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
             </choice>
         </element>
+        <element label="Step Type" max_length="40" name="step_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Machine Processing" sequence="1" value="machine_processing"/>
+                <element inactive_on_update="false" label="Material Transfer" sequence="4" value="material_transfer"/>
+                <element inactive_on_update="false" label="Quality Check" sequence="3" value="quality_check"/>
+                <element inactive_on_update="false" label="Assembly" sequence="2" value="assembly"/>
+            </choice>
+        </element>
+        <element label="Required Machine Type" max_length="32" name="machine_type" reference="x_2056099_indust_0_mach_type" type="reference"/>
+        <element label="Previous Step" max_length="32" name="previous_step" reference="x_2056099_indust_0_prod_sched" type="reference"/>
         <element label="Input Batch" max_length="32" name="input_batch" reference="x_2056099_indust_0_inv_batch" type="reference"/>
-        <element label="Confirmation Date" max_length="40" name="confirmation_date" type="glide_date_time"/>
-        <element label="Machine" max_length="32" name="machine" reference="x_2056099_indust_0_machine" type="reference"/>
-        <element label="Start Date" max_length="40" name="start_date" type="glide_date_time"/>
+        <element label="Confirmed By" max_length="32" name="confirmed_by" reference="sys_user" type="reference"/>
         <element default="draft" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Awaiting Machine" sequence="7" value="awaiting_machine"/>
-                <element inactive_on_update="false" label="Confirmed" sequence="3" value="confirmed"/>
-                <element inactive_on_update="false" label="Scheduled" sequence="2" value="scheduled"/>
-                <element inactive_on_update="false" label="Step Completed" sequence="10" value="step_completed"/>
-                <element inactive_on_update="false" label="Cancelled" sequence="6" value="cancelled"/>
-                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
-                <element inactive_on_update="false" label="Machine Processing" sequence="9" value="machine_processing"/>
-                <element inactive_on_update="false" label="Completed" sequence="5" value="completed"/>
-                <element inactive_on_update="false" label="Step Failed" sequence="12" value="step_failed"/>
-                <element inactive_on_update="false" label="Output Transferred" sequence="11" value="output_transferred"/>
                 <element inactive_on_update="false" label="Machine Assigned" sequence="8" value="machine_assigned"/>
                 <element inactive_on_update="false" label="In Progress" sequence="4" value="in_progress"/>
+                <element inactive_on_update="false" label="Step Failed" sequence="12" value="step_failed"/>
+                <element inactive_on_update="false" label="Output Transferred" sequence="11" value="output_transferred"/>
+                <element inactive_on_update="false" label="Awaiting Machine" sequence="7" value="awaiting_machine"/>
+                <element inactive_on_update="false" label="Confirmed" sequence="3" value="confirmed"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="6" value="cancelled"/>
+                <element inactive_on_update="false" label="Scheduled" sequence="2" value="scheduled"/>
+                <element inactive_on_update="false" label="Step Completed" sequence="10" value="step_completed"/>
+                <element inactive_on_update="false" label="Machine Processing" sequence="9" value="machine_processing"/>
+                <element inactive_on_update="false" label="Completed" sequence="5" value="completed"/>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
             </choice>
         </element>
-        <element label="Confirmed By" max_length="32" name="confirmed_by" reference="sys_user" type="reference"/>
-        <element label="Input Material" max_length="32" name="input_material" reference="x_2056099_indust_0_mat_master" type="reference"/>
-        <element label="Actual End" max_length="40" name="actual_end" type="glide_date_time"/>
-        <element label="Completed By" max_length="32" name="completed_by" reference="sys_user" type="reference"/>
         <element label="Production Resource" mandatory="true" max_length="32" name="production_resource" reference="x_2056099_indust_0_prod_res" type="reference"/>
+        <element label="Production Order" mandatory="true" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
+        <element label="Input Quantity" max_length="15" name="input_quantity" type="decimal"/>
         <index name="index">
             <element name="completed_by"/>
         </index>
