@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="6f2f28f6c3af0710239a32f1b4013148" label="Transfer Lead Time" max_length="40" name="x_2056099_indust_0_transfer_lead_time" type="collection">
-        <element label="Destination Warehouse" mandatory="true" max_length="32" name="destination_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Lead Time (Days)" mandatory="true" max_length="15" name="lead_time_days" type="decimal"/>
-        <element label="Notes" max_length="1000" name="notes" type="string"/>
         <element label="Source Warehouse" mandatory="true" max_length="32" name="source_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Lead Time (Days)" mandatory="true" max_length="15" name="lead_time_days" type="decimal"/>
         <element default="standard" label="Transport Mode" max_length="40" name="transport_mode" type="string"/>
         <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
+        <element label="Destination Warehouse" mandatory="true" max_length="32" name="destination_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Notes" max_length="1000" name="notes" type="string"/>
         <index name="index">
             <element name="destination_warehouse"/>
         </index>

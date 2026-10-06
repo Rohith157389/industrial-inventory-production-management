@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>UI Test Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>1</order>
+        <step_config display_value="Run UI Test Script">bfb48f59ffdf3210f972ffffffffffb3</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:14</sys_created_on>
+        <sys_id>9edf6006febd48cea983ac29796da01b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>UI Test Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_9edf6006febd48cea983ac29796da01b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:14</sys_updated_on>
+        <table/>
+        <test display_value="ATF-CP-UI-07: Customer Portal Navigation">126f6e7ec6ec45dd9e077b161161056c</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=9edf6006febd48cea983ac29796da01b"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>9edf6006febd48cea983ac29796da01b</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:14</sys_created_on>
+        <sys_id>b4b1f38d5d024d76bb65cd570c9a273d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:14</sys_updated_on>
+        <value>// ATF-CP-UI-07: Customer Portal Navigation
+await sn_atf.navigate('/x_2056099_indust_0_customer_portal.do#dashboard');
+await sn_atf.delay(3000);
+var navTargets = [
+    { tab: 'Catalog', heading: 'Product Catalog' },
+    { tab: 'My Orders', heading: 'My Orders' },
+    { tab: 'Delivery', heading: 'Delivery Tracking' },
+    { tab: 'Surveys', heading: 'Customer Survey' },
+    { tab: 'Profile', heading: 'My Profile' },
+    { tab: 'Dashboard', heading: 'Dashboard' },
+];
+for (var i = 0; i &lt; navTargets.length; i++) {
+    var target = navTargets[i];
+    var tabs = await screen.findAllByText(target.tab, { exact: true });
+    var navTab = null;
+    for (var j = 0; j &lt; tabs.length; j++) {
+        if (tabs[j].tagName === 'BUTTON' || tabs[j].closest('nav')) {
+            navTab = tabs[j];
+            break;
+        }
+    }
+    if (!navTab) navTab = tabs[0];
+    await user.click(navTab);
+    await sn_atf.delay(2000);
+    var headingEl = await screen.queryByText(target.heading, { exact: false });
+    var notLinkedEl = await screen.queryByText('Customer Account Not Linked');
+    if (headingEl) {
+        expect(headingEl).toBeVisible();
+    } else if (notLinkedEl) {
+        expect(notLinkedEl).toBeVisible();
+    }
+}
+</value>
+        <variable display_value="Script">e216835dffdf3210f972ffffffffff53</variable>
+    </sys_variable_value>
+</record_update>

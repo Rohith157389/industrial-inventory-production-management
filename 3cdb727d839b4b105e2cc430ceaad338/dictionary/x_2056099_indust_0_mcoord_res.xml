@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="903c3add715f4e7da9b195aca5d0662f" label="Material Coordination Result" name="x_2056099_indust_0_mcoord_res" type="collection">
         <element label="Feasible" max_length="40" name="feasible" type="boolean"/>
+        <element label="Supplier" max_length="32" name="supplier" reference="core_company" type="reference"/>
+        <element label="Blocker Notes" max_length="4000" name="blocker_notes" type="string"/>
+        <element label="Transfer Lead Time (Days)" max_length="40" name="transfer_lead_time_days" type="integer"/>
         <element default="pending" label="Status" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Fulfilled" sequence="2" value="fulfilled"/>
                 <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
                 <element inactive_on_update="false" label="Unfulfillable" sequence="4" value="unfulfillable"/>
                 <element inactive_on_update="false" label="Blocked" sequence="3" value="blocked"/>
+                <element inactive_on_update="false" label="Fulfilled" sequence="2" value="fulfilled"/>
             </choice>
         </element>
-        <element label="Transfer Lead Time (Days)" max_length="40" name="transfer_lead_time_days" type="integer"/>
-        <element label="Supplier Lead Time (Days)" max_length="40" name="supplier_lead_time_days" type="integer"/>
-        <element label="Fulfillment Strategy" max_length="100" name="fulfillment_strategy" type="string"/>
-        <element label="Supplier" max_length="32" name="supplier" reference="core_company" type="reference"/>
         <element label="Destination Warehouse" max_length="32" name="fulfillment_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Source Warehouse" max_length="32" name="source_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Coordination Run" mandatory="true" max_length="32" name="coordination_run" reference="x_2056099_indust_0_mcoord_run" type="reference"/>
-        <element label="Procurement Required" max_length="40" name="procurement_required" type="boolean"/>
-        <element label="Blocker Notes" max_length="4000" name="blocker_notes" type="string"/>
         <element label="Required Quantity" mandatory="true" max_length="15" name="required_quantity" type="decimal"/>
+        <element label="Supplier Lead Time (Days)" max_length="40" name="supplier_lead_time_days" type="integer"/>
+        <element label="Source Warehouse" max_length="32" name="source_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
         <element label="Material Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="Coordination Run" mandatory="true" max_length="32" name="coordination_run" reference="x_2056099_indust_0_mcoord_run" type="reference"/>
         <element label="Decision Sys ID" max_length="32" name="decision_sys_id" type="string"/>
+        <element label="Fulfillment Strategy" max_length="100" name="fulfillment_strategy" type="string"/>
+        <element label="Procurement Required" max_length="40" name="procurement_required" type="boolean"/>
         <element label="Expected Arrival" max_length="40" name="expected_arrival" type="glide_date_time"/>
         <index name="index">
             <element name="coordination_run"/>

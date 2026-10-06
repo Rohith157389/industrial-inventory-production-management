@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>Run Server Side Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>3</order>
+        <step_config display_value="Run Server Side Script">41de4a935332120028bc29cac2dc349a</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:20:11</sys_created_on>
+        <sys_id>116613252aab4accbade1c031ce682a7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Run Server Side Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_116613252aab4accbade1c031ce682a7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:20:11</sys_updated_on>
+        <table/>
+        <test display_value="ATF-CP-05: Customer Order Isolation">ff62096f71334557a9a5ea68d7c08b6e</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=116613252aab4accbade1c031ce682a7"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>116613252aab4accbade1c031ce682a7</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:12</sys_created_on>
+        <sys_id>28b9012e54d44e6f80608b24eeb4958e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:12</sys_updated_on>
+        <value>(function(outputs, steps, params, stepResult, assertEqual) {
+    var P = 'x_2056099_indust_0_';
+    var custASysId = '{{step['a757249cb75e4abeb49077fe0b902191'].record_id}}';
+    var custBSysId = '{{step['f7286a5988df4477a0840917e3c32486'].record_id}}';
+    var orderA = '', orderB = '', itemA = '', itemB = '';
+    try {
+        var grOA = new GlideRecord(P + 'cust_order');
+        grOA.initialize(); grOA.setValue('customer', custASysId); grOA.setValue('order_date', new GlideDateTime().getValue()); grOA.setValue('status', 'draft'); grOA.setValue('active', true);
+        orderA = grOA.insert();
+        var grIA = new GlideRecord(P + 'cust_ord_item');
+        grIA.initialize(); grIA.setValue('customer_order', orderA); grIA.setValue('quantity_ordered', 5); grIA.setValue('active', true);
+        itemA = grIA.insert();
+        var grOB = new GlideRecord(P + 'cust_order');
+        grOB.initialize(); grOB.setValue('customer', custBSysId); grOB.setValue('order_date', new GlideDateTime().getValue()); grOB.setValue('status', 'draft'); grOB.setValue('active', true);
+        orderB = grOB.insert();
+        var grIB = new GlideRecord(P + 'cust_ord_item');
+        grIB.initialize(); grIB.setValue('customer_order', orderB); grIB.setValue('quantity_ordered', 3); grIB.setValue('active', true);
+        itemB = grIB.insert();
+        var grQA = new GlideRecord(P + 'cust_order'); grQA.addQuery('customer', custASysId); grQA.query();
+        var cA = 0, seenB = false;
+        while (grQA.next()) { cA++; if (grQA.getValue('customer') == custBSysId) seenB = true; }
+        assertEqual({ name: 'A sees own orders', shouldbe: true, value: cA &gt;= 1 });
+        assertEqual({ name: 'A not see B orders', shouldbe: false, value: seenB });
+        var grQB = new GlideRecord(P + 'cust_order'); grQB.addQuery('customer', custBSysId); grQB.query();
+        var cB = 0, seenA = false;
+        while (grQB.next()) { cB++; if (grQB.getValue('customer') == custASysId) seenA = true; }
+        assertEqual({ name: 'B sees own orders', shouldbe: true, value: cB &gt;= 1 });
+        assertEqual({ name: 'B not see A orders', shouldbe: false, value: seenA });
+        var grItemsA = new GlideRecord(P + 'cust_ord_item'); grItemsA.addQuery('customer_order.customer', custASysId); grItemsA.query();
+        var iA = 0; while (grItemsA.next()) iA++;
+        assertEqual({ name: 'A items scoped', shouldbe: true, value: iA &gt;= 1 });
+        var grItemsB = new GlideRecord(P + 'cust_ord_item'); grItemsB.addQuery('customer_order.customer', custBSysId); grItemsB.query();
+        var iB = 0; while (grItemsB.next()) iB++;
+        assertEqual({ name: 'B items scoped', shouldbe: true, value: iB &gt;= 1 });
+        var grU = new GlideRecord(P + 'cust_order'); grU.addQuery('sys_id', orderA); grU.addQuery('customer', custBSysId); grU.query();
+        assertEqual({ name: 'Unauthorized access blocked', shouldbe: false, value: grU.hasNext() });
+        stepResult.setOutputMessage('Isolation: A=' + cA + ' B=' + cB + ' passed');
+    } finally {
+        if (itemA) { var d1 = new GlideRecord(P + 'cust_ord_item'); if (d1.get(itemA)) d1.deleteRecord(); }
+        if (itemB) { var d2 = new GlideRecord(P + 'cust_ord_item'); if (d2.get(itemB)) d2.deleteRecord(); }
+        if (orderA) { var d3 = new GlideRecord(P + 'cust_order'); if (d3.get(orderA)) d3.deleteRecord(); }
+        if (orderB) { var d4 = new GlideRecord(P + 'cust_order'); if (d4.get(orderB)) d4.deleteRecord(); }
+    }
+    return true;
+})(outputs, steps, params, stepResult, assertEqual);</value>
+        <variable display_value="Test script">989d9e235324220002c6435723dc3484</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>116613252aab4accbade1c031ce682a7</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:12</sys_created_on>
+        <sys_id>68be06eb95a141c8a4025f09bea21c2d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:12</sys_updated_on>
+        <value>3.1</value>
+        <variable display_value="Jasmine version">42f2564b73031300440211d8faf6a777</variable>
+    </sys_variable_value>
+</record_update>

@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="1107e8be5363471045b132a0a0490eff" label="Simulation Schedule Run" max_length="40" name="x_2056099_indust_0_sim_schedule_run" type="collection">
         <element label="Net Delay Recovered" max_length="50" name="net_delay_recovered" type="string"/>
-        <element label="Adapted Finish (Digital Twin)" max_length="10" name="adapted_finish" type="glide_date"/>
-        <element label="Product / BOM" max_length="200" name="product_bom" type="string"/>
-        <element label="Baseline Planned Finish" max_length="10" name="baseline_planned_finish" type="glide_date"/>
-        <element label="Order Quantity" max_length="40" name="order_qty" type="integer"/>
         <element label="Customer Order Reference" max_length="100" name="customer_order_ref" type="string"/>
-        <element label="Delay (Unmitigated)" max_length="50" name="delay_unmitigated" type="string"/>
-        <element label="Adaptive Strategy Applied" max_length="500" name="adaptive_strategy" type="string"/>
-        <element label="Simulated Finish (Unmitigated)" max_length="10" name="simulated_finish" type="glide_date"/>
+        <element label="Order Quantity" max_length="40" name="order_qty" type="integer"/>
         <element choice="1" label="Material Status" max_length="40" name="material_status" type="string">
             <choice>
-                <element inactive_on_update="false" label="In Transit Expedited" sequence="300" value="in_transit_expedited"/>
-                <element inactive_on_update="false" label="In Stock" sequence="100" value="in_stock"/>
-                <element inactive_on_update="false" label="Shortage Alert" sequence="600" value="shortage_alert"/>
-                <element inactive_on_update="false" label="Rework Loop In Progress" sequence="500" value="rework_in_progress"/>
-                <element inactive_on_update="false" label="In Transit Expedited" sequence="300" value="in_transit_expedited"/>
                 <element inactive_on_update="false" label="Rework Loop In Progress" sequence="500" value="rework_in_progress"/>
                 <element inactive_on_update="false" label="Partial Available" sequence="400" value="partial_available"/>
+                <element inactive_on_update="false" label="In Transit Expedited" sequence="300" value="in_transit_expedited"/>
+                <element inactive_on_update="false" label="In Transit Expedited" sequence="300" value="in_transit_expedited"/>
                 <element inactive_on_update="false" label="Transfer Required" sequence="200" value="transfer_required"/>
+                <element inactive_on_update="false" label="Shortage Alert" sequence="600" value="shortage_alert"/>
+                <element inactive_on_update="false" label="Rework Loop In Progress" sequence="500" value="rework_in_progress"/>
+                <element inactive_on_update="false" label="In Stock" sequence="100" value="in_stock"/>
             </choice>
         </element>
-        <element default="javascript:current.getTableName();" label="Class" max_length="80" name="sys_class_name" type="sys_class_name"/>
-        <element label="Scenario" mandatory="true" max_length="32" name="scenario" reference="x_2056099_indust_0_sim_scenario" type="reference"/>
-        <element label="Customer Name" max_length="200" name="customer_name" type="string"/>
         <element label="Target Facility" max_length="32" name="target_facility" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Adapted Finish (Digital Twin)" max_length="10" name="adapted_finish" type="glide_date"/>
+        <element label="Delay (Unmitigated)" max_length="50" name="delay_unmitigated" type="string"/>
+        <element default="javascript:current.getTableName();" label="Class" max_length="80" name="sys_class_name" type="sys_class_name"/>
         <element label="Assigned Machine / Cell" max_length="200" name="assigned_machine" type="string"/>
         <element choice="1" label="Final OTD Status" max_length="40" name="final_otd_status" type="string">
             <choice>
                 <element inactive_on_update="false" label="Critical Late" sequence="500" value="critical_late"/>
-                <element inactive_on_update="false" label="Delayed" sequence="400" value="delayed"/>
                 <element inactive_on_update="false" label="Minor Delay Mitigated" sequence="200" value="minor_delay_mitigated"/>
-                <element inactive_on_update="false" label="On-Time Buffer Used" sequence="300" value="on_time_buffer_used"/>
+                <element inactive_on_update="false" label="Delayed" sequence="400" value="delayed"/>
                 <element inactive_on_update="false" label="On-Time Guaranteed" sequence="100" value="on_time_guaranteed"/>
+                <element inactive_on_update="false" label="On-Time Buffer Used" sequence="300" value="on_time_buffer_used"/>
                 <element inactive_on_update="false" label="Minor Delay Mitigated" sequence="200" value="minor_delay_mitigated"/>
             </choice>
         </element>
+        <element label="Product / BOM" max_length="200" name="product_bom" type="string"/>
+        <element label="Adaptive Strategy Applied" max_length="500" name="adaptive_strategy" type="string"/>
+        <element label="Scenario" mandatory="true" max_length="32" name="scenario" reference="x_2056099_indust_0_sim_scenario" type="reference"/>
+        <element label="Customer Name" max_length="200" name="customer_name" type="string"/>
+        <element label="Baseline Planned Finish" max_length="10" name="baseline_planned_finish" type="glide_date"/>
+        <element label="Simulated Finish (Unmitigated)" max_length="10" name="simulated_finish" type="glide_date"/>
         <index name="index">
             <element name="scenario"/>
         </index>

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="c20f916fa07445cb8576d1c2c777c94c" label="Material Coordination Run" name="x_2056099_indust_0_mcoord_run" type="collection">
+        <element label="Destination Warehouse" max_length="32" name="destination_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Blocked Materials" max_length="40" name="blocked_materials" read_only="true" read_only_option="instance_configured" type="integer"/>
+        <element label="Total Materials" max_length="40" name="total_materials" read_only="true" read_only_option="instance_configured" type="integer"/>
         <element label="Production Order" mandatory="true" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
+        <element label="Feasible Materials" max_length="40" name="feasible_materials" read_only="true" read_only_option="instance_configured" type="integer"/>
+        <element label="Coordinated On" max_length="40" name="coordinated_on" type="glide_date_time"/>
         <element label="Review Reason" max_length="4000" name="review_reason" type="string"/>
+        <element label="Customer Order" max_length="32" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
+        <element label="Material Ready Date" max_length="40" name="material_ready_date" type="glide_date_time"/>
         <element default="draft" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Requires Review" sequence="4" value="requires_review"/>
-                <element inactive_on_update="false" label="Coordinating" sequence="2" value="coordinating"/>
                 <element inactive_on_update="false" label="Completed" sequence="3" value="completed"/>
+                <element inactive_on_update="false" label="Coordinating" sequence="2" value="coordinating"/>
                 <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="Requires Review" sequence="4" value="requires_review"/>
             </choice>
         </element>
-        <element label="Destination Warehouse" max_length="32" name="destination_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Feasible Materials" max_length="40" name="feasible_materials" read_only="true" read_only_option="instance_configured" type="integer"/>
-        <element label="Material Ready Date" max_length="40" name="material_ready_date" type="glide_date_time"/>
-        <element label="Requires Review" max_length="40" name="requires_review" type="boolean"/>
-        <element label="Blocked Materials" max_length="40" name="blocked_materials" read_only="true" read_only_option="instance_configured" type="integer"/>
         <element label="Coordinated By" max_length="32" name="coordinated_by" reference="sys_user" type="reference"/>
-        <element label="Total Materials" max_length="40" name="total_materials" read_only="true" read_only_option="instance_configured" type="integer"/>
-        <element label="Coordinated On" max_length="40" name="coordinated_on" type="glide_date_time"/>
-        <element label="Customer Order" max_length="32" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
+        <element label="Requires Review" max_length="40" name="requires_review" type="boolean"/>
         <index name="index">
             <element name="coordinated_by"/>
         </index>

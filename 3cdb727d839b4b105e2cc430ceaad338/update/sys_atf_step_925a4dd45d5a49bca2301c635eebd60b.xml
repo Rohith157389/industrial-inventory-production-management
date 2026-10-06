@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>Run Server Side Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>3</order>
+        <step_config display_value="Run Server Side Script">41de4a935332120028bc29cac2dc349a</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:20:13</sys_created_on>
+        <sys_id>925a4dd45d5a49bca2301c635eebd60b</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Run Server Side Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_925a4dd45d5a49bca2301c635eebd60b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:20:13</sys_updated_on>
+        <table/>
+        <test display_value="ATF-CP-04: Customer Order Submission">75ed3fa4a206424e857006edbccca65d</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=925a4dd45d5a49bca2301c635eebd60b"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>925a4dd45d5a49bca2301c635eebd60b</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:14</sys_created_on>
+        <sys_id>9547f9a494304c88ad805b4bdc828f7a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:14</sys_updated_on>
+        <value>3.1</value>
+        <variable display_value="Jasmine version">42f2564b73031300440211d8faf6a777</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>925a4dd45d5a49bca2301c635eebd60b</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:14</sys_created_on>
+        <sys_id>d2bb44bac2b2475eb9530f90e68f09e2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:14</sys_updated_on>
+        <value>(function(outputs, steps, params, stepResult, assertEqual) {
+    var P = 'x_2056099_indust_0_';
+    var custSysId = '{{step['4dc0b2bf855a459cac2a14c1729385f9'].record_id}}';
+    var prodSysId = '{{step['c8c5fb5c887b4c01bb6732b2ad5df397'].record_id}}';
+    var orderSysId = '', itemSysId = '';
+    try {
+        var grOrder = new GlideRecord(P + 'cust_order');
+        grOrder.initialize();
+        grOrder.setValue('customer', custSysId);
+        grOrder.setValue('order_date', new GlideDateTime().getValue());
+        grOrder.setValue('requested_delivery_date', new GlideDateTime().getValue());
+        grOrder.setValue('status', 'draft');
+        grOrder.setValue('order_type', 'standard');
+        grOrder.setValue('priority', 'medium');
+        grOrder.setValue('active', true);
+        orderSysId = grOrder.insert();
+        assertEqual({ name: 'Order created', shouldbe: true, value: orderSysId.length &gt; 0 });
+        var grOC = new GlideRecord(P + 'cust_order');
+        grOC.get(orderSysId);
+        assertEqual({ name: 'Order belongs to customer', shouldbe: custSysId, value: grOC.getValue('customer') });
+        assertEqual({ name: 'Order number generated', shouldbe: true, value: (grOC.getValue('number') || '').length &gt; 0 });
+        assertEqual({ name: 'Initial status stored', shouldbe: true, value: (grOC.getValue('status') || '').length &gt; 0 });
+        var grItem = new GlideRecord(P + 'cust_ord_item');
+        grItem.initialize();
+        grItem.setValue('customer_order', orderSysId);
+        grItem.setValue('material_product', prodSysId);
+        grItem.setValue('quantity_ordered', 10);
+        grItem.setValue('unit_of_measure', 'EA');
+        grItem.setValue('active', true);
+        itemSysId = grItem.insert();
+        assertEqual({ name: 'Order item created', shouldbe: true, value: itemSysId.length &gt; 0 });
+        var grIC = new GlideRecord(P + 'cust_ord_item');
+        grIC.get(itemSysId);
+        assertEqual({ name: 'Correct product on item', shouldbe: prodSysId, value: grIC.getValue('material_product') });
+        assertEqual({ name: 'Correct quantity', shouldbe: '10', value: grIC.getValue('quantity_ordered') });
+        assertEqual({ name: 'Item linked to order', shouldbe: orderSysId, value: grIC.getValue('customer_order') });
+        stepResult.setOutputMessage('Order: ' + grOC.getValue('number') + ' Items:1 Qty:10');
+    } finally {
+        if (itemSysId) { var d1 = new GlideRecord(P + 'cust_ord_item'); if (d1.get(itemSysId)) d1.deleteRecord(); }
+        if (orderSysId) { var d2 = new GlideRecord(P + 'cust_order'); if (d2.get(orderSysId)) d2.deleteRecord(); }
+    }
+    return true;
+})(outputs, steps, params, stepResult, assertEqual);</value>
+        <variable display_value="Test script">989d9e235324220002c6435723dc3484</variable>
+    </sys_variable_value>
+</record_update>

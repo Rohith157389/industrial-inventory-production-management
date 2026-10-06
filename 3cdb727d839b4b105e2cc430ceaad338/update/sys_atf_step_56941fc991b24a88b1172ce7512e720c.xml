@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>UI Test Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>1</order>
+        <step_config display_value="Run UI Test Script">bfb48f59ffdf3210f972ffffffffffb3</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:13</sys_created_on>
+        <sys_id>56941fc991b24a88b1172ce7512e720c</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>UI Test Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_56941fc991b24a88b1172ce7512e720c</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:13</sys_updated_on>
+        <table/>
+        <test display_value="ATF-CP-UI-05: My Orders UI">2c11c7fa41dc41c081f0ba64fd5ba963</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=56941fc991b24a88b1172ce7512e720c"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>56941fc991b24a88b1172ce7512e720c</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:13</sys_created_on>
+        <sys_id>13a1b1a6e4be45c2ae7a2a66b8888554</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:13</sys_updated_on>
+        <value>// ATF-CP-UI-05: My Orders UI
+await sn_atf.navigate('/x_2056099_indust_0_customer_portal.do#orders');
+await sn_atf.delay(3000);
+var notLinked = await screen.queryByText('Customer Account Not Linked');
+if (notLinked) {
+    expect(notLinked).toBeVisible();
+} else {
+    var ordersHeading = await screen.findByText('My Orders', { exact: false }, { timeout: 15000 });
+    expect(ordersHeading).toBeVisible();
+    var allFilter = await screen.queryByText('All');
+    if (allFilter) expect(allFilter).toBeVisible();
+    var tableHeaders = await screen.queryAllBySelector('th');
+    expect(tableHeaders.length).toBeGreaterThan(0);
+    var orderLinks = await screen.queryAllBySelector('td.order-number, td[style*="color: var(--ids-text-link)"]');
+    if (!orderLinks || orderLinks.length === 0) {
+        orderLinks = await screen.queryAllBySelector('tr.clickable-row td:first-child, tbody tr td:first-child');
+    }
+    if (orderLinks &amp;&amp; orderLinks.length &gt; 0) {
+        await user.click(orderLinks[0]);
+        await sn_atf.delay(2000);
+        var backToOrders = await screen.queryByText(/Back to Orders/i);
+        var orderTitle = await screen.queryByText(/Order ORD/i);
+        if (backToOrders) expect(backToOrders).toBeVisible();
+        if (orderTitle) expect(orderTitle).toBeVisible();
+    }
+}
+</value>
+        <variable display_value="Script">e216835dffdf3210f972ffffffffff53</variable>
+    </sys_variable_value>
+</record_update>

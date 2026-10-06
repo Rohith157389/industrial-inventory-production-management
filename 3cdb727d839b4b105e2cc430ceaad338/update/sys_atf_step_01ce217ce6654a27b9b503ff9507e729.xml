@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>Record Insert</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>2</order>
+        <step_config display_value="Record Insert">14872288df60220062fe6c7a4df26319</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:20:10</sys_created_on>
+        <sys_id>01ce217ce6654a27b9b503ff9507e729</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record Insert</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_01ce217ce6654a27b9b503ff9507e729</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:20:10</sys_updated_on>
+        <table>x_2056099_indust_0_mat_master</table>
+        <test display_value="ATF-CP-06: Customer Order Detail">d77ffdd23afe44f384598d9cc5545437</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=01ce217ce6654a27b9b503ff9507e729"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>01ce217ce6654a27b9b503ff9507e729</document_key>
+        <order>400</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:11</sys_created_on>
+        <sys_id>0d439c01baff491e94dae9a2bc44aba6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:11</sys_updated_on>
+        <value>name=ATF Product CP06^material_product_id=ATF-MAT-CP06^standard_cost=250^unit_of_measure=EA^active=true^material_type=finished_good^category=finished_goods^EQ</value>
+        <variable display_value="Field values">dd54cf535320220002c6435723dc34fd</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>01ce217ce6654a27b9b503ff9507e729</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:11</sys_created_on>
+        <sys_id>1b2b262cfab348b38968aeca8aee1db3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:11</sys_updated_on>
+        <value>1</value>
+        <variable display_value="Enforce security">e6e3c7535320220002c6435723dc3496</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>01ce217ce6654a27b9b503ff9507e729</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:11</sys_created_on>
+        <sys_id>432ce714196847efa3b98c219b13f374</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:11</sys_updated_on>
+        <value>x_2056099_indust_0_mat_master</value>
+        <variable display_value="Table">90144b535320220002c6435723dc3488</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>01ce217ce6654a27b9b503ff9507e729</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:11</sys_created_on>
+        <sys_id>b29b8c68a23a4cbb88d4a995e323d976</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:11</sys_updated_on>
+        <value>record_successfully_inserted</value>
+        <variable display_value="Assert type">9024a37f671003007ba405225685efe5</variable>
+    </sys_variable_value>
+    <sys_element_mapping action="delete_multiple" query="table=var__m_atf_input_variable_14872288df60220062fe6c7a4df26319^id=01ce217ce6654a27b9b503ff9507e729"/>
+</record_update>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>UI Test Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>1</order>
+        <step_config display_value="Run UI Test Script">bfb48f59ffdf3210f972ffffffffffb3</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:14</sys_created_on>
+        <sys_id>912b5ec7f28e47549addd209b2bd5992</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>UI Test Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_912b5ec7f28e47549addd209b2bd5992</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:14</sys_updated_on>
+        <table/>
+        <test display_value="ATF-CP-UI-01: Customer Portal Dashboard UI">1a940c2524284aeb817137abd9fe7dc5</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=912b5ec7f28e47549addd209b2bd5992"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>912b5ec7f28e47549addd209b2bd5992</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:14</sys_created_on>
+        <sys_id>ab5fb2b7dcef40218e61fa263b85bab6</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:14</sys_updated_on>
+        <value>// ATF-CP-UI-01: Customer Portal Dashboard UI
+await sn_atf.navigate('/x_2056099_indust_0_customer_portal.do#dashboard');
+var dashHeading = await screen.findByText('Dashboard', { exact: false }, { timeout: 15000 });
+await waitFor(function() { expect(dashHeading).toBeVisible(); });
+var brand = await screen.findByText('Industrial Supply Co.', { exact: false });
+expect(brand).toBeVisible();
+var kpiLabels = ['Total Orders', 'Active Orders', 'In Production'];
+for (var i = 0; i &lt; kpiLabels.length; i++) {
+    var el = await screen.queryByText(kpiLabels[i]);
+    if (el) { expect(el).toBeVisible(); }
+}
+var welcomeEl = await screen.queryByText(/Welcome,/i);
+var notLinkedEl = await screen.queryByText('Customer Account Not Linked');
+if (welcomeEl) {
+    expect(welcomeEl).toBeVisible();
+    var currentOrders = await screen.queryByText('Current Orders');
+    if (currentOrders) expect(currentOrders).toBeVisible();
+    var nextDelivery = await screen.queryByText('Next Delivery');
+    if (nextDelivery) expect(nextDelivery).toBeVisible();
+    var bestSelling = await screen.queryByText('Best Selling Products');
+    if (bestSelling) expect(bestSelling).toBeVisible();
+} else if (notLinkedEl) {
+    expect(notLinkedEl).toBeVisible();
+}
+var navTabs = ['Dashboard', 'Catalog', 'My Orders', 'Delivery'];
+for (var t = 0; t &lt; navTabs.length; t++) {
+    var tab = await screen.queryByText(navTabs[t]);
+    if (tab) expect(tab).toBeVisible();
+}
+</value>
+        <variable display_value="Script">e216835dffdf3210f972ffffffffff53</variable>
+    </sys_variable_value>
+</record_update>

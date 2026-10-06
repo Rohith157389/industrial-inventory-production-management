@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>Record Insert</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>2</order>
+        <step_config display_value="Record Insert">14872288df60220062fe6c7a4df26319</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:20:16</sys_created_on>
+        <sys_id>f7286a5988df4477a0840917e3c32486</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record Insert</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_f7286a5988df4477a0840917e3c32486</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:20:16</sys_updated_on>
+        <table>x_2056099_indust_0_cust_master</table>
+        <test display_value="ATF-CP-05: Customer Order Isolation">ff62096f71334557a9a5ea68d7c08b6e</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=f7286a5988df4477a0840917e3c32486"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>f7286a5988df4477a0840917e3c32486</document_key>
+        <order>400</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:16</sys_created_on>
+        <sys_id>154825401fbe4f32b2ddf253677cf1b8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:16</sys_updated_on>
+        <value>customer_name=ATF Customer B CP05^customer_id=ATF-CUST-B-CP05^primary_contact_email=atf_b_cp05@test.invalid^active=true^customer_type=direct^EQ</value>
+        <variable display_value="Field values">dd54cf535320220002c6435723dc34fd</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>f7286a5988df4477a0840917e3c32486</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:16</sys_created_on>
+        <sys_id>c56933008b9e4c059294ee74885ac9eb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:16</sys_updated_on>
+        <value>record_successfully_inserted</value>
+        <variable display_value="Assert type">9024a37f671003007ba405225685efe5</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>f7286a5988df4477a0840917e3c32486</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:16</sys_created_on>
+        <sys_id>d0f0e2ef963c4a06981d638d91422f1d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:16</sys_updated_on>
+        <value>1</value>
+        <variable display_value="Enforce security">e6e3c7535320220002c6435723dc3496</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>f7286a5988df4477a0840917e3c32486</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:16</sys_created_on>
+        <sys_id>f7d2136294a94005bffee07e6dbad2af</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:16</sys_updated_on>
+        <value>x_2056099_indust_0_cust_master</value>
+        <variable display_value="Table">90144b535320220002c6435723dc3488</variable>
+    </sys_variable_value>
+    <sys_element_mapping action="delete_multiple" query="table=var__m_atf_input_variable_14872288df60220062fe6c7a4df26319^id=f7286a5988df4477a0840917e3c32486"/>
+</record_update>

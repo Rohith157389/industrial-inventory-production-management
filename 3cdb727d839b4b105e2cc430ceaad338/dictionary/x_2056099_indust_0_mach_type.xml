@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="88e6724caa4e42258bfdfc389d375540" label="Machine Type" name="x_2056099_indust_0_mach_type" type="collection">
-        <element label="Expected Units Per Hour" max_length="15" name="units_per_hour" type="decimal"/>
-        <element display="true" label="Name" mandatory="true" max_length="100" name="name" type="string"/>
-        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
         <element label="Category" max_length="40" name="category" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Other" sequence="8" value="other"/>
-                <element inactive_on_update="false" label="Testing" sequence="4" value="testing"/>
-                <element inactive_on_update="false" label="Utility" sequence="7" value="utility"/>
-                <element inactive_on_update="false" label="Assembly" sequence="3" value="assembly"/>
-                <element inactive_on_update="false" label="Material Handling" sequence="6" value="material_handling"/>
-                <element inactive_on_update="false" label="Fabrication" sequence="2" value="fabrication"/>
                 <element inactive_on_update="false" label="Packaging" sequence="5" value="packaging"/>
                 <element inactive_on_update="false" label="CNC" sequence="1" value="cnc"/>
+                <element inactive_on_update="false" label="Utility" sequence="7" value="utility"/>
+                <element inactive_on_update="false" label="Testing" sequence="4" value="testing"/>
+                <element inactive_on_update="false" label="Material Handling" sequence="6" value="material_handling"/>
+                <element inactive_on_update="false" label="Assembly" sequence="3" value="assembly"/>
+                <element inactive_on_update="false" label="Fabrication" sequence="2" value="fabrication"/>
+            </choice>
+        </element>
+        <element label="Criticality" max_length="40" name="criticality" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
+                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
+                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
+                <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
             </choice>
         </element>
         <element label="Description" max_length="1000" name="description" type="string"/>
-        <element label="Standard Production Capacity" max_length="15" name="standard_capacity" type="decimal"/>
-        <element label="Maintenance Interval (Days)" max_length="40" name="maintenance_interval_days" type="integer"/>
-        <element label="Minimum Production Threshold" max_length="15" name="min_production_threshold" type="decimal"/>
-        <element label="Criticality" max_length="40" name="criticality" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
-                <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
-                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
-                <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
-            </choice>
-        </element>
         <element label="Production Category" max_length="200" name="production_category" type="string"/>
+        <element label="Standard Production Capacity" max_length="15" name="standard_capacity" type="decimal"/>
         <element label="Standard Maintenance Duration" max_length="40" name="standard_maint_duration" type="glide_duration"/>
+        <element display="true" label="Name" mandatory="true" max_length="100" name="name" type="string"/>
+        <element label="Maintenance Interval (Days)" max_length="40" name="maintenance_interval_days" type="integer"/>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="Minimum Production Threshold" max_length="15" name="min_production_threshold" type="decimal"/>
+        <element label="Expected Units Per Hour" max_length="15" name="units_per_hour" type="decimal"/>
     </element>
 </database>

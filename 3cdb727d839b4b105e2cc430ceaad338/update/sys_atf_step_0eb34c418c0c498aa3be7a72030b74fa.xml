@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>Run Server Side Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>1</order>
+        <step_config display_value="Run Server Side Script">41de4a935332120028bc29cac2dc349a</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:20:11</sys_created_on>
+        <sys_id>0eb34c418c0c498aa3be7a72030b74fa</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Run Server Side Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_0eb34c418c0c498aa3be7a72030b74fa</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:20:11</sys_updated_on>
+        <table/>
+        <test display_value="ATF-CP-03: Product Detail to Cart">d1ec4f0a11074ed59a458a2defea0560</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=0eb34c418c0c498aa3be7a72030b74fa"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>0eb34c418c0c498aa3be7a72030b74fa</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:12</sys_created_on>
+        <sys_id>0488155392b04c2cb9af838bbfa57671</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:12</sys_updated_on>
+        <value>(function(outputs, steps, params, stepResult, assertEqual) {
+    var P = 'x_2056099_indust_0_';
+    var grProd = new GlideRecord(P + 'mat_master');
+    grProd.addActiveQuery();
+    grProd.addNotNullQuery('standard_cost');
+    grProd.addNotNullQuery('unit_of_measure');
+    grProd.setLimit(1);
+    grProd.query();
+    if (!grProd.next()) { stepResult.setOutputMessage('FAIL: No active product with cost+UOM'); return false; }
+    var prodSysId = grProd.getUniqueValue();
+    var prodName = grProd.getValue('name');
+    var unitPrice = parseFloat(grProd.getValue('standard_cost'));
+    var uom = grProd.getValue('unit_of_measure');
+    assertEqual({ name: 'Product name displayed', shouldbe: true, value: prodName.length &gt; 0 });
+    assertEqual({ name: 'Unit price displayed', shouldbe: true, value: unitPrice &gt; 0 });
+    assertEqual({ name: 'UOM displayed', shouldbe: true, value: uom.length &gt; 0 });
+    var quantity = 5;
+    assertEqual({ name: 'Positive quantity', shouldbe: true, value: quantity &gt; 0 });
+    var lineTotal = quantity * unitPrice;
+    assertEqual({ name: 'Line total correct', shouldbe: quantity * unitPrice, value: lineTotal });
+    var cartItem = { product_sys_id: prodSysId, quantity: quantity, uom: uom, line_total: lineTotal };
+    assertEqual({ name: 'Cart has selected product', shouldbe: prodSysId, value: cartItem.product_sys_id });
+    assertEqual({ name: 'Cart has correct quantity', shouldbe: quantity, value: cartItem.quantity });
+    assertEqual({ name: 'Cart line total matches', shouldbe: lineTotal, value: cartItem.line_total });
+    assertEqual({ name: 'UOM preserved in cart', shouldbe: uom, value: cartItem.uom });
+    stepResult.setOutputMessage('Cart: Product=' + prodName + ' Qty=' + quantity + ' Total=' + lineTotal);
+    return true;
+})(outputs, steps, params, stepResult, assertEqual);</value>
+        <variable display_value="Test script">989d9e235324220002c6435723dc3484</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>0eb34c418c0c498aa3be7a72030b74fa</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:12</sys_created_on>
+        <sys_id>9e9d5652fd3d4a13b7c9b99863729eac</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:12</sys_updated_on>
+        <value>3.1</value>
+        <variable display_value="Jasmine version">42f2564b73031300440211d8faf6a777</variable>
+    </sys_variable_value>
+</record_update>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>UI Test Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>1</order>
+        <step_config display_value="Run UI Test Script">bfb48f59ffdf3210f972ffffffffffb3</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:12</sys_created_on>
+        <sys_id>3642810f6a70446489790f6552314985</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>UI Test Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_3642810f6a70446489790f6552314985</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:12</sys_updated_on>
+        <table/>
+        <test display_value="ATF-CP-UI-03: Product Detail and Cart UI">f6b0200300434f60a85302a6ee4e596f</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=3642810f6a70446489790f6552314985"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>3642810f6a70446489790f6552314985</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:12</sys_created_on>
+        <sys_id>d9fdb99896744347ba447a56deef76ab</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:12</sys_updated_on>
+        <value>// ATF-CP-UI-03: Product Detail and Cart UI
+await sn_atf.navigate('/x_2056099_indust_0_customer_portal.do#catalog');
+await screen.findByText('Product Catalog', { exact: false }, { timeout: 15000 });
+await sn_atf.delay(2000);
+var viewBtns = await screen.findAllByText('View Details', { exact: true });
+await user.click(viewBtns[0]);
+var backBtn = await screen.findByText(/Back to Catalog/i, {}, { timeout: 10000 });
+expect(backBtn).toBeVisible();
+var qtyInput = await screen.findBySelector('input.qty-input');
+await user.clear(qtyInput);
+await user.type(qtyInput, '3');
+await user.tab();
+await sn_atf.delay(500);
+var uomEl = await screen.queryByText('UOM');
+if (uomEl) expect(uomEl).toBeVisible();
+var lineTotalEl = await screen.queryByText('Line Total');
+if (lineTotalEl) expect(lineTotalEl).toBeVisible();
+var addBtn = await screen.findByText('Add to Cart', { exact: true });
+await user.click(addBtn);
+var addedMsg = await screen.findByText(/Added to Cart/i, {}, { timeout: 5000 });
+expect(addedMsg).toBeVisible();
+await sn_atf.navigate('/x_2056099_indust_0_customer_portal.do#cart');
+var cartHeading = await screen.findByText('Shopping Cart', { exact: false }, { timeout: 10000 });
+expect(cartHeading).toBeVisible();
+var cartItems = await screen.queryAllBySelector('.cart-item');
+expect(cartItems.length).toBeGreaterThan(0);
+</value>
+        <variable display_value="Script">e216835dffdf3210f972ffffffffff53</variable>
+    </sys_variable_value>
+</record_update>

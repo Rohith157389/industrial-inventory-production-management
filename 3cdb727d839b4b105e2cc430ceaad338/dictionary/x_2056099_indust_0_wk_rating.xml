@@ -1,44 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" audit="true" db_object_id="6091f7e3b1504a95a6ee1d6b6ed9d7a0" label="Worker Weekly Performance Rating" name="x_2056099_indust_0_wk_rating" type="collection">
-        <element choice="3" label="Rating Reason" mandatory="true" max_length="40" name="rating_reason" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Attendance / Availability" sequence="3" value="attendance"/>
-                <element inactive_on_update="false" label="Recognition" sequence="15" value="recognition"/>
-                <element inactive_on_update="false" label="Skill / Training Gap" sequence="11" value="skill_training_gap"/>
-                <element inactive_on_update="false" label="Machine Operation" sequence="7" value="machine_operation"/>
-                <element inactive_on_update="false" label="Work Discipline" sequence="10" value="work_discipline"/>
-                <element inactive_on_update="false" label="Safety / Compliance" sequence="6" value="safety_compliance"/>
-                <element inactive_on_update="false" label="Work Quality" sequence="2" value="work_quality"/>
-                <element inactive_on_update="false" label="Exceptional Performance" sequence="14" value="exceptional"/>
-                <element inactive_on_update="false" label="Productivity" sequence="1" value="productivity"/>
-                <element inactive_on_update="false" label="Repeated Performance Issue" sequence="13" value="repeated_issue"/>
-                <element inactive_on_update="false" label="Teamwork / Collaboration" sequence="9" value="teamwork"/>
-                <element inactive_on_update="false" label="Rework / Errors" sequence="5" value="rework_errors"/>
-                <element inactive_on_update="false" label="Material Handling" sequence="8" value="material_handling"/>
-                <element inactive_on_update="false" label="Timeliness" sequence="4" value="timeliness"/>
-                <element inactive_on_update="false" label="Other" sequence="16" value="other"/>
-                <element inactive_on_update="false" label="Communication" sequence="12" value="communication"/>
-            </choice>
-        </element>
-        <element label="Employee Profile" max_length="32" name="employee_profile" reference="x_2056099_indust_0_hr_profile" type="reference"/>
-        <element label="Follow-Up Date" max_length="40" name="follow_up_date" type="glide_date"/>
-        <element label="Rating Manager" mandatory="true" max_length="32" name="manager" reference="sys_user" type="reference"/>
-        <element label="Detailed Manager Comments" max_length="40" name="detailed_comments" type="journal_input"/>
-        <element label="Assignment Group" max_length="32" name="assignment_group" reference="sys_user_group" type="reference"/>
-        <element choice="3" default="draft" label="Review Status" max_length="40" name="review_status" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Submitted" sequence="2" value="submitted"/>
-                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
-                <element inactive_on_update="false" label="Correction Requested" sequence="5" value="correction_requested"/>
-                <element inactive_on_update="false" label="Finalized" sequence="4" value="finalized"/>
-                <element inactive_on_update="false" label="Manager Review" sequence="3" value="manager_review"/>
-            </choice>
-        </element>
-        <element label="Manager Recommendation" max_length="2000" name="manager_recommendation" type="multi_two_lines"/>
+        <element label="HR Review Required" max_length="40" name="hr_review_required" type="boolean"/>
+        <element label="Manager Summary" mandatory="true" max_length="4000" name="manager_summary" type="multi_two_lines"/>
         <element display="true" label="Rating ID" mandatory="true" max_length="20" name="rating_id" read_only="true" read_only_option="instance_configured" type="string"/>
-        <element label="Reporting Week" mandatory="true" max_length="10" name="reporting_week" type="string"/>
-        <element label="HR Case" max_length="32" name="hr_case" reference="x_2056099_indust_0_hr_action" type="reference"/>
-        <element label="HR Escalation Reason" max_length="2000" name="hr_escalation_reason" type="multi_two_lines"/>
+        <element label="Week Start Date" mandatory="true" max_length="40" name="week_start_date" type="glide_date"/>
+        <element label="Follow-Up Date" max_length="40" name="follow_up_date" type="glide_date"/>
         <element choice="3" label="Rating Action" mandatory="true" max_length="40" name="rating_action" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Other" sequence="5" value="other"/>
@@ -48,59 +14,93 @@
                 <element inactive_on_update="false" label="Decrease" sequence="3" value="decrease"/>
             </choice>
         </element>
+        <element label="Rating Manager" mandatory="true" max_length="32" name="manager" reference="sys_user" type="reference"/>
         <element choice="1" default="not_escalated" label="HR Escalation Status" max_length="40" name="hr_escalation_status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Resolved" sequence="5" value="resolved"/>
-                <element inactive_on_update="false" label="Not Escalated" sequence="1" value="not_escalated"/>
                 <element inactive_on_update="false" label="HR Reviewing" sequence="4" value="hr_reviewing"/>
                 <element inactive_on_update="false" label="Escalated to HR" sequence="3" value="escalated"/>
                 <element inactive_on_update="false" label="Pending Escalation" sequence="2" value="pending"/>
+                <element inactive_on_update="false" label="Resolved" sequence="5" value="resolved"/>
+                <element inactive_on_update="false" label="Not Escalated" sequence="1" value="not_escalated"/>
             </choice>
         </element>
-        <element choice="1" label="Secondary Reason" max_length="40" name="secondary_reason" type="choice">
+        <element label="Worker" mandatory="true" max_length="32" name="worker" reference="sys_user" type="reference"/>
+        <element label="Reporting Week" mandatory="true" max_length="10" name="reporting_week" type="string"/>
+        <element label="Department" max_length="32" name="department" reference="cmn_department" type="reference"/>
+        <element choice="3" label="Rating Reason" mandatory="true" max_length="40" name="rating_reason" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Timeliness" sequence="4" value="timeliness"/>
-                <element inactive_on_update="false" label="Work Discipline" sequence="10" value="work_discipline"/>
-                <element inactive_on_update="false" label="Safety / Compliance" sequence="6" value="safety_compliance"/>
-                <element inactive_on_update="false" label="Teamwork / Collaboration" sequence="9" value="teamwork"/>
-                <element inactive_on_update="false" label="Rework / Errors" sequence="5" value="rework_errors"/>
-                <element inactive_on_update="false" label="Attendance / Availability" sequence="3" value="attendance"/>
                 <element inactive_on_update="false" label="Other" sequence="16" value="other"/>
-                <element inactive_on_update="false" label="Repeated Performance Issue" sequence="13" value="repeated_issue"/>
-                <element inactive_on_update="false" label="Recognition" sequence="15" value="recognition"/>
-                <element inactive_on_update="false" label="Work Quality" sequence="2" value="work_quality"/>
                 <element inactive_on_update="false" label="Communication" sequence="12" value="communication"/>
                 <element inactive_on_update="false" label="Material Handling" sequence="8" value="material_handling"/>
+                <element inactive_on_update="false" label="Timeliness" sequence="4" value="timeliness"/>
                 <element inactive_on_update="false" label="Machine Operation" sequence="7" value="machine_operation"/>
-                <element inactive_on_update="false" label="Exceptional Performance" sequence="14" value="exceptional"/>
-                <element inactive_on_update="false" label="Productivity" sequence="1" value="productivity"/>
+                <element inactive_on_update="false" label="Attendance / Availability" sequence="3" value="attendance"/>
+                <element inactive_on_update="false" label="Recognition" sequence="15" value="recognition"/>
                 <element inactive_on_update="false" label="Skill / Training Gap" sequence="11" value="skill_training_gap"/>
+                <element inactive_on_update="false" label="Exceptional Performance" sequence="14" value="exceptional"/>
+                <element inactive_on_update="false" label="Work Discipline" sequence="10" value="work_discipline"/>
+                <element inactive_on_update="false" label="Safety / Compliance" sequence="6" value="safety_compliance"/>
+                <element inactive_on_update="false" label="Work Quality" sequence="2" value="work_quality"/>
+                <element inactive_on_update="false" label="Rework / Errors" sequence="5" value="rework_errors"/>
+                <element inactive_on_update="false" label="Productivity" sequence="1" value="productivity"/>
+                <element inactive_on_update="false" label="Repeated Performance Issue" sequence="13" value="repeated_issue"/>
+                <element inactive_on_update="false" label="Teamwork / Collaboration" sequence="9" value="teamwork"/>
             </choice>
         </element>
-        <element label="Reviewed By" max_length="32" name="reviewed_by" reference="sys_user" type="reference"/>
-        <element label="HR Review Required" max_length="40" name="hr_review_required" type="boolean"/>
+        <element label="HR Case" max_length="32" name="hr_case" reference="x_2056099_indust_0_hr_action" type="reference"/>
+        <element label="Rating Change" max_length="15" name="rating_change" read_only="true" read_only_option="instance_configured" type="decimal"/>
+        <element label="Detailed Manager Comments" max_length="40" name="detailed_comments" type="journal_input"/>
+        <element choice="1" label="Secondary Reason" max_length="40" name="secondary_reason" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Material Handling" sequence="8" value="material_handling"/>
+                <element inactive_on_update="false" label="Timeliness" sequence="4" value="timeliness"/>
+                <element inactive_on_update="false" label="Recognition" sequence="15" value="recognition"/>
+                <element inactive_on_update="false" label="Communication" sequence="12" value="communication"/>
+                <element inactive_on_update="false" label="Machine Operation" sequence="7" value="machine_operation"/>
+                <element inactive_on_update="false" label="Attendance / Availability" sequence="3" value="attendance"/>
+                <element inactive_on_update="false" label="Exceptional Performance" sequence="14" value="exceptional"/>
+                <element inactive_on_update="false" label="Skill / Training Gap" sequence="11" value="skill_training_gap"/>
+                <element inactive_on_update="false" label="Work Quality" sequence="2" value="work_quality"/>
+                <element inactive_on_update="false" label="Safety / Compliance" sequence="6" value="safety_compliance"/>
+                <element inactive_on_update="false" label="Repeated Performance Issue" sequence="13" value="repeated_issue"/>
+                <element inactive_on_update="false" label="Work Discipline" sequence="10" value="work_discipline"/>
+                <element inactive_on_update="false" label="Rework / Errors" sequence="5" value="rework_errors"/>
+                <element inactive_on_update="false" label="Productivity" sequence="1" value="productivity"/>
+                <element inactive_on_update="false" label="Other" sequence="16" value="other"/>
+                <element inactive_on_update="false" label="Teamwork / Collaboration" sequence="9" value="teamwork"/>
+            </choice>
+        </element>
+        <element label="Other Reason Description" max_length="1000" name="other_reason_desc" type="multi_two_lines"/>
+        <element choice="3" default="draft" label="Review Status" max_length="40" name="review_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Submitted" sequence="2" value="submitted"/>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="Correction Requested" sequence="5" value="correction_requested"/>
+                <element inactive_on_update="false" label="Finalized" sequence="4" value="finalized"/>
+                <element inactive_on_update="false" label="Manager Review" sequence="3" value="manager_review"/>
+            </choice>
+        </element>
+        <element label="Current Rating" mandatory="true" max_length="15" name="current_rating" type="decimal"/>
+        <element label="Manager Recommendation" max_length="2000" name="manager_recommendation" type="multi_two_lines"/>
         <element choice="1" label="Manager Action Plan" max_length="40" name="manager_action_plan" type="choice">
             <choice>
-                <element inactive_on_update="false" label="No Immediate Action" sequence="9" value="no_action"/>
                 <element inactive_on_update="false" label="Machine Training" sequence="5" value="machine_training"/>
+                <element inactive_on_update="false" label="Additional Supervision" sequence="1" value="additional_supervision"/>
+                <element inactive_on_update="false" label="No Immediate Action" sequence="9" value="no_action"/>
                 <element inactive_on_update="false" label="Process Clarification" sequence="8" value="process_clarification"/>
                 <element inactive_on_update="false" label="Coaching" sequence="4" value="coaching"/>
-                <element inactive_on_update="false" label="Training" sequence="2" value="training"/>
-                <element inactive_on_update="false" label="Additional Supervision" sequence="1" value="additional_supervision"/>
-                <element inactive_on_update="false" label="Safety Training" sequence="7" value="safety_training"/>
                 <element inactive_on_update="false" label="Task Reassignment" sequence="3" value="task_reassignment"/>
+                <element inactive_on_update="false" label="Safety Training" sequence="7" value="safety_training"/>
                 <element inactive_on_update="false" label="Quality Training" sequence="6" value="quality_training"/>
+                <element inactive_on_update="false" label="Training" sequence="2" value="training"/>
             </choice>
         </element>
-        <element label="Week Start Date" mandatory="true" max_length="40" name="week_start_date" type="glide_date"/>
-        <element label="Department" max_length="32" name="department" reference="cmn_department" type="reference"/>
-        <element label="Rating Change" max_length="15" name="rating_change" read_only="true" read_only_option="instance_configured" type="decimal"/>
+        <element label="Employee Profile" max_length="32" name="employee_profile" reference="x_2056099_indust_0_hr_profile" type="reference"/>
+        <element label="HR Escalation Reason" max_length="2000" name="hr_escalation_reason" type="multi_two_lines"/>
         <element label="Previous Rating" max_length="15" name="previous_rating" type="decimal"/>
-        <element label="Other Reason Description" max_length="1000" name="other_reason_desc" type="multi_two_lines"/>
+        <element label="Assignment Group" max_length="32" name="assignment_group" reference="sys_user_group" type="reference"/>
+        <element label="Reviewed By" max_length="32" name="reviewed_by" reference="sys_user" type="reference"/>
         <element label="Week End Date" mandatory="true" max_length="40" name="week_end_date" type="glide_date"/>
-        <element label="Manager Summary" mandatory="true" max_length="4000" name="manager_summary" type="multi_two_lines"/>
-        <element label="Worker" mandatory="true" max_length="32" name="worker" reference="sys_user" type="reference"/>
-        <element label="Current Rating" mandatory="true" max_length="15" name="current_rating" type="decimal"/>
         <element label="Review Date" max_length="40" name="review_date" type="glide_date_time"/>
         <index name="index">
             <element name="assignment_group"/>

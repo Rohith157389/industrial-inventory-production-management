@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <callable_outputs/>
+        <copied_from/>
+        <description/>
+        <display_name>Run Server Side Script</display_name>
+        <inputs/>
+        <mugshots_cache_json/>
+        <notes/>
+        <order>4</order>
+        <step_config display_value="Run Server Side Script">41de4a935332120028bc29cac2dc349a</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:20:14</sys_created_on>
+        <sys_id>9c8ebffdc7504e6a9e929d232e6bd317</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Run Server Side Script</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_atf_step_9c8ebffdc7504e6a9e929d232e6bd317</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:20:14</sys_updated_on>
+        <table/>
+        <test display_value="ATF-CP-01: Customer Portal Identity &amp; Dashboard">70e03858fc8e42e58be8340392694b1a</test>
+        <timeout/>
+        <warning_message/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=9c8ebffdc7504e6a9e929d232e6bd317"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>9c8ebffdc7504e6a9e929d232e6bd317</document_key>
+        <order>200</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:14</sys_created_on>
+        <sys_id>4864e974d784486386190a1b5e51fe12</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:14</sys_updated_on>
+        <value>(function(outputs, steps, params, stepResult, assertEqual) {
+    var P = 'x_2056099_indust_0_';
+    var passed = 0;
+    var total = 0;
+    total++;
+    var grCust = new GlideRecord(P + 'cust_master');
+    grCust.addActiveQuery();
+    grCust.setLimit(1);
+    grCust.query();
+    if (!grCust.next()) { stepResult.setOutputMessage('FAIL: No active customer found'); return false; }
+    var custSysId = grCust.getUniqueValue();
+    var custName = grCust.getValue('customer_name');
+    var custEmail = grCust.getValue('primary_contact_email');
+    passed++;
+    total++;
+    var grLookup = new GlideRecord(P + 'cust_master');
+    grLookup.addQuery('primary_contact_email', custEmail);
+    grLookup.addActiveQuery();
+    grLookup.setLimit(1);
+    grLookup.query();
+    assertEqual({ name: 'Email lookup finds customer', shouldbe: true, value: grLookup.next() });
+    assertEqual({ name: 'Correct sys_id returned', shouldbe: custSysId, value: grLookup.getUniqueValue() });
+    assertEqual({ name: 'Correct customer_name returned', shouldbe: custName, value: grLookup.getValue('customer_name') });
+    passed++;
+    total++;
+    var grFake = new GlideRecord(P + 'cust_master');
+    grFake.addQuery('primary_contact_email', 'atf_nonexistent_9999@test.invalid');
+    grFake.addActiveQuery();
+    grFake.setLimit(1);
+    grFake.query();
+    assertEqual({ name: 'Unlinked email returns no customer', shouldbe: false, value: grFake.hasNext() });
+    passed++;
+    total++;
+    var grAll = new GlideRecord(P + 'cust_master');
+    grAll.addActiveQuery();
+    grAll.query();
+    var allCount = 0;
+    while (grAll.next()) allCount++;
+    if (allCount &gt; 1) {
+        var grFirst = new GlideRecord(P + 'cust_master');
+        grFirst.addActiveQuery();
+        grFirst.orderBy('sys_created_on');
+        grFirst.setLimit(1);
+        grFirst.query();
+        grFirst.next();
+        var firstId = grFirst.getUniqueValue();
+        var grSecond = new GlideRecord(P + 'cust_master');
+        grSecond.addActiveQuery();
+        grSecond.orderBy('sys_created_on');
+        grSecond.setLimit(2);
+        grSecond.query();
+        grSecond.next(); grSecond.next();
+        var secondEmail = grSecond.getValue('primary_contact_email');
+        var grCheck = new GlideRecord(P + 'cust_master');
+        grCheck.addQuery('primary_contact_email', secondEmail);
+        grCheck.addActiveQuery();
+        grCheck.setLimit(1);
+        grCheck.query();
+        grCheck.next();
+        assertEqual({ name: 'No first-active-customer fallback', shouldbe: true, value: grCheck.getUniqueValue() !== firstId || secondEmail === grFirst.getValue('primary_contact_email') });
+    }
+    passed++;
+    total++;
+    if (allCount &gt; 1) {
+        var grA = new GlideRecord(P + 'cust_master');
+        grA.addActiveQuery();
+        grA.setLimit(1);
+        grA.query();
+        grA.next();
+        var emailA = grA.getValue('primary_contact_email');
+        var nameA = grA.getValue('customer_name');
+        var grLookA = new GlideRecord(P + 'cust_master');
+        grLookA.addQuery('primary_contact_email', emailA);
+        grLookA.addActiveQuery();
+        grLookA.setLimit(1);
+        grLookA.query();
+        grLookA.next();
+        assertEqual({ name: 'Customer data not mixed', shouldbe: nameA, value: grLookA.getValue('customer_name') });
+    }
+    passed++;
+    stepResult.setOutputMessage('Identity: ' + passed + '/' + total + ' passed');
+    return true;
+})(outputs, steps, params, stepResult, assertEqual);</value>
+        <variable display_value="Test script">989d9e235324220002c6435723dc3484</variable>
+    </sys_variable_value>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>9c8ebffdc7504e6a9e929d232e6bd317</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 09:44:14</sys_created_on>
+        <sys_id>f7269f8cd8064170a58e0b775617ac65</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 09:44:14</sys_updated_on>
+        <value>3.1</value>
+        <variable display_value="Jasmine version">42f2564b73031300440211d8faf6a777</variable>
+    </sys_variable_value>
+</record_update>
