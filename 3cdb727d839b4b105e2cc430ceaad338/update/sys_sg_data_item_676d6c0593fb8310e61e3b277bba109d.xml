@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_sg_data_item">
+    <sys_sg_data_item action="INSERT_OR_UPDATE">
+        <condition_type>declarative</condition_type>
+        <description>Critical and high severity unresolved alerts — matches Alert Center API summary.critical + summary.high</description>
+        <group_by/>
+        <instance_relative_url_qc/>
+        <name>Critical and High Severity Alerts</name>
+        <offline_query_condition/>
+        <offline_query_condition_script/>
+        <query_condition table="x_2056099_indust_0_inv_alert">severityINcritical,high^statusNOT INresolved,dismissed^ORDERBYDESCalert_date<item display_value="critical,high" endquery="false" field="severity" goto="false" newquery="false" operator="IN" or="false" value="critical,high"/>
+            <item display_value="resolved,dismissed" endquery="false" field="status" goto="false" newquery="false" operator="NOT IN" or="false" value="resolved,dismissed"/>
+            <item endquery="false" field="" goto="false" newquery="false" operator="ORDERBYDESC" or="false" value="alert_date"/>
+        </query_condition>
+        <query_condition_script/>
+        <sys_class_name>sys_sg_data_item</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 05:00:10</sys_created_on>
+        <sys_id>676d6c0593fb8310e61e3b277bba109d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Critical and High Severity Alerts</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_sg_data_item_676d6c0593fb8310e61e3b277bba109d</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 05:00:10</sys_updated_on>
+        <table>x_2056099_indust_0_inv_alert</table>
+    </sys_sg_data_item>
+    <sys_translated_text action="delete_multiple" query="documentkey=676d6c0593fb8310e61e3b277bba109d"/>
+</record_update>

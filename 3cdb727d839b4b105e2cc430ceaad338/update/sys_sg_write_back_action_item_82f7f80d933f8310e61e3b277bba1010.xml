@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_sg_write_back_action_item">
+    <sys_sg_write_back_action_item action="INSERT_OR_UPDATE">
+        <attach_in_activity_stream/>
+        <description>Transitions Production Order from In Production to Completed. Existing Business Rules enforce lifecycle validation and quantity checks.</description>
+        <execution_script/>
+        <name>Complete Production</name>
+        <parameter_screen/>
+        <query_condition/>
+        <sys_class_name>sys_sg_write_back_action_item</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 05:46:13</sys_created_on>
+        <sys_id>82f7f80d933f8310e61e3b277bba1010</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Complete Production</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_sg_write_back_action_item_82f7f80d933f8310e61e3b277bba1010</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 05:46:13</sys_updated_on>
+        <table>x_2056099_indust_0_production_order</table>
+        <template>status=completed^EQ</template>
+        <type>update</type>
+        <use_current_record_as_condition>true</use_current_record_as_condition>
+        <use_fields_for_ref_lookup>false</use_fields_for_ref_lookup>
+    </sys_sg_write_back_action_item>
+    <sys_translated_text action="delete_multiple" query="documentkey=82f7f80d933f8310e61e3b277bba1010"/>
+</record_update>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_sg_write_back_action_item">
+    <sys_sg_write_back_action_item action="INSERT_OR_UPDATE">
+        <attach_in_activity_stream/>
+        <description>Records production quantity. Validates positive numeric input and remaining quantity. Uses existing table update pipeline with Business Rule enforcement.</description>
+        <execution_script><![CDATA[var qty = parseFloat(inputs.production_quantity) || 0;
+if (qty <= 0) { output.error = "Quantity must be a positive number."; }
+else {
+  var produced = parseFloat(current.getValue("quantity_produced")) || 0;
+  var remaining = parseFloat(current.getValue("quantity_remaining")) || 0;
+  if (qty > remaining) { output.error = "Quantity (" + qty + ") exceeds remaining (" + remaining + ")."; }
+  else {
+    current.setValue("quantity_produced", (produced + qty).toString());
+    current.setValue("quantity_remaining", (remaining - qty).toString());
+    current.update();
+    output.success = true;
+    output.message = "Recorded " + qty + " units. Produced: " + (produced + qty) + ", Remaining: " + (remaining - qty);
+  }
+}]]></execution_script>
+        <name>Record Production Output</name>
+        <parameter_screen display_value="Record Production Quantity">4af7b80d933f8310e61e3b277bba10e1</parameter_screen>
+        <query_condition/>
+        <sys_class_name>sys_sg_write_back_action_item</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 05:46:13</sys_created_on>
+        <sys_id>4ef7b80d933f8310e61e3b277bba10f8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record Production Output</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_sg_write_back_action_item_4ef7b80d933f8310e61e3b277bba10f8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 05:46:13</sys_updated_on>
+        <table>x_2056099_indust_0_production_order</table>
+        <template/>
+        <type>script</type>
+        <use_current_record_as_condition>true</use_current_record_as_condition>
+        <use_fields_for_ref_lookup>false</use_fields_for_ref_lookup>
+    </sys_sg_write_back_action_item>
+    <sys_translated_text action="delete_multiple" query="documentkey=4ef7b80d933f8310e61e3b277bba10f8"/>
+</record_update>

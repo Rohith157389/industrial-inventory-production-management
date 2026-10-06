@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_sg_write_back_action_item">
+    <sys_sg_write_back_action_item action="INSERT_OR_UPDATE">
+        <attach_in_activity_stream/>
+        <description>Calls the existing POST /operator_api/issue-material endpoint via internal REST. The existing API validates PO status, material eligibility, stock availability, batch quality, and role authorization. No direct table updates from mobile scripting.</description>
+        <execution_script><![CDATA[// Issue Material via existing Operator API contract
+var pmId = inputs.production_material_id;
+var issueQty = parseFloat(inputs.issue_quantity) || 0;
+
+// Input validation
+if (!pmId) { output.error = "Production Material ID is required."; }
+else if (isNaN(issueQty) || issueQty <= 0) { output.error = "Issue Quantity must be a positive number."; }
+else {
+  // Call existing issue-material API via internal REST
+  var sm = new sn_ws.RESTMessageV2();
+  sm.setHttpMethod("POST");
+  sm.setEndpoint(gs.getProperty("glide.servlet.uri") + "api/x_2056099_indust_0/operator_api/issue-material");
+  sm.setRequestHeader("Content-Type", "application/json");
+  sm.setRequestHeader("Accept", "application/json");
+  sm.setRequestBody(JSON.stringify({
+    production_material_id: pmId,
+    issue_quantity: issueQty
+  }));
+  try {
+    var resp = sm.execute();
+    var statusCode = resp.getStatusCode();
+    var body = JSON.parse(resp.getBody());
+    if (statusCode == 200 && body.result && body.result.success) {
+      output.success = true;
+      output.message = body.result.message || "Material issued successfully.";
+    } else {
+      output.error = (body.result && body.result.error) || (body.error && body.error.message) || "Issue failed (HTTP " + statusCode + ")";
+    }
+  } catch(e) {
+    output.error = "API call failed: " + e.message;
+  }
+}]]></execution_script>
+        <name>Issue Material to Production</name>
+        <parameter_screen display_value="Issue Material Input">a239b88d933f8310e61e3b277bba105e</parameter_screen>
+        <query_condition/>
+        <sys_class_name>sys_sg_write_back_action_item</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-06 05:51:43</sys_created_on>
+        <sys_id>b63974cd933f8310e61e3b277bba10e5</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Issue Material to Production</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_sg_write_back_action_item_b63974cd933f8310e61e3b277bba10e5</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-06 05:51:43</sys_updated_on>
+        <table>x_2056099_indust_0_production_order</table>
+        <template/>
+        <type>script</type>
+        <use_current_record_as_condition>true</use_current_record_as_condition>
+        <use_fields_for_ref_lookup>false</use_fields_for_ref_lookup>
+    </sys_sg_write_back_action_item>
+    <sys_translated_text action="delete_multiple" query="documentkey=b63974cd933f8310e61e3b277bba10e5"/>
+</record_update>
