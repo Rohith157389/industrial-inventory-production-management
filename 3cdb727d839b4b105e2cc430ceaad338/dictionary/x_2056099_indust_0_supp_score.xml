@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="9e8ca0a05ce240a0a9cc11236db66517" label="Supplier Scorecard" name="x_2056099_indust_0_supp_score" type="collection">
-        <element label="Procurement Review Required" max_length="40" name="procurement_review_required" type="boolean"/>
-        <element label="Last Calculated On" max_length="40" name="last_calculated_on" read_only="true" read_only_option="instance_configured" type="glide_date_time"/>
+        <element default="0" label="Overall Score (0-100)" max_length="15" name="overall_score_pct" read_only="true" read_only_option="instance_configured" type="decimal"/>
         <element default="approved" label="Supplier Status" max_length="40" name="supplier_status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Restricted" sequence="4" value="restricted"/>
-                <element inactive_on_update="false" label="Performance Review Required" sequence="3" value="performance_review_required"/>
                 <element inactive_on_update="false" label="Approved" sequence="2" value="approved"/>
                 <element inactive_on_update="false" label="Inactive" sequence="5" value="inactive"/>
                 <element inactive_on_update="false" label="Preferred" sequence="1" value="preferred"/>
+                <element inactive_on_update="false" label="Restricted" sequence="4" value="restricted"/>
+                <element inactive_on_update="false" label="Performance Review Required" sequence="3" value="performance_review_required"/>
             </choice>
         </element>
-        <element display="true" label="Supplier" mandatory="true" max_length="32" name="supplier" reference="core_company" type="reference"/>
-        <element default="0" label="Avg Delivery Score (0-10)" max_length="15" name="avg_delivery_score" read_only="true" read_only_option="instance_configured" type="decimal"/>
-        <element default="0" label="Total Evaluated Orders" max_length="40" name="total_evaluated_orders" read_only="true" read_only_option="instance_configured" type="integer"/>
-        <element default="0" label="Avg Cost Score (0-10)" max_length="15" name="avg_cost_score" read_only="true" read_only_option="instance_configured" type="decimal"/>
         <element default="0" label="Overall Rating (0-10)" max_length="15" name="overall_rating" read_only="true" read_only_option="instance_configured" type="decimal"/>
+        <element default="0" label="Avg Cost Score (0-10)" max_length="15" name="avg_cost_score" read_only="true" read_only_option="instance_configured" type="decimal"/>
+        <element default="0" label="Completed Evaluations" max_length="40" name="completed_evaluations" read_only="true" read_only_option="instance_configured" type="integer"/>
+        <element default="0" label="Avg Documentation Score (0-10)" max_length="15" name="avg_documentation_score" read_only="true" read_only_option="instance_configured" type="decimal"/>
+        <element display="true" label="Supplier" mandatory="true" max_length="32" name="supplier" reference="core_company" type="reference"/>
         <element default="not_rated" label="Performance Status" max_length="40" name="performance_status" read_only="true" read_only_option="instance_configured" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Satisfactory (60-74)" sequence="3" value="satisfactory"/>
                 <element inactive_on_update="false" label="Not Rated" sequence="6" value="not_rated"/>
                 <element inactive_on_update="false" label="Good (75-89)" sequence="2" value="good"/>
-                <element inactive_on_update="false" label="Poor (0-39)" sequence="5" value="poor"/>
                 <element inactive_on_update="false" label="Excellent (90-100)" sequence="1" value="excellent"/>
+                <element inactive_on_update="false" label="Poor (0-39)" sequence="5" value="poor"/>
                 <element inactive_on_update="false" label="Needs Improvement (40-59)" sequence="4" value="needs_improvement"/>
             </choice>
         </element>
+        <element default="0" label="Avg Delivery Score (0-10)" max_length="15" name="avg_delivery_score" read_only="true" read_only_option="instance_configured" type="decimal"/>
         <element default="0" label="Avg Quality Score (0-10)" max_length="15" name="avg_quality_score" read_only="true" read_only_option="instance_configured" type="decimal"/>
+        <element label="Last Calculated On" max_length="40" name="last_calculated_on" read_only="true" read_only_option="instance_configured" type="glide_date_time"/>
+        <element label="Procurement Review Required" max_length="40" name="procurement_review_required" type="boolean"/>
+        <element default="0" label="Total Evaluated Orders" max_length="40" name="total_evaluated_orders" read_only="true" read_only_option="instance_configured" type="integer"/>
         <element label="Last Evaluation Date" max_length="40" name="last_evaluation_date" read_only="true" read_only_option="instance_configured" type="glide_date_time"/>
-        <element default="0" label="Completed Evaluations" max_length="40" name="completed_evaluations" read_only="true" read_only_option="instance_configured" type="integer"/>
         <element default="0" label="Avg Quantity Score (0-10)" max_length="15" name="avg_quantity_score" read_only="true" read_only_option="instance_configured" type="decimal"/>
-        <element default="0" label="Overall Score (0-100)" max_length="15" name="overall_score_pct" read_only="true" read_only_option="instance_configured" type="decimal"/>
-        <element default="0" label="Avg Documentation Score (0-10)" max_length="15" name="avg_documentation_score" read_only="true" read_only_option="instance_configured" type="decimal"/>
         <index name="index">
             <element name="performance_status"/>
         </index>

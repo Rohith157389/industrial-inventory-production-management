@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="d5d5b93dcd8b4815b962837d4245cea5" label="Supplier Material Profile" name="x_2056099_indust_0_supp_mat" type="collection">
-        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
+        <element default="INR" label="Currency" mandatory="true" max_length="40" name="currency" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="EUR - Euro" sequence="3" value="EUR"/>
+                <element inactive_on_update="false" label="USD - US Dollar" sequence="2" value="USD"/>
+                <element inactive_on_update="false" label="INR - Indian Rupee" sequence="1" value="INR"/>
+                <element inactive_on_update="false" label="GBP - British Pound" sequence="4" value="GBP"/>
+            </choice>
+        </element>
+        <element label="Preferred Supplier" max_length="40" name="preferred" type="boolean"/>
+        <element default="1" label="Minimum Order Quantity" max_length="15" name="minimum_order_qty" type="decimal"/>
+        <element label="Unit Price" mandatory="true" max_length="15" name="unit_price" type="decimal"/>
+        <element label="Effective To" max_length="40" name="effective_to" type="glide_date"/>
         <element label="Material / Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
+        <element display="true" label="Supplier Material Code" max_length="100" name="supplier_material_code" type="string"/>
+        <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="core_company" type="reference"/>
         <element default="net_30" label="Payment Terms" max_length="40" name="payment_terms" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Cash on Delivery" sequence="2" value="cod"/>
-                <element inactive_on_update="false" label="Net 90 Days" sequence="6" value="net_90"/>
                 <element inactive_on_update="false" label="Net 60 Days" sequence="5" value="net_60"/>
                 <element inactive_on_update="false" label="Advance Payment" sequence="1" value="advance"/>
+                <element inactive_on_update="false" label="Net 90 Days" sequence="6" value="net_90"/>
                 <element inactive_on_update="false" label="Net 45 Days" sequence="4" value="net_45"/>
                 <element inactive_on_update="false" label="Net 30 Days" sequence="3" value="net_30"/>
             </choice>
         </element>
-        <element default="INR" label="Currency" mandatory="true" max_length="40" name="currency" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="GBP - British Pound" sequence="4" value="GBP"/>
-                <element inactive_on_update="false" label="EUR - Euro" sequence="3" value="EUR"/>
-                <element inactive_on_update="false" label="USD - US Dollar" sequence="2" value="USD"/>
-                <element inactive_on_update="false" label="INR - Indian Rupee" sequence="1" value="INR"/>
-            </choice>
-        </element>
-        <element label="Unit Price" mandatory="true" max_length="15" name="unit_price" type="decimal"/>
-        <element display="true" label="Supplier Material Code" max_length="100" name="supplier_material_code" type="string"/>
         <element label="Lead Time (Days)" mandatory="true" max_length="40" name="lead_time_days" type="integer"/>
-        <element label="Preferred Supplier" max_length="40" name="preferred" type="boolean"/>
-        <element label="Effective To" max_length="40" name="effective_to" type="glide_date"/>
-        <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="core_company" type="reference"/>
-        <element label="Effective From" max_length="40" name="effective_from" type="glide_date"/>
         <element label="Notes" max_length="4000" name="notes" type="string"/>
-        <element default="1" label="Minimum Order Quantity" max_length="15" name="minimum_order_qty" type="decimal"/>
+        <element label="Effective From" max_length="40" name="effective_from" type="glide_date"/>
         <index name="index">
             <element name="material_product"/>
         </index>

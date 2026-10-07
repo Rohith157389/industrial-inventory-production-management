@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="b210804b971f46f4816f7a2d7c159752" label="Procurement Order" name="x_2056099_indust_0_proc_order" type="collection">
-        <element label="Required Date" mandatory="true" max_length="40" name="required_date" type="glide_date_time"/>
-        <element label="Supplier Reference Number" max_length="100" name="supplier_ref_number" type="string"/>
-        <element label="Supplier Confirmation Date" max_length="40" name="supplier_confirm_date" type="glide_date_time"/>
-        <element label="Source Inventory Request" max_length="32" name="source_request" reference="x_2056099_indust_0_inv_req" type="reference"/>
-        <element default="0" label="Tax" max_length="15" name="tax" type="decimal"/>
         <element default="INR" label="Currency" mandatory="true" max_length="40" name="currency" type="choice">
             <choice>
+                <element inactive_on_update="false" label="GBP - British Pound" sequence="4" value="GBP"/>
                 <element inactive_on_update="false" label="EUR - Euro" sequence="3" value="EUR"/>
                 <element inactive_on_update="false" label="USD - US Dollar" sequence="2" value="USD"/>
                 <element inactive_on_update="false" label="INR - Indian Rupee" sequence="1" value="INR"/>
-                <element inactive_on_update="false" label="GBP - British Pound" sequence="4" value="GBP"/>
             </choice>
         </element>
-        <element label="Expected Delivery Date" max_length="40" name="expected_delivery_date" type="glide_date_time"/>
-        <element label="Approval Date" max_length="40" name="approval_date" type="glide_date_time"/>
-        <element default="medium" label="Priority" mandatory="true" max_length="40" name="priority" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
-                <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
-                <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
-                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
-            </choice>
-        </element>
-        <element label="Supplier Confirmed" max_length="40" name="supplier_confirmed" type="boolean"/>
         <element default="0" label="Total Cost" max_length="15" name="total_cost" type="decimal"/>
-        <element label="Related Production Order" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
-        <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="core_company" type="reference"/>
-        <element label="Dispatch Date" max_length="40" name="dispatch_date" type="glide_date_time"/>
+        <element label="Supplier Confirmed" max_length="40" name="supplier_confirmed" type="boolean"/>
         <element default="draft" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Completed" sequence="10" value="completed"/>
+                <element inactive_on_update="false" label="Dispatched" sequence="6" value="dispatched"/>
+                <element inactive_on_update="false" label="Pending Approval" sequence="2" value="pending_approval"/>
                 <element inactive_on_update="false" label="Cancelled" sequence="12" value="cancelled"/>
                 <element inactive_on_update="false" label="Quality Check" sequence="9" value="quality_check"/>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
                 <element inactive_on_update="false" label="Supplier Confirmed" sequence="5" value="supplier_confirmed"/>
                 <element inactive_on_update="false" label="Received" sequence="8" value="received"/>
                 <element inactive_on_update="false" label="Ordered" sequence="4" value="ordered"/>
                 <element inactive_on_update="false" label="Rejected" sequence="11" value="rejected"/>
-                <element inactive_on_update="false" label="Pending Approval" sequence="2" value="pending_approval"/>
                 <element inactive_on_update="false" label="In Transit" sequence="7" value="in_transit"/>
                 <element inactive_on_update="false" label="Approved" sequence="3" value="approved"/>
-                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
-                <element inactive_on_update="false" label="Dispatched" sequence="6" value="dispatched"/>
-                <element inactive_on_update="false" label="Completed" sequence="10" value="completed"/>
             </choice>
         </element>
-        <element label="Procurement Notes" max_length="4000" name="notes" type="string"/>
-        <element label="Receiving Warehouse" mandatory="true" max_length="32" name="receiving_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Approved By" max_length="32" name="approved_by" reference="sys_user" type="reference"/>
         <element label="Related Customer Order" max_length="32" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
+        <element label="Requested By" max_length="32" name="requested_by" reference="sys_user" type="reference"/>
+        <element label="Supplier Reference Number" max_length="100" name="supplier_ref_number" type="string"/>
+        <element label="Supplier Confirmation Date" max_length="40" name="supplier_confirm_date" type="glide_date_time"/>
+        <element label="Expected Delivery Date" max_length="40" name="expected_delivery_date" type="glide_date_time"/>
+        <element label="Related Production Order" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
+        <element label="Procurement Notes" max_length="4000" name="notes" type="string"/>
         <element label="Order Date" mandatory="true" max_length="40" name="order_date" type="glide_date_time"/>
         <element default="0" label="Subtotal" max_length="15" name="subtotal" type="decimal"/>
+        <element label="Source Inventory Request" max_length="32" name="source_request" reference="x_2056099_indust_0_inv_req" type="reference"/>
+        <element label="Approval Date" max_length="40" name="approval_date" type="glide_date_time"/>
+        <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="core_company" type="reference"/>
+        <element label="Receiving Warehouse" mandatory="true" max_length="32" name="receiving_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
         <element label="Actual Delivery Date" max_length="40" name="actual_delivery_date" type="glide_date_time"/>
+        <element label="Approved By" max_length="32" name="approved_by" reference="sys_user" type="reference"/>
         <element label="Shipment / Tracking Reference" max_length="200" name="shipment_tracking_ref" type="string"/>
-        <element label="Requested By" max_length="32" name="requested_by" reference="sys_user" type="reference"/>
+        <element label="Required Date" mandatory="true" max_length="40" name="required_date" type="glide_date_time"/>
+        <element default="0" label="Tax" max_length="15" name="tax" type="decimal"/>
+        <element default="medium" label="Priority" mandatory="true" max_length="40" name="priority" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
+                <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
+                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
+                <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
+            </choice>
+        </element>
+        <element label="Dispatch Date" max_length="40" name="dispatch_date" type="glide_date_time"/>
         <index name="index">
             <element name="approved_by"/>
         </index>
