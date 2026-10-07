@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl>cf9d01d3e73003009d6247e603f6a990</enforce_acl>
+        <http_method>POST</http_method>
+        <name>Check Feasibility</name>
+        <operation_script><![CDATA[(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+    try {
+        var body = request.body.data;
+        if (!body) {
+            response.setStatus(400);
+            response.setBody({ status: 'ERROR', message: 'Request body is required. Expected JSON with finished_product, quantity, requested_delivery_date.' });
+            return;
+        }
+
+        var finishedProduct = body.finished_product || '';
+        var quantity = parseInt(body.quantity, 10);
+        var requestedDate = body.requested_delivery_date || '';
+
+        // ── INPUT VALIDATION ──
+        if (!finishedProduct) {
+            response.setStatus(400);
+            response.setBody({ status: 'ERROR', message: 'finished_product is required (sys_id of a mat_master record).' });
+            return;
+        }
+        if (isNaN(quantity) || quantity <= 0) {
+            response.setStatus(400);
+            response.setBody({ status: 'ERROR', message: 'quantity must be a positive number.' });
+            return;
+        }
+        if (!requestedDate) {
+            response.setStatus(400);
+            response.setBody({ status: 'ERROR', message: 'requested_delivery_date is required (YYYY-MM-DD).' });
+            return;
+        }
+
+        // Validate date format and ensure it is in the future
+        var reqDt = new GlideDateTime(requestedDate + ' 00:00:00');
+        var now = new GlideDateTime();
+        if (reqDt.compareTo(now) <= 0) {
+            response.setStatus(400);
+            response.setBody({ status: 'ERROR', message: 'requested_delivery_date must be in the future.' });
+            return;
+        }
+
+        // Validate the finished product exists in mat_master
+        var matGr = new GlideRecord('x_2056099_indust_0_mat_master');
+        if (!matGr.get(finishedProduct)) {
+            response.setStatus(400);
+            response.setBody({ status: 'ERROR', message: 'Product not found: ' + finishedProduct });
+            return;
+        }
+        var productName = matGr.getValue('name') || '';
+        var productId = matGr.getValue('material_product_id') || '';
+
+        // ═══════════════════════════════════════
+        // STEP 1: BOM RESOLUTION (read-only)
+        // ═══════════════════════════════════════
+        var resolver = new x_2056099_indust_0.BomResolver();
+        var bomResult = resolver.resolveByProduct(finishedProduct);
+
+        if (!bomResult.success) {
+            response.setBody({
+                status: 'NOT_FEASIBLE',
+                reason: 'No valid Bill of Materials found for this product.',
+                detail: bomResult.message,
+                product: productName,
+                product_id: productId,
+                requested_quantity: quantity,
+                requested_delivery_date: requestedDate
+            });
+            return;
+        }
+
+        // ═══════════════════════════════════════
+        // STEP 2: MATERIAL FEASIBILITY (read-only)
+        // Uses MaterialFulfillmentDecision.evaluateReadOnly()
+        // ═══════════════════════════════════════
+
+        // Resolve a warehouse for material evaluation
+        var whGr = new GlideRecord('x_2056099_indust_0_inv_loc');
+        whGr.addQuery('active', true);
+        whGr.addQuery('location_id', 'STARTSWITH', 'WH-');
+        whGr.orderBy('location_id');
+        whGr.setLimit(1);
+        whGr.query();
+        var warehouseSysId = '';
+        var warehouseName = '';
+        if (whGr.next()) {
+            warehouseSysId = whGr.getUniqueValue();
+            warehouseName = whGr.getValue('name') || whGr.getValue('location_id') || '';
+        }
+
+        if (!warehouseSysId) {
+            response.setBody({
+                status: 'NOT_FEASIBLE',
+                reason: 'No active warehouse available for material evaluation.',
+                product: productName,
+                requested_quantity: quantity,
+                requested_delivery_date: requestedDate
+            });
+            return;
+        }
+
+        var fulfillEngine = new x_2056099_indust_0.MaterialFulfillmentDecision();
+        var materialResults = [];
+        var allMaterialsFeasible = true;
+        var materialReasons = [];
+
+        for (var i = 0; i < bomResult.lines.length; i++) {
+            var line = bomResult.lines[i];
+            var perUnitQty = parseFloat(line.quantity_required) || 0;
+            var requiredQty = perUnitQty * quantity;
+
+            var matResult = fulfillEngine.evaluateReadOnly({
+                materialSysId: line.material_product,
+                quantityRequired: requiredQty,
+                warehouseSysId: warehouseSysId,
+                customerRequiredDate: requestedDate + ' 00:00:00'
+            });
+
+            var matFeasible = !!(matResult && matResult.success && matResult.feasible);
+            var availQty = 0;
+            var decisionType = 'UNKNOWN';
+            var reason = '';
+
+            if (matResult && matResult.success) {
+                availQty = matResult.available_quantity || 0;
+                decisionType = matResult.decision_type || 'UNKNOWN';
+                reason = matResult.reason || '';
+            } else {
+                reason = (matResult && matResult.error) ? matResult.error : 'Evaluation failed';
+            }
+
+            materialResults.push({
+                material: line.material_name || '',
+                required_quantity: requiredQty,
+                per_unit_quantity: perUnitQty,
+                available_quantity: availQty,
+                feasible: matFeasible,
+                decision_type: decisionType,
+                summary: reason
+            });
+
+            if (!matFeasible) {
+                allMaterialsFeasible = false;
+                materialReasons.push((line.material_name || 'Unknown material') + ': ' + reason);
+            }
+        }
+
+        // ═══════════════════════════════════════
+        // STEP 3: PRODUCTION CAPACITY (read-only)
+        // Replicates ProductionScheduler capacity logic
+        // without creating any schedule records
+        // ═══════════════════════════════════════
+        var resGr = new GlideRecord('x_2056099_indust_0_prod_res');
+        resGr.addQuery('active', true);
+        resGr.addQuery('status', 'available');
+        resGr.addQuery('maintenance_required', false);
+        resGr.orderByDesc('capacity_per_day');
+        resGr.setLimit(1);
+        resGr.query();
+
+        var capacityFeasible = false;
+        var capacitySummary = '';
+        var earliestCompletion = '';
+        var daysNeeded = 0;
+        var resourceName = '';
+        var effectiveCapacity = 0;
+        var conflictCount = 0;
+
+        if (resGr.next()) {
+            var capacityPerDay = parseFloat(resGr.getValue('capacity_per_day')) || 1;
+            var efficiency = (parseFloat(resGr.getValue('efficiency_percentage')) || 100) / 100;
+            effectiveCapacity = capacityPerDay * efficiency;
+            if (effectiveCapacity <= 0) effectiveCapacity = 1;
+
+            daysNeeded = Math.ceil(quantity / effectiveCapacity);
+            if (daysNeeded < 1) daysNeeded = 1;
+            resourceName = resGr.getValue('resource_name') || resGr.getValue('resource_id') || '';
+
+            var plannedEnd = new GlideDateTime();
+            plannedEnd.addDaysLocalTime(daysNeeded);
+            earliestCompletion = plannedEnd.getDisplayValue();
+
+            capacityFeasible = plannedEnd.compareTo(reqDt) <= 0;
+
+            // Check existing schedule conflicts on this resource
+            var schedGr = new GlideRecord('x_2056099_indust_0_prod_sched');
+            schedGr.addQuery('production_resource', resGr.getUniqueValue());
+            schedGr.addQuery('status', 'IN', 'draft,scheduled,confirmed,in_progress');
+            schedGr.addQuery('active', true);
+            schedGr.query();
+
+            while (schedGr.next()) {
+                conflictCount++;
+            }
+
+            capacitySummary = 'Resource: ' + resourceName +
+                ', Effective capacity: ' + effectiveCapacity.toFixed(1) + ' units/day' +
+                ', Days needed: ' + daysNeeded +
+                ', Earliest completion: ' + earliestCompletion;
+            if (conflictCount > 0) {
+                capacitySummary += ', Existing active schedules: ' + conflictCount;
+            }
+            if (!capacityFeasible) {
+                capacitySummary += ' — Exceeds requested delivery date';
+            }
+        } else {
+            // Fallback: any active resource (allow maintenance_required as warning)
+            var resFallback = new GlideRecord('x_2056099_indust_0_prod_res');
+            resFallback.addQuery('active', true);
+            resFallback.addQuery('status', 'available');
+            resFallback.orderByDesc('capacity_per_day');
+            resFallback.setLimit(1);
+            resFallback.query();
+
+            if (resFallback.next()) {
+                var cpd = parseFloat(resFallback.getValue('capacity_per_day')) || 1;
+                var eff = (parseFloat(resFallback.getValue('efficiency_percentage')) || 100) / 100;
+                effectiveCapacity = cpd * eff;
+                if (effectiveCapacity <= 0) effectiveCapacity = 1;
+                daysNeeded = Math.ceil(quantity / effectiveCapacity);
+                resourceName = resFallback.getValue('resource_name') || '';
+                var pe = new GlideDateTime();
+                pe.addDaysLocalTime(daysNeeded);
+                earliestCompletion = pe.getDisplayValue();
+                capacityFeasible = pe.compareTo(reqDt) <= 0;
+                capacitySummary = 'Resource (maintenance warning): ' + resourceName +
+                    ', Days needed: ' + daysNeeded +
+                    ', Earliest completion: ' + earliestCompletion;
+            } else {
+                capacitySummary = 'No production resources currently available.';
+                capacityFeasible = false;
+            }
+        }
+
+        // ═══════════════════════════════════════
+        // FINAL DETERMINATION
+        // ═══════════════════════════════════════
+        var overallFeasible = allMaterialsFeasible && capacityFeasible;
+
+        var result = {
+            status: overallFeasible ? 'FEASIBLE' : 'NOT_FEASIBLE',
+            product: productName,
+            product_id: productId,
+            requested_quantity: quantity,
+            requested_delivery_date: requestedDate,
+            earliest_completion_date: earliestCompletion || 'Unknown',
+            bom: {
+                name: bomResult.bom_name,
+                number: bomResult.bom_number || '',
+                component_count: bomResult.line_count,
+                resolution_mode: bomResult.resolution_mode
+            },
+            material_feasibility: {
+                all_materials_feasible: allMaterialsFeasible,
+                warehouse_evaluated: warehouseName,
+                components: materialResults
+            },
+            capacity_feasibility: {
+                feasible: capacityFeasible,
+                resource: resourceName,
+                effective_capacity_per_day: effectiveCapacity,
+                days_needed: daysNeeded,
+                earliest_completion: earliestCompletion,
+                existing_schedule_conflicts: conflictCount,
+                summary: capacitySummary
+            }
+        };
+
+        if (!overallFeasible) {
+            var reasons = [];
+            if (!allMaterialsFeasible) {
+                for (var r = 0; r < materialReasons.length; r++) {
+                    reasons.push(materialReasons[r]);
+                }
+            }
+            if (!capacityFeasible) {
+                reasons.push('Production capacity cannot meet the requested delivery date. Earliest completion: ' + earliestCompletion);
+            }
+            result.reasons = reasons;
+        }
+
+        response.setBody(result);
+
+    } catch (e) {
+        response.setStatus(500);
+        response.setBody({ status: 'ERROR', message: 'Internal error during feasibility evaluation: ' + e.message });
+    }
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/customer_feasibility_api/check</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/check</relative_path>
+        <request_example/>
+        <requires_acl_authorization>true</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description>Check whether a product, quantity and delivery date can be met</short_description>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-07 16:40:40</sys_created_on>
+        <sys_id>f58f7e3bcae9449e8365470f145f7417</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Check Feasibility</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_f58f7e3bcae9449e8365470f145f7417</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-07 16:40:40</sys_updated_on>
+        <web_service_definition display_value="Customer Feasibility API">70009bd287eb43bdbca85d00460c6e60</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>
