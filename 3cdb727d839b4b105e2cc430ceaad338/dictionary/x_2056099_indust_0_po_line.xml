@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="0f10d18bbaf440c5a1cc6433c7b9cfbf" label="Procurement Order Line" name="x_2056099_indust_0_po_line" type="collection">
-        <element label="Supplier Material Profile" max_length="32" name="supplier_material" reference="x_2056099_indust_0_supp_mat" type="reference"/>
-        <element label="Procurement Order" mandatory="true" max_length="32" name="procurement_order" reference="x_2056099_indust_0_proc_order" type="reference"/>
-        <element label="Related Quality Inspection" max_length="32" name="related_inspection" reference="x_2056099_indust_0_qc_insp" type="reference"/>
-        <element label="Ordered Quantity" mandatory="true" max_length="15" name="ordered_quantity" type="decimal"/>
-        <element default="INR" label="Currency" mandatory="true" max_length="40" name="currency" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="EUR - Euro" sequence="3" value="EUR"/>
-                <element inactive_on_update="false" label="USD - US Dollar" sequence="2" value="USD"/>
-                <element inactive_on_update="false" label="INR - Indian Rupee" sequence="1" value="INR"/>
-                <element inactive_on_update="false" label="GBP - British Pound" sequence="4" value="GBP"/>
-            </choice>
-        </element>
-        <element label="Supplier Lead Time (Days)" max_length="40" name="supplier_lead_time" type="integer"/>
-        <element default="true" label="QC Required" max_length="40" name="qc_required" type="boolean"/>
-        <element default="0" label="Remaining Quantity" max_length="15" name="remaining_quantity" read_only="true" read_only_option="instance_configured" type="decimal"/>
-        <element label="Notes" max_length="4000" name="notes" type="string"/>
-        <element default="0" label="Line Total" max_length="15" name="line_total" read_only="true" read_only_option="instance_configured" type="decimal"/>
         <element default="not_applicable" label="QC Status" max_length="40" name="qc_status" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Pending" sequence="2" value="pending"/>
@@ -26,29 +9,46 @@
                 <element inactive_on_update="false" label="Passed" sequence="3" value="passed"/>
             </choice>
         </element>
-        <element label="Received Date" max_length="40" name="received_date" type="glide_date"/>
         <element label="Expected Delivery Date" max_length="40" name="expected_delivery_date" type="glide_date_time"/>
-        <element default="0" label="Rejected Quantity" max_length="15" name="rejected_quantity" type="decimal"/>
-        <element label="Unit Price" mandatory="true" max_length="15" name="unit_price" type="decimal"/>
-        <element default="0" label="Received Quantity" max_length="15" name="received_quantity" type="decimal"/>
+        <element label="Procurement Order" mandatory="true" max_length="32" name="procurement_order" reference="x_2056099_indust_0_proc_order" type="reference"/>
+        <element default="true" label="QC Required" max_length="40" name="qc_required" type="boolean"/>
         <element label="Minimum Order Quantity" max_length="15" name="minimum_order_qty" type="decimal"/>
+        <element label="Material / Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="Related Quality Inspection" max_length="32" name="related_inspection" reference="x_2056099_indust_0_qc_insp" type="reference"/>
+        <element default="0" label="Remaining Quantity" max_length="15" name="remaining_quantity" read_only="true" read_only_option="instance_configured" type="decimal"/>
         <element default="pending" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Cancelled" sequence="6" value="cancelled"/>
-                <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
                 <element inactive_on_update="false" label="Rejected" sequence="5" value="rejected"/>
                 <element inactive_on_update="false" label="Fully Received" sequence="4" value="fully_received"/>
-                <element inactive_on_update="false" label="Ordered" sequence="2" value="ordered"/>
+                <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
                 <element inactive_on_update="false" label="Completed" sequence="7" value="completed"/>
                 <element inactive_on_update="false" label="Partially Received" sequence="3" value="partially_received"/>
+                <element inactive_on_update="false" label="Ordered" sequence="2" value="ordered"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="6" value="cancelled"/>
             </choice>
         </element>
-        <element display="true" label="Line Number" mandatory="true" max_length="40" name="line_number" type="integer"/>
-        <element label="Related Batch / Lot" max_length="32" name="related_batch" reference="x_2056099_indust_0_inv_batch" type="reference"/>
-        <element label="Material / Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
-        <element label="Description" max_length="1000" name="description" type="string"/>
+        <element default="0" label="Rejected Quantity" max_length="15" name="rejected_quantity" type="decimal"/>
         <element label="Required Date" max_length="40" name="required_date" type="glide_date_time"/>
+        <element label="Description" max_length="1000" name="description" type="string"/>
+        <element label="Unit Price" mandatory="true" max_length="15" name="unit_price" type="decimal"/>
+        <element label="Ordered Quantity" mandatory="true" max_length="15" name="ordered_quantity" type="decimal"/>
+        <element label="Notes" max_length="4000" name="notes" type="string"/>
+        <element display="true" label="Line Number" mandatory="true" max_length="40" name="line_number" type="integer"/>
         <element label="Supplier Material Code" max_length="100" name="supplier_material_code" type="string"/>
+        <element label="Received Date" max_length="40" name="received_date" type="glide_date"/>
+        <element label="Supplier Material Profile" max_length="32" name="supplier_material" reference="x_2056099_indust_0_supp_mat" type="reference"/>
+        <element label="Supplier Lead Time (Days)" max_length="40" name="supplier_lead_time" type="integer"/>
+        <element default="0" label="Received Quantity" max_length="15" name="received_quantity" type="decimal"/>
+        <element default="INR" label="Currency" mandatory="true" max_length="40" name="currency" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="INR - Indian Rupee" sequence="1" value="INR"/>
+                <element inactive_on_update="false" label="GBP - British Pound" sequence="4" value="GBP"/>
+                <element inactive_on_update="false" label="EUR - Euro" sequence="3" value="EUR"/>
+                <element inactive_on_update="false" label="USD - US Dollar" sequence="2" value="USD"/>
+            </choice>
+        </element>
+        <element default="0" label="Line Total" max_length="15" name="line_total" read_only="true" read_only_option="instance_configured" type="decimal"/>
+        <element label="Related Batch / Lot" max_length="32" name="related_batch" reference="x_2056099_indust_0_inv_batch" type="reference"/>
         <index name="index">
             <element name="material_product"/>
             <element name="status"/>

@@ -50,7 +50,7 @@
             expect(ui.next()).toBe(true);
             var html = ui.getValue('html') || '';
             var cs = ui.getValue('client_script') || '';
-            expect((html.length + cs.length) > 1000).toBe(true);
+            expect((html.length + cs.length) &gt; 1000).toBe(true);
         });
 
         it('should contain visual pipeline components in UI Page', function() {
@@ -60,7 +60,7 @@
             var found = false;
             while(ui.next()) {
                 var content = (ui.getValue('html') || '') + (ui.getValue('client_script') || '');
-                if (content.length > 500) {
+                if (content.length &gt; 500) {
                     found = true;
                 }
             }
@@ -74,7 +74,7 @@
             var found = false;
             while(ui.next()) {
                 var content = (ui.getValue('html') || '') + (ui.getValue('client_script') || '');
-                if (content.length > 500) {
+                if (content.length &gt; 500) {
                     found = true;
                 }
             }
@@ -85,7 +85,7 @@
             var mod = new GlideRecord('sys_app_module');
             mod.addEncodedQuery('queryLIKEwhatif_dashboard.do');
             mod.query();
-            if (mod.getRowCount() >= 1) {
+            if (mod.getRowCount() &gt;= 1) {
                 expect(mod.getRowCount()).toBeGreaterThanOrEqual(1);
             } else {
                 var ui = new GlideRecord('sys_ui_page');
