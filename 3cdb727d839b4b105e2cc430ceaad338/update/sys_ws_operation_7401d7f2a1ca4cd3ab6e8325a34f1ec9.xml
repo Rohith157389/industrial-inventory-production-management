@@ -99,7 +99,6 @@
   }
 
   response.setBody({
-    result: {
       totalStock: totalStock,
       lowStock: lowStock,
       openAlerts: openAlerts,
@@ -109,7 +108,6 @@
       quality: quality,
       requests: requests,
       recentTransactions: transactions
-    }
   });
 })(request, response);
 ]]></operation_script>
@@ -127,14 +125,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-19 05:55:13</sys_created_on>
         <sys_id>7401d7f2a1ca4cd3ab6e8325a34f1ec9</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>1</sys_mod_count>
         <sys_name>Get KPIs</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ws_operation_7401d7f2a1ca4cd3ab6e8325a34f1ec9</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-19 05:55:13</sys_updated_on>
+        <sys_updated_on>2026-10-07 09:23:18</sys_updated_on>
         <web_service_definition display_value="Dashboard API">0cd7b7e07d51482f91bb5e3f8ee69330</web_service_definition>
         <web_service_version/>
     </sys_ws_operation>

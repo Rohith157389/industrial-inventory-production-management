@@ -109,14 +109,12 @@
     }
 
     response.setBody({
-        result: {
-            summary: summary,
-            total: totalMatching,
-            limit: limit,
-            offset: offset,
-            alertTypes: alertTypes,
-            alerts: alerts
-        }
+        summary: summary,
+        total: totalMatching,
+        limit: limit,
+        offset: offset,
+        alertTypes: alertTypes,
+        alerts: alerts
     });
 
     function _getRelatedRecord(rec) {
@@ -157,14 +155,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 11:13:52</sys_created_on>
         <sys_id>f1d9acb1f09649b0b8fe4aba51ce5acd</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>1</sys_mod_count>
         <sys_name>Get Alerts</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ws_operation_f1d9acb1f09649b0b8fe4aba51ce5acd</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 11:13:52</sys_updated_on>
+        <sys_updated_on>2026-10-07 09:19:55</sys_updated_on>
         <web_service_definition display_value="Alert Center API">e59ecfc3b61648638019226a50133330</web_service_definition>
         <web_service_version/>
     </sys_ws_operation>

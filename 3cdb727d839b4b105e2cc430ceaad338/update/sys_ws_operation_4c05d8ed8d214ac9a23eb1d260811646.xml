@@ -23,7 +23,6 @@
   var RES = "x_2056099_indust_0_prod_res";
 
   response.setBody({
-    result: {
       activeOrders: countRecords(PO, "active=true"),
       inProgressOrders: countRecords(PO, "status=in_production"),
       plannedOrders: countRecords(PO, "status=planned"),
@@ -32,7 +31,6 @@
       criticalAlerts: countRecords(ALERT, "severity=critical^statusNOT INresolved,dismissed"),
       availableResources: countRecords(RES, "active=true^status=available"),
       maintenanceRequired: countRecords(RES, "maintenance_required=true")
-    }
   });
 })(request, response);]]></operation_script>
         <operation_uri>/api/x_2056099_indust_0/operator_api/summary</operation_uri>
@@ -49,14 +47,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-27 06:52:46</sys_created_on>
         <sys_id>4c05d8ed8d214ac9a23eb1d260811646</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>1</sys_mod_count>
         <sys_name>summary</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ws_operation_4c05d8ed8d214ac9a23eb1d260811646</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-09-27 06:52:46</sys_updated_on>
+        <sys_updated_on>2026-10-07 09:23:03</sys_updated_on>
         <web_service_definition display_value="Operator API">7acd7c17725147d9a550963b7da0fe53</web_service_definition>
         <web_service_version/>
     </sys_ws_operation>
