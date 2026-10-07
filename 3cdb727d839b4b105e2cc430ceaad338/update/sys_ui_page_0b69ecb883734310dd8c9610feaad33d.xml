@@ -73,7 +73,7 @@
         'SIM-2026-003': {
             title: 'Bengaluru Facility • Urgent VIP Tata Steel Rush Ingestion',
             modelName: 'SIM-2026-003 (VIP Rush)',
-            facility: 'Bengaluru', asset: 'MC-BLR-CNC-01', duration: 24, cap: 50, cat: 'rush_order',
+            facility: 'Bengaluru', asset: 'MC-BLR-CNC-01', duration: 24, cap: 50, cat: 'urgent_order_ingestion',
             baseline: 96.5, simulated: 82.0, optimized: 95.8, cost: '&#8377;32,000', drop: '14.5%', recovery: '+13.8%',
             strategy: 'Preempt standard valve machining on MC-BLR-CNC-01; schedule weekend overtime assembly crew in Bengaluru.',
             downMachine: null, rerouteMachine: 'MC-BLR-CNC-01',
@@ -84,7 +84,7 @@
         'SIM-2026-004': {
             title: 'Helium Leak Cryo Test Stand Quarantine',
             modelName: 'SIM-2026-004 (Cryo Quarantine)',
-            facility: 'Bengaluru', asset: 'MC-BLR-TST-01', duration: 36, cap: 100, cat: 'quality_quarantine',
+            facility: 'Bengaluru', asset: 'MC-BLR-TST-01', duration: 36, cap: 100, cat: 'quality_disruption',
             baseline: 96.5, simulated: 71.5, optimized: 94.2, cost: '&#8377;26,000', drop: '25.0%', recovery: '+22.7%',
             strategy: 'Reroute helium leak testing to Chennai dual test station MC-CHN-TST-01 via express inter-facility logistics.',
             downMachine: 'MC-BLR-TST-01', rerouteMachine: 'MC-CHN-TST-01',
@@ -95,7 +95,7 @@
         'SIM-2026-005': {
             title: 'Shift Crew Absenteeism (50% CNC Staff)',
             modelName: 'SIM-2026-005 (Absenteeism)',
-            facility: 'Hyderabad', asset: 'MC-HYD-CNC-01', duration: 32, cap: 50, cat: 'crew_absenteeism',
+            facility: 'Hyderabad', asset: 'MC-HYD-CNC-01', duration: 32, cap: 50, cat: 'workforce_constraint',
             baseline: 96.5, simulated: 77.0, optimized: 94.5, cost: '&#8377;15,000', drop: '19.5%', recovery: '+17.5%',
             strategy: 'Cross-deploy Crew Gamma from Assembly to CNC turning cells; activate automated pallet pool on Cell 01.',
             downMachine: null, rerouteMachine: 'MC-HYD-CNC-01',
