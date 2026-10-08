@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ServiceNow • Smart Manufacturing Mobile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --header-bg: #0b1a2e;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --border-card: #e2e8f0;
+      --border-subtle: #f1f5f9;
+      --primary-blue: #2563eb;
+      --primary-hover: #1d4ed8;
+      --green-accent: #10b981;
+      --green-light: #ecfdf5;
+      --red-accent: #ef4444;
+      --red-light: #fef2f2;
+      --amber-accent: #f59e0b;
+      --amber-light: #fffbeb;
+      --purple-light: #f5f3ff;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: #09131f;
+      font-family: var(--font-sans);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0;
+    }
+    .phone-container {
+      max-width: 440px;
+      width: 100%;
+      min-height: 100vh;
+      background: #f8fafc;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      border-left: 1px solid #cbd5e1;
+      border-right: 1px solid #cbd5e1;
+      overflow: hidden;
+    }
+    /* iOS Style Top Status Bar */
+    .status-bar {
+      background: var(--header-bg);
+      color: #fff;
+      padding: 8px 18px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+    }
+    /* App Header */
+    .app-header {
+      background: var(--header-bg);
+      color: #fff;
+      padding: 10px 18px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-icon-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header-title-box h1 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: -0.01em;
+    }
+    .header-title-box p { font-size: 10px; color: #94a3b8; font-weight: 600; }
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #1e293b;
+      border: 1.5px solid #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: #fff;
+      font-weight: 700;
+      overflow: hidden;
+    }
+    .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    
+    /* Template Screen Switcher Bar */
+    .screen-selector-bar {
+      background: #162438;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #23354d;
+    }
+    .screen-select {
+      background: #0b1522;
+      color: #38bdf8;
+      border: 1px solid #334e68;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+      max-width: 250px;
+    }
+    .screen-flow-btn {
+      background: #2563eb;
+      border: none;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Main Scrollable View Area */
+    .content-area {
+      flex: 1;
+      padding: 16px 16px 85px;
+      overflow-y: auto;
+    }
+    .screen-view { display: none; }
+    .screen-view.active { display: block; animation: fadeIn 0.2s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Card Utility */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .greeting-title { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 2px; }
+    .greeting-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+
+    /* Section Headers */
+    .sec-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 16px 0 8px;
+    }
+    .sec-title { font-size: 13px; font-weight: 800; color: #0f172a; }
+    .sec-link { font-size: 11px; font-weight: 700; color: var(--primary-blue); text-decoration: none; cursor: pointer; }
+
+    /* KPI Matrix Table (Screen 1) */
+    .kpi-container {
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .kpi-head-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .status-healthy {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #059669;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
+    .kpi-grid-3x2 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+      padding: 10px 4px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .kpi-grid-3x2:last-child { border-bottom: none; }
+    .kpi-item { padding: 4px; }
+    .kpi-item .lbl { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px; }
+    .kpi-item .val { font-size: 15px; font-weight: 800; color: #0f172a; font-family: var(--font-mono); margin-bottom: 2px; }
+    .kpi-item .trend {
+      font-size: 10px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .trend.green { color: #059669; }
+    .trend.red { color: #dc2626; }
+
+    /* Critical Issues List (Screen 1) */
+    .issue-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .issue-row:last-child { border-bottom: none; padding-bottom: 2px; }
+    .issue-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .issue-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .issue-dot.red { background: #ef4444; }
+    .issue-dot.orange { background: #f97316; }
+    .issue-dot.amber { background: #f59e0b; }
+    .issue-text h4 { font-size: 12px; font-weight: 800; color: #0f172a; }
+    .issue-text p { font-size: 11px; color: var(--text-muted); }
+    .pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .pill.red { background: #fee2e2; color: #dc2626; }
+    .pill.orange { background: #ffedd5; color: #ea580c; }
+    .pill.amber { background: #fef3c7; color: #d97706; }
+    .pill.green { background: #dcfce7; color: #15803d; }
+    .pill.blue { background: #dbeafe; color: #1d4ed8; }
+    .pill.gray { background: #f1f5f9; color: #475569; }
+
+    /* Progress Today Bar (Screen 1) */
+    .progress-track {
+      background: #e2e8f0;
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #10b981;
+      border-radius: 999px;
+    }
+
+    /* AI Recommendation Card (Screen 1) */
+    .ai-banner-card {
+      background: #f0f7ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 14px;
+    }
+    .ai-banner-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1e40af;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .ai-banner-desc { font-size: 12px; color: #1e3a5f; margin-bottom: 8px; }
+    .btn-blue {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      width: 100%;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* Sub Tabs / Segmented Control (Screen 2 & 3) */
+    .segmented-control {
+      display: flex;
+      background: #e2e8f0;
+      padding: 3px;
+      border-radius: 8px;
+      gap: 3px;
+      margin-bottom: 14px;
+    }
+    .seg-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 4px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .seg-btn.active {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    /* Order Card (Screen 2) */
+    .order-card {
+      background: #fff;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .order-card:active { transform: scale(0.99); }
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .order-num-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .order-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+    .order-metrics {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .order-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 11px;
+    }
+    .meta-col { display: flex; align-items: center; gap: 4px; }
+
+    /* Floating (+) Button (Screen 2) */
+    .fab-btn {
+      position: fixed;
+      bottom: 80px;
+      right: calc(50% - 195px);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: #fff;
+      font-size: 24px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.4);
+      cursor: pointer;
+      z-index: 99;
+    }
+    @media (max-width: 440px) {
+      .fab-btn { right: 20px; }
+    }
+
+    /* Stepper (Screen 3) */
+    .stepper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 16px 0;
+      position: relative;
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+    .step-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .step-circle {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      z-index: 2;
+    }
+    .step-circle.done { background: #10b981; color: #fff; }
+    .step-circle.current { background: #3b82f6; color: #fff; box-shadow: 0 0 0 4px rgba(59,130,246,0.2); }
+    .step-circle.pending { background: #e2e8f0; color: #94a3b8; }
+    .step-name { font-size: 12px; font-weight: 700; color: #0f172a; }
+
+    /* Action Buttons Pair (Screen 3) */
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .btn-pause {
+      flex: 1;
+      background: #f59e0b;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-complete {
+      flex: 1;
+      background: #10b981;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Form Fields (Screen 4) */
+    .form-group { margin-bottom: 12px; }
+    .form-label { font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px; display: block; }
+    .form-select {
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #0f172a;
+      outline: none;
+    }
+
+    /* Sim Option Cards (Screen 4) */
+    .sim-card {
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .sim-card.best { background: #f0fdf4; border-color: #86efac; }
+    .sim-card.normal { background: #eff6ff; border-color: #bfdbfe; }
+    .sim-card.current { background: #fef2f2; border-color: #fecaca; }
+
+    /* Pastel Grid 6-pack (Screen 5) */
+    .pastel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .pastel-card {
+      border-radius: 12px;
+      padding: 12px 6px;
+      text-align: center;
+    }
+    .pastel-card.blue { background: #e0f2fe; color: #0369a1; }
+    .pastel-card.green { background: #dcfce7; color: #15803d; }
+    .pastel-card.orange { background: #ffedd5; color: #c2410c; }
+    .pastel-card.red { background: #fee2e2; color: #b91c1c; }
+    .pastel-card.purple { background: #f3e8ff; color: #7e22ce; }
+    .pastel-card.yellow { background: #fef9c3; color: #a16207; }
+    .pastel-card .p-val { font-size: 18px; font-weight: 800; font-family: var(--font-mono); }
+    .pastel-card .p-lbl { font-size: 10px; font-weight: 600; margin-top: 2px; }
+
+    /* Low Stock Rows (Screen 5) */
+    .stock-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .stock-row:last-child { border-bottom: none; }
+
+    /* Table (Screen 6) */
+    .bom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-top: 8px;
+    }
+    .bom-table th {
+      text-align: left;
+      color: var(--text-muted);
+      font-weight: 700;
+      padding: 6px 4px;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .bom-table td {
+      padding: 8px 4px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-weight: 600;
+    }
+
+    /* Filter Pills (Screen 7) */
+    .pill-filter-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      margin-bottom: 12px;
+      padding-bottom: 4px;
+    }
+    .pill-filter {
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #e2e8f0;
+      color: var(--text-muted);
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .pill-filter.active { background: #2563eb; color: #fff; }
+
+    /* 2x5 Grid (Screen 8) */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .menu-tile {
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      transition: transform 0.1s;
+    }
+    .menu-tile:active { transform: scale(0.98); }
+    .tile-icon { font-size: 24px; }
+    .tile-title { font-size: 12px; font-weight: 700; }
+
+    /* Skills Coverage (Screen 9) */
+    .skill-row { margin-bottom: 10px; }
+    .skill-head { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; margin-bottom: 3px; }
+    .skill-bar { height: 6px; border-radius: 999px; background: #e2e8f0; overflow: hidden; }
+    .skill-fill { height: 100%; border-radius: 999px; }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      max-width: 440px;
+      width: 100%;
+      height: 64px;
+      background: #ffffff;
+      border-top: 1px solid var(--border-card);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      padding-bottom: 4px;
+    }
+    .nav-tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 700;
+      position: relative;
+    }
+    .nav-tab-btn.active { color: #2563eb; }
+    .nav-icon { font-size: 18px; line-height: 1; }
+    .nav-badge {
+      position: absolute;
+      top: -2px;
+      right: calc(50% - 14px);
+      background: #ef4444;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      z-index: 999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="phone-container">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <span>📶</span>
+        <span>5G</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="app-header" id="appHeader">
+      <div class="header-left">
+        <button class="header-icon-btn" id="headerLeftBtn">☰</button>
+        <div class="header-title-box">
+          <h1 id="headerTitle">ServiceNow • Smart Manufacturing</h1>
+          <p id="headerSubtitle">Executive Cockpit</p>
+        </div>
+      </div>
+      <div class="user-avatar" title="Rohith (Shift Lead)">
+        <span style="color:#38bdf8;">R</span>
+      </div>
+    </div>
+
+    <!-- Screen Switcher Bar (Template 1 to 10 Quick Select) -->
+    <div class="screen-selector-bar">
+      <select class="screen-select" id="screenSelector" onchange="jumpToScreen(this.value)">
+        <option value="1">1. Dashboard (KPIs & Status)</option>
+        <option value="2">2. Production (Orders List)</option>
+        <option value="3">3. Production Details (PO-101)</option>
+        <option value="4">4. What-If Simulation</option>
+        <option value="5">5. Inventory (Stock & SS)</option>
+        <option value="6">6. BOM & Material (PO-101)</option>
+        <option value="7">7. Alerts (Active Alarms)</option>
+        <option value="8">8. More (10-App Grid)</option>
+        <option value="9">9. Workforce / Maintenance</option>
+        <option value="10">10. AI Recommendations</option>
+      </select>
+      <button class="screen-flow-btn" onclick="stepDemoStory()">Next Demo Step ⚡</button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-box" id="toastBox">Action recorded</div>
+
+    <!-- Scrollable Content Area -->
+    <div class="content-area">
+
+      <!-- =================================================================== -->
+      <!-- SCREEN 1: DASHBOARD -->
+      <!-- =================================================================== -->
+      <div class="screen-view active" id="screen1">
+        <div class="card" style="padding:12px 14px; margin-bottom:12px;">
+          <h2 class="greeting-title">Hello, Rohith! 👋</h2>
+          <p class="greeting-sub">Here's your production overview</p>
+
+          <!-- Factory Status + 6 KPI Table -->
+          <div class="kpi-container">
+            <div class="kpi-head-row">
+              <span>Factory Status</span>
+              <span class="status-healthy"><span class="status-dot"></span> Healthy</span>
+            </div>
+            <div class="kpi-grid-3x2">
+              <div class="kpi-item">
+                <div class="lbl">OEE</div>
+                <div class="val" id="kpiOEE">88.4%</div>
+                <div class="trend green">↑ 5.2%</div>
+              </div>
+              <div class="kpi-item">
+                <div class="lbl">Orders</div>
+                <div class="val" id="kpiOrders">4</div>
+                <div class="trend green">↑ 1</div>
+              </div>
+              <div class="kpi-item">
+                <div class="lbl">Alerts</div>
+                <div class="val" id="kpiAlerts">3</div>
+                <div class="trend red">↓ 2</div>
+              </div>
+            </div>
+            <div class="kpi-grid-3x2">
+              <div class="kpi-item">
+                <div class="lbl">On-Time</div>
+                <div class="val" id="kpiOTD">92%</div>
+                <div class="trend green">↑ 8%</div>
+              </div>
+              <div class="kpi-item">
+                <div class="lbl">Downtime</div>
+                <div class="val" id="kpiDown">197 min</div>
+                <div class="trend green">↓ 32%</div>
+              </div>
+              <div class="kpi-item">
+                <div class="lbl">Inventory</div>
+                <div class="val">83%</div>
+                <div class="trend green">↑ 6%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Critical Issues Section -->
+        <div class="sec-head">
+          <span class="sec-title">Critical Issues</span>
+          <span class="sec-link" onclick="jumpToScreen('7')">View All</span>
+        </div>
+        <div class="card" style="padding:10px 14px;">
+          <div class="issue-row" onclick="jumpToScreen('4')">
+            <div class="issue-info">
+              <span class="issue-dot red"></span>
+              <div class="issue-text">
+                <h4>CNC-501</h4>
+                <p>Machine breakdown</p>
+              </div>
+            </div>
+            <span class="pill red">Critical</span>
+          </div>
+          <div class="issue-row" onclick="jumpToScreen('3')">
+            <div class="issue-info">
+              <span class="issue-dot orange"></span>
+              <div class="issue-text">
+                <h4>PO-2026-101</h4>
+                <p>At risk (delay)</p>
+              </div>
+            </div>
+            <span class="pill orange">High</span>
+          </div>
+          <div class="issue-row" onclick="jumpToScreen('5')">
+            <div class="issue-info">
+              <span class="issue-dot amber"></span>
+              <div class="issue-text">
+                <h4>MAT-BRG-201</h4>
+                <p>Low stock</p>
+              </div>
+            </div>
+            <span class="pill amber">Medium</span>
+          </div>
+        </div>
+
+        <!-- Production Today -->
+        <div class="card" style="padding:12px 14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:12px; font-weight:800; color:#0f172a;">Production Today</span>
+            <span style="font-size:11px; font-weight:700; color:#10b981;">37 / 85 units</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="dashBar" style="width: 43.5%;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted); font-weight:600;">
+            <span>Planned: 85</span>
+            <span id="dashProdToday">Produced: 37</span>
+            <span id="dashRemToday">Remaining: 48</span>
+          </div>
+        </div>
+
+        <!-- AI Recommendation Card -->
+        <div class="ai-banner-card">
+          <div class="ai-banner-title">
+            <span>✨</span> AI Recommendation
+          </div>
+          <div class="ai-banner-desc">Move PO-101 to WC-ADD-503</div>
+          <button class="btn-blue" onclick="jumpToScreen('10')">+ View Recommendation</button>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SCREEN 2: PRODUCTION -->
+      <!-- =================================================================== -->
+      <div class="screen-view" id="screen2">
+        <div class="segmented-control">
+          <button class="seg-btn active">Orders</button>
+          <button class="seg-btn">Schedule</button>
+          <button class="seg-btn">Planner</button>
+          <button class="seg-btn" onclick="jumpToScreen('4')">What-If</button>
+        </div>
+
+        <div class="sec-head" style="margin-top:0;">
+          <span class="sec-title">Production Orders</span>
+          <span class="sec-link">🔍 Filter</span>
+        </div>
+
+        <!-- Card PO-101 -->
+        <div class="order-card" onclick="jumpToScreen('3')">
+          <div class="order-top">
+            <div class="order-num-box">
+              <span>PO-2026-101</span>
+              <span class="pill red">P1</span>
+            </div>
+            <span class="pill green" id="badgePO101">In Progress</span>
+          </div>
+          <div class="order-desc">Aerospace Fuel Valve</div>
+          <div class="order-metrics">
+            <span id="cardUnitsPO101">31 / 50 units</span>
+            <span style="font-weight:700;" id="cardPctPO101">62%</span>
+          </div>
+          <div class="progress-track" style="margin:2px 0 8px;">
+            <div class="progress-fill" id="cardFillPO101" style="width:62%; background:#10b981;"></div>
+          </div>
+          <div class="order-meta-grid">
+            <div class="meta-col">🖥 <span id="cardMachPO101">WC-CNC-501</span></div>
+            <div class="meta-col" style="justify-content:flex-end;">⏱ <span class="pill orange" id="cardDelPO101">At Risk</span></div>
+          </div>
+        </div>
+
+        <!-- Card PO-104 -->
+        <div class="order-card">
+          <div class="order-top">
+            <div class="order-num-box">
+              <span>PO-2026-104</span>
+              <span class="pill orange">P2</span>
+            </div>
+            <span class="pill blue">Scheduled</span>
+          </div>
+          <div class="order-desc">Hydraulic Pump</div>
+          <div class="order-metrics">
+            <span>0 / 40 units</span>
+            <span style="font-weight:700;">0%</span>
+          </div>
+          <div class="progress-track" style="margin:2px 0 8px;">
+            <div class="progress-fill" style="width:0%;"></div>
+          </div>
+          <div class="order-meta-grid">
+            <div class="meta-col">🖥 WC-ADD-503</div>
+            <div class="meta-col" style="justify-content:flex-end;">⏱ <span class="pill green">On Track</span></div>
+          </div>
+        </div>
+
+        <!-- Card PO-102 -->
+        <div class="order-card">
+          <div class="order-top">
+            <div class="order-num-box">
+              <span>PO-2026-102</span>
+              <span class="pill orange">P2</span>
+            </div>
+            <span class="pill gray">Pending</span>
+          </div>
+          <div class="order-desc">Gear Assembly</div>
+          <div class="order-metrics">
+            <span>0 / 30 units</span>
+            <span style="font-weight:700;">0%</span>
+          </div>
+          <div class="progress-track" style="margin:2px 0 8px;">
+            <div class="progress-fill" style="width:0%;"></div>
+          </div>
+          <div class="order-meta-grid">
+            <div class="meta-col">🖥 WC-ROBO-502</div>
+            <div class="meta-col" style="justify-content:flex-end;">⏱ <span class="pill green">On Track</span></div>
+          </div>
+        </div>
+
+        <!-- FAB (+) -->
+        <button class="fab-btn" onclick="toast('Create New Production Order modal opened!')">+</button>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SCREEN 3: PRODUCTION DETAILS -->
+      <!-- =================================================================== -->
+      <div class="screen-view" id="screen3">
+        <div class="card" style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <div style="font-size:14px; font-weight:800; color:#0f172a;">Aerospace Fuel Valve</div>
+            <span class="pill red">P1</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-bottom:4px;">
+            <span id="detailUnits">31 / 50 units</span>
+            <span style="font-weight:700;" id="detailPct">62%</span>
+          </div>
+          <div class="progress-track" style="margin:2px 0 12px;">
+            <div class="progress-fill" id="detailFill" style="width:62%; background:#ef4444;"></div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:11px;">
+            <div><span style="color:var(--text-muted);">Start Date:</span> <br><b>12 Sep 2026</b></div>
+            <div><span style="color:var(--text-muted);">Due Date:</span> <br><b>20 Sep 2026</b> <span class="pill orange">At Risk</span></div>
+            <div><span style="color:var(--text-muted);">Machine:</span> <br><b id="detailMach">WC-CNC-501</b></div>
+            <div><span style="color:var(--text-muted);">Priority:</span> <br><b style="color:#ef4444;">High</b></div>
+          </div>
+        </div>
+
+        <!-- Sub Tabs -->
+        <div class="segmented-control">
+          <button class="seg-btn active">Progress</button>
+          <button class="seg-btn" onclick="jumpToScreen('6')">BOM</button>
+          <button class="seg-btn">Activity</button>
+        </div>
+
+        <!-- Stepper -->
+        <div class="card">
+          <div class="stepper">
+            <div class="step-item">
+              <div class="step-left">
+                <div class="step-circle done">✓</div>
+                <div class="step-name">Material Check</div>
+              </div>
+              <span class="pill green">Completed ✓</span>
+            </div>
+            <div class="step-item">
+              <div class="step-left">
+                <div class="step-circle current">●</div>
+                <div class="step-name">Production Started</div>
+              </div>
+              <span class="pill orange" id="stepProdState">In Progress</span>
+            </div>
+            <div class="step-item">
+              <div class="step-left">
+                <div class="step-circle pending">○</div>
+                <div class="step-name">Quality Inspection</div>
+              </div>
+              <span class="pill gray">Pending</span>
+            </div>
+            <div class="step-item">
+              <div class="step-left">
+                <div class="step-circle pending">○</div>
+                <div class="step-name">Completion</div>
+              </div>
+              <span class="pill gray">Pending</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button class="btn-pause" onclick="toast('PO-2026-101 Paused')">Pause</button>
+          <button class="btn-complete" onclick="logDetailUnits()">Complete Batch (+5)</button>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SCREEN 4: WHAT-IF SIMULATION -->
+      <!-- =================================================================== -->
+      <div class="screen-view" id="screen4">
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label">Scenario</label>
+            <select class="form-select" id="simScenario">
+              <option>🚨 Machine Failure</option>
+              <option>📦 Material Shortage</option>
+              <option>⚡ Priority Order Surge</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Machine</label>
+            <select class="form-select" id="simMachine">
+              <option>WC-CNC-501 (5-Axis Milling)</option>
+              <option>WC-ADD-503 (3D Metal Printer)</option>
+              <option>WC-ROBO-502 (Arc Welding)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Duration</label>
+            <select class="form-select" id="simDuration">
+              <option>4 hours</option>
+              <option>8 hours</option>
+              <option>24 hours</option>
+            </select>
+          </div>
+          <button class="btn-blue" style="padding:10px;" onclick="runSimulationUI()">▶ Run Simulation</button>
+        </div>
+
+        <div class="sec-head">
+          <span class="sec-title">Simulation Results</span>
+        </div>
+
+        <!-- Current Plan -->
+        <div class="sim-card current">
+          <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#b91c1c;">
+            <span>🔴 Current Plan</span>
+            <span>14:00</span>
+          </div>
+          <div style="font-size:11px; color:#7f1d1d; margin-top:2px;">PO-101 delayed on WC-CNC-501</div>
+        </div>
+
+        <!-- Alternative A (Best) -->
+        <div class="sim-card best" onclick="applyAlternativeA()">
+          <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800; color:#15803d;">
+            <span>🟢 Alternative A (Recommended)</span>
+            <span class="pill green">Best</span>
+          </div>
+          <div style="font-size:11px; color:#166534; margin:4px 0;">Move to WC-ADD-503 (15:00)</div>
+          <div style="font-size:10px; color:#15803d; font-weight:700;">👉 Tap to Apply to Schedule</div>
+        </div>
+
+        <!-- Alternative B -->
+        <div class="sim-card normal">
+          <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#1d4ed8;">
+            <span>🔵 Alternative B</span>
+            <span>18:00</span>
+          </div>
+          <div style="font-size:11px; color:#1e40af; margin-top:2px;">Wait for CNC repair</div>
+        </div>
+
+        <!-- Expected Impact -->
+        <div class="sec-head">
+          <span class="sec-title">Expected Impact</span>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
+          <div class="pastel-card green">
+            <div class="p-val" id="impactOTD">+12%</div>
+            <div class="p-lbl">OTD</div>
+          </div>
+          <div class="pastel-card blue">
+            <div class="p-val" id="impactDelay">-4h</div>
+            <div class="p-lbl">Delay</div>
+          </div>
+          <div class="pastel-card purple">
+            <div class="p-val">+8%</div>
+            <div class="p-lbl">Utilization</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SCREEN 5: INVENTORY -->
+      <!-- =================================================================== -->
+      <div class="screen-view" id="screen5">
+        <div class="sec-head" style="margin-top:0;">
+          <span class="sec-title">Stock Overview</span>
+          <span class="sec-link">View All</span>
+        </div>
+
+        <!-- 6 Pastel Cards (Exact Match to Template Screen 5) -->
+        <div class="pastel-grid">
+          <div class="pastel-card blue">
+            <div class="p-val">283</div>
+            <div class="p-lbl">Total</div>
+          </div>
+          <div class="pastel-card green">
+            <div class="p-val">210</div>
+            <div class="p-lbl">Available</div>
+          </div>
+          <div class="pastel-card orange">
+            <div class="p-val">43</div>
+            <div class="p-lbl">Reserved</div>
+          </div>
+          <div class="pastel-card red">
+            <div class="p-val">8</div>
+            <div class="p-lbl">Quarantine</div>
+          </div>
+          <div class="pastel-card purple">
+            <div class="p-val">22</div>
+            <div class="p-lbl">Incoming</div>
+          </div>
+          <div class="pastel-card yellow">
+            <div class="p-val">5</div>
+            <div class="p-lbl">Low Stock</div>
+          </div>
+        </div>
+
+        <!-- Low Stock Items -->
+        <div class="sec-head">
+          <span class="sec-title">Low Stock Items</span>
+        </div>
+        <div class="card" style="padding:10px 14px;">
+          <div class="stock-row" onclick="jumpToScreen('6')">
+            <div class="issue-info">
+              <span class="issue-dot red"></span>
+              <div class="issue-text">
+                <h4>MAT-BRG-201</h4>
+                <p>Ceramic Bearing</p>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:13px; font-weight:800; color:#ef4444;">12</div>
+              <span class="pill red">Below SS</span>
+            </div>
+          </div>
+          <div class="stock-row">
+            <div class="issue-info">
+              <span class="issue-dot orange"></span>
+              <div class="issue-text">
+                <h4>MAT-202</h4>
+                <p>Hydraulic Seal</p>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:13px; font-weight:800; color:#f97316;">8</div>
+              <span class="pill orange">Below SS</span>
+            </div>
+          </div>
+          <div class="stock-row">
+            <div class="issue-info">
+              <span class="issue-dot amber"></span>
+              <div class="issue-text">
+                <h4>MAT-205</h4>
+                <p>Fasteners</p>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:13px; font-weight:800; color:#ca8a04;">25</div>
+              <span class="pill amber">Low</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="sec-head">
+          <span class="sec-title">Quick Actions</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button style="background:#f0f9ff; border:1px solid #bae6fd; color:#0369a1; padding:11px; border-radius:10px; font-weight:700; font-size:12px; cursor:pointer;" onclick="jumpToScreen('6')">🔍 Check BOM</button>
+          <button style="background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; padding:11px; border-radius:10px; font-weight:700; font-size:12px; cursor:pointer;" onclick="toast('Material Request triggered!')">📦 Request Material</button>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SCREEN 6: BOM & MATERIAL -->
+      <!-- =================================================================== -->
+      <div class="screen-view" id="screen6">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <h3 style="font-size:14px; font-weight:800;">PO-2026-101</h3>
+              <p style="font-size:11px; color:var(--text-muted);">Aerospace Fuel Valve</p>
+            </div>
+            <span class="sec-link" onclick="jumpToScreen('3')">View Order</span>
+          </div>
+
+          <table class="bom-table">
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Required</th>
+                <th>Available</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Titanium Body</td>
+                <td>10</td>
+                <td>10</td>
+                <td><span style="color:#10b981; font-weight:800;">✓</span></td>
+              </tr>
+              <tr>
+                <td>Seal Assembly</td>
+                <td>10</td>
+                <td>10</td>
+                <td><span style="color:#10b981; font-weight:800;">✓</span></td>
+              </tr>
+              <tr style="background:#fef2f2;">
+                <td>Ceramic Bearing</td>
+                <td>10</td>
+                <td style="color:#ef4444; font-weight:800;">7</td>
+                <td><span class="pill red">!</span></td>
+              </tr>
+              <tr>
+                <td>Fasteners</td>
+                <td>10</td>
+                <td>10</td>
+                <td><span style="color:#10b981; font-weight:800;">✓</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Material Requests Card -->
+        <div class="sec-head">
+          <span class="sec-title">Material Requests</span>
+        </div>
+        <div class="card" style="border-left:4px solid #ef4444;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="font-size:13px; font-weight:800; color:#0f172a;">MAT-BRG-201</div>
+              <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Ceramic Bearing</div>
+              <div style="font-size:11px; color:#475569;">
+                Required: <b>10</b> &nbsp;|&nbsp; Available: <b style="color:#ef4444;">7</b>
+              </div>
+            </div>
+            <span class="pill red">Shortage: 3</span>
+          </div>
+          <button class="btn-blue" style="margin-top:12px;" onclick="toast('PO-101 Material Shortage Expedited with Supplier!')">+ Request Material</button>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SCREEN 7: ALERTS -->
+      <!-- =================================================================== -->
+      <div class="screen-view" id="screen7">
+        <div class="pill-filter-bar">
+          <button class="pill-filter active">All</button>
+          <button class="pill-filter">🔴 Critical</button>
+          <button class="pill-filter">🟠 Warning</button>
+          <button class="pill-filter">ℹ️ Info</button>
+        </div>
+
+        <div class="card" style="padding:12px; margin-bottom:10px; cursor:pointer;" onclick="jumpToScreen('4')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="pill red">CRITICAL</span>
+            <span style="font-size:10px; color:var(--text-muted);">2h ago ›</span>
+          </div>
+          <div style="font-size:13px; font-weight:800; color:#0f172a;">CNC-501 Breakdown</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Vibration exceeded threshold (0.19 mm/s)</div>
+          <div style="font-size:10px; color:#dc2626; font-weight:700; margin-top:4px;">2 orders affected</div>
+        </div>
+
+        <div class="card" style="padding:12px; margin-bottom:10px; cursor:pointer;" onclick="jumpToScreen('3')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="pill orange">HIGH</span>
+            <span style="font-size:10px; color:var(--text-muted);">3h ago ›</span>
+          </div>
+          <div style="font-size:13px; font-weight:800; color:#0f172a;">PO-2026-101 At Risk</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Delivery delay expected on Aerospace Fuel Valve</div>
+        </div>
+
+        <div class="card" style="padding:12px; margin-bottom:10px; cursor:pointer;" onclick="jumpToScreen('5')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="pill amber">MEDIUM</span>
+            <span style="font-size:10px; color:var(--text-muted);">5h ago ›</span>
+          </div>
+          <div style="font-size:13px; font-weight:800; color:#0f172a;">MAT-BRG-201 Low Stock</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Below safety stock level</div>
+        </div>
+
+        <div class="card" style="padding:12px; cursor:pointer;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="pill blue">INFO</span>
+            <span style="font-size:10px; color:var(--text-muted);">8h ago ›</span>
+          </div>
+          <div style="font-size:13px; font-weight:800; color:#0f172a;">Production Completed</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">PO-2026-099 • 25 units finished inspection</div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SCREEN 8: MORE (MENU - 10 APPS) -->
+      <!-- =================================================================== -->
+      <div class="screen-view" id="screen8">
+        <div class="menu-grid">
+          <div class="menu-tile" style="background:#ecfdf5; color:#047857;" onclick="jumpToScreen('9')">
+            <span class="tile-icon">👥</span>
+            <span class="tile-title">Workforce</span>
+          </div>
+          <div class="menu-tile" style="background:#f0fdfa; color:#0f766e;" onclick="jumpToScreen('4')">
+            <span class="tile-icon">🏭</span>
+            <span class="tile-title">Work Centers</span>
+          </div>
+          <div class="menu-tile" style="background:#fff7ed; color:#c2410c;" onclick="jumpToScreen('9')">
+            <span class="tile-icon">🔧</span>
+            <span class="tile-title">Maintenance</span>
+          </div>
+          <div class="menu-tile" style="background:#faf5ff; color:#7e22ce;" onclick="toast('Opening Suppliers Directory...')">
+            <span class="tile-icon">🚚</span>
+            <span class="tile-title">Suppliers</span>
+          </div>
+          <div class="menu-tile" style="background:#fef2f2; color:#b91c1c;" onclick="toast('Opening Quality Management...')">
+            <span class="tile-icon">🛡️</span>
+            <span class="tile-title">Quality</span>
+          </div>
+          <div class="menu-tile" style="background:#eff6ff; color:#1d4ed8;" onclick="toast('Opening Live Factory Analytics...')">
+            <span class="tile-icon">📊</span>
+            <span class="tile-title">Analytics</span>
+          </div>
+          <div class="menu-tile" style="background:#f5f3ff; color:#6d28d9;" onclick="jumpToScreen('10')">
+            <span class="tile-icon">✨</span>
+            <span class="tile-title">AI Recommendations</span>
+          </div>
+          <div class="menu-tile" style="background:#ecfeff; color:#0e7490;" onclick="toast('Opening 3D Digital Twin Viewer...')">
+            <span class="tile-icon">📦</span>
+            <span class="tile-title">Digital Twin</span>
+          </div>
+          <div class="menu-tile" style="background:#fffbeb; color:#b45309;" onclick="toast('Opening Approval Inbox...')">
+            <span class="tile-icon">📋</span>
+            <span class="tile-title">Approvals</span>
+          </div>
+          <div class="menu-tile" style="background:#f8fafc; color:#334155;" onclick="toast('Opening Shop Floor Work Orders...')">
+            <span class="tile-icon">📄</span>
+            <span class="tile-title">Work Orders</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SCREEN 9: WORKFORCE / MAINTENANCE -->
+      <!-- =================================================================== -->
+      <div class="screen-view" id="screen9">
+        <div class="sec-head" style="margin-top:0;">
+          <span class="sec-title">Today's Workforce</span>
+          <span class="sec-link">View All</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:14px;">
+          <div class="pastel-card green">
+            <div class="p-val">42</div>
+            <div class="p-lbl">Available</div>
+          </div>
+          <div class="pastel-card blue">
+            <div class="p-val">36</div>
+            <div class="p-lbl">Assigned</div>
+          </div>
+          <div class="pastel-card orange">
+            <div class="p-val">6</div>
+            <div class="p-lbl">Absent</div>
+          </div>
+          <div class="pastel-card red">
+            <div class="p-val">3</div>
+            <div class="p-lbl">Overloaded</div>
+          </div>
+        </div>
+
+        <!-- Skills Coverage -->
+        <div class="sec-head">
+          <span class="sec-title">Skills Coverage</span>
+        </div>
+        <div class="card">
+          <div class="skill-row">
+            <div class="skill-head">
+              <span>CNC Machining</span>
+              <span>8/10</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" style="width:80%; background:#2563eb;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-head">
+              <span>Welding</span>
+              <span>6/10</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" style="width:60%; background:#0d9488;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-head">
+              <span>Assembly</span>
+              <span>10/10</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" style="width:100%; background:#10b981;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-head">
+              <span>Maintenance</span>
+              <span>5/10</span>
+            </div>
+            <div class="skill-bar"><div class="skill-fill" style="width:50%; background:#f59e0b;"></div></div>
+          </div>
+        </div>
+
+        <!-- Maintenance Section -->
+        <div class="sec-head">
+          <span class="sec-title">🔧 Maintenance</span>
+        </div>
+        <div class="card" style="display:flex; justify-content:space-around; text-align:center;">
+          <div>
+            <div style="font-size:16px; font-weight:800; color:#ef4444; font-family:var(--font-mono);">2</div>
+            <div style="font-size:10px; color:var(--text-muted); font-weight:700;">Active</div>
+          </div>
+          <div>
+            <div style="font-size:16px; font-weight:800; color:#f59e0b; font-family:var(--font-mono);">1</div>
+            <div style="font-size:10px; color:var(--text-muted); font-weight:700;">In Progress</div>
+          </div>
+          <div>
+            <div style="font-size:16px; font-weight:800; color:#10b981; font-family:var(--font-mono);">4</div>
+            <div style="font-size:10px; color:var(--text-muted); font-weight:700;">Completed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SCREEN 10: AI RECOMMENDATIONS -->
+      <!-- =================================================================== -->
+      <div class="screen-view" id="screen10">
+        <!-- Card 1 (High) -->
+        <div class="card" style="border-left:4px solid #ef4444;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="pill red">HIGH PRIORITY</span>
+            <span style="font-size:10px; color:var(--text-muted);">98% Confidence</span>
+          </div>
+          <h3 style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:4px;">Move PO-101 to WC-ADD-503</h3>
+          <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Reason: CNC-501 breakdown</p>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:6px 10px; font-size:11px; font-weight:700; color:#0f172a; display:flex; gap:12px; margin-bottom:10px;">
+            <span style="color:#15803d;">↓ 4h delay</span>
+            <span style="color:#2563eb;">↑ 12% OTD</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button style="flex:1; background:#f1f5f9; border:1px solid #cbd5e1; color:#334155; padding:8px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;" onclick="jumpToScreen('4')">Simulate</button>
+            <button style="flex:1; background:#10b981; border:none; color:#fff; padding:8px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;" onclick="applyAlternativeA()">Approve ✓</button>
+          </div>
+        </div>
+
+        <!-- Card 2 (Med) -->
+        <div class="card" style="border-left:4px solid #f59e0b;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="pill amber">MEDIUM PRIORITY</span>
+          </div>
+          <h3 style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:4px;">Order MAT-BRG-201</h3>
+          <p style="font-size:11px; color:var(--text-muted); margin-bottom:10px;">Reason: Stock below safety level</p>
+          <button class="btn-blue" onclick="toast('PO created for MAT-BRG-201 with Supplier Alpha')">Create Procurement Request</button>
+        </div>
+
+        <!-- Card 3 (Low) -->
+        <div class="card" style="border-left:4px solid #3b82f6;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="pill blue">LOW PRIORITY</span>
+          </div>
+          <h3 style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:4px;">Optimize workforce allocation</h3>
+          <p style="font-size:11px; color:var(--text-muted); margin-bottom:10px;">Reason: Overutilization in Shift B</p>
+          <button style="width:100%; background:#f8fafc; border:1px solid #cbd5e1; color:#334155; padding:8px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;" onclick="jumpToScreen('9')">View Details</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Navigation Bar (5 Primary Tabs Matching Now Mobile) -->
+    <div class="bottom-nav">
+      <button class="nav-tab-btn active" id="navTab1" onclick="jumpToScreen('1')">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-tab-btn" id="navTab2" onclick="jumpToScreen('2')">
+        <span class="nav-icon">🏭</span>
+        <span>Production</span>
+      </button>
+      <button class="nav-tab-btn" id="navTab3" onclick="jumpToScreen('5')">
+        <span class="nav-icon">📦</span>
+        <span>Inventory</span>
+      </button>
+      <button class="nav-tab-btn" id="navTab4" onclick="jumpToScreen('7')">
+        <span class="nav-icon">🔔</span>
+        <span class="nav-badge">3</span>
+        <span>Alerts</span>
+      </button>
+      <button class="nav-tab-btn" id="navTab5" onclick="jumpToScreen('8')">
+        <span class="nav-icon">⚙️</span>
+        <span>More</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // SCREEN NAVIGATION LOGIC
+    function jumpToScreen(idStr) {
+      document.getElementById('screenSelector').value = idStr;
+      
+      // Hide all screen views
+      for (var i = 1; i <= 10; i++) {
+        var el = document.getElementById('screen' + i);
+        if (el) el.classList.remove('active');
+      }
+      
+      // Show selected screen
+      var target = document.getElementById('screen' + idStr);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Update Header Text to match screen context
+      var titles = {
+        '1': 'ServiceNow • Smart Manufacturing',
+        '2': 'Production',
+        '3': 'PO-2026-101',
+        '4': 'What-If Simulation',
+        '5': 'Inventory',
+        '6': 'BOM & Material',
+        '7': 'Alerts',
+        '8': 'More',
+        '9': 'Workforce',
+        '10': 'AI Recommendations'
+      };
+      var subtitles = {
+        '1': 'Executive Cockpit',
+        '2': 'Orders & Scheduling',
+        '3': 'Aerospace Fuel Valve',
+        '4': 'Adaptive Scheduling Engine',
+        '5': 'Stock & Material Management',
+        '6': 'Component Shortage Resolution',
+        '7': 'Shop Floor Alarms',
+        '8': 'Enterprise Modules',
+        '9': 'Skills & Maintenance',
+        '10': 'Intelligent Action Center'
+      };
+      document.getElementById('headerTitle').innerText = titles[idStr] || 'Smart Manufacturing';
+      document.getElementById('headerSubtitle').innerText = subtitles[idStr] || 'Mobile Suite';
+
+      // Update Header left button icon
+      var leftBtn = document.getElementById('headerLeftBtn');
+      if (idStr === '3' || idStr === '4' || idStr === '6') {
+        leftBtn.innerText = '←';
+        leftBtn.onclick = function() { jumpToScreen('1'); };
+      } else {
+        leftBtn.innerText = '☰';
+        leftBtn.onclick = function() { jumpToScreen('8'); };
+      }
+
+      // Update Bottom Tab highlight
+      var tabMap = {
+        '1': 'navTab1',
+        '2': 'navTab2',
+        '3': 'navTab2',
+        '4': 'navTab2',
+        '5': 'navTab3',
+        '6': 'navTab3',
+        '7': 'navTab4',
+        '8': 'navTab5',
+        '9': 'navTab5',
+        '10': 'navTab5'
+      };
+      for (var t = 1; t <= 5; t++) {
+        var tabEl = document.getElementById('navTab' + t);
+        if (tabEl) tabEl.classList.remove('active');
+      }
+      var activeTab = document.getElementById(tabMap[idStr]);
+      if (activeTab) activeTab.classList.add('active');
+    }
+
+    // TOAST HELPER
+    function toast(msg) {
+      var box = document.getElementById('toastBox');
+      box.innerText = msg;
+      box.style.display = 'block';
+      setTimeout(function() {
+        box.style.display = 'none';
+      }, 2400);
+    }
+
+    // INTERACTIVE WHAT-IF SIMULATION
+    function runSimulationUI() {
+      toast('⚡ Simulating CNC-501 failure impact...');
+      setTimeout(function() {
+        document.getElementById('impactOTD').innerText = '+12%';
+        document.getElementById('impactDelay').innerText = '-4h';
+        toast('Simulation complete: Alternative A achieves 12% OTD recovery!');
+      }, 400);
+    }
+
+    function applyAlternativeA() {
+      toast('✅ Schedule Applied: PO-101 re-routed to WC-ADD-503!');
+      document.getElementById('cardMachPO101').innerText = 'WC-ADD-503';
+      document.getElementById('cardDelPO101').innerText = 'On Track';
+      document.getElementById('cardDelPO101').className = 'pill green';
+      document.getElementById('detailMach').innerText = 'WC-ADD-503';
+      document.getElementById('badgePO101').innerText = 'Running on 3D Printer';
+      document.getElementById('kpiOTD').innerText = '94%';
+      document.getElementById('kpiDown').innerText = '145 min';
+      setTimeout(function() { jumpToScreen('2'); }, 700);
+    }
+
+    function logDetailUnits() {
+      document.getElementById('detailUnits').innerText = '36 / 50 units';
+      document.getElementById('detailPct').innerText = '72%';
+      document.getElementById('detailFill').style.width = '72%';
+      document.getElementById('cardUnitsPO101').innerText = '36 / 50 units';
+      document.getElementById('cardPctPO101').innerText = '72%';
+      document.getElementById('cardFillPO101').style.width = '72%';
+      document.getElementById('dashProdToday').innerText = 'Produced: 42';
+      document.getElementById('dashRemToday').innerText = 'Remaining: 43';
+      document.getElementById('dashBar').style.width = '49%';
+      toast('⚡ Logged +5 produced units for PO-2026-101');
+    }
+
+    // DEMO STORY FLOW
+    var flowIndex = 0;
+    function stepDemoStory() {
+      flowIndex++;
+      if (flowIndex === 1) {
+        jumpToScreen('7');
+        toast('Step 1: Breakdown Alarm detected on CNC-501!');
+      } else if (flowIndex === 2) {
+        jumpToScreen('4');
+        runSimulationUI();
+        toast('Step 2: What-If simulation computed. Alternative A is best!');
+      } else if (flowIndex === 3) {
+        jumpToScreen('10');
+        toast('Step 3: AI recommends moving PO-101 to ADD-503!');
+      } else if (flowIndex === 4) {
+        applyAlternativeA();
+        toast('Step 4: Schedule Change approved! PO-101 on WC-ADD-503!');
+      } else if (flowIndex === 5) {
+        jumpToScreen('3');
+        logDetailUnits();
+        toast('Step 5: Operator logs 36/50 units completed!');
+      } else {
+        jumpToScreen('1');
+        toast('Step 6: Dashboard live updated! Complete Adaptive Loop 🎉');
+        flowIndex = 0;
+      }
+    }
+  </script>
+</body>
+</html>

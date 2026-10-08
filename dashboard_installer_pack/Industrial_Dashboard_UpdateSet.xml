@@ -1,0 +1,2804 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-10-08 10:00:00">
+<sys_remote_update_set action="INSERT_OR_UPDATE">
+  <application display_value="Global">global</application>
+  <description>Industrial Operations Desktop Dashboard Pack: Interactive inventory, customer orders with product and quantity, production tracking with execution telemetry, alerts, and detailed popups.</description>
+  <is_default>false</is_default>
+  <name>Industrial Operations - Desktop Dashboard Pack v1.0</name>
+  <origin_sys_id/>
+  <remote_base_update_set display_value=""/>
+  <remote_parent_id/>
+  <remote_sys_id>97bd5034b954c0a9fc4ffe8e9fba1ec3</remote_sys_id>
+  <state>loaded</state>
+  <sys_class_name>sys_remote_update_set</sys_class_name>
+  <sys_created_by>admin</sys_created_by>
+  <sys_created_on>2026-10-08 10:00:00</sys_created_on>
+  <sys_id>97bd5034b954c0a9fc4ffe8e9fba1ec3</sys_id>
+  <sys_mod_count>0</sys_mod_count>
+  <sys_updated_by>admin</sys_updated_by>
+  <sys_updated_on>2026-10-08 10:00:00</sys_updated_on>
+  <update_set display_value=""/>
+  <update_source display_value=""/>
+  <updated_on>2026-10-08 10:00:00</updated_on>
+</sys_remote_update_set>
+<sys_update_xml action="INSERT_OR_UPDATE">
+  <action>INSERT_OR_UPDATE</action>
+  <application display_value="Global">global</application>
+  <category>customer</category>
+  <comments/>
+  <name>sys_ui_page_3fa6e2419f1b49eaa5fe5530954b1fbc</name>
+  <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_ui_page"&gt;&lt;sys_ui_page action="INSERT_OR_UPDATE"&gt;&lt;category&gt;general&lt;/category&gt;&lt;client_script&gt;&lt;![CDATA[
+    // DETAIL STORE FOR POPUPS
+    window.DETAIL_STORE = {"orders": {"ORD-2026-001": {"number": "ORD-2026-001", "customer": "ABC Engineering Pvt Ltd", "product": "Gate Valve 100mm", "quantity": "100", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-002": {"number": "ORD-2026-002", "customer": "ABC Engineering Pvt Ltd", "product": "Valve Manifold", "quantity": "40", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-003": {"number": "ORD-2026-003", "customer": "Sahyadri Pumps and Valves", "product": "Valve Manifold", "quantity": "60", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-004": {"number": "ORD-2026-004", "customer": "ABC Engineering Pvt Ltd", "product": "Actuated Valve Assembly", "quantity": "300", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-005": {"number": "ORD-2026-005", "customer": "Sahyadri Pumps and Valves", "product": "Actuated Valve Assembly", "quantity": "20", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-006": {"number": "ORD-2026-006", "customer": "ABC Engineering Pvt Ltd", "product": "Valve Manifold", "quantity": "40", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-007": {"number": "ORD-2026-007", "customer": "Sahyadri Pumps and Valves", "product": "Valve Manifold", "quantity": "80", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-008": {"number": "ORD-2026-008", "customer": "ABC Engineering Pvt Ltd", "product": "Actuated Valve Assembly", "quantity": "150", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-009": {"number": "ORD-2026-009", "customer": "Sahyadri Pumps and Valves", "product": "Actuated Valve Assembly", "quantity": "300", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-010": {"number": "ORD-2026-010", "customer": "ABC Engineering Pvt Ltd", "product": "Ball Valve 200mm", "quantity": "150", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-011": {"number": "ORD-2026-011", "customer": "Sahyadri Pumps and Valves", "product": "Valve Manifold", "quantity": "150", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-012": {"number": "ORD-2026-012", "customer": "ABC Engineering Pvt Ltd", "product": "Actuated Valve Assembly", "quantity": "120", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-013": {"number": "ORD-2026-013", "customer": "Sahyadri Pumps and Valves", "product": "Actuated Valve Assembly", "quantity": "10", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-014": {"number": "ORD-2026-014", "customer": "ABC Engineering Pvt Ltd", "product": "Valve Manifold", "quantity": "200", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-015": {"number": "ORD-2026-015", "customer": "Sahyadri Pumps and Valves", "product": "Valve Manifold", "quantity": "80", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-016": {"number": "ORD-2026-016", "customer": "ABC Engineering Pvt Ltd", "product": "Gate Valve 100mm", "quantity": "120", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-017": {"number": "ORD-2026-017", "customer": "Sahyadri Pumps and Valves", "product": "Ball Valve 200mm", "quantity": "200", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-018": {"number": "ORD-2026-018", "customer": "ABC Engineering Pvt Ltd", "product": "Ball Valve 200mm", "quantity": "40", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-019": {"number": "ORD-2026-019", "customer": "Sahyadri Pumps and Valves", "product": "Valve Manifold", "quantity": "300", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-020": {"number": "ORD-2026-020", "customer": "ABC Engineering Pvt Ltd", "product": "Gate Valve 100mm", "quantity": "150", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-021": {"number": "ORD-2026-021", "customer": "Sahyadri Pumps and Valves", "product": "Ball Valve 200mm", "quantity": "60", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-022": {"number": "ORD-2026-022", "customer": "ABC Engineering Pvt Ltd", "product": "Valve Manifold", "quantity": "300", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-023": {"number": "ORD-2026-023", "customer": "Sahyadri Pumps and Valves", "product": "Gate Valve 100mm", "quantity": "10", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-024": {"number": "ORD-2026-024", "customer": "ABC Engineering Pvt Ltd", "product": "Gate Valve 100mm", "quantity": "60", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-025": {"number": "ORD-2026-025", "customer": "Sahyadri Pumps and Valves", "product": "Actuated Valve Assembly", "quantity": "40", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-026": {"number": "ORD-2026-026", "customer": "Krishna Pharma Process Engineers", "product": "316L Steel Bar Stock", "quantity": "25", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-027": {"number": "ORD-2026-027", "customer": "Sagar Shipyard &amp; Marine", "product": "4-inch Gate Valve - Pneumatic Actuated", "quantity": "35", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-028": {"number": "ORD-2026-028", "customer": "Cauvery Water Infra Projects", "product": "4-inch Industrial Gate Valve", "quantity": "45", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-029": {"number": "ORD-2026-029", "customer": "Godavari Fertilizers &amp; Chemicals", "product": "6-inch Ball Valve - Pneumatic Actuated", "quantity": "55", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-030": {"number": "ORD-2026-030", "customer": "Cauvery Water Infra Projects", "product": "6-inch Industrial Ball Valve", "quantity": "65", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-031": {"number": "ORD-2026-031", "customer": "Bharat Refinery Services", "product": "8-inch Butterfly Valve - Pneumatic Actua", "quantity": "75", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-032": {"number": "ORD-2026-032", "customer": "Bharat Refinery Services", "product": "8-inch Industrial Butterfly Valve", "quantity": "25", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-033": {"number": "ORD-2026-033", "customer": "Bay of Bengal Offshore Services", "product": "Actuated Valve Assembly", "quantity": "35", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-034": {"number": "ORD-2026-034", "customer": "AquaPure Water Systems", "product": "Actuator Mounting Bracket (ISO 5211)", "quantity": "45", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-035": {"number": "ORD-2026-035", "customer": "Nandi Cement Works", "product": "Actuator Mounting Bracket (ISO 5211)", "quantity": "55", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-041": {"number": "ORD-2026-041", "customer": "Southern Power Utilities", "product": "Air Compressor Filter Element", "quantity": "65", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-042": {"number": "ORD-2026-042", "customer": "Bay of Bengal Offshore Services", "product": "Anti-Seize Grease (Nickel Based)", "quantity": "75", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-043": {"number": "ORD-2026-043", "customer": "Cauvery Water Infra Projects", "product": "Anti-Seize Grease (Nickel Based)", "quantity": "25", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-044": {"number": "ORD-2026-044", "customer": "Godavari Fertilizers &amp; Chemicals", "product": "Ball Valve 200mm", "quantity": "35", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-045": {"number": "ORD-2026-045", "customer": "Bay of Bengal Offshore Services", "product": "Bearing 6205", "quantity": "45", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-046": {"number": "ORD-2026-046", "customer": "Sagar Shipyard &amp; Marine", "product": "Bearing 6205-2RS", "quantity": "55", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-047": {"number": "ORD-2026-047", "customer": "Nandi Cement Works", "product": "Brass Valve Stem", "quantity": "65", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-048": {"number": "ORD-2026-048", "customer": "Krishna Pharma Process Engineers", "product": "Carbide Cutting Insert", "quantity": "75", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-049": {"number": "ORD-2026-049", "customer": "Tungabhadra Sugar Mills", "product": "Cast Iron Handwheel Assembly", "quantity": "25", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-050": {"number": "ORD-2026-050", "customer": "Sagar Shipyard &amp; Marine", "product": "Cast Iron Handwheel Assembly", "quantity": "35", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-051": {"number": "ORD-2026-051", "customer": "Sagar Shipyard &amp; Marine", "product": "CF8M Bonnet - 4-inch Gate Valve", "quantity": "45", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-052": {"number": "ORD-2026-052", "customer": "Tungabhadra Sugar Mills", "product": "CF8M Bonnet - 4-inch Gate Valve", "quantity": "55", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-053": {"number": "ORD-2026-053", "customer": "Deccan Petrochem Industries", "product": "CNC Carbide Cutting Insert CNMG 120408", "quantity": "65", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-054": {"number": "ORD-2026-054", "customer": "Bharat Refinery Services", "product": "Cold Rolled Steel Sheet 2mm", "quantity": "75", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-055": {"number": "ORD-2026-055", "customer": "Bharat Refinery Services", "product": "Control PCB", "quantity": "25", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-061": {"number": "ORD-2026-061", "customer": "Krishna Pharma Process Engineers", "product": "Copper Wire 2.5mm", "quantity": "35", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-062": {"number": "ORD-2026-062", "customer": "Petromax Oil &amp; Gas Pvt Ltd", "product": "Corrugated Box", "quantity": "45", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-063": {"number": "ORD-2026-063", "customer": "Krishna Pharma Process Engineers", "product": "Cut Resistant Safety Gloves", "quantity": "55", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-064": {"number": "ORD-2026-064", "customer": "Bharat Refinery Services", "product": "Cutting Coolant Concentrate", "quantity": "65", "status": "pending", "date": "Oct 15 2026"}, "ORD-2026-065": {"number": "ORD-2026-065", "customer": "Cauvery Water Infra Projects", "product": "Epoxy Coating Paint - Industrial Grey", "quantity": "75", "status": "pending", "date": "Oct 15 2026"}}, "production": {"PROD-2026-091": {"number": "PROD-2026-091", "part": "316L Steel Bar Stock", "planned": 50, "produced": 29, "pct": 58, "machine": "RES-001", "priority": "medium", "status": "In Progress", "rawStatus": "in_production"}, "PROD-2026-092": {"number": "PROD-2026-092", "part": "4-inch Gate Valve - Pneumatic Actuated", "planned": 75, "produced": 75, "pct": 100, "machine": "RES-005", "priority": "medium", "status": "Completed", "rawStatus": "completed"}, "PROD-2026-093": {"number": "PROD-2026-093", "part": "4-inch Industrial Gate Valve", "planned": 100, "produced": 0, "pct": 0, "machine": "RES-004", "priority": "medium", "status": "Scheduled", "rawStatus": "planned"}, "PROD-2026-094": {"number": "PROD-2026-094", "part": "6-inch Ball Valve - Pneumatic Actuated", "planned": 125, "produced": 98, "pct": 78, "machine": "RES-003", "priority": "medium", "status": "In Progress", "rawStatus": "in_production"}, "PROD-2026-095": {"number": "PROD-2026-095", "part": "6-inch Industrial Ball Valve", "planned": 150, "produced": 150, "pct": 100, "machine": "RES-004", "priority": "medium", "status": "Completed", "rawStatus": "completed"}, "PROD-2026-096": {"number": "PROD-2026-096", "part": "8-inch Butterfly Valve - Pneumatic Actua", "planned": 175, "produced": 0, "pct": 0, "machine": "RES-005", "priority": "medium", "status": "Scheduled", "rawStatus": "planned"}, "PROD-2026-097": {"number": "PROD-2026-097", "part": "8-inch Industrial Butterfly Valve", "planned": 200, "produced": 128, "pct": 64, "machine": "RES-005", "priority": "medium", "status": "In Progress", "rawStatus": "in_production"}, "PROD-2026-098": {"number": "PROD-2026-098", "part": "Actuated Valve Assembly", "planned": 225, "produced": 225, "pct": 100, "machine": "RES-002", "priority": "medium", "status": "Completed", "rawStatus": "completed"}, "PROD-2026-099": {"number": "PROD-2026-099", "part": "Actuator Mounting Bracket (ISO 5211)", "planned": 50, "produced": 0, "pct": 0, "machine": "RES-002", "priority": "medium", "status": "Scheduled", "rawStatus": "planned"}, "PROD-2026-100": {"number": "PROD-2026-100", "part": "Actuator Mounting Bracket (ISO 5211)", "planned": 75, "produced": 38, "pct": 51, "machine": "RES-001", "priority": "medium", "status": "In Progress", "rawStatus": "in_production"}, "PROD-2026-101": {"number": "PROD-2026-101", "part": "Air Compressor Filter Element", "planned": 100, "produced": 100, "pct": 100, "machine": "RES-001", "priority": "medium", "status": "Completed", "rawStatus": "completed"}, "PROD-2026-102": {"number": "PROD-2026-102", "part": "Anti-Seize Grease (Nickel Based)", "planned": 125, "produced": 0, "pct": 0, "machine": "RES-003", "priority": "medium", "status": "Scheduled", "rawStatus": "planned"}, "PROD-2026-103": {"number": "PROD-2026-103", "part": "Anti-Seize Grease (Nickel Based)", "planned": 150, "produced": 107, "pct": 71, "machine": "RES-001", "priority": "medium", "status": "In Progress", "rawStatus": "in_production"}, "PROD-2026-104": {"number": "PROD-2026-104", "part": "Ball Valve 200mm", "planned": 175, "produced": 175, "pct": 100, "machine": "RES-003", "priority": "medium", "status": "Completed", "rawStatus": "completed"}, "PROD-2026-105": {"number": "PROD-2026-105", "part": "Bearing 6205", "planned": 200, "produced": 0, "pct": 0, "machine": "RES-004", "priority": "medium", "status": "Scheduled", "rawStatus": "planned"}, "PROD-2026-106": {"number": "PROD-2026-106", "part": "Bearing 6205-2RS", "planned": 225, "produced": 128, "pct": 57, "machine": "RES-001", "priority": "medium", "status": "In Progress", "rawStatus": "in_production"}, "PROD-2026-107": {"number": "PROD-2026-107", "part": "Brass Valve Stem", "planned": 50, "produced": 50, "pct": 100, "machine": "RES-002", "priority": "medium", "status": "Completed", "rawStatus": "completed"}, "PROD-2026-108": {"number": "PROD-2026-108", "part": "Carbide Cutting Insert", "planned": 75, "produced": 0, "pct": 0, "machine": "RES-003", "priority": "medium", "status": "Scheduled", "rawStatus": "planned"}, "PROD-2026-109": {"number": "PROD-2026-109", "part": "Cast Iron Handwheel Assembly", "planned": 100, "produced": 78, "pct": 78, "machine": "RES-004", "priority": "medium", "status": "In Progress", "rawStatus": "in_production"}, "PROD-2026-110": {"number": "PROD-2026-110", "part": "Cast Iron Handwheel Assembly", "planned": 125, "produced": 125, "pct": 100, "machine": "RES-005", "priority": "medium", "status": "Completed", "rawStatus": "completed"}, "PROD-2026-111": {"number": "PROD-2026-111", "part": "CF8M Bonnet - 4-inch Gate Valve", "planned": 150, "produced": 0, "pct": 0, "machine": "RES-006", "priority": "medium", "status": "Scheduled", "rawStatus": "planned"}, "PROD-2026-112": {"number": "PROD-2026-112", "part": "CF8M Bonnet - 4-inch Gate Valve", "planned": 175, "produced": 112, "pct": 64, "machine": "RES-001", "priority": "medium", "status": "In Progress", "rawStatus": "in_production"}, "PROD-2026-113": {"number": "PROD-2026-113", "part": "CNC Carbide Cutting Insert CNMG 120408", "planned": 200, "produced": 200, "pct": 100, "machine": "RES-002", "priority": "medium", "status": "Completed", "rawStatus": "completed"}, "PROD-2026-114": {"number": "PROD-2026-114", "part": "Cold Rolled Steel Sheet 2mm", "planned": 225, "produced": 0, "pct": 0, "machine": "RES-003", "priority": "medium", "status": "Scheduled", "rawStatus": "planned"}, "PROD-2026-115": {"number": "PROD-2026-115", "part": "Control PCB", "planned": 50, "produced": 25, "pct": 50, "machine": "RES-004", "priority": "medium", "status": "In Progress", "rawStatus": "in_production"}, "PROD-2026-116": {"number": "PROD-2026-116", "part": "Copper Wire 2.5mm", "planned": 75, "produced": 75, "pct": 100, "machine": "RES-005", "priority": "medium", "status": "Completed", "rawStatus": "completed"}, "PROD-2026-117": {"number": "PROD-2026-117", "part": "Corrugated Box", "planned": 100, "produced": 0, "pct": 0, "machine": "RES-006", "priority": "medium", "status": "Scheduled", "rawStatus": "planned"}, "PROD-2026-118": {"number": "PROD-2026-118", "part": "Cut Resistant Safety Gloves", "planned": 125, "produced": 89, "pct": 71, "machine": "RES-001", "priority": "medium", "status": "In Progress", "rawStatus": "in_production"}, "PROD-2026-119": {"number": "PROD-2026-119", "part": "Cutting Coolant Concentrate", "planned": 150, "produced": 150, "pct": 100, "machine": "RES-002", "priority": "medium", "status": "Completed", "rawStatus": "completed"}, "PROD-2026-120": {"number": "PROD-2026-120", "part": "Epoxy Coating Paint - Industrial Grey", "planned": 175, "produced": 0, "pct": 0, "machine": "RES-003", "priority": "medium", "status": "Scheduled", "rawStatus": "planned"}}, "inventory": {"RM-ACT-007": {"code": "RM-ACT-007", "name": "Pneumatic Actuator", "stock": 800, "safety": 115, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "nos", "location": "Chennai Warehouse"}, "RM-STL-002": {"code": "RM-STL-002", "name": "316L Steel Bar Stock", "stock": 580, "safety": 25, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "kg", "location": "Chennai Warehouse"}, "RM-GSK-006": {"code": "RM-GSK-006", "name": "Graphite Gasket", "stock": 520, "safety": 45, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "nos", "location": "Hyderabad Warehouse"}, "FG-VALVE-200": {"code": "FG-VALVE-200", "name": "Ball Valve 200mm", "stock": 80, "safety": 105, "shortage": 25, "status": "Critical Shortage", "type": "finished_goods", "uom": "nos", "location": "Bangalore Warehouse"}, "RM-WIR-009": {"code": "RM-WIR-009", "name": "Copper Wire 2.5mm", "stock": 60, "safety": 85, "shortage": 25, "status": "Critical Shortage", "type": "raw_material", "uom": "nos", "location": "Chennai Warehouse"}, "FG-MANI-400": {"code": "FG-MANI-400", "name": "Valve Manifold", "stock": 55, "safety": 105, "shortage": 50, "status": "Critical Shortage", "type": "finished_goods", "uom": "nos", "location": "Chennai Warehouse"}, "SCN-S10": {"code": "SCN-S10", "name": "Scenario S10 test material", "stock": 100, "safety": 115, "shortage": 15, "status": "Critical Shortage", "type": "raw_material", "uom": "nos", "location": "Hyderabad Warehouse"}, "RM-SEA-003": {"code": "RM-SEA-003", "name": "Nitrile Seal Ring", "stock": 460, "safety": 85, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "nos", "location": "Chennai Warehouse"}, "MAT-044": {"code": "MAT-044", "name": "Valve Seat Ring SS316 - 4-inch", "stock": 1484, "safety": 75, "shortage": 0, "status": "Optimal", "type": "mro", "uom": "nos", "location": "Raw Material Warehouse - Hyderabad"}, "FG-VALVE-100": {"code": "FG-VALVE-100", "name": "Gate Valve 100mm", "stock": 63, "safety": 25, "shortage": 0, "status": "Optimal", "type": "finished_goods", "uom": "nos", "location": "Bangalore Warehouse"}, "MAT-038": {"code": "MAT-038", "name": "SS304 Gland Follower", "stock": 148, "safety": 35, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "nos", "location": "Raw Material Warehouse - Chennai"}, "MAT-039": {"code": "MAT-039", "name": "SS316 Ball - 6-inch Ball Valve", "stock": 577, "safety": 25, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "nos", "location": "Raw Material Warehouse - Hyderabad"}, "RM-PNT-012": {"code": "RM-PNT-012", "name": "Epoxy Paint", "stock": 240, "safety": 105, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "litres", "location": "Bangalore Warehouse"}, "RM-VAL-001": {"code": "RM-VAL-001", "name": "Stainless Steel Valve Body", "stock": 704, "safety": 95, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "kg", "location": "Hyderabad Warehouse"}, "MAT-042": {"code": "MAT-042", "name": "SS410 Valve Stem 25mm", "stock": 1469, "safety": 85, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "nos", "location": "Raw Material Warehouse - Hyderabad"}, "MAT-0082": {"code": "MAT-0082", "name": "SS304 Butterfly Disc - 8-inch", "stock": 532, "safety": 55, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "nos", "location": "Raw Material Warehouse - Bangalore"}, "RM-BRS-011": {"code": "RM-BRS-011", "name": "Brass Valve Stem", "stock": 412, "safety": 105, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "nos", "location": "Chennai Warehouse"}, "RM-SPR-005": {"code": "RM-SPR-005", "name": "Spring Steel Coil", "stock": 176, "safety": 95, "shortage": 0, "status": "Normal", "type": "raw_material", "uom": "litres", "location": "Chennai Warehouse"}, "RM-BLT-004": {"code": "RM-BLT-004", "name": "Hex Bolt M12", "stock": 320, "safety": 65, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "nos", "location": "Bangalore Warehouse"}, "MAT-0043": {"code": "MAT-0043", "name": "Hex Nut ASTM A194 2H M20", "stock": 2065, "safety": 45, "shortage": 0, "status": "Optimal", "type": "raw_material", "uom": "nos", "location": "Raw Material Warehouse - Chennai"}, "FG-ACT-300": {"code": "FG-ACT-300", "name": "Actuated Valve Assembly", "stock": 90, "safety": 55, "shortage": 0, "status": "Normal", "type": "finished_goods", "uom": "nos", "location": "Hyderabad Warehouse"}}};
+    window.currentModalRecord = null;
+
+    function openDetailModal(type, code) {
+      var data = null;
+      if (type === 'order' &amp;&amp; window.DETAIL_STORE.orders &amp;&amp; window.DETAIL_STORE.orders[code]) {
+        data = { type: 'order', item: window.DETAIL_STORE.orders[code] };
+      } else if (type === 'production' &amp;&amp; window.DETAIL_STORE.production &amp;&amp; window.DETAIL_STORE.production[code]) {
+        data = { type: 'production', item: window.DETAIL_STORE.production[code] };
+      } else if (type === 'inventory' &amp;&amp; window.DETAIL_STORE.inventory &amp;&amp; window.DETAIL_STORE.inventory[code]) {
+        data = { type: 'inventory', item: window.DETAIL_STORE.inventory[code] };
+      } else {
+        data = findRecordByCode(code);
+      }
+      if (!data) {
+        data = buildGenericRecord(code);
+      }
+      renderDetailModal(data);
+    }
+
+    function openDetailModalByCode(code) {
+      var rec = findRecordByCode(code);
+      if (!rec) {
+        rec = buildGenericRecord(code);
+      }
+      renderDetailModal(rec);
+    }
+
+    function findRecordByCode(code) {
+      if (!code) return null;
+      code = code.trim();
+      if (window.DETAIL_STORE.orders &amp;&amp; window.DETAIL_STORE.orders[code]) {
+        return { type: 'order', item: window.DETAIL_STORE.orders[code] };
+      }
+      if (window.DETAIL_STORE.production &amp;&amp; window.DETAIL_STORE.production[code]) {
+        return { type: 'production', item: window.DETAIL_STORE.production[code] };
+      }
+      if (window.DETAIL_STORE.inventory &amp;&amp; window.DETAIL_STORE.inventory[code]) {
+        return { type: 'inventory', item: window.DETAIL_STORE.inventory[code] };
+      }
+      if (code.indexOf('ORD-') === 0) {
+        return { type: 'order', item: { number: code, customer: 'Industrial Client', product: 'Precision Valve Assembly', quantity: '100', status: 'In Progress', date: 'Oct 15 2026' } };
+      }
+      if (code.indexOf('PROD-') === 0 || code.indexOf('PO-') === 0) {
+        return { type: 'production', item: { number: code, part: 'Precision Engineered Component', planned: 50, produced: 32, pct: 64, machine: 'WC-CNC-501', priority: 'P1', status: 'In Progress' } };
+      }
+      if (code.indexOf('RM-') === 0 || code.indexOf('FG-') === 0 || code.indexOf('MAT-') === 0 || code.indexOf('MRO-') === 0) {
+        return { type: 'inventory', item: { code: code, name: 'Precision Industrial Component', stock: 370, safety: 25, shortage: 0, status: 'Optimal', type: 'Raw Material', uom: 'nos', location: 'Central Warehouse' } };
+      }
+      if (code.indexOf('SUPPO-') === 0) {
+        return { type: 'supplier_po', item: { code: code, vendor: 'Industrial Supply Co Partner', amount: '53,100 INR', priority: 'Medium', status: 'Approved', date: 'Oct 15 2026' } };
+      }
+      return null;
+    }
+
+    function buildGenericRecord(code) {
+      return {
+        type: 'generic',
+        item: { code: code, name: 'Industrial Operational Record', details: 'Active record in ServiceNow Industrial Suite' }
+      };
+    }
+
+    function renderDetailModal(data) {
+      var backdrop = document.getElementById('detailModalBackdrop');
+      var iconEl = document.getElementById('modalIcon');
+      var titleEl = document.getElementById('modalTitle');
+      var subTitleEl = document.getElementById('modalSubTitle');
+      var bodyEl = document.getElementById('modalBody');
+      var actionBtn = document.getElementById('modalActionBtn');
+      if (!backdrop || !bodyEl) return;
+
+      window.currentModalRecord = data;
+      var it = data.item;
+
+      if (data.type === 'order') {
+        iconEl.innerHTML = '&amp;#128230;';
+        titleEl.textContent = 'Customer Order: ' + it.number;
+        subTitleEl.textContent = 'Customer Order Telemetry &amp; Delivery Progress';
+
+        var stBadge = '&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;';
+        if (it.status &amp;&amp; it.status.toLowerCase() === 'approved') {
+          stBadge = '&lt;span class="badge-pill badge-approved"&gt;Approved&lt;/span&gt;';
+        } else if (it.status &amp;&amp; it.status.toLowerCase() === 'pending') {
+          stBadge = '&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;';
+        }
+
+        bodyEl.innerHTML = '&lt;div class="modal-grid"&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Order Number&lt;/span&gt;&lt;span class="modal-field-value" style="color:#0284c7; font-family:monospace;"&gt;' + it.number + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Status&lt;/span&gt;&lt;div&gt;' + stBadge + '&lt;/div&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field-full"&gt;&lt;span class="modal-field-label"&gt;Customer&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + (it.customer || 'Enterprise Customer') + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field-full"&gt;&lt;span class="modal-field-label"&gt;Ordered Product&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + (it.product || 'Precision Valve') + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Order Quantity&lt;/span&gt;&lt;span class="modal-field-value" style="font-size:16px; color:#1e40af;"&gt;' + it.quantity + ' Units&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Requested Delivery&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + (it.date || 'Oct 15 2026') + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Fulfillment Cell&lt;/span&gt;&lt;span class="modal-field-value"&gt;Cell-04 (Automated)&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Dispatch Bay&lt;/span&gt;&lt;span class="modal-field-value"&gt;Warehouse Bay 02&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;/div&gt;';
+        if (actionBtn) {
+          actionBtn.textContent = 'Open Order in ServiceNow';
+          actionBtn.style.display = 'inline-block';
+        }
+      } else if (data.type === 'production') {
+        iconEl.innerHTML = '&amp;#9889;';
+        titleEl.textContent = 'Production Order: ' + it.number;
+        subTitleEl.textContent = 'Shop Floor Work Order &amp; Machine Telemetry';
+
+        var stBadge = '&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;';
+        if (it.status === 'Completed' || it.pct &gt;= 100) {
+          stBadge = '&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;';
+        } else if (it.status === 'Scheduled' || it.pct === 0) {
+          stBadge = '&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;';
+        }
+
+        var barColor = it.pct &gt;= 100 ? '#10b981' : (it.pct &gt; 50 ? '#0284c7' : '#ea580c');
+
+        bodyEl.innerHTML = '&lt;div class="modal-grid"&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Order Number&lt;/span&gt;&lt;span class="modal-field-value" style="color:#0284c7; font-family:monospace;"&gt;' + it.number + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Status&lt;/span&gt;&lt;div&gt;' + stBadge + '&lt;/div&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field-full"&gt;&lt;span class="modal-field-label"&gt;Part Description&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + it.part + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Planned Quantity&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + it.planned + ' Units&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Produced Quantity&lt;/span&gt;&lt;span class="modal-field-value" style="color:#059669; font-weight:700;"&gt;' + it.produced + ' (' + it.pct + '%)&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field-full"&gt;' +
+            '&lt;span class="modal-field-label"&gt;Execution Progress (' + it.pct + '%)&lt;/span&gt;' +
+            '&lt;div class="modal-progress-wrap"&gt;&lt;div class="modal-progress-bar" style="width:' + it.pct + '%; background:' + barColor + ';"&gt;&lt;/div&gt;&lt;/div&gt;' +
+          '&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Assigned Machine&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + it.machine + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Priority&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + (it.priority || 'P2') + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;/div&gt;';
+        if (actionBtn) {
+          actionBtn.textContent = 'View Production Order';
+          actionBtn.style.display = 'inline-block';
+        }
+      } else if (data.type === 'inventory') {
+        iconEl.innerHTML = '&amp;#127981;';
+        titleEl.textContent = 'Material Master: ' + it.code;
+        subTitleEl.textContent = 'Warehouse Stock Health &amp; Bin Tracking';
+
+        var stBadge = '&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;';
+        if (it.shortage &gt; 0) {
+          stBadge = '&lt;span class="badge-pill" style="background:#fee2e2; color:#b91c1c;"&gt;Critical Shortage (' + it.shortage + ' Units)&lt;/span&gt;';
+        } else if (it.status &amp;&amp; it.status.indexOf('Below') !== -1) {
+          stBadge = '&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;Below SS&lt;/span&gt;';
+        }
+
+        var shortageText = it.shortage &gt; 0 ? (it.shortage + ' Units Short') : 'Surplus / Optimal Buffer';
+        var shortageColor = it.shortage &gt; 0 ? '#dc2626' : '#059669';
+
+        bodyEl.innerHTML = '&lt;div class="modal-grid"&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Material Code&lt;/span&gt;&lt;span class="modal-field-value" style="color:#0284c7; font-family:monospace;"&gt;' + it.code + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Health Status&lt;/span&gt;&lt;div&gt;' + stBadge + '&lt;/div&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field-full"&gt;&lt;span class="modal-field-label"&gt;Item Description&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + it.name + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Current On-Hand Stock&lt;/span&gt;&lt;span class="modal-field-value" style="font-size:16px; color:#0f172a;"&gt;' + it.stock + ' ' + (it.uom || 'Units') + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Safety Stock Limit&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + it.safety + ' ' + (it.uom || 'Units') + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Net Buffer / Shortage&lt;/span&gt;&lt;span class="modal-field-value" style="color:' + shortageColor + ';"&gt;' + shortageText + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Material Category&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + (it.type || 'Raw Material') + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field-full"&gt;&lt;span class="modal-field-label"&gt;Primary Bin Location&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + (it.location || 'Warehouse Central') + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;/div&gt;';
+        if (actionBtn) {
+          actionBtn.textContent = 'View Inventory Record';
+          actionBtn.style.display = 'inline-block';
+        }
+      } else if (data.type === 'supplier_po') {
+        iconEl.innerHTML = '&amp;#128666;';
+        titleEl.textContent = 'Purchase Order: ' + it.code;
+        subTitleEl.textContent = 'Supplier Procurement &amp; Material Inflow';
+        bodyEl.innerHTML = '&lt;div class="modal-grid"&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;PO Number&lt;/span&gt;&lt;span class="modal-field-value" style="color:#0284c7; font-family:monospace;"&gt;' + it.code + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Status&lt;/span&gt;&lt;div&gt;&lt;span class="badge-pill badge-approved"&gt;' + it.status + '&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field-full"&gt;&lt;span class="modal-field-label"&gt;Supplier / Vendor&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + it.vendor + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;PO Value&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + it.amount + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field"&gt;&lt;span class="modal-field-label"&gt;Delivery Date&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + it.date + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;/div&gt;';
+        if (actionBtn) {
+          actionBtn.textContent = 'Open Purchase Order';
+          actionBtn.style.display = 'inline-block';
+        }
+      } else {
+        iconEl.innerHTML = '&amp;#128203;';
+        titleEl.textContent = 'Record Details: ' + (it.code || 'Item');
+        subTitleEl.textContent = 'ServiceNow Industrial Management';
+        bodyEl.innerHTML = '&lt;div class="modal-grid"&gt;' +
+          '&lt;div class="modal-field-full"&gt;&lt;span class="modal-field-label"&gt;Identifier&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + (it.code || 'N/A') + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;div class="modal-field-full"&gt;&lt;span class="modal-field-label"&gt;Description&lt;/span&gt;&lt;span class="modal-field-value"&gt;' + (it.name || it.details || 'Industrial Asset') + '&lt;/span&gt;&lt;/div&gt;' +
+          '&lt;/div&gt;';
+        if (actionBtn) actionBtn.style.display = 'none';
+      }
+
+      backdrop.classList.add('open');
+    }
+
+    function closeDetailModal() {
+      var backdrop = document.getElementById('detailModalBackdrop');
+      if (backdrop) backdrop.classList.remove('open');
+    }
+
+    function onModalPrimaryAction() {
+      if (!window.currentModalRecord) return;
+      var rec = window.currentModalRecord;
+      var it = rec.item;
+      if (rec.type === 'order') {
+        window.open('/x_2056099_indust_0_cust_order.do?sysparm_query=number=' + it.number, '_blank');
+      } else if (rec.type === 'production') {
+        window.open('/x_2056099_indust_0_production_order.do?sysparm_query=number=' + it.number, '_blank');
+      } else if (rec.type === 'inventory') {
+        window.open('/x_2056099_indust_0_inv_stock.do', '_blank');
+      } else {
+        closeDetailModal();
+      }
+    }
+
+    // Delegate clicks on all .link-code elements anywhere in the dashboard
+    document.addEventListener('click', function(e) {
+      var t = e.target;
+      if (!t) return;
+      var linkEl = t.closest ? t.closest('.link-code') : (t.classList &amp;&amp; t.classList.contains('link-code') ? t : null);
+      if (linkEl) {
+        e.preventDefault();
+        var code = (linkEl.getAttribute('data-code') || linkEl.innerText || '').trim();
+        if (code) {
+          openDetailModalByCode(code);
+        }
+      }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        closeDetailModal();
+      }
+    });
+
+    // FULL TAB SWITCHING
+    function switchTab(tabKey) {
+      document.querySelectorAll('.nav-btn').forEach(btn =&gt; btn.classList.remove('active'));
+      document.querySelectorAll('.tab-view').forEach(view =&gt; view.classList.remove('active'));
+
+      var tabMap = {
+        'dashboard': { btn: 'btnNavDashboard', view: 'view-dashboard' },
+        'customer-orders': { btn: 'btnNavCustomerOrders', view: 'view-customer-orders' },
+        'production': { btn: 'btnNavProduction', view: 'view-production' },
+        'schedule': { btn: 'btnNavSchedule', view: 'view-schedule' },
+        'inventory': { btn: 'btnNavInventory', view: 'view-inventory' },
+        'procurement': { btn: 'btnNavProcurement', view: 'view-procurement' },
+        'suppliers': { btn: 'btnNavSuppliers', view: 'view-suppliers' },
+        'alerts': { btn: 'btnNavAlerts', view: 'view-alerts' },
+        'forecasting': { btn: 'btnNavForecasting', view: 'view-forecasting' },
+        'digital-twin': { btn: 'btnNavDigitalTwin', view: 'view-digital-twin' }
+      };
+
+      var target = tabMap[tabKey] || tabMap['customer-orders'];
+      var btnEl = document.getElementById(target.btn);
+      var viewEl = document.getElementById(target.view);
+
+      if (btnEl) btnEl.classList.add('active');
+      if (viewEl) viewEl.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function filterOrders(term) {
+      var rows = document.querySelectorAll('#ordersTableBody tr');
+      rows.forEach(function(row) {
+        var text = row.innerText.toLowerCase();
+        row.style.display = text.includes(term.toLowerCase()) ? '' : 'none';
+      });
+    }
+
+    function runDigitalTwinSim() {
+      document.getElementById('simResultsContainer').style.display = 'block';
+      alert('Simulation completed: Alternative A achieves +12% On-Time Delivery recovery by routing PO-101 to WC-ADD-503.');
+    }
+
+    function applyDigitalTwinPlan() {
+      alert('Schedule updated in ServiceNow: PO-101 dispatched to WC-ADD-503. Machine breakdown mitigated!');
+      switchTab('production');
+    }
+
+    function refreshData() {
+      window.location.reload();
+    }
+]]&gt;&lt;/client_script&gt;&lt;description&gt;Industrial Operations &amp;amp; Inventory Management Enterprise Desktop Dashboard&lt;/description&gt;&lt;direct&gt;false&lt;/direct&gt;&lt;endpoint&gt;x_2056099_indust_0_dashboard.do&lt;/endpoint&gt;&lt;html&gt;&lt;![CDATA[&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null"&gt;
+&lt;link rel="preconnect" href="https://fonts.googleapis.com" /&gt;
+&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" /&gt;
+&lt;link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;amp;family=JetBrains+Mono:wght@500;700&amp;amp;display=swap" rel="stylesheet" /&gt;
+
+&lt;style&gt;
+
+#desktop_ops_app {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: var(--bg-body) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  font-family: var(--font-sans) !important;
+  color: var(--text-main) !important;
+}
+#desktop_ops_app .sidebar {
+  position: relative !important;
+  height: 100vh !important;
+}
+#desktop_ops_app .main-wrapper {
+  margin-left: 0 !important;
+  flex: 1 !important;
+  overflow-y: auto !important;
+  height: 100vh !important;
+}
+
+    :root {
+      --bg-body: #f8fafc;
+      --bg-sidebar: #ffffff;
+      --bg-card: #ffffff;
+      --sidebar-border: #e2e8f0;
+      --border-card: #e2e8f0;
+      --border-subtle: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --primary-navy: #0f2438;
+      --primary-blue: #0284c7;
+      --primary-blue-hover: #0369a1;
+      --nav-active-bg: #0f2438;
+      --nav-active-text: #ffffff;
+      --badge-red: #ef4444;
+      --badge-green: #10b981;
+      --badge-amber: #f59e0b;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-body);
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+    
+    /* LEFT SIDEBAR (Photo 2 Light Theme) */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 50;
+    }
+    .brand-box {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-navy);
+      letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+    
+    .nav-menu {
+      flex: 1;
+      padding: 16px 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+      position: relative;
+      width: 100%;
+    }
+    .nav-btn:hover {
+      background: #f1f5f9;
+      color: var(--primary-navy);
+    }
+    .nav-btn.active {
+      background: var(--nav-active-bg);
+      color: var(--nav-active-text);
+      font-weight: 700;
+    }
+    .nav-btn .icon {
+      font-size: 16px;
+      width: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .nav-badge-pill {
+      margin-left: auto;
+      background: var(--badge-red);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 11px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    /* MAIN CONTENT AREA */
+    .main-wrapper {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .topbar {
+      height: 64px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--sidebar-border);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .btn-refresh {
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-refresh:hover { background: #f8fafc; color: var(--text-main); }
+    
+    /* ONLY ADMIN BADGE */
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #0284c7;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    /* CONTENT BODY */
+    .content-container {
+      padding: 32px;
+      flex: 1;
+    }
+    .page-header {
+      margin-bottom: 24px;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* CARDS &amp;amp; TABLES */
+    .content-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .card-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-head-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .count-badge {
+      background: #0284c7;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .records-info {
+      font-size: 12px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    /* DATA TABLES */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+    .data-table th {
+      background: #ffffff;
+      padding: 12px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .data-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: #334155;
+      font-weight: 500;
+    }
+    .data-table tr:hover td {
+      background: #f8fafc;
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .link-code {
+      color: #0284c7;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .link-code:hover { text-decoration: underline; }
+
+    /* STATUS BADGES */
+    .badge-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .badge-pending {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .badge-approved {
+      background: #fef3c7;
+      color: #d97706;
+      border: 1px solid #fde68a;
+    }
+    .badge-priority-med {
+      color: #0284c7;
+      font-weight: 700;
+    }
+    .badge-active {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    /* KPI GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: #fff;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .kpi-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .kpi-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 8px 0 4px;
+      font-family: var(--font-mono);
+    }
+    .kpi-trend {
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .trend-up { color: #059669; }
+    .trend-down { color: #dc2626; }
+
+    /* TAB VIEWS */
+    .tab-view { display: none; }
+    .tab-view.active { display: block; animation: fadeIn 0.15s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* FORM &amp;amp; SIMULATION CONTROLS */
+    .sim-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .sim-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .sim-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .sim-field select, .sim-field input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #fff;
+    }
+    .btn-action {
+      background: #0284c7;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-action:hover { background: #0369a1; }
+    .btn-success { background: #10b981; }
+    .btn-success:hover { background: #059669; }
+
+    /* FOOTER */
+    .page-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-light);
+    }
+  
+
+    /* MODERN INTERACTIVE DETAIL MODAL */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 99999;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+    .modal-backdrop.open {
+      display: flex;
+      opacity: 1;
+    }
+    .portal-modal {
+      background: #ffffff;
+      border-radius: 12px;
+      width: 580px;
+      max-width: 92vw;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      animation: modalSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalSlideIn {
+      from { transform: translateY(16px) scale(0.97); }
+      to { transform: translateY(0) scale(1); }
+    }
+    .modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+    }
+    .modal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .modal-icon-badge {
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+    }
+    .modal-heading-text {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 16px;
+      line-height: 1.25;
+    }
+    .modal-subheading-text {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      font-size: 26px;
+      line-height: 1;
+      color: #64748b;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all .15s ease;
+    }
+    .modal-close-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      font-size: 13px;
+      color: #334155;
+    }
+    .modal-footer {
+      padding: 14px 24px;
+      border-top: 1px solid #e2e8f0;
+      background: #f8fafc;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 20px;
+    }
+    .modal-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .modal-field-full {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .modal-field-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .modal-field-value {
+      font-size: 14px;
+      color: #0f172a;
+      font-weight: 600;
+    }
+    .modal-progress-wrap {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .modal-progress-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .link-code {
+      color: #0284c7 !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      text-decoration: underline !important;
+    }
+    .link-code:hover {
+      color: #0369a1 !important;
+    }
+
+  &lt;/style&gt;
+
+&lt;div id="desktop_ops_app"&gt;
+
+
+  &lt;!-- ===================================================================== --&gt;
+  &lt;!-- LEFT SIDEBAR                                                          --&gt;
+  &lt;!-- ===================================================================== --&gt;
+  &lt;aside class="sidebar"&gt;
+    &lt;div class="brand-box"&gt;
+      &lt;div class="brand-title"&gt;Industrial Supply Co.&lt;/div&gt;
+      &lt;div class="brand-sub"&gt;OPERATIONS ADMIN&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;nav class="nav-menu"&gt;
+      &lt;button class="nav-btn" id="btnNavDashboard" onclick="switchTab('dashboard')"&gt;
+        &lt;span class="icon"&gt;&amp;#8862;&lt;/span&gt;
+        &lt;span&gt;Dashboard&lt;/span&gt;
+      &lt;/button&gt;
+
+      &lt;button class="nav-btn active" id="btnNavCustomerOrders" onclick="switchTab('customer-orders')"&gt;
+        &lt;span class="icon"&gt;&amp;#128229;&lt;/span&gt;
+        &lt;span&gt;Customer Orders&lt;/span&gt;
+      &lt;/button&gt;
+
+      &lt;button class="nav-btn" id="btnNavProduction" onclick="switchTab('production')"&gt;
+        &lt;span class="icon"&gt;&amp;#9881;&amp;#65039;&lt;/span&gt;
+        &lt;span&gt;Production &amp;amp; Machines&lt;/span&gt;
+      &lt;/button&gt;
+
+      &lt;button class="nav-btn" id="btnNavSchedule" onclick="switchTab('schedule')"&gt;
+        &lt;span class="icon"&gt;&amp;#128197;&lt;/span&gt;
+        &lt;span&gt;Schedule Planner&lt;/span&gt;
+      &lt;/button&gt;
+
+      &lt;button class="nav-btn" id="btnNavInventory" onclick="switchTab('inventory')"&gt;
+        &lt;span class="icon"&gt;&amp;#128230;&lt;/span&gt;
+        &lt;span&gt;Inventory&lt;/span&gt;
+      &lt;/button&gt;
+
+      &lt;button class="nav-btn" id="btnNavProcurement" onclick="switchTab('procurement')"&gt;
+        &lt;span class="icon"&gt;&amp;#128203;&lt;/span&gt;
+        &lt;span&gt;Procurement&lt;/span&gt;
+      &lt;/button&gt;
+
+      &lt;button class="nav-btn" id="btnNavSuppliers" onclick="switchTab('suppliers')"&gt;
+        &lt;span class="icon"&gt;&amp;#128666;&lt;/span&gt;
+        &lt;span&gt;Suppliers&lt;/span&gt;
+      &lt;/button&gt;
+
+      &lt;button class="nav-btn" id="btnNavAlerts" onclick="switchTab('alerts')"&gt;
+        &lt;span class="icon"&gt;&amp;#128276;&lt;/span&gt;
+        &lt;span&gt;Alerts &amp;amp; Exceptions&lt;/span&gt;
+        &lt;span class="nav-badge-pill"&gt;168&lt;/span&gt;
+      &lt;/button&gt;
+
+      &lt;button class="nav-btn" id="btnNavForecasting" onclick="switchTab('forecasting')"&gt;
+        &lt;span class="icon"&gt;&amp;#128200;&lt;/span&gt;
+        &lt;span&gt;Demand Forecasting&lt;/span&gt;
+      &lt;/button&gt;
+
+      &lt;button class="nav-btn" id="btnNavDigitalTwin" onclick="switchTab('digital-twin')"&gt;
+        &lt;span class="icon"&gt;&amp;#127760;&lt;/span&gt;
+        &lt;span&gt;Digital Twin&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/nav&gt;
+
+    &lt;div class="sidebar-footer"&gt;
+      Industrial Ops v2.0
+    &lt;/div&gt;
+  &lt;/aside&gt;
+
+  &lt;!-- ===================================================================== --&gt;
+  &lt;!-- MAIN WORKSPACE CONTENT                                                --&gt;
+  &lt;!-- ===================================================================== --&gt;
+  &lt;div class="main-wrapper"&gt;
+    
+    &lt;!-- TOPBAR --&gt;
+    &lt;header class="topbar"&gt;
+      &lt;div class="topbar-left"&gt;
+        &lt;span class="live-status-pill"&gt;&lt;span class="live-dot"&gt;&lt;/span&gt; LIVE&lt;/span&gt;
+        &lt;span style="font-size: 12px; color: var(--text-muted); font-weight: 600;"&gt;Real-time Command Center&lt;/span&gt;
+      &lt;/div&gt;
+
+      &lt;div class="topbar-right"&gt;
+        &lt;button class="btn-refresh" onclick="refreshData()"&gt;
+          &lt;span&gt;&amp;#128260;&lt;/span&gt; Refresh All
+        &lt;/button&gt;
+        &lt;!-- ONLY ADMIN AVATAR --&gt;
+        &lt;div class="user-pill"&gt;
+          &lt;div class="avatar-circle"&gt;A&lt;/div&gt;
+          &lt;span&gt;System Administrator&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;div class="content-container"&gt;
+
+      &lt;!-- =================================================================== --&gt;
+      &lt;!-- VIEW 1: CUSTOMER ORDERS (PHOTO 2 EXACT RECREATION)                  --&gt;
+      &lt;!-- =================================================================== --&gt;
+      &lt;section class="tab-view active" id="view-customer-orders"&gt;
+        &lt;div class="page-header"&gt;
+          &lt;h1 class="page-title"&gt;Customer Orders&lt;/h1&gt;
+          &lt;p class="page-subtitle"&gt;Track customer orders and delivery&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="content-card"&gt;
+          &lt;div class="card-head"&gt;
+            &lt;span class="records-info"&gt;55 records&lt;/span&gt;
+            &lt;div style="display:flex; gap:10px;"&gt;
+              &lt;input type="text" placeholder="Search orders..." style="padding:6px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:12px; width:220px;" oninput="filterOrders(this.value)" /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;table class="data-table"&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;NUMBER&lt;/th&gt;
+                &lt;th&gt;CUSTOMER&lt;/th&gt;
+                &lt;th&gt;PRODUCT&lt;/th&gt;
+                &lt;th&gt;QTY&lt;/th&gt;
+                &lt;th&gt;STATUS&lt;/th&gt;
+                &lt;th&gt;DELIVERY DATE&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody id="ordersTableBody"&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-001" onclick="openDetailModal('order', 'ORD-2026-001')"&gt;ORD-2026-001&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Gate Valve 100mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;100&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-002" onclick="openDetailModal('order', 'ORD-2026-002')"&gt;ORD-2026-002&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Valve Manifold&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;40&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-003" onclick="openDetailModal('order', 'ORD-2026-003')"&gt;ORD-2026-003&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Valve Manifold&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;60&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-004" onclick="openDetailModal('order', 'ORD-2026-004')"&gt;ORD-2026-004&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Actuated Valve Assembly&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;300&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-005" onclick="openDetailModal('order', 'ORD-2026-005')"&gt;ORD-2026-005&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Actuated Valve Assembly&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;20&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-006" onclick="openDetailModal('order', 'ORD-2026-006')"&gt;ORD-2026-006&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Valve Manifold&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;40&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-007" onclick="openDetailModal('order', 'ORD-2026-007')"&gt;ORD-2026-007&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Valve Manifold&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;80&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-008" onclick="openDetailModal('order', 'ORD-2026-008')"&gt;ORD-2026-008&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Actuated Valve Assembly&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;150&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-009" onclick="openDetailModal('order', 'ORD-2026-009')"&gt;ORD-2026-009&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Actuated Valve Assembly&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;300&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-010" onclick="openDetailModal('order', 'ORD-2026-010')"&gt;ORD-2026-010&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Ball Valve 200mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;150&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-011" onclick="openDetailModal('order', 'ORD-2026-011')"&gt;ORD-2026-011&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Valve Manifold&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;150&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-012" onclick="openDetailModal('order', 'ORD-2026-012')"&gt;ORD-2026-012&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Actuated Valve Assembly&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;120&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-013" onclick="openDetailModal('order', 'ORD-2026-013')"&gt;ORD-2026-013&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Actuated Valve Assembly&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;10&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-014" onclick="openDetailModal('order', 'ORD-2026-014')"&gt;ORD-2026-014&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Valve Manifold&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;200&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-015" onclick="openDetailModal('order', 'ORD-2026-015')"&gt;ORD-2026-015&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Valve Manifold&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;80&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-016" onclick="openDetailModal('order', 'ORD-2026-016')"&gt;ORD-2026-016&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Gate Valve 100mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;120&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-017" onclick="openDetailModal('order', 'ORD-2026-017')"&gt;ORD-2026-017&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Ball Valve 200mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;200&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-018" onclick="openDetailModal('order', 'ORD-2026-018')"&gt;ORD-2026-018&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Ball Valve 200mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;40&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-019" onclick="openDetailModal('order', 'ORD-2026-019')"&gt;ORD-2026-019&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Valve Manifold&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;300&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-020" onclick="openDetailModal('order', 'ORD-2026-020')"&gt;ORD-2026-020&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Gate Valve 100mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;150&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-021" onclick="openDetailModal('order', 'ORD-2026-021')"&gt;ORD-2026-021&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Ball Valve 200mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;60&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-022" onclick="openDetailModal('order', 'ORD-2026-022')"&gt;ORD-2026-022&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Valve Manifold&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;300&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-023" onclick="openDetailModal('order', 'ORD-2026-023')"&gt;ORD-2026-023&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Gate Valve 100mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;10&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-024" onclick="openDetailModal('order', 'ORD-2026-024')"&gt;ORD-2026-024&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;ABC Engineering Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Gate Valve 100mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;60&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-025" onclick="openDetailModal('order', 'ORD-2026-025')"&gt;ORD-2026-025&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sahyadri Pumps and Valves&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Actuated Valve Assembly&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;40&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-026" onclick="openDetailModal('order', 'ORD-2026-026')"&gt;ORD-2026-026&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Krishna Pharma Process Engineers&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;316L Steel Bar Stock&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;25&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-027" onclick="openDetailModal('order', 'ORD-2026-027')"&gt;ORD-2026-027&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sagar Shipyard &amp;amp; Marine&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;4-inch Gate Valve - Pneumatic Actuated&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;35&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-028" onclick="openDetailModal('order', 'ORD-2026-028')"&gt;ORD-2026-028&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Cauvery Water Infra Projects&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;4-inch Industrial Gate Valve&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;45&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-029" onclick="openDetailModal('order', 'ORD-2026-029')"&gt;ORD-2026-029&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Godavari Fertilizers &amp;amp; Chemicals&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;6-inch Ball Valve - Pneumatic Actuated&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;55&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-030" onclick="openDetailModal('order', 'ORD-2026-030')"&gt;ORD-2026-030&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Cauvery Water Infra Projects&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;6-inch Industrial Ball Valve&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;65&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-031" onclick="openDetailModal('order', 'ORD-2026-031')"&gt;ORD-2026-031&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Bharat Refinery Services&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;8-inch Butterfly Valve - Pneumatic Actua&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;75&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-032" onclick="openDetailModal('order', 'ORD-2026-032')"&gt;ORD-2026-032&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Bharat Refinery Services&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;8-inch Industrial Butterfly Valve&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;25&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-033" onclick="openDetailModal('order', 'ORD-2026-033')"&gt;ORD-2026-033&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Bay of Bengal Offshore Services&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Actuated Valve Assembly&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;35&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-034" onclick="openDetailModal('order', 'ORD-2026-034')"&gt;ORD-2026-034&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;AquaPure Water Systems&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Actuator Mounting Bracket (ISO 5211)&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;45&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-035" onclick="openDetailModal('order', 'ORD-2026-035')"&gt;ORD-2026-035&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Nandi Cement Works&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Actuator Mounting Bracket (ISO 5211)&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;55&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-041" onclick="openDetailModal('order', 'ORD-2026-041')"&gt;ORD-2026-041&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Southern Power Utilities&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Air Compressor Filter Element&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;65&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-042" onclick="openDetailModal('order', 'ORD-2026-042')"&gt;ORD-2026-042&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Bay of Bengal Offshore Services&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Anti-Seize Grease (Nickel Based)&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;75&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-043" onclick="openDetailModal('order', 'ORD-2026-043')"&gt;ORD-2026-043&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Cauvery Water Infra Projects&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Anti-Seize Grease (Nickel Based)&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;25&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-044" onclick="openDetailModal('order', 'ORD-2026-044')"&gt;ORD-2026-044&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Godavari Fertilizers &amp;amp; Chemicals&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Ball Valve 200mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;35&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-045" onclick="openDetailModal('order', 'ORD-2026-045')"&gt;ORD-2026-045&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Bay of Bengal Offshore Services&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Bearing 6205&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;45&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-046" onclick="openDetailModal('order', 'ORD-2026-046')"&gt;ORD-2026-046&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sagar Shipyard &amp;amp; Marine&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Bearing 6205-2RS&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;55&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-047" onclick="openDetailModal('order', 'ORD-2026-047')"&gt;ORD-2026-047&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Nandi Cement Works&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Brass Valve Stem&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;65&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-048" onclick="openDetailModal('order', 'ORD-2026-048')"&gt;ORD-2026-048&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Krishna Pharma Process Engineers&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Carbide Cutting Insert&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;75&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-049" onclick="openDetailModal('order', 'ORD-2026-049')"&gt;ORD-2026-049&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Tungabhadra Sugar Mills&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Cast Iron Handwheel Assembly&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;25&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-050" onclick="openDetailModal('order', 'ORD-2026-050')"&gt;ORD-2026-050&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sagar Shipyard &amp;amp; Marine&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Cast Iron Handwheel Assembly&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;35&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-051" onclick="openDetailModal('order', 'ORD-2026-051')"&gt;ORD-2026-051&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sagar Shipyard &amp;amp; Marine&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;CF8M Bonnet - 4-inch Gate Valve&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;45&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-052" onclick="openDetailModal('order', 'ORD-2026-052')"&gt;ORD-2026-052&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Tungabhadra Sugar Mills&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;CF8M Bonnet - 4-inch Gate Valve&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;55&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-053" onclick="openDetailModal('order', 'ORD-2026-053')"&gt;ORD-2026-053&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Deccan Petrochem Industries&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;CNC Carbide Cutting Insert CNMG 120408&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;65&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-054" onclick="openDetailModal('order', 'ORD-2026-054')"&gt;ORD-2026-054&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Bharat Refinery Services&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Cold Rolled Steel Sheet 2mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;75&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-055" onclick="openDetailModal('order', 'ORD-2026-055')"&gt;ORD-2026-055&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Bharat Refinery Services&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Control PCB&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;25&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-061" onclick="openDetailModal('order', 'ORD-2026-061')"&gt;ORD-2026-061&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Krishna Pharma Process Engineers&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Copper Wire 2.5mm&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;35&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-062" onclick="openDetailModal('order', 'ORD-2026-062')"&gt;ORD-2026-062&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Petromax Oil &amp;amp; Gas Pvt Ltd&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Corrugated Box&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;45&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-063" onclick="openDetailModal('order', 'ORD-2026-063')"&gt;ORD-2026-063&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Krishna Pharma Process Engineers&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Cut Resistant Safety Gloves&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;55&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-064" onclick="openDetailModal('order', 'ORD-2026-064')"&gt;ORD-2026-064&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Bharat Refinery Services&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Cutting Coolant Concentrate&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;65&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="ORD-2026-065" onclick="openDetailModal('order', 'ORD-2026-065')"&gt;ORD-2026-065&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Cauvery Water Infra Projects&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-weight:600; color:#0f172a;"&gt;Epoxy Coating Paint - Industrial Grey&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;"&gt;75&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Pending&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;Oct 15 2026&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- =================================================================== --&gt;
+      &lt;!-- VIEW 2: PROCUREMENT ORDERS (PHOTO 1 EXACT RECREATION)               --&gt;
+      &lt;!-- =================================================================== --&gt;
+      &lt;section class="tab-view" id="view-procurement"&gt;
+        &lt;div class="page-header"&gt;
+          &lt;h1 class="page-title"&gt;Procurement Management&lt;/h1&gt;
+          &lt;p class="page-subtitle"&gt;Supplier purchase orders, approval pipelines, and incoming stock delivery&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="content-card"&gt;
+          &lt;div class="card-head"&gt;
+            &lt;div class="card-head-left"&gt;
+              &lt;span class="card-title"&gt;&amp;#128666; Procurement Orders&lt;/span&gt;
+              &lt;span class="count-badge"&gt;10&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;span class="records-info"&gt;10 active vendor orders&lt;/span&gt;
+          &lt;/div&gt;
+
+          &lt;table class="data-table"&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;PO REF&lt;/th&gt;
+                &lt;th&gt;SUPPLIER&lt;/th&gt;
+                &lt;th&gt;AMOUNT&lt;/th&gt;
+                &lt;th&gt;PRIORITY&lt;/th&gt;
+                &lt;th&gt;STATUS&lt;/th&gt;
+                &lt;th&gt;EXPECTED DELIVERY&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code"&gt;SUPPO-0010&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;SKF Precision Bearings Ltd (4013368f)&lt;/td&gt;
+                &lt;td&gt;53,100 INR&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-priority-med"&gt;medium&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;approved&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;04/09/2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code"&gt;SUPPO-0006&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Tata Advanced Alloys (5d61455b)&lt;/td&gt;
+                &lt;td&gt;29,500 INR&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-priority-med"&gt;medium&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;approved&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;04/09/2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code"&gt;SUPPO-0008&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Hydraulics International (1534251d)&lt;/td&gt;
+                &lt;td&gt;41,300 INR&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-priority-med"&gt;medium&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;approved&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;04/09/2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code"&gt;SUPPO-0015&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sundaram Fasteners (51849e31)&lt;/td&gt;
+                &lt;td&gt;53,100 INR&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-priority-med"&gt;medium&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;approved&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;04/09/2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code"&gt;SUPPO-0004&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Global Titanium Components (b6065400)&lt;/td&gt;
+                &lt;td&gt;47,200 INR&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-priority-med"&gt;medium&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;approved&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;04/09/2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code"&gt;SUPPO-0003&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Precision Seal Systems (1f96a105)&lt;/td&gt;
+                &lt;td&gt;41,300 INR&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-priority-med"&gt;medium&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;approved&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;04/09/2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code"&gt;SUPPO-0007&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Sundaram Fasteners (51849e31)&lt;/td&gt;
+                &lt;td&gt;35,400 INR&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-priority-med"&gt;medium&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;approved&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;04/09/2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code"&gt;SUPPO-0012&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Global Titanium Components (b6065400)&lt;/td&gt;
+                &lt;td&gt;35,400 INR&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-priority-med"&gt;medium&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;approved&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;04/09/2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code"&gt;SUPPO-0011&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Precision Seal Systems (1f96a105)&lt;/td&gt;
+                &lt;td&gt;29,500 INR&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-priority-med"&gt;medium&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;approved&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;04/09/2026&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code"&gt;SUPPO-0014&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Tata Advanced Alloys (5d61455b)&lt;/td&gt;
+                &lt;td&gt;47,200 INR&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-priority-med"&gt;medium&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;approved&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;04/09/2026&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- =================================================================== --&gt;
+      &lt;!-- VIEW 3: EXECUTIVE DASHBOARD (OVERVIEW)                              --&gt;
+      &lt;!-- =================================================================== --&gt;
+      &lt;section class="tab-view" id="view-dashboard"&gt;
+        &lt;div class="page-header"&gt;
+          &lt;h1 class="page-title"&gt;Executive Operations Dashboard&lt;/h1&gt;
+          &lt;p class="page-subtitle"&gt;Real-time factory telemetry, OEE metrics, and smart manufacturing health&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="kpi-grid"&gt;
+          &lt;div class="kpi-card"&gt;
+            &lt;div class="kpi-lbl"&gt;Overall OEE&lt;/div&gt;
+            &lt;div class="kpi-val"&gt;88.4%&lt;/div&gt;
+            &lt;div class="kpi-trend trend-up"&gt;&amp;#8593; 5.2% vs target&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="kpi-card"&gt;
+            &lt;div class="kpi-lbl"&gt;Customer Orders&lt;/div&gt;
+            &lt;div class="kpi-val"&gt;50&lt;/div&gt;
+            &lt;div class="kpi-trend trend-up"&gt;&amp;#8593; 100% On Schedule&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="kpi-card"&gt;
+            &lt;div class="kpi-lbl"&gt;Active Alerts&lt;/div&gt;
+            &lt;div class="kpi-val" style="color:#ef4444;"&gt;168&lt;/div&gt;
+            &lt;div class="kpi-trend trend-down"&gt;&amp;#8595; 3 Critical alarms&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class="kpi-card"&gt;
+            &lt;div class="kpi-lbl"&gt;On-Time Delivery&lt;/div&gt;
+            &lt;div class="kpi-val"&gt;92%&lt;/div&gt;
+            &lt;div class="kpi-trend trend-up"&gt;&amp;#8593; 8% recovery achieved&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Work Centers Card --&gt;
+        &lt;div class="content-card"&gt;
+          &lt;div class="card-head"&gt;
+            &lt;span class="card-title"&gt;&amp;#127981; Shop Floor Work Centers Telemetry&lt;/span&gt;
+            &lt;span class="records-info"&gt;4 active production cells&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;table class="data-table"&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;CELL CODE&lt;/th&gt;
+                &lt;th&gt;WORK CENTER NAME&lt;/th&gt;
+                &lt;th&gt;HEALTH&lt;/th&gt;
+                &lt;th&gt;TEMPERATURE&lt;/th&gt;
+                &lt;th&gt;VIBRATION&lt;/th&gt;
+                &lt;th&gt;STATUS&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong style="color:#0284c7;"&gt;WC-CNC-501&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;5-Axis CNC Milling Center&lt;/td&gt;
+                &lt;td&gt;64%&lt;/td&gt;
+                &lt;td&gt;68.5 &amp;#176;C&lt;/td&gt;
+                &lt;td style="color:#ef4444; font-weight:700;"&gt;0.19 mm/s (High)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fee2e2; color:#b91c1c;"&gt;Breakdown / Risk&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong style="color:#0284c7;"&gt;WC-ROBO-502&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Robotic Arc Welding Cell&lt;/td&gt;
+                &lt;td&gt;76%&lt;/td&gt;
+                &lt;td&gt;48.0 &amp;#176;C&lt;/td&gt;
+                &lt;td&gt;0.14 mm/s&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;Maintenance Due&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong style="color:#0284c7;"&gt;WC-ADD-503&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Laser Powder 3D Metal Printer&lt;/td&gt;
+                &lt;td&gt;96%&lt;/td&gt;
+                &lt;td&gt;31.5 &amp;#176;C&lt;/td&gt;
+                &lt;td&gt;0.02 mm/s&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#dcfce7; color:#15803d;"&gt;Optimal Running&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong style="color:#0284c7;"&gt;WC-ASSY-504&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Cleanroom Final Assembly Line&lt;/td&gt;
+                &lt;td&gt;98%&lt;/td&gt;
+                &lt;td&gt;21.8 &amp;#176;C&lt;/td&gt;
+                &lt;td&gt;0.01 mm/s&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#dcfce7; color:#15803d;"&gt;Optimal Running&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- =================================================================== --&gt;
+      &lt;!-- VIEW 4: PRODUCTION &amp;amp; MACHINES                                       --&gt;
+      &lt;!-- =================================================================== --&gt;
+      &lt;section class="tab-view" id="view-production"&gt;
+        &lt;div class="page-header"&gt;
+          &lt;h1 class="page-title"&gt;Production &amp;amp; Machines&lt;/h1&gt;
+          &lt;p class="page-subtitle"&gt;Shop floor work order progress, machine routing, and batch tracking&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="content-card"&gt;
+          &lt;div class="card-head"&gt;
+            &lt;span class="card-title"&gt;&amp;#9889; Live Production Orders&lt;/span&gt;
+            &lt;span class="count-badge"&gt;30 In-Flight&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;table class="data-table"&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;ORDER NUMBER&lt;/th&gt;
+                &lt;th&gt;PART DESCRIPTION&lt;/th&gt;
+                &lt;th&gt;PLANNED QTY&lt;/th&gt;
+                &lt;th&gt;PRODUCED&lt;/th&gt;
+                &lt;th&gt;MACHINE&lt;/th&gt;
+                &lt;th&gt;PRIORITY&lt;/th&gt;
+                &lt;th&gt;STATUS&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-091" onclick="openDetailModal('production', 'PROD-2026-091')"&gt;PROD-2026-091&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;316L Steel Bar Stock&lt;/td&gt;
+                &lt;td&gt;50&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;29&lt;/strong&gt;(58%)&lt;/td&gt;
+                &lt;td&gt;RES-001&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-092" onclick="openDetailModal('production', 'PROD-2026-092')"&gt;PROD-2026-092&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;4-inch Gate Valve - Pneumatic Actuated&lt;/td&gt;
+                &lt;td&gt;75&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;75&lt;/strong&gt;(100%)&lt;/td&gt;
+                &lt;td&gt;RES-005&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-093" onclick="openDetailModal('production', 'PROD-2026-093')"&gt;PROD-2026-093&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;4-inch Industrial Gate Valve&lt;/td&gt;
+                &lt;td&gt;100&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;0&lt;/strong&gt;(0%)&lt;/td&gt;
+                &lt;td&gt;RES-004&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-094" onclick="openDetailModal('production', 'PROD-2026-094')"&gt;PROD-2026-094&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;6-inch Ball Valve - Pneumatic Actuated&lt;/td&gt;
+                &lt;td&gt;125&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;98&lt;/strong&gt;(78%)&lt;/td&gt;
+                &lt;td&gt;RES-003&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-095" onclick="openDetailModal('production', 'PROD-2026-095')"&gt;PROD-2026-095&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;6-inch Industrial Ball Valve&lt;/td&gt;
+                &lt;td&gt;150&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;150&lt;/strong&gt;(100%)&lt;/td&gt;
+                &lt;td&gt;RES-004&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-096" onclick="openDetailModal('production', 'PROD-2026-096')"&gt;PROD-2026-096&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;8-inch Butterfly Valve - Pneumatic Actua&lt;/td&gt;
+                &lt;td&gt;175&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;0&lt;/strong&gt;(0%)&lt;/td&gt;
+                &lt;td&gt;RES-005&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-097" onclick="openDetailModal('production', 'PROD-2026-097')"&gt;PROD-2026-097&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;8-inch Industrial Butterfly Valve&lt;/td&gt;
+                &lt;td&gt;200&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;128&lt;/strong&gt;(64%)&lt;/td&gt;
+                &lt;td&gt;RES-005&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-098" onclick="openDetailModal('production', 'PROD-2026-098')"&gt;PROD-2026-098&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Actuated Valve Assembly&lt;/td&gt;
+                &lt;td&gt;225&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;225&lt;/strong&gt;(100%)&lt;/td&gt;
+                &lt;td&gt;RES-002&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-099" onclick="openDetailModal('production', 'PROD-2026-099')"&gt;PROD-2026-099&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Actuator Mounting Bracket (ISO 5211)&lt;/td&gt;
+                &lt;td&gt;50&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;0&lt;/strong&gt;(0%)&lt;/td&gt;
+                &lt;td&gt;RES-002&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-100" onclick="openDetailModal('production', 'PROD-2026-100')"&gt;PROD-2026-100&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Actuator Mounting Bracket (ISO 5211)&lt;/td&gt;
+                &lt;td&gt;75&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;38&lt;/strong&gt;(51%)&lt;/td&gt;
+                &lt;td&gt;RES-001&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-101" onclick="openDetailModal('production', 'PROD-2026-101')"&gt;PROD-2026-101&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Air Compressor Filter Element&lt;/td&gt;
+                &lt;td&gt;100&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;100&lt;/strong&gt;(100%)&lt;/td&gt;
+                &lt;td&gt;RES-001&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-102" onclick="openDetailModal('production', 'PROD-2026-102')"&gt;PROD-2026-102&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Anti-Seize Grease (Nickel Based)&lt;/td&gt;
+                &lt;td&gt;125&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;0&lt;/strong&gt;(0%)&lt;/td&gt;
+                &lt;td&gt;RES-003&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-103" onclick="openDetailModal('production', 'PROD-2026-103')"&gt;PROD-2026-103&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Anti-Seize Grease (Nickel Based)&lt;/td&gt;
+                &lt;td&gt;150&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;107&lt;/strong&gt;(71%)&lt;/td&gt;
+                &lt;td&gt;RES-001&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-104" onclick="openDetailModal('production', 'PROD-2026-104')"&gt;PROD-2026-104&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Ball Valve 200mm&lt;/td&gt;
+                &lt;td&gt;175&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;175&lt;/strong&gt;(100%)&lt;/td&gt;
+                &lt;td&gt;RES-003&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-105" onclick="openDetailModal('production', 'PROD-2026-105')"&gt;PROD-2026-105&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Bearing 6205&lt;/td&gt;
+                &lt;td&gt;200&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;0&lt;/strong&gt;(0%)&lt;/td&gt;
+                &lt;td&gt;RES-004&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-106" onclick="openDetailModal('production', 'PROD-2026-106')"&gt;PROD-2026-106&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Bearing 6205-2RS&lt;/td&gt;
+                &lt;td&gt;225&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;128&lt;/strong&gt;(57%)&lt;/td&gt;
+                &lt;td&gt;RES-001&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-107" onclick="openDetailModal('production', 'PROD-2026-107')"&gt;PROD-2026-107&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Brass Valve Stem&lt;/td&gt;
+                &lt;td&gt;50&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;50&lt;/strong&gt;(100%)&lt;/td&gt;
+                &lt;td&gt;RES-002&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-108" onclick="openDetailModal('production', 'PROD-2026-108')"&gt;PROD-2026-108&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Carbide Cutting Insert&lt;/td&gt;
+                &lt;td&gt;75&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;0&lt;/strong&gt;(0%)&lt;/td&gt;
+                &lt;td&gt;RES-003&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-109" onclick="openDetailModal('production', 'PROD-2026-109')"&gt;PROD-2026-109&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Cast Iron Handwheel Assembly&lt;/td&gt;
+                &lt;td&gt;100&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;78&lt;/strong&gt;(78%)&lt;/td&gt;
+                &lt;td&gt;RES-004&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-110" onclick="openDetailModal('production', 'PROD-2026-110')"&gt;PROD-2026-110&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Cast Iron Handwheel Assembly&lt;/td&gt;
+                &lt;td&gt;125&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;125&lt;/strong&gt;(100%)&lt;/td&gt;
+                &lt;td&gt;RES-005&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-111" onclick="openDetailModal('production', 'PROD-2026-111')"&gt;PROD-2026-111&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;CF8M Bonnet - 4-inch Gate Valve&lt;/td&gt;
+                &lt;td&gt;150&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;0&lt;/strong&gt;(0%)&lt;/td&gt;
+                &lt;td&gt;RES-006&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-112" onclick="openDetailModal('production', 'PROD-2026-112')"&gt;PROD-2026-112&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;CF8M Bonnet - 4-inch Gate Valve&lt;/td&gt;
+                &lt;td&gt;175&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;112&lt;/strong&gt;(64%)&lt;/td&gt;
+                &lt;td&gt;RES-001&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-113" onclick="openDetailModal('production', 'PROD-2026-113')"&gt;PROD-2026-113&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;CNC Carbide Cutting Insert CNMG 120408&lt;/td&gt;
+                &lt;td&gt;200&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;200&lt;/strong&gt;(100%)&lt;/td&gt;
+                &lt;td&gt;RES-002&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-114" onclick="openDetailModal('production', 'PROD-2026-114')"&gt;PROD-2026-114&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Cold Rolled Steel Sheet 2mm&lt;/td&gt;
+                &lt;td&gt;225&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;0&lt;/strong&gt;(0%)&lt;/td&gt;
+                &lt;td&gt;RES-003&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-115" onclick="openDetailModal('production', 'PROD-2026-115')"&gt;PROD-2026-115&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Control PCB&lt;/td&gt;
+                &lt;td&gt;50&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;25&lt;/strong&gt;(50%)&lt;/td&gt;
+                &lt;td&gt;RES-004&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-116" onclick="openDetailModal('production', 'PROD-2026-116')"&gt;PROD-2026-116&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Copper Wire 2.5mm&lt;/td&gt;
+                &lt;td&gt;75&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;75&lt;/strong&gt;(100%)&lt;/td&gt;
+                &lt;td&gt;RES-005&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-117" onclick="openDetailModal('production', 'PROD-2026-117')"&gt;PROD-2026-117&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Corrugated Box&lt;/td&gt;
+                &lt;td&gt;100&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;0&lt;/strong&gt;(0%)&lt;/td&gt;
+                &lt;td&gt;RES-006&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-118" onclick="openDetailModal('production', 'PROD-2026-118')"&gt;PROD-2026-118&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Cut Resistant Safety Gloves&lt;/td&gt;
+                &lt;td&gt;125&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;89&lt;/strong&gt;(71%)&lt;/td&gt;
+                &lt;td&gt;RES-001&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;In Progress&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-119" onclick="openDetailModal('production', 'PROD-2026-119')"&gt;PROD-2026-119&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Cutting Coolant Concentrate&lt;/td&gt;
+                &lt;td&gt;150&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;150&lt;/strong&gt;(100%)&lt;/td&gt;
+                &lt;td&gt;RES-002&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Completed&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="PROD-2026-120" onclick="openDetailModal('production', 'PROD-2026-120')"&gt;PROD-2026-120&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Epoxy Coating Paint - Industrial Grey&lt;/td&gt;
+                &lt;td&gt;175&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;0&lt;/strong&gt;(0%)&lt;/td&gt;
+                &lt;td&gt;RES-003&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;P2&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-pending"&gt;Scheduled&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- =================================================================== --&gt;
+      &lt;!-- VIEW 5: SCHEDULE PLANNER                                            --&gt;
+      &lt;!-- =================================================================== --&gt;
+      &lt;section class="tab-view" id="view-schedule"&gt;
+        &lt;div class="page-header"&gt;
+          &lt;h1 class="page-title"&gt;Schedule Planner&lt;/h1&gt;
+          &lt;p class="page-subtitle"&gt;Shift allocations, cell dispatching, and takt time optimization&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="content-card"&gt;
+          &lt;div class="card-head"&gt;
+            &lt;span class="card-title"&gt;&amp;#128197; Shift Allocations &amp;amp; Crew Assignments&lt;/span&gt;
+            &lt;span class="records-info"&gt;15 Active Shifts&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;table class="data-table"&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;SHIFT&lt;/th&gt;
+                &lt;th&gt;HOURS&lt;/th&gt;
+                &lt;th&gt;CREW LEAD&lt;/th&gt;
+                &lt;th&gt;TECHNICIANS&lt;/th&gt;
+                &lt;th&gt;ASSIGNED WORK CENTER&lt;/th&gt;
+                &lt;th&gt;UTILIZATION&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-001 (Rajesh Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Rajesh Sharma&lt;/td&gt;
+                &lt;td&gt;4 Techs&lt;/td&gt;
+                &lt;td&gt;Precision Actuator Assembly&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;75%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-002 (Suresh Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Suresh Kumar&lt;/td&gt;
+                &lt;td&gt;6 Techs&lt;/td&gt;
+                &lt;td&gt;Cryogenic Testing Cell&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;80%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-003 (Anil Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Anil Verma&lt;/td&gt;
+                &lt;td&gt;8 Techs&lt;/td&gt;
+                &lt;td&gt;Fast-Track Dispatch Depot&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;85%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-004 (Pooja Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Pooja Mehta&lt;/td&gt;
+                &lt;td&gt;10 Techs&lt;/td&gt;
+                &lt;td&gt;Raw Castings Receiving Rig&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;90%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-005 (Kavita Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Kavita Reddy&lt;/td&gt;
+                &lt;td&gt;12 Techs&lt;/td&gt;
+                &lt;td&gt;CNC Lathe Cell 01 (Machining)&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;95%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-006 (Rajesh Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Rajesh Sharma&lt;/td&gt;
+                &lt;td&gt;4 Techs&lt;/td&gt;
+                &lt;td&gt;CNC Lathe Cell 02 (Machining)&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;75%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-007 (Suresh Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Suresh Kumar&lt;/td&gt;
+                &lt;td&gt;6 Techs&lt;/td&gt;
+                &lt;td&gt;Valve Trim &amp;amp; Stem Fit Bench&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;80%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-008 (Anil Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Anil Verma&lt;/td&gt;
+                &lt;td&gt;8 Techs&lt;/td&gt;
+                &lt;td&gt;Hydrostatic Pressure Test Rig&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;85%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-009 (Pooja Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Pooja Mehta&lt;/td&gt;
+                &lt;td&gt;10 Techs&lt;/td&gt;
+                &lt;td&gt;Flange Turning Station 01&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;90%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-010 (Kavita Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Kavita Reddy&lt;/td&gt;
+                &lt;td&gt;12 Techs&lt;/td&gt;
+                &lt;td&gt;Gate Valve Body Milling Rig&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;95%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-011 (Rajesh Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Rajesh Sharma&lt;/td&gt;
+                &lt;td&gt;4 Techs&lt;/td&gt;
+                &lt;td&gt;High-Pressure Gas Test Bench&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;75%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-012 (Suresh Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Suresh Kumar&lt;/td&gt;
+                &lt;td&gt;6 Techs&lt;/td&gt;
+                &lt;td&gt;Epoxy Coating &amp;amp; Packaging Cell&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;80%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-013 (Anil Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Anil Verma&lt;/td&gt;
+                &lt;td&gt;8 Techs&lt;/td&gt;
+                &lt;td&gt;Precision Actuator Assembly&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;85%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-014 (Pooja Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Pooja Mehta&lt;/td&gt;
+                &lt;td&gt;10 Techs&lt;/td&gt;
+                &lt;td&gt;Cryogenic Testing Cell&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;90%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SCH-2026-015 (Kavita Shift)&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;08:00 - 16:00&lt;/td&gt;
+                &lt;td&gt;Kavita Reddy&lt;/td&gt;
+                &lt;td&gt;12 Techs&lt;/td&gt;
+                &lt;td&gt;Fast-Track Dispatch Depot&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;95%&lt;/strong&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- =================================================================== --&gt;
+      &lt;!-- VIEW 6: INVENTORY                                                   --&gt;
+      &lt;!-- =================================================================== --&gt;
+      &lt;section class="tab-view" id="view-inventory"&gt;
+        &lt;div class="page-header"&gt;
+          &lt;h1 class="page-title"&gt;Inventory Management&lt;/h1&gt;
+          &lt;p class="page-subtitle"&gt;Warehouse stock levels, bin tracking, and safety stock thresholds&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="kpi-grid"&gt;
+          &lt;div class="kpi-card"&gt;&lt;div class="kpi-lbl"&gt;Total Stock&lt;/div&gt;&lt;div class="kpi-val"&gt;283&lt;/div&gt;&lt;div class="kpi-trend trend-up"&gt;All warehouses&lt;/div&gt;&lt;/div&gt;
+          &lt;div class="kpi-card"&gt;&lt;div class="kpi-lbl"&gt;Available&lt;/div&gt;&lt;div class="kpi-val" style="color:#10b981;"&gt;210&lt;/div&gt;&lt;div class="kpi-trend trend-up"&gt;Ready for issue&lt;/div&gt;&lt;/div&gt;
+          &lt;div class="kpi-card"&gt;&lt;div class="kpi-lbl"&gt;Reserved&lt;/div&gt;&lt;div class="kpi-val" style="color:#0284c7;"&gt;43&lt;/div&gt;&lt;div class="kpi-trend"&gt;Committed to POs&lt;/div&gt;&lt;/div&gt;
+          &lt;div class="kpi-card"&gt;&lt;div class="kpi-lbl"&gt;Low Stock Alerts&lt;/div&gt;&lt;div class="kpi-val" style="color:#ef4444;"&gt;5&lt;/div&gt;&lt;div class="kpi-trend trend-down"&gt;Below safety limit&lt;/div&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="content-card"&gt;
+          &lt;div class="card-head"&gt;
+            &lt;span class="card-title"&gt;&amp;#9888;&amp;#65039; Critical Components Below Safety Stock&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;table class="data-table"&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;MATERIAL CODE&lt;/th&gt;
+                &lt;th&gt;ITEM DESCRIPTION&lt;/th&gt;
+                &lt;th&gt;CURRENT STOCK&lt;/th&gt;
+                &lt;th&gt;SAFETY STOCK&lt;/th&gt;
+                &lt;th&gt;SHORTAGE&lt;/th&gt;
+                &lt;th&gt;STATUS&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-ACT-007" onclick="openDetailModal('inventory', 'RM-ACT-007')"&gt;RM-ACT-007&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Pneumatic Actuator&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;370&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;25&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-STL-002" onclick="openDetailModal('inventory', 'RM-STL-002')"&gt;RM-STL-002&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;316L Steel Bar Stock&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;100&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;0&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-GSK-006" onclick="openDetailModal('inventory', 'RM-GSK-006')"&gt;RM-GSK-006&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Graphite Gasket&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;300&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;105&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="FG-VALVE-200" onclick="openDetailModal('inventory', 'FG-VALVE-200')"&gt;FG-VALVE-200&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Ball Valve 200mm&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#ef4444;"&gt;80&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;105&lt;/td&gt;
+                &lt;td&gt;25 Units&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fee2e2; color:#b91c1c;"&gt;Critical Shortage&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-WIR-009" onclick="openDetailModal('inventory', 'RM-WIR-009')"&gt;RM-WIR-009&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Copper Wire 2.5mm&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#ef4444;"&gt;60&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;85&lt;/td&gt;
+                &lt;td&gt;25 Units&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fee2e2; color:#b91c1c;"&gt;Critical Shortage&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-GSK-006" onclick="openDetailModal('inventory', 'RM-GSK-006')"&gt;RM-GSK-006&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Graphite Gasket&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;520&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;45&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="FG-MANI-400" onclick="openDetailModal('inventory', 'FG-MANI-400')"&gt;FG-MANI-400&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Valve Manifold&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#ef4444;"&gt;55&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;105&lt;/td&gt;
+                &lt;td&gt;50 Units&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fee2e2; color:#b91c1c;"&gt;Critical Shortage&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="SCN-S10" onclick="openDetailModal('inventory', 'SCN-S10')"&gt;SCN-S10&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Scenario S10 test material&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;120&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;65&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-SEA-003" onclick="openDetailModal('inventory', 'RM-SEA-003')"&gt;RM-SEA-003&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Nitrile Seal Ring&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;80&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;75&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="MAT-044" onclick="openDetailModal('inventory', 'MAT-044')"&gt;MAT-044&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Valve Seat Ring SS316 - 4-inch&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;1484&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;75&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="FG-VALVE-100" onclick="openDetailModal('inventory', 'FG-VALVE-100')"&gt;FG-VALVE-100&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Gate Valve 100mm&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;63&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;25&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="SCN-S10" onclick="openDetailModal('inventory', 'SCN-S10')"&gt;SCN-S10&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Scenario S10 test material&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#ef4444;"&gt;100&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;115&lt;/td&gt;
+                &lt;td&gt;15 Units&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fee2e2; color:#b91c1c;"&gt;Critical Shortage&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-STL-002" onclick="openDetailModal('inventory', 'RM-STL-002')"&gt;RM-STL-002&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;316L Steel Bar Stock&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;800&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;75&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="MAT-038" onclick="openDetailModal('inventory', 'MAT-038')"&gt;MAT-038&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;SS304 Gland Follower&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;1547&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;115&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="MAT-038" onclick="openDetailModal('inventory', 'MAT-038')"&gt;MAT-038&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;SS304 Gland Follower&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;148&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;35&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="MAT-039" onclick="openDetailModal('inventory', 'MAT-039')"&gt;MAT-039&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;SS316 Ball - 6-inch Ball Valve&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;577&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;25&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-ACT-007" onclick="openDetailModal('inventory', 'RM-ACT-007')"&gt;RM-ACT-007&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Pneumatic Actuator&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;800&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;115&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-PNT-012" onclick="openDetailModal('inventory', 'RM-PNT-012')"&gt;RM-PNT-012&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Epoxy Paint&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;240&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;105&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-VAL-001" onclick="openDetailModal('inventory', 'RM-VAL-001')"&gt;RM-VAL-001&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Stainless Steel Valve Body&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;704&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;95&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-SEA-003" onclick="openDetailModal('inventory', 'RM-SEA-003')"&gt;RM-SEA-003&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Nitrile Seal Ring&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;460&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;85&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-STL-002" onclick="openDetailModal('inventory', 'RM-STL-002')"&gt;RM-STL-002&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;316L Steel Bar Stock&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;580&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;25&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="MAT-042" onclick="openDetailModal('inventory', 'MAT-042')"&gt;MAT-042&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;SS410 Valve Stem 25mm&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;1469&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;85&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="MAT-0082" onclick="openDetailModal('inventory', 'MAT-0082')"&gt;MAT-0082&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;SS304 Butterfly Disc - 8-inch&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;532&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;55&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-BRS-011" onclick="openDetailModal('inventory', 'RM-BRS-011')"&gt;RM-BRS-011&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Brass Valve Stem&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;412&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;105&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-SPR-005" onclick="openDetailModal('inventory', 'RM-SPR-005')"&gt;RM-SPR-005&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Spring Steel Coil&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;176&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;95&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="RM-BLT-004" onclick="openDetailModal('inventory', 'RM-BLT-004')"&gt;RM-BLT-004&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Hex Bolt M12&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;320&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;65&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="MAT-0043" onclick="openDetailModal('inventory', 'MAT-0043')"&gt;MAT-0043&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Hex Nut ASTM A194 2H M20&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;1598&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;85&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="FG-ACT-300" onclick="openDetailModal('inventory', 'FG-ACT-300')"&gt;FG-ACT-300&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Actuated Valve Assembly&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#ef4444;"&gt;2&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;35&lt;/td&gt;
+                &lt;td&gt;33 Units&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fee2e2; color:#b91c1c;"&gt;Critical Shortage&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="MAT-0043" onclick="openDetailModal('inventory', 'MAT-0043')"&gt;MAT-0043&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Hex Nut ASTM A194 2H M20&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;2065&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;45&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;a class="link-code" data-code="FG-ACT-300" onclick="openDetailModal('inventory', 'FG-ACT-300')"&gt;FG-ACT-300&lt;/a&gt;&lt;/td&gt;
+                &lt;td&gt;Actuated Valve Assembly&lt;/td&gt;
+                &lt;td&gt;&lt;strong style="color:#10b981;"&gt;90&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;55&lt;/td&gt;
+                &lt;td&gt;0 (Surplus)&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Optimal&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- =================================================================== --&gt;
+      &lt;!-- VIEW 7: SUPPLIERS                                                   --&gt;
+      &lt;!-- =================================================================== --&gt;
+      &lt;section class="tab-view" id="view-suppliers"&gt;
+        &lt;div class="page-header"&gt;
+          &lt;h1 class="page-title"&gt;Supplier Performance &amp;amp; Directory&lt;/h1&gt;
+          &lt;p class="page-subtitle"&gt;Vendor lead times, quality acceptance rates, and active purchase contracts&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="content-card"&gt;
+          &lt;div class="card-head"&gt;
+            &lt;span class="card-title"&gt;&amp;#128666; Approved Industrial Vendors&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;table class="data-table"&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;SUPPLIER NAME&lt;/th&gt;
+                &lt;th&gt;CATEGORY&lt;/th&gt;
+                &lt;th&gt;ON-TIME DELIVERY&lt;/th&gt;
+                &lt;th&gt;QUALITY RATING&lt;/th&gt;
+                &lt;th&gt;ACTIVE POs&lt;/th&gt;
+                &lt;th&gt;STATUS&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;SKF Precision Bearings Ltd&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Precision Bearings&lt;/td&gt;
+                &lt;td&gt;94.8%&lt;/td&gt;
+                &lt;td&gt;98.2%&lt;/td&gt;
+                &lt;td&gt;3&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;Preferred Tier 1&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;Tata Advanced Alloys&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Raw Materials / Steel&lt;/td&gt;
+                &lt;td&gt;96.2%&lt;/td&gt;
+                &lt;td&gt;99.1%&lt;/td&gt;
+                &lt;td&gt;4&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-active"&gt;Preferred Tier 1&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;Sundaram Fasteners&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Hardware / Fasteners&lt;/td&gt;
+                &lt;td&gt;91.5%&lt;/td&gt;
+                &lt;td&gt;97.0%&lt;/td&gt;
+                &lt;td&gt;2&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Certified&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;strong&gt;Precision Seal Systems&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Hydraulic Seals&lt;/td&gt;
+                &lt;td&gt;89.0%&lt;/td&gt;
+                &lt;td&gt;95.4%&lt;/td&gt;
+                &lt;td&gt;1&lt;/td&gt;
+                &lt;td&gt;&lt;span class="badge-pill badge-approved"&gt;Certified&lt;/span&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- =================================================================== --&gt;
+      &lt;!-- VIEW 8: ALERTS &amp;amp; EXCEPTIONS                                         --&gt;
+      &lt;!-- =================================================================== --&gt;
+      &lt;section class="tab-view" id="view-alerts"&gt;
+        &lt;div class="page-header"&gt;
+          &lt;h1 class="page-title"&gt;Alerts &amp;amp; Exceptions&lt;/h1&gt;
+          &lt;p class="page-subtitle"&gt;Real-time shop floor anomalies, downtime risks, and sensor alarms&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class="content-card"&gt;
+          &lt;div class="card-head"&gt;
+            &lt;span class="card-title"&gt;&amp;#128680; Active Alarm Stream&lt;/span&gt;
+            &lt;span class="count-badge" style="background:#ef4444;"&gt;30 Active&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;table class="data-table"&gt;
+            &lt;thead&gt;
+              &lt;tr&gt;
+                &lt;th&gt;SEVERITY&lt;/th&gt;
+                &lt;th&gt;ASSET / ORDER&lt;/th&gt;
+                &lt;th&gt;ALARM DETAILS&lt;/th&gt;
+                &lt;th&gt;IMPACT&lt;/th&gt;
+                &lt;th&gt;ACTION&lt;/th&gt;
+              &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;HIGH&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Scenario S10 test material&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety stock level. Review stock availability and consider replenishment.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Expedite PO&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;HIGH&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Ball Valve 200mm&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety stock level. Review stock availability and consider replenishment.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Expedite PO&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;HIGH&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Gate Valve 100mm&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety stock level. Review stock availability and consider replenishment.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Expedite PO&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;HIGH&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Valve Manifold&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety stock level. Review stock availability and consider replenishment.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Expedite PO&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;HIGH&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Actuated Valve Assembly&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety stock level. Review stock availability and consider replenishment.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Expedite PO&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;HIGH&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Actuated Valve Assembly&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety stock level. Review stock availability and consider replenishment.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Expedite PO&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;HIGH&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Copper Wire 2.5mm&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety stock level. Review stock availability and consider replenishment.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Expedite PO&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#ffedd5; color:#ea580c;"&gt;HIGH&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Valve Manifold&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety stock level. Review stock availability and consider replenishment.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Expedite PO&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Carbide Cutting Insert&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Material shortage detected. The requested quantity cannot be fulfilled from available stock.&lt;/td&gt;
+                &lt;td&gt;material_shortage&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Brass Valve Stem&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;[SYNTH-A0011] Available inventory is insufficient for the requested material requirement.&lt;/td&gt;
+                &lt;td&gt;material_shortage&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Hex Bolt M12&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Scenario S04 test material&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Epoxy Paint&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;[SYNTH-A016] Batch expires within 60 days. Review FEFO allocation and consume the batch before expiry.&lt;/td&gt;
+                &lt;td&gt;expiry_warning&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;SS304 Gland Follower&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Activated Valve Assembly&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Material shortage detected. The requested quantity cannot be fulfilled from available stock.&lt;/td&gt;
+                &lt;td&gt;material_shortage&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;CF8M Bolt - 4-inch Gate Valve&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Epoxy Paint&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;[SYNTH-A018] Batch expires within 60 days. Review FEFO allocation and consume the batch before expiry.&lt;/td&gt;
+                &lt;td&gt;expiry_warning&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Spring Steel Coil&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Bearing 6205&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;CF8M Bolt - 4-inch Gate Valve&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Graphite Gasket&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Spring Steel Coil&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Epoxy Paint&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;[SYNTH-A023] Batch expires within 60 days. Review FEFO allocation and consume the batch before expiry.&lt;/td&gt;
+                &lt;td&gt;expiry_warning&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Copper Wire 2.5mm&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;CF8M Bolt - 4-inch Gate Valve&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Graphite Gasket&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Spring Steel Coil&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Carbide Cutting Insert&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Material shortage detected. The requested quantity cannot be fulfilled from available stock.&lt;/td&gt;
+                &lt;td&gt;material_shortage&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Copper Wire 2.5mm&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+              &lt;tr&gt;
+                &lt;td&gt;&lt;span class="badge-pill" style="background:#fef3c7; color:#d97706;"&gt;MEDIUM&lt;/span&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;strong&gt;Nitrile Seal Ring&lt;/strong&gt;&lt;/td&gt;
+                &lt;td&gt;Inventory stock has reached or fallen below the configured safety-stock threshold.&lt;/td&gt;
+                &lt;td&gt;below_safety_stock&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')"&gt;Create Requisition&lt;/button&gt;&lt;/td&gt;
+              &lt;/tr&gt;
+            &lt;/tbody&gt;
+          &lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- =================================================================== --&gt;
+      &lt;!-- VIEW 9: DEMAND FORECASTING                                          --&gt;
+      &lt;!-- =================================================================== --&gt;
+      &lt;section class="tab-view" id="view-forecasting" style="padding:0; margin:0;"&gt;
+        &lt;div class="content-card" style="padding:0; overflow:hidden; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.06); border:1px solid #e2e8f0; background:#ffffff;"&gt;
+          &lt;iframe id="dfcIframe" src="/dfc_dashboard.do" style="width:100%; height:940px; min-height:86vh; border:none; display:block;" title="Demand Forecasting Engine"&gt;&lt;/iframe&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- =================================================================== --&gt;
+      &lt;!-- VIEW 10: DIGITAL TWIN &amp;amp; WHAT-IF SIMULATOR                           --&gt;
+      &lt;!-- =================================================================== --&gt;
+      &lt;section class="tab-view" id="view-digital-twin" style="padding:0; margin:0;"&gt;
+        &lt;div class="content-card" style="padding:0; overflow:hidden; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.06); border:1px solid #e2e8f0; background:#ffffff;"&gt;
+          &lt;iframe id="dtIframe" src="/x_2056099_indust_0_whatif_dashboard.do" style="width:100%; height:940px; min-height:86vh; border:none; display:block;" title="Digital Twin Simulation Portal"&gt;&lt;/iframe&gt;
+        &lt;/div&gt;
+      &lt;/section&gt;
+
+      &lt;!-- FOOTER --&gt;
+      &lt;div class="page-footer"&gt;
+        Industrial Inventory &amp;amp; Production Management &amp;#8226; Powered by ServiceNow dev445579
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  
+
+&lt;/div&gt;
+
+
+    &lt;!-- DETAIL POPUP MODAL --&gt;
+    &lt;div class="modal-backdrop" id="detailModalBackdrop" onclick="if(event.target===this) closeDetailModal()"&gt;
+      &lt;div class="portal-modal" role="dialog" aria-modal="true"&gt;
+        &lt;div class="modal-header"&gt;
+          &lt;div class="modal-title-wrap"&gt;
+            &lt;div class="modal-icon-badge" id="modalIcon"&gt;&amp;#128203;&lt;/div&gt;
+            &lt;div&gt;
+              &lt;div class="modal-heading-text" id="modalTitle"&gt;Record Details&lt;/div&gt;
+              &lt;div class="modal-subheading-text" id="modalSubTitle"&gt;ServiceNow Live Industrial System&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;button class="modal-close-btn" onclick="closeDetailModal()" aria-label="Close modal"&gt;&amp;#215;&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div class="modal-body" id="modalBody"&gt;
+          &lt;!-- Populated dynamically --&gt;
+        &lt;/div&gt;
+        &lt;div class="modal-footer"&gt;
+          &lt;button class="btn-sec" onclick="closeDetailModal()"&gt;Close&lt;/button&gt;
+          &lt;button class="btn-pri" id="modalActionBtn" onclick="onModalPrimaryAction()"&gt;View in ServiceNow&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+
+&lt;/j:jelly&gt;]]&gt;&lt;/html&gt;&lt;name&gt;dashboard&lt;/name&gt;&lt;processing_script/&gt;&lt;sys_class_name&gt;sys_ui_page&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2026-10-08 10:00:00&lt;/sys_created_on&gt;&lt;sys_id&gt;3fa6e2419f1b49eaa5fe5530954b1fbc&lt;/sys_id&gt;&lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;&lt;sys_name&gt;dashboard&lt;/sys_name&gt;&lt;sys_package display_value="Global" source="global"&gt;global&lt;/sys_package&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sys_ui_page_3fa6e2419f1b49eaa5fe5530954b1fbc&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-10-08 10:00:00&lt;/sys_updated_on&gt;&lt;/sys_ui_page&gt;&lt;/record_update&gt;</payload>
+  <payload_hash>3421798238</payload_hash>
+  <remote_update_set display_value="Industrial Operations - Desktop Dashboard Pack v1.0">97bd5034b954c0a9fc4ffe8e9fba1ec3</remote_update_set>
+  <replace_on_upgrade>false</replace_on_upgrade>
+  <sys_created_by>admin</sys_created_by>
+  <sys_created_on>2026-10-08 10:00:00</sys_created_on>
+  <sys_id>603c3e4431d7e80d751b46d280f0e403</sys_id>
+  <sys_mod_count>0</sys_mod_count>
+  <sys_recorded_at>2026-10-08 10:00:00</sys_recorded_at>
+  <sys_updated_by>admin</sys_updated_by>
+  <sys_updated_on>2026-10-08 10:00:00</sys_updated_on>
+  <table/>
+  <target_name>dashboard</target_name>
+  <type>UI Page</type>
+  <update_domain>global</update_domain>
+  <update_guid>4fb68e183a56a2b6bcc786a99a624be6</update_guid>
+  <update_guid_history>4fb68e183a56a2b6bcc786a99a624be6:1</update_guid_history>
+  <update_set display_value=""/>
+  <view/>
+</sys_update_xml>
+</unload>

@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industrial Supply Co. • Operations Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-body: #f8fafc;
+      --bg-sidebar: #ffffff;
+      --bg-card: #ffffff;
+      --sidebar-border: #e2e8f0;
+      --border-card: #e2e8f0;
+      --border-subtle: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --primary-navy: #0f2438;
+      --primary-blue: #0284c7;
+      --primary-blue-hover: #0369a1;
+      --nav-active-bg: #0f2438;
+      --nav-active-text: #ffffff;
+      --badge-red: #ef4444;
+      --badge-green: #10b981;
+      --badge-amber: #f59e0b;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-body);
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+    
+    /* LEFT SIDEBAR (Photo 2 Light Theme) */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 50;
+    }
+    .brand-box {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-navy);
+      letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+    
+    .nav-menu {
+      flex: 1;
+      padding: 16px 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+      position: relative;
+      width: 100%;
+    }
+    .nav-btn:hover {
+      background: #f1f5f9;
+      color: var(--primary-navy);
+    }
+    .nav-btn.active {
+      background: var(--nav-active-bg);
+      color: var(--nav-active-text);
+      font-weight: 700;
+    }
+    .nav-btn .icon {
+      font-size: 16px;
+      width: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .nav-badge-pill {
+      margin-left: auto;
+      background: var(--badge-red);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 11px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    /* MAIN CONTENT AREA */
+    .main-wrapper {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .topbar {
+      height: 64px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--sidebar-border);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .btn-refresh {
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-refresh:hover { background: #f8fafc; color: var(--text-main); }
+    
+    /* ONLY ADMIN BADGE */
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #0284c7;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    /* CONTENT BODY */
+    .content-container {
+      padding: 32px;
+      flex: 1;
+    }
+    .page-header {
+      margin-bottom: 24px;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* CARDS & TABLES */
+    .content-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .card-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-head-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .count-badge {
+      background: #0284c7;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .records-info {
+      font-size: 12px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    /* DATA TABLES */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+    .data-table th {
+      background: #ffffff;
+      padding: 12px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .data-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: #334155;
+      font-weight: 500;
+    }
+    .data-table tr:hover td {
+      background: #f8fafc;
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .link-code {
+      color: #0284c7;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .link-code:hover { text-decoration: underline; }
+
+    /* STATUS BADGES */
+    .badge-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .badge-pending {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .badge-approved {
+      background: #fef3c7;
+      color: #d97706;
+      border: 1px solid #fde68a;
+    }
+    .badge-priority-med {
+      color: #0284c7;
+      font-weight: 700;
+    }
+    .badge-active {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    /* KPI GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: #fff;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .kpi-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .kpi-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 8px 0 4px;
+      font-family: var(--font-mono);
+    }
+    .kpi-trend {
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .trend-up { color: #059669; }
+    .trend-down { color: #dc2626; }
+
+    /* TAB VIEWS */
+    .tab-view { display: none; }
+    .tab-view.active { display: block; animation: fadeIn 0.15s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* FORM & SIMULATION CONTROLS */
+    .sim-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .sim-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .sim-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .sim-field select, .sim-field input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #fff;
+    }
+    .btn-action {
+      background: #0284c7;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-action:hover { background: #0369a1; }
+    .btn-success { background: #10b981; }
+    .btn-success:hover { background: #059669; }
+
+    /* FOOTER */
+    .page-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================================================================== -->
+  <!-- LEFT SIDEBAR                                                          -->
+  <!-- ===================================================================== -->
+  <aside class="sidebar">
+    <div class="brand-box">
+      <div class="brand-title">Industrial Supply Co.</div>
+      <div class="brand-sub">OPERATIONS ADMIN</div>
+    </div>
+
+    <nav class="nav-menu">
+      <button class="nav-btn" id="btnNavDashboard" onclick="switchTab('dashboard')">
+        <span class="icon">⊞</span>
+        <span>Dashboard</span>
+      </button>
+
+      <button class="nav-btn active" id="btnNavCustomerOrders" onclick="switchTab('customer-orders')">
+        <span class="icon">📥</span>
+        <span>Customer Orders</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavProduction" onclick="switchTab('production')">
+        <span class="icon">⚙️</span>
+        <span>Production &amp; Machines</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavSchedule" onclick="switchTab('schedule')">
+        <span class="icon">📅</span>
+        <span>Schedule Planner</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavInventory" onclick="switchTab('inventory')">
+        <span class="icon">📦</span>
+        <span>Inventory</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavProcurement" onclick="switchTab('procurement')">
+        <span class="icon">📋</span>
+        <span>Procurement</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavSuppliers" onclick="switchTab('suppliers')">
+        <span class="icon">🚚</span>
+        <span>Suppliers</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavAlerts" onclick="switchTab('alerts')">
+        <span class="icon">🔔</span>
+        <span>Alerts &amp; Exceptions</span>
+        <span class="nav-badge-pill">168</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavForecasting" onclick="switchTab('forecasting')">
+        <span class="icon">📈</span>
+        <span>Demand Forecasting</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavDigitalTwin" onclick="switchTab('digital-twin')">
+        <span class="icon">🌐</span>
+        <span>Digital Twin</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      Industrial Ops v2.0
+    </div>
+  </aside>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN WORKSPACE CONTENT                                                -->
+  <!-- ===================================================================== -->
+  <div class="main-wrapper">
+    
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="live-status-pill"><span class="live-dot"></span> LIVE</span>
+        <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Real-time Command Center</span>
+      </div>
+
+      <div class="topbar-right">
+        <button class="btn-refresh" onclick="refreshData()">
+          <span>🔄</span> Refresh All
+        </button>
+        <!-- ONLY ADMIN AVATAR -->
+        <div class="user-pill">
+          <div class="avatar-circle">A</div>
+          <span>System Administrator</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-container">
+
+      <!-- =================================================================== -->
+      <!-- VIEW 1: CUSTOMER ORDERS (PHOTO 2 EXACT RECREATION)                  -->
+      <!-- =================================================================== -->
+      <section class="tab-view active" id="view-customer-orders">
+        <div class="page-header">
+          <h1 class="page-title">Customer Orders</h1>
+          <p class="page-subtitle">Track customer orders and delivery</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="records-info">50 records</span>
+            <div style="display:flex; gap:10px;">
+              <input type="text" placeholder="Search orders..." style="padding:6px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:12px; width:220px;" oninput="filterOrders(this.value)" />
+            </div>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>NUMBER</th>
+                <th>CUSTOMER</th>
+                <th>PRODUCT</th>
+                <th>QTY</th>
+                <th>STATUS</th>
+                <th>DELIVERY DATE</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <tr>
+                <td><a class="link-code">ORD-2026-008</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-034</a></td>
+                <td>AquaPure Water Systems</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-062</a></td>
+                <td>Petromax Oil &amp; Gas Pvt Ltd</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-048</a></td>
+                <td>Krishna Pharma Process Engineers</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-033</a></td>
+                <td>Bay of Bengal Offshore Services</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-051</a></td>
+                <td>Sagar Shipyard &amp; Marine</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-012</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-019</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-023</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-041</a></td>
+                <td>Tata Power Plant Division</td>
+                <td>Industrial Control Valve</td>
+                <td>40</td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 18 2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 2: PROCUREMENT ORDERS (PHOTO 1 EXACT RECREATION)               -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-procurement">
+        <div class="page-header">
+          <h1 class="page-title">Procurement Management</h1>
+          <p class="page-subtitle">Supplier purchase orders, approval pipelines, and incoming stock delivery</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <div class="card-head-left">
+              <span class="card-title">🚚 Procurement Orders</span>
+              <span class="count-badge">10</span>
+            </div>
+            <span class="records-info">10 active vendor orders</span>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>PO REF</th>
+                <th>SUPPLIER</th>
+                <th>AMOUNT</th>
+                <th>PRIORITY</th>
+                <th>STATUS</th>
+                <th>EXPECTED DELIVERY</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a class="link-code">SUPPO-0010</a></td>
+                <td>SKF Precision Bearings Ltd (4013368f)</td>
+                <td>53,100 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0006</a></td>
+                <td>Tata Advanced Alloys (5d61455b)</td>
+                <td>29,500 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0008</a></td>
+                <td>Hydraulics International (1534251d)</td>
+                <td>41,300 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0015</a></td>
+                <td>Sundaram Fasteners (51849e31)</td>
+                <td>53,100 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0004</a></td>
+                <td>Global Titanium Components (b6065400)</td>
+                <td>47,200 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0003</a></td>
+                <td>Precision Seal Systems (1f96a105)</td>
+                <td>41,300 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0007</a></td>
+                <td>Sundaram Fasteners (51849e31)</td>
+                <td>35,400 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0012</a></td>
+                <td>Global Titanium Components (b6065400)</td>
+                <td>35,400 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0011</a></td>
+                <td>Precision Seal Systems (1f96a105)</td>
+                <td>29,500 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0014</a></td>
+                <td>Tata Advanced Alloys (5d61455b)</td>
+                <td>47,200 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 3: EXECUTIVE DASHBOARD (OVERVIEW)                              -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-dashboard">
+        <div class="page-header">
+          <h1 class="page-title">Executive Operations Dashboard</h1>
+          <p class="page-subtitle">Real-time factory telemetry, OEE metrics, and smart manufacturing health</p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-lbl">Overall OEE</div>
+            <div class="kpi-val">88.4%</div>
+            <div class="kpi-trend trend-up">↑ 5.2% vs target</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Customer Orders</div>
+            <div class="kpi-val">50</div>
+            <div class="kpi-trend trend-up">↑ 100% On Schedule</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Active Alerts</div>
+            <div class="kpi-val" style="color:#ef4444;">168</div>
+            <div class="kpi-trend trend-down">↓ 3 Critical alarms</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">On-Time Delivery</div>
+            <div class="kpi-val">92%</div>
+            <div class="kpi-trend trend-up">↑ 8% recovery achieved</div>
+          </div>
+        </div>
+
+        <!-- Work Centers Card -->
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">🏭 Shop Floor Work Centers Telemetry</span>
+            <span class="records-info">4 active production cells</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>CELL CODE</th>
+                <th>WORK CENTER NAME</th>
+                <th>HEALTH</th>
+                <th>TEMPERATURE</th>
+                <th>VIBRATION</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong style="color:#0284c7;">WC-CNC-501</strong></td>
+                <td>5-Axis CNC Milling Center</td>
+                <td>64%</td>
+                <td>68.5 °C</td>
+                <td style="color:#ef4444; font-weight:700;">0.19 mm/s (High)</td>
+                <td><span class="badge-pill" style="background:#fee2e2; color:#b91c1c;">Breakdown / Risk</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:#0284c7;">WC-ROBO-502</strong></td>
+                <td>Robotic Arc Welding Cell</td>
+                <td>76%</td>
+                <td>48.0 °C</td>
+                <td>0.14 mm/s</td>
+                <td><span class="badge-pill" style="background:#fef3c7; color:#d97706;">Maintenance Due</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:#0284c7;">WC-ADD-503</strong></td>
+                <td>Laser Powder 3D Metal Printer</td>
+                <td>96%</td>
+                <td>31.5 °C</td>
+                <td>0.02 mm/s</td>
+                <td><span class="badge-pill" style="background:#dcfce7; color:#15803d;">Optimal Running</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:#0284c7;">WC-ASSY-504</strong></td>
+                <td>Cleanroom Final Assembly Line</td>
+                <td>98%</td>
+                <td>21.8 °C</td>
+                <td>0.01 mm/s</td>
+                <td><span class="badge-pill" style="background:#dcfce7; color:#15803d;">Optimal Running</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 4: PRODUCTION & MACHINES                                       -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-production">
+        <div class="page-header">
+          <h1 class="page-title">Production &amp; Machines</h1>
+          <p class="page-subtitle">Shop floor work order progress, machine routing, and batch tracking</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">⚡ Live Production Orders</span>
+            <span class="count-badge">3 In-Flight</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ORDER NUMBER</th>
+                <th>PART DESCRIPTION</th>
+                <th>PLANNED QTY</th>
+                <th>PRODUCED</th>
+                <th>MACHINE</th>
+                <th>PRIORITY</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a class="link-code">PO-2026-101</a></td>
+                <td>Aerospace Fuel Valve</td>
+                <td>50</td>
+                <td><strong>31</strong> (62%)</td>
+                <td>WC-CNC-501</td>
+                <td><span class="badge-pill" style="background:#fee2e2; color:#b91c1c;">P1</span></td>
+                <td><span class="badge-pill badge-active">In Progress</span></td>
+              </tr>
+              <tr>
+                <td><a class="link-code">PO-2026-104</a></td>
+                <td>Hydraulic Pump</td>
+                <td>40</td>
+                <td><strong>0</strong> (0%)</td>
+                <td>WC-ADD-503</td>
+                <td><span class="badge-pill" style="background:#ffedd5; color:#ea580c;">P2</span></td>
+                <td><span class="badge-pill badge-pending">Scheduled</span></td>
+              </tr>
+              <tr>
+                <td><a class="link-code">PO-2026-102</a></td>
+                <td>Gear Assembly</td>
+                <td>30</td>
+                <td><strong>0</strong> (0%)</td>
+                <td>WC-ROBO-502</td>
+                <td><span class="badge-pill" style="background:#ffedd5; color:#ea580c;">P2</span></td>
+                <td><span class="badge-pill" style="background:#f1f5f9; color:#475569;">Pending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 5: SCHEDULE PLANNER                                            -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-schedule">
+        <div class="page-header">
+          <h1 class="page-title">Schedule Planner</h1>
+          <p class="page-subtitle">Shift allocations, cell dispatching, and takt time optimization</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">📅 Shift Allocations &amp; Crew Assignments</span>
+            <span class="records-info">3 Active Shifts</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>SHIFT</th>
+                <th>HOURS</th>
+                <th>CREW LEAD</th>
+                <th>TECHNICIANS</th>
+                <th>ASSIGNED WORK CENTER</th>
+                <th>UTILIZATION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Shift Alpha (Morning)</strong></td>
+                <td>06:00 - 14:00</td>
+                <td>Rajesh Sharma</td>
+                <td>8 Techs</td>
+                <td>WC-CNC-501, WC-ADD-503</td>
+                <td><strong style="color:#10b981;">92%</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Shift Beta (Afternoon)</strong></td>
+                <td>14:00 - 22:00</td>
+                <td>Suresh Kumar</td>
+                <td>6 Techs</td>
+                <td>WC-ROBO-502</td>
+                <td><strong style="color:#0284c7;">84%</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Shift Gamma (Night)</strong></td>
+                <td>22:00 - 06:00</td>
+                <td>Anil Verma</td>
+                <td>4 Techs</td>
+                <td>WC-ASSY-504</td>
+                <td><strong style="color:#f59e0b;">78%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 6: INVENTORY                                                   -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-inventory">
+        <div class="page-header">
+          <h1 class="page-title">Inventory Management</h1>
+          <p class="page-subtitle">Warehouse stock levels, bin tracking, and safety stock thresholds</p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-lbl">Total Stock</div><div class="kpi-val">283</div><div class="kpi-trend trend-up">All warehouses</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">Available</div><div class="kpi-val" style="color:#10b981;">210</div><div class="kpi-trend trend-up">Ready for issue</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">Reserved</div><div class="kpi-val" style="color:#0284c7;">43</div><div class="kpi-trend">Committed to POs</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">Low Stock Alerts</div><div class="kpi-val" style="color:#ef4444;">5</div><div class="kpi-trend trend-down">Below safety limit</div></div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">⚠️ Critical Components Below Safety Stock</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>MATERIAL CODE</th>
+                <th>ITEM DESCRIPTION</th>
+                <th>CURRENT STOCK</th>
+                <th>SAFETY STOCK</th>
+                <th>SHORTAGE</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a class="link-code">MAT-BRG-201</a></td>
+                <td>Ceramic Ball Bearings 45mm</td>
+                <td><strong style="color:#ef4444;">7</strong></td>
+                <td>10</td>
+                <td>3 Units</td>
+                <td><span class="badge-pill" style="background:#fee2e2; color:#b91c1c;">Critical Shortage</span></td>
+              </tr>
+              <tr>
+                <td><a class="link-code">MAT-202</a></td>
+                <td>High-Temp Hydraulic Seal</td>
+                <td><strong style="color:#f59e0b;">8</strong></td>
+                <td>15</td>
+                <td>7 Units</td>
+                <td><span class="badge-pill badge-approved">Below SS</span></td>
+              </tr>
+              <tr>
+                <td><a class="link-code">MAT-205</a></td>
+                <td>Grade 8 Titanium Fasteners</td>
+                <td><strong>25</strong></td>
+                <td>30</td>
+                <td>5 Units</td>
+                <td><span class="badge-pill" style="background:#fef3c7; color:#d97706;">Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 7: SUPPLIERS                                                   -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-suppliers">
+        <div class="page-header">
+          <h1 class="page-title">Supplier Performance &amp; Directory</h1>
+          <p class="page-subtitle">Vendor lead times, quality acceptance rates, and active purchase contracts</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">🚚 Approved Industrial Vendors</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>SUPPLIER NAME</th>
+                <th>CATEGORY</th>
+                <th>ON-TIME DELIVERY</th>
+                <th>QUALITY RATING</th>
+                <th>ACTIVE POs</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>SKF Precision Bearings Ltd</strong></td>
+                <td>Precision Bearings</td>
+                <td>94.8%</td>
+                <td>98.2%</td>
+                <td>3</td>
+                <td><span class="badge-pill badge-active">Preferred Tier 1</span></td>
+              </tr>
+              <tr>
+                <td><strong>Tata Advanced Alloys</strong></td>
+                <td>Raw Materials / Steel</td>
+                <td>96.2%</td>
+                <td>99.1%</td>
+                <td>4</td>
+                <td><span class="badge-pill badge-active">Preferred Tier 1</span></td>
+              </tr>
+              <tr>
+                <td><strong>Sundaram Fasteners</strong></td>
+                <td>Hardware / Fasteners</td>
+                <td>91.5%</td>
+                <td>97.0%</td>
+                <td>2</td>
+                <td><span class="badge-pill badge-approved">Certified</span></td>
+              </tr>
+              <tr>
+                <td><strong>Precision Seal Systems</strong></td>
+                <td>Hydraulic Seals</td>
+                <td>89.0%</td>
+                <td>95.4%</td>
+                <td>1</td>
+                <td><span class="badge-pill badge-approved">Certified</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 8: ALERTS & EXCEPTIONS                                         -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-alerts">
+        <div class="page-header">
+          <h1 class="page-title">Alerts &amp; Exceptions</h1>
+          <p class="page-subtitle">Real-time shop floor anomalies, downtime risks, and sensor alarms</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">🚨 Active Alarm Stream</span>
+            <span class="count-badge" style="background:#ef4444;">168 Total</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>SEVERITY</th>
+                <th>ASSET / ORDER</th>
+                <th>ALARM DETAILS</th>
+                <th>IMPACT</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge-pill" style="background:#fee2e2; color:#b91c1c;">CRITICAL</span></td>
+                <td><strong>WC-CNC-501</strong></td>
+                <td>Spindle vibration exceeded threshold (0.19 mm/s)</td>
+                <td>PO-101 Halted</td>
+                <td><button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('digital-twin')">Simulate Reroute</button></td>
+              </tr>
+              <tr>
+                <td><span class="badge-pill" style="background:#ffedd5; color:#ea580c;">HIGH</span></td>
+                <td><strong>PO-2026-101</strong></td>
+                <td>Material shortage: Ceramic Bearings (3 missing)</td>
+                <td>Assembly blocked</td>
+                <td><button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')">Expedite PO</button></td>
+              </tr>
+              <tr>
+                <td><span class="badge-pill" style="background:#fef3c7; color:#d97706;">MEDIUM</span></td>
+                <td><strong>MAT-BRG-201</strong></td>
+                <td>Stock dipped below safety stock level</td>
+                <td>Reorder point reached</td>
+                <td><button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')">Create Requisition</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 9: DEMAND FORECASTING                                          -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-forecasting">
+        <div class="page-header">
+          <h1 class="page-title">Demand Forecasting &amp; MRP Engine</h1>
+          <p class="page-subtitle">Moving average consumption models, lead time buffers, and replenishment forecasts</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">📈 90-Day Projected Demand by Product Family</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>PRODUCT FAMILY</th>
+                <th>30-DAY DEMAND</th>
+                <th>60-DAY DEMAND</th>
+                <th>90-DAY DEMAND</th>
+                <th>TREND</th>
+                <th>BUFFER STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Aerospace Fuel Valves</strong></td>
+                <td>120 Units</td>
+                <td>240 Units</td>
+                <td>380 Units</td>
+                <td><span style="color:#10b981; font-weight:700;">↑ +14%</span></td>
+                <td><span class="badge-pill badge-active">Adequate</span></td>
+              </tr>
+              <tr>
+                <td><strong>Hydraulic Pump Subsystems</strong></td>
+                <td>80 Units</td>
+                <td>150 Units</td>
+                <td>210 Units</td>
+                <td><span style="color:#0284c7; font-weight:700;">→ Stable</span></td>
+                <td><span class="badge-pill badge-active">Adequate</span></td>
+              </tr>
+              <tr>
+                <td><strong>Cryogenic Control Valves</strong></td>
+                <td>45 Units</td>
+                <td>95 Units</td>
+                <td>160 Units</td>
+                <td><span style="color:#10b981; font-weight:700;">↑ +18%</span></td>
+                <td><span class="badge-pill badge-approved">Review Buffer</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 10: DIGITAL TWIN & WHAT-IF SIMULATOR                           -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-digital-twin">
+        <div class="page-header">
+          <h1 class="page-title">Digital Twin &amp; What-If Simulation</h1>
+          <p class="page-subtitle">Simulate machine breakdowns, re-route production batches, and evaluate delivery impact</p>
+        </div>
+
+        <div class="sim-box">
+          <h3 style="font-size:15px; font-weight:700; margin-bottom:12px;">Disruption Parameters</h3>
+          <div class="sim-grid">
+            <div class="sim-field">
+              <label>Scenario</label>
+              <select id="simScenario">
+                <option>🚨 CNC-501 Spindle Breakdown</option>
+                <option>📦 Ceramic Bearings Delay</option>
+                <option>⚡ Priority Order Surge</option>
+              </select>
+            </div>
+            <div class="sim-field">
+              <label>Affected Cell</label>
+              <select id="simCell">
+                <option>WC-CNC-501 (Milling)</option>
+                <option>WC-ADD-503 (3D Printer)</option>
+                <option>WC-ROBO-502 (Welder)</option>
+              </select>
+            </div>
+            <div class="sim-field">
+              <label>Estimated Outage</label>
+              <select id="simOutage">
+                <option>4 Hours</option>
+                <option>8 Hours</option>
+                <option>24 Hours</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-action" onclick="runDigitalTwinSim()">▶ Run Digital Twin Simulation</button>
+        </div>
+
+        <div id="simResultsContainer" style="display:none;">
+          <div class="content-card">
+            <div class="card-head">
+              <span class="card-title">🔮 Simulation Recommendations (Adaptive Decision Engine)</span>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>STRATEGY</th>
+                  <th>RE-ROUTED ASSET</th>
+                  <th>ESTIMATED FINISH</th>
+                  <th>ON-TIME DELIVERY</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background:#ecfdf5;">
+                  <td><strong style="color:#059669;">Alternative A (Recommended - Best)</strong></td>
+                  <td>WC-ADD-503 (3D Printer)</td>
+                  <td>15:00 Today</td>
+                  <td><strong style="color:#059669;">96% (+12% Saved)</strong></td>
+                  <td><button class="btn-action btn-success" onclick="applyDigitalTwinPlan()">Approve &amp; Dispatch</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Alternative B</strong></td>
+                  <td>Wait for CNC-501 Repair</td>
+                  <td>18:00 (Delayed)</td>
+                  <td>84% (-8% Loss)</td>
+                  <td><span class="records-info">Sub-optimal</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <div class="page-footer">
+        Industrial Inventory &amp; Production Management • Powered by ServiceNow dev445579
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // FULL TAB SWITCHING
+    function switchTab(tabKey) {
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
+
+      var tabMap = {
+        'dashboard': { btn: 'btnNavDashboard', view: 'view-dashboard' },
+        'customer-orders': { btn: 'btnNavCustomerOrders', view: 'view-customer-orders' },
+        'production': { btn: 'btnNavProduction', view: 'view-production' },
+        'schedule': { btn: 'btnNavSchedule', view: 'view-schedule' },
+        'inventory': { btn: 'btnNavInventory', view: 'view-inventory' },
+        'procurement': { btn: 'btnNavProcurement', view: 'view-procurement' },
+        'suppliers': { btn: 'btnNavSuppliers', view: 'view-suppliers' },
+        'alerts': { btn: 'btnNavAlerts', view: 'view-alerts' },
+        'forecasting': { btn: 'btnNavForecasting', view: 'view-forecasting' },
+        'digital-twin': { btn: 'btnNavDigitalTwin', view: 'view-digital-twin' }
+      };
+
+      var target = tabMap[tabKey] || tabMap['customer-orders'];
+      var btnEl = document.getElementById(target.btn);
+      var viewEl = document.getElementById(target.view);
+
+      if (btnEl) btnEl.classList.add('active');
+      if (viewEl) viewEl.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function filterOrders(term) {
+      var rows = document.querySelectorAll('#ordersTableBody tr');
+      rows.forEach(function(row) {
+        var text = row.innerText.toLowerCase();
+        row.style.display = text.includes(term.toLowerCase()) ? '' : 'none';
+      });
+    }
+
+    function runDigitalTwinSim() {
+      document.getElementById('simResultsContainer').style.display = 'block';
+      alert('Simulation completed: Alternative A achieves +12% On-Time Delivery recovery by routing PO-101 to WC-ADD-503.');
+    }
+
+    function applyDigitalTwinPlan() {
+      alert('Schedule updated in ServiceNow: PO-101 dispatched to WC-ADD-503. Machine breakdown mitigated!');
+      switchTab('production');
+    }
+
+    function refreshData() {
+      alert('Real-time data synchronized with ServiceNow dev445579.');
+    }
+  </script>
+</body>
+</html>
