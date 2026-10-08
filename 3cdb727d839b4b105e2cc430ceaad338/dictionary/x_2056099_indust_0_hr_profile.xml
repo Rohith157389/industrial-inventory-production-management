@@ -2,39 +2,39 @@
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="be306ab35e854efd8c049dc5f03304bf" label="HR Employee Profile" name="x_2056099_indust_0_hr_profile" type="collection">
         <element choice="1" default="active" label="Employment Status" max_length="40" name="employment_status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="On Leave" sequence="2" value="on_leave"/>
-                <element inactive_on_update="false" label="Active" sequence="1" value="active"/>
-                <element inactive_on_update="false" label="Terminated" sequence="5" value="terminated"/>
-                <element inactive_on_update="false" label="Resigned" sequence="4" value="resigned"/>
                 <element inactive_on_update="false" label="Suspended" sequence="3" value="suspended"/>
-            </choice>
-        </element>
-        <element label="Worker" mandatory="true" max_length="32" name="worker" reference="sys_user" type="reference"/>
-        <element label="Job Title" max_length="100" name="job_title" type="string"/>
-        <element choice="1" label="Employment Type" max_length="40" name="employment_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Permanent" sequence="1" value="permanent"/>
-                <element inactive_on_update="false" label="Apprentice" sequence="4" value="apprentice"/>
-                <element inactive_on_update="false" label="Temporary" sequence="3" value="temporary"/>
-                <element inactive_on_update="false" label="Contract" sequence="2" value="contract"/>
+                <element inactive_on_update="false" label="On Leave" sequence="2" value="on_leave"/>
+                <element inactive_on_update="false" label="Terminated" sequence="5" value="terminated"/>
+                <element inactive_on_update="false" label="Active" sequence="1" value="active"/>
+                <element inactive_on_update="false" label="Resigned" sequence="4" value="resigned"/>
             </choice>
         </element>
         <element label="Work Location" max_length="32" name="work_location" reference="cmn_location" type="reference"/>
-        <element label="Joining Date" max_length="40" name="joining_date" type="glide_date"/>
-        <element label="Department" max_length="32" name="department" reference="cmn_department" type="reference"/>
-        <element display="true" label="Employee ID" mandatory="true" max_length="20" name="employee_id" read_only="true" read_only_option="instance_configured" type="string"/>
-        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
         <element label="Manager" max_length="32" name="manager" reference="sys_user" type="reference"/>
+        <element label="Worker" mandatory="true" max_length="32" name="worker" reference="sys_user" type="reference"/>
+        <element label="Joining Date" max_length="40" name="joining_date" type="glide_date"/>
         <element label="Assignment Group" max_length="32" name="assignment_group" reference="sys_user_group" type="reference"/>
+        <element label="Job Title" max_length="100" name="job_title" type="string"/>
+        <element display="true" label="Employee ID" mandatory="true" max_length="20" name="employee_id" read_only="true" read_only_option="instance_configured" type="string"/>
+        <element label="Department" max_length="32" name="department" reference="cmn_department" type="reference"/>
         <element choice="1" label="Shift" max_length="40" name="shift" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Afternoon" sequence="3" value="afternoon"/>
                 <element inactive_on_update="false" label="Morning" sequence="2" value="morning"/>
+                <element inactive_on_update="false" label="General" sequence="1" value="general"/>
                 <element inactive_on_update="false" label="Rotational" sequence="5" value="rotational"/>
                 <element inactive_on_update="false" label="Night" sequence="4" value="night"/>
-                <element inactive_on_update="false" label="General" sequence="1" value="general"/>
             </choice>
         </element>
+        <element choice="1" label="Employment Type" max_length="40" name="employment_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Contract" sequence="2" value="contract"/>
+                <element inactive_on_update="false" label="Permanent" sequence="1" value="permanent"/>
+                <element inactive_on_update="false" label="Apprentice" sequence="4" value="apprentice"/>
+                <element inactive_on_update="false" label="Temporary" sequence="3" value="temporary"/>
+            </choice>
+        </element>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
         <index name="index">
             <element name="assignment_group"/>
         </index>

@@ -1,58 +1,1781 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
     <sys_ui_page action="INSERT_OR_UPDATE">
         <category>general</category>
-        <client_script/>
+        <client_script><![CDATA[
+    // FULL TAB SWITCHING
+    function switchTab(tabKey) {
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
+
+      var tabMap = {
+        'dashboard': { btn: 'btnNavDashboard', view: 'view-dashboard' },
+        'customer-orders': { btn: 'btnNavCustomerOrders', view: 'view-customer-orders' },
+        'production': { btn: 'btnNavProduction', view: 'view-production' },
+        'schedule': { btn: 'btnNavSchedule', view: 'view-schedule' },
+        'inventory': { btn: 'btnNavInventory', view: 'view-inventory' },
+        'procurement': { btn: 'btnNavProcurement', view: 'view-procurement' },
+        'suppliers': { btn: 'btnNavSuppliers', view: 'view-suppliers' },
+        'alerts': { btn: 'btnNavAlerts', view: 'view-alerts' },
+        'forecasting': { btn: 'btnNavForecasting', view: 'view-forecasting' },
+        'digital-twin': { btn: 'btnNavDigitalTwin', view: 'view-digital-twin' }
+      };
+
+      var target = tabMap[tabKey] || tabMap['customer-orders'];
+      var btnEl = document.getElementById(target.btn);
+      var viewEl = document.getElementById(target.view);
+
+      if (btnEl) btnEl.classList.add('active');
+      if (viewEl) viewEl.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function filterOrders(term) {
+      var rows = document.querySelectorAll('#ordersTableBody tr');
+      rows.forEach(function(row) {
+        var text = row.innerText.toLowerCase();
+        row.style.display = text.includes(term.toLowerCase()) ? '' : 'none';
+      });
+    }
+
+    function runDigitalTwinSim() {
+      document.getElementById('simResultsContainer').style.display = 'block';
+      alert('Simulation completed: Alternative A achieves +12% On-Time Delivery recovery by routing PO-101 to WC-ADD-503.');
+    }
+
+    function applyDigitalTwinPlan() {
+      alert('Schedule updated in ServiceNow: PO-101 dispatched to WC-ADD-503. Machine breakdown mitigated!');
+      switchTab('production');
+    }
+
+    function refreshData() {
+      alert('Real-time data synchronized with ServiceNow dev445579.');
+    }
+  ]]></client_script>
         <description/>
         <direct>false</direct>
         <endpoint>x_2056099_indust_0_dashboard.do</endpoint>
-        <html><![CDATA[
-<!-- @fluent-import-html WARNING: This file was imported from the output of a static build. Modifications of any kind are likely to result in unintended behavior. In most cases, you should edit the source file of the HTML imported below. If you are absolutely certain you want to take control of this HTML, you can remove this comment to prevent the SDK from regenerating it. However, you will then be responsible for the management of this HTML in your Fluent file. -->
-<html class="-polaris">
-  <head>
-    <title>Industrial Operations Dashboard</title>
-    <!-- @sdk:now-ux-globals -->
-    <!-- Resolved from sdk:now-ux-globals tag at NowSDK build time to support earlier Glide releases -->
-    <script>window.NOW = {};
-window.NOW.user = {};
-window.NOW.batch_glide_ajax_requests = false;
-window.NOW.isUsingPolaris = true;
-window.NOW.exclude_dark_theme = "false";
-window.g_ck = "$[gs.getSession().getSessionToken() || gs.getSessionToken()]";</script>
-    <!-- Include ServiceNow's required scripts -->
-    <g:requires name="scripts/doctype/functions_bootstrap14.js"></g:requires>
-    <g:requires name="scripts/lib/prototype.js"></g:requires>
-    <g:requires name="scripts/classes/ajax/GlideURL.js"></g:requires>
-    <g:requires name="scripts/doctype/CustomEventManager.js"></g:requires>
-    <g:requires name="scripts/classes/ajax/GlideAjax.js"></g:requires>
-    <g:requires name="scripts/classes/GlideUser.js"></g:requires>
-    <g2:client_script type="user"></g2:client_script>
-    <link rel="preload" href="/uxasset/set-cache-buster/$[UxFrameworkScriptables.getFlushTimestamp()].js" as="script"></link>
-    <g:requires name="scripts/polaris_theme_refresh_observer.js"></g:requires>
-    <link data-source-id="glide-theme" id="polarisberg_theme_variables" rel="stylesheet" href="/$uxappimmutables.do?sysparm_request_type=ux_theme$[AMP]sysparm_app_sys_id=c86a62e2c7022010099a308dc7c26022$[AMP]uxpcb=$[sn_ui.PolarisUI.getThemeVariableCssCacheKey()]"></link>
-    <script type="module" src="/uxasset/externals/@devsnc/library-uxf/index.jsdbx"></script>
-    <!-- @sdk:now-ux-globals -->
-    <link rel="stylesheet" href="design-system.css?uxpcb=$[UxFrameworkScriptables.getFlushTimestamp()]">
-      <script src="/uxasset/externals/x_2056099_indust_0/dashboard-alert-summary/main.jsdbx?uxpcb=$[UxFrameworkScriptables.getFlushTimestamp()]" type="module"></script>
-    </link>
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>]]></html>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet" />
+
+<style>
+
+#desktop_ops_app {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important;
+  background: var(--bg-body) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  font-family: var(--font-sans) !important;
+  color: var(--text-main) !important;
+}
+#desktop_ops_app .sidebar {
+  position: relative !important;
+  height: 100vh !important;
+}
+#desktop_ops_app .main-wrapper {
+  margin-left: 0 !important;
+  flex: 1 !important;
+  overflow-y: auto !important;
+  height: 100vh !important;
+}
+
+    :root {
+      --bg-body: #f8fafc;
+      --bg-sidebar: #ffffff;
+      --bg-card: #ffffff;
+      --sidebar-border: #e2e8f0;
+      --border-card: #e2e8f0;
+      --border-subtle: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --primary-navy: #0f2438;
+      --primary-blue: #0284c7;
+      --primary-blue-hover: #0369a1;
+      --nav-active-bg: #0f2438;
+      --nav-active-text: #ffffff;
+      --badge-red: #ef4444;
+      --badge-green: #10b981;
+      --badge-amber: #f59e0b;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-body);
+      font-family: var(--font-sans);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+    }
+    
+    /* LEFT SIDEBAR (Photo 2 Light Theme) */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 50;
+    }
+    .brand-box {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-navy);
+      letter-spacing: -0.01em;
+    }
+    .brand-sub {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+    
+    .nav-menu {
+      flex: 1;
+      padding: 16px 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+      position: relative;
+      width: 100%;
+    }
+    .nav-btn:hover {
+      background: #f1f5f9;
+      color: var(--primary-navy);
+    }
+    .nav-btn.active {
+      background: var(--nav-active-bg);
+      color: var(--nav-active-text);
+      font-weight: 700;
+    }
+    .nav-btn .icon {
+      font-size: 16px;
+      width: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .nav-badge-pill {
+      margin-left: auto;
+      background: var(--badge-red);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 11px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    /* MAIN CONTENT AREA */
+    .main-wrapper {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .topbar {
+      height: 64px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--sidebar-border);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .btn-refresh {
+      background: #ffffff;
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-refresh:hover { background: #f8fafc; color: var(--text-main); }
+    
+    /* ONLY ADMIN BADGE */
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #0284c7;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    /* CONTENT BODY */
+    .content-container {
+      padding: 32px;
+      flex: 1;
+    }
+    .page-header {
+      margin-bottom: 24px;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* CARDS &amp; TABLES */
+    .content-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .card-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-head-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .count-badge {
+      background: #0284c7;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    .records-info {
+      font-size: 12px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    /* DATA TABLES */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+    .data-table th {
+      background: #ffffff;
+      padding: 12px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .data-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: #334155;
+      font-weight: 500;
+    }
+    .data-table tr:hover td {
+      background: #f8fafc;
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .link-code {
+      color: #0284c7;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .link-code:hover { text-decoration: underline; }
+
+    /* STATUS BADGES */
+    .badge-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .badge-pending {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .badge-approved {
+      background: #fef3c7;
+      color: #d97706;
+      border: 1px solid #fde68a;
+    }
+    .badge-priority-med {
+      color: #0284c7;
+      font-weight: 700;
+    }
+    .badge-active {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    /* KPI GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: #fff;
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .kpi-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .kpi-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 8px 0 4px;
+      font-family: var(--font-mono);
+    }
+    .kpi-trend {
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .trend-up { color: #059669; }
+    .trend-down { color: #dc2626; }
+
+    /* TAB VIEWS */
+    .tab-view { display: none; }
+    .tab-view.active { display: block; animation: fadeIn 0.15s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* FORM &amp; SIMULATION CONTROLS */
+    .sim-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .sim-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .sim-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .sim-field select, .sim-field input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #fff;
+    }
+    .btn-action {
+      background: #0284c7;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-action:hover { background: #0369a1; }
+    .btn-success { background: #10b981; }
+    .btn-success:hover { background: #059669; }
+
+    /* FOOTER */
+    .page-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-light);
+    }
+  
+</style>
+
+<div id="desktop_ops_app">
+
+
+  <!-- ===================================================================== -->
+  <!-- LEFT SIDEBAR                                                          -->
+  <!-- ===================================================================== -->
+  <aside class="sidebar">
+    <div class="brand-box">
+      <div class="brand-title">Industrial Supply Co.</div>
+      <div class="brand-sub">OPERATIONS ADMIN</div>
+    </div>
+
+    <nav class="nav-menu">
+      <button class="nav-btn" id="btnNavDashboard" onclick="switchTab('dashboard')">
+        <span class="icon">⊞</span>
+        <span>Dashboard</span>
+      </button>
+
+      <button class="nav-btn active" id="btnNavCustomerOrders" onclick="switchTab('customer-orders')">
+        <span class="icon">]]>📥<![CDATA[</span>
+        <span>Customer Orders</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavProduction" onclick="switchTab('production')">
+        <span class="icon">⚙️</span>
+        <span>Production &amp; Machines</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavSchedule" onclick="switchTab('schedule')">
+        <span class="icon">]]>📅<![CDATA[</span>
+        <span>Schedule Planner</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavInventory" onclick="switchTab('inventory')">
+        <span class="icon">]]>📦<![CDATA[</span>
+        <span>Inventory</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavProcurement" onclick="switchTab('procurement')">
+        <span class="icon">]]>📋<![CDATA[</span>
+        <span>Procurement</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavSuppliers" onclick="switchTab('suppliers')">
+        <span class="icon">]]>🚚<![CDATA[</span>
+        <span>Suppliers</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavAlerts" onclick="switchTab('alerts')">
+        <span class="icon">]]>🔔<![CDATA[</span>
+        <span>Alerts &amp; Exceptions</span>
+        <span class="nav-badge-pill">168</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavForecasting" onclick="switchTab('forecasting')">
+        <span class="icon">]]>📈<![CDATA[</span>
+        <span>Demand Forecasting</span>
+      </button>
+
+      <button class="nav-btn" id="btnNavDigitalTwin" onclick="switchTab('digital-twin')">
+        <span class="icon">]]>🌐<![CDATA[</span>
+        <span>Digital Twin</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      Industrial Ops v2.0
+    </div>
+  </aside>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN WORKSPACE CONTENT                                                -->
+  <!-- ===================================================================== -->
+  <div class="main-wrapper">
+    
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="live-status-pill"><span class="live-dot"></span> LIVE</span>
+        <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Real-time Command Center</span>
+      </div>
+
+      <div class="topbar-right">
+        <button class="btn-refresh" onclick="refreshData()">
+          <span>]]>🔄<![CDATA[</span> Refresh All
+        </button>
+        <!-- ONLY ADMIN AVATAR -->
+        <div class="user-pill">
+          <div class="avatar-circle">A</div>
+          <span>System Administrator</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-container">
+
+      <!-- =================================================================== -->
+      <!-- VIEW 1: CUSTOMER ORDERS (PHOTO 2 EXACT RECREATION)                  -->
+      <!-- =================================================================== -->
+      <section class="tab-view active" id="view-customer-orders">
+        <div class="page-header">
+          <h1 class="page-title">Customer Orders</h1>
+          <p class="page-subtitle">Track customer orders and delivery</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="records-info">50 records</span>
+            <div style="display:flex; gap:10px;">
+              <input type="text" placeholder="Search orders..." style="padding:6px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:12px; width:220px;" oninput="filterOrders(this.value)" />
+            </div>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>NUMBER</th>
+                <th>CUSTOMER</th>
+                <th>PRODUCT</th>
+                <th>QTY</th>
+                <th>STATUS</th>
+                <th>DELIVERY DATE</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <tr>
+                <td><a class="link-code">ORD-2026-001</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Gate Valve 100mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">100</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-002</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Valve Manifold</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">40</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-003</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Valve Manifold</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">60</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-004</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Actuated Valve Assembly</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">300</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-005</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Actuated Valve Assembly</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">20</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-006</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Valve Manifold</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">40</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-007</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Valve Manifold</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">80</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-008</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Actuated Valve Assembly</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">150</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-009</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Actuated Valve Assembly</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">300</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-010</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Ball Valve 200mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">150</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-011</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Valve Manifold</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">150</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-012</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Actuated Valve Assembly</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">120</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-013</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Actuated Valve Assembly</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">10</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-014</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Valve Manifold</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">200</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-015</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Valve Manifold</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">80</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-016</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Gate Valve 100mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">120</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-017</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Ball Valve 200mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">200</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-018</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Ball Valve 200mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">40</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-019</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Valve Manifold</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">300</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-020</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Gate Valve 100mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">150</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-021</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Ball Valve 200mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">60</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-022</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Valve Manifold</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">300</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-023</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Gate Valve 100mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">10</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-024</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Gate Valve 100mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">60</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-025</a></td>
+                <td>Sahyadri Pumps and Valves</td>
+                <td><span style="font-weight:600; color:#0f172a;">Actuated Valve Assembly</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">40</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-026</a></td>
+                <td>Krishna Pharma Process Engineers</td>
+                <td><span style="font-weight:600; color:#0f172a;">316L Steel Bar Stock</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">25</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-027</a></td>
+                <td>Sagar Shipyard &amp; Marine</td>
+                <td><span style="font-weight:600; color:#0f172a;">4-inch Gate Valve - Pneumatic Actuated</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">35</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-028</a></td>
+                <td>Cauvery Water Infra Projects</td>
+                <td><span style="font-weight:600; color:#0f172a;">4-inch Industrial Gate Valve</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">45</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-029</a></td>
+                <td>Godavari Fertilizers &amp; Chemicals</td>
+                <td><span style="font-weight:600; color:#0f172a;">6-inch Ball Valve - Pneumatic Actuated</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">55</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-030</a></td>
+                <td>Cauvery Water Infra Projects</td>
+                <td><span style="font-weight:600; color:#0f172a;">6-inch Industrial Ball Valve</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">65</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-031</a></td>
+                <td>Bharat Refinery Services</td>
+                <td><span style="font-weight:600; color:#0f172a;">8-inch Butterfly Valve - Pneumatic Actua</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">75</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-032</a></td>
+                <td>Bharat Refinery Services</td>
+                <td><span style="font-weight:600; color:#0f172a;">8-inch Industrial Butterfly Valve</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">25</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-033</a></td>
+                <td>Bay of Bengal Offshore Services</td>
+                <td><span style="font-weight:600; color:#0f172a;">Actuated Valve Assembly</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">35</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-034</a></td>
+                <td>AquaPure Water Systems</td>
+                <td><span style="font-weight:600; color:#0f172a;">Actuator Mounting Bracket (ISO 5211)</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">45</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-035</a></td>
+                <td>Nandi Cement Works</td>
+                <td><span style="font-weight:600; color:#0f172a;">Actuator Mounting Bracket (ISO 5211)</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">55</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-041</a></td>
+                <td>Southern Power Utilities</td>
+                <td><span style="font-weight:600; color:#0f172a;">Air Compressor Filter Element</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">65</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-042</a></td>
+                <td>Bay of Bengal Offshore Services</td>
+                <td><span style="font-weight:600; color:#0f172a;">Anti-Seize Grease (Nickel Based)</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">75</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-043</a></td>
+                <td>Cauvery Water Infra Projects</td>
+                <td><span style="font-weight:600; color:#0f172a;">Anti-Seize Grease (Nickel Based)</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">25</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-044</a></td>
+                <td>Godavari Fertilizers &amp; Chemicals</td>
+                <td><span style="font-weight:600; color:#0f172a;">Ball Valve 200mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">35</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-045</a></td>
+                <td>Bay of Bengal Offshore Services</td>
+                <td><span style="font-weight:600; color:#0f172a;">Bearing 6205</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">45</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-046</a></td>
+                <td>Sagar Shipyard &amp; Marine</td>
+                <td><span style="font-weight:600; color:#0f172a;">Bearing 6205-2RS</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">55</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-047</a></td>
+                <td>Nandi Cement Works</td>
+                <td><span style="font-weight:600; color:#0f172a;">Brass Valve Stem</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">65</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-048</a></td>
+                <td>Krishna Pharma Process Engineers</td>
+                <td><span style="font-weight:600; color:#0f172a;">Carbide Cutting Insert</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">75</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-049</a></td>
+                <td>Tungabhadra Sugar Mills</td>
+                <td><span style="font-weight:600; color:#0f172a;">Cast Iron Handwheel Assembly</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">25</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-050</a></td>
+                <td>Sagar Shipyard &amp; Marine</td>
+                <td><span style="font-weight:600; color:#0f172a;">Cast Iron Handwheel Assembly</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">35</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-051</a></td>
+                <td>Sagar Shipyard &amp; Marine</td>
+                <td><span style="font-weight:600; color:#0f172a;">CF8M Bonnet - 4-inch Gate Valve</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">45</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-052</a></td>
+                <td>Tungabhadra Sugar Mills</td>
+                <td><span style="font-weight:600; color:#0f172a;">CF8M Bonnet - 4-inch Gate Valve</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">55</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-053</a></td>
+                <td>Deccan Petrochem Industries</td>
+                <td><span style="font-weight:600; color:#0f172a;">CNC Carbide Cutting Insert CNMG 120408</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">65</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-054</a></td>
+                <td>Bharat Refinery Services</td>
+                <td><span style="font-weight:600; color:#0f172a;">Cold Rolled Steel Sheet 2mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">75</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-055</a></td>
+                <td>Bharat Refinery Services</td>
+                <td><span style="font-weight:600; color:#0f172a;">Control PCB</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">25</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-061</a></td>
+                <td>Krishna Pharma Process Engineers</td>
+                <td><span style="font-weight:600; color:#0f172a;">Copper Wire 2.5mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">35</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-062</a></td>
+                <td>Petromax Oil &amp; Gas Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Corrugated Box</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">45</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-063</a></td>
+                <td>Krishna Pharma Process Engineers</td>
+                <td><span style="font-weight:600; color:#0f172a;">Cut Resistant Safety Gloves</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">55</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-064</a></td>
+                <td>Bharat Refinery Services</td>
+                <td><span style="font-weight:600; color:#0f172a;">Cutting Coolant Concentrate</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">65</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-065</a></td>
+                <td>Cauvery Water Infra Projects</td>
+                <td><span style="font-weight:600; color:#0f172a;">Epoxy Coating Paint - Industrial Grey</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">75</span></td>
+                <td><span class="badge-pill badge-pending">Pending</span></td>
+                <td>Oct 15 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-901</a></td>
+                <td>Boeing Commercial Airplanes</td>
+                <td><span style="font-weight:600; color:#0f172a;">Aerospace High-Pressure Fuel Control Valve</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">100</span></td>
+                <td><span class="badge-pill badge-pending">In_production</span></td>
+                <td>Oct 1 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-902</a></td>
+                <td>Toyota Motor Manufacturing</td>
+                <td><span style="font-weight:600; color:#0f172a;">Industrial 5-Axis CNC Servo Drive Unit 400W</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">60</span></td>
+                <td><span class="badge-pill badge-pending">In_production</span></td>
+                <td>Oct 2 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-903</a></td>
+                <td>Siemens Energy Industrial</td>
+                <td><span style="font-weight:600; color:#0f172a;">Heavy Hydraulic Pressure Relief Manifold 350 Bar</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">40</span></td>
+                <td><span class="badge-pill badge-pending">Confirmed</span></td>
+                <td>Oct 4 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-2026-904</a></td>
+                <td>GE Aerospace Propulsion</td>
+                <td><span style="font-weight:600; color:#0f172a;">Gas Turbine Blisk Impeller Contoured Rotor</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">20</span></td>
+                <td><span class="badge-pill badge-pending">In_production</span></td>
+                <td>Oct 5 2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">ORD-TEST-001</a></td>
+                <td>ABC Engineering Pvt Ltd</td>
+                <td><span style="font-weight:600; color:#0f172a;">Gate Valve 100mm</span></td>
+                <td><span style="font-family:var(--font-mono); font-weight:700; color:#1e40af;">5</span></td>
+                <td><span class="badge-pill badge-pending">Submitted</span></td>
+                <td>Mar 1 2027</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 2: PROCUREMENT ORDERS (PHOTO 1 EXACT RECREATION)               -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-procurement">
+        <div class="page-header">
+          <h1 class="page-title">Procurement Management</h1>
+          <p class="page-subtitle">Supplier purchase orders, approval pipelines, and incoming stock delivery</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <div class="card-head-left">
+              <span class="card-title">]]>🚚<![CDATA[ Procurement Orders</span>
+              <span class="count-badge">10</span>
+            </div>
+            <span class="records-info">10 active vendor orders</span>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>PO REF</th>
+                <th>SUPPLIER</th>
+                <th>AMOUNT</th>
+                <th>PRIORITY</th>
+                <th>STATUS</th>
+                <th>EXPECTED DELIVERY</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a class="link-code">SUPPO-0010</a></td>
+                <td>SKF Precision Bearings Ltd (4013368f)</td>
+                <td>53,100 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0006</a></td>
+                <td>Tata Advanced Alloys (5d61455b)</td>
+                <td>29,500 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0008</a></td>
+                <td>Hydraulics International (1534251d)</td>
+                <td>41,300 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0015</a></td>
+                <td>Sundaram Fasteners (51849e31)</td>
+                <td>53,100 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0004</a></td>
+                <td>Global Titanium Components (b6065400)</td>
+                <td>47,200 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0003</a></td>
+                <td>Precision Seal Systems (1f96a105)</td>
+                <td>41,300 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0007</a></td>
+                <td>Sundaram Fasteners (51849e31)</td>
+                <td>35,400 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0012</a></td>
+                <td>Global Titanium Components (b6065400)</td>
+                <td>35,400 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0011</a></td>
+                <td>Precision Seal Systems (1f96a105)</td>
+                <td>29,500 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+              <tr>
+                <td><a class="link-code">SUPPO-0014</a></td>
+                <td>Tata Advanced Alloys (5d61455b)</td>
+                <td>47,200 INR</td>
+                <td><span class="badge-priority-med">medium</span></td>
+                <td><span class="badge-pill badge-approved">approved</span></td>
+                <td>04/09/2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 3: EXECUTIVE DASHBOARD (OVERVIEW)                              -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-dashboard">
+        <div class="page-header">
+          <h1 class="page-title">Executive Operations Dashboard</h1>
+          <p class="page-subtitle">Real-time factory telemetry, OEE metrics, and smart manufacturing health</p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-lbl">Overall OEE</div>
+            <div class="kpi-val">88.4%</div>
+            <div class="kpi-trend trend-up">↑ 5.2% vs target</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Customer Orders</div>
+            <div class="kpi-val">50</div>
+            <div class="kpi-trend trend-up">↑ 100% On Schedule</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Active Alerts</div>
+            <div class="kpi-val" style="color:#ef4444;">168</div>
+            <div class="kpi-trend trend-down">↓ 3 Critical alarms</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">On-Time Delivery</div>
+            <div class="kpi-val">92%</div>
+            <div class="kpi-trend trend-up">↑ 8% recovery achieved</div>
+          </div>
+        </div>
+
+        <!-- Work Centers Card -->
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">]]>🏭<![CDATA[ Shop Floor Work Centers Telemetry</span>
+            <span class="records-info">4 active production cells</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>CELL CODE</th>
+                <th>WORK CENTER NAME</th>
+                <th>HEALTH</th>
+                <th>TEMPERATURE</th>
+                <th>VIBRATION</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong style="color:#0284c7;">WC-CNC-501</strong></td>
+                <td>5-Axis CNC Milling Center</td>
+                <td>64%</td>
+                <td>68.5 °C</td>
+                <td style="color:#ef4444; font-weight:700;">0.19 mm/s (High)</td>
+                <td><span class="badge-pill" style="background:#fee2e2; color:#b91c1c;">Breakdown / Risk</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:#0284c7;">WC-ROBO-502</strong></td>
+                <td>Robotic Arc Welding Cell</td>
+                <td>76%</td>
+                <td>48.0 °C</td>
+                <td>0.14 mm/s</td>
+                <td><span class="badge-pill" style="background:#fef3c7; color:#d97706;">Maintenance Due</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:#0284c7;">WC-ADD-503</strong></td>
+                <td>Laser Powder 3D Metal Printer</td>
+                <td>96%</td>
+                <td>31.5 °C</td>
+                <td>0.02 mm/s</td>
+                <td><span class="badge-pill" style="background:#dcfce7; color:#15803d;">Optimal Running</span></td>
+              </tr>
+              <tr>
+                <td><strong style="color:#0284c7;">WC-ASSY-504</strong></td>
+                <td>Cleanroom Final Assembly Line</td>
+                <td>98%</td>
+                <td>21.8 °C</td>
+                <td>0.01 mm/s</td>
+                <td><span class="badge-pill" style="background:#dcfce7; color:#15803d;">Optimal Running</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 4: PRODUCTION &amp; MACHINES                                       -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-production">
+        <div class="page-header">
+          <h1 class="page-title">Production &amp; Machines</h1>
+          <p class="page-subtitle">Shop floor work order progress, machine routing, and batch tracking</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">⚡ Live Production Orders</span>
+            <span class="count-badge">3 In-Flight</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ORDER NUMBER</th>
+                <th>PART DESCRIPTION</th>
+                <th>PLANNED QTY</th>
+                <th>PRODUCED</th>
+                <th>MACHINE</th>
+                <th>PRIORITY</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a class="link-code">PO-2026-101</a></td>
+                <td>Aerospace Fuel Valve</td>
+                <td>50</td>
+                <td><strong>31</strong> (62%)</td>
+                <td>WC-CNC-501</td>
+                <td><span class="badge-pill" style="background:#fee2e2; color:#b91c1c;">P1</span></td>
+                <td><span class="badge-pill badge-active">In Progress</span></td>
+              </tr>
+              <tr>
+                <td><a class="link-code">PO-2026-104</a></td>
+                <td>Hydraulic Pump</td>
+                <td>40</td>
+                <td><strong>0</strong> (0%)</td>
+                <td>WC-ADD-503</td>
+                <td><span class="badge-pill" style="background:#ffedd5; color:#ea580c;">P2</span></td>
+                <td><span class="badge-pill badge-pending">Scheduled</span></td>
+              </tr>
+              <tr>
+                <td><a class="link-code">PO-2026-102</a></td>
+                <td>Gear Assembly</td>
+                <td>30</td>
+                <td><strong>0</strong> (0%)</td>
+                <td>WC-ROBO-502</td>
+                <td><span class="badge-pill" style="background:#ffedd5; color:#ea580c;">P2</span></td>
+                <td><span class="badge-pill" style="background:#f1f5f9; color:#475569;">Pending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 5: SCHEDULE PLANNER                                            -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-schedule">
+        <div class="page-header">
+          <h1 class="page-title">Schedule Planner</h1>
+          <p class="page-subtitle">Shift allocations, cell dispatching, and takt time optimization</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">]]>📅<![CDATA[ Shift Allocations &amp; Crew Assignments</span>
+            <span class="records-info">3 Active Shifts</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>SHIFT</th>
+                <th>HOURS</th>
+                <th>CREW LEAD</th>
+                <th>TECHNICIANS</th>
+                <th>ASSIGNED WORK CENTER</th>
+                <th>UTILIZATION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Shift Alpha (Morning)</strong></td>
+                <td>06:00 - 14:00</td>
+                <td>Rajesh Sharma</td>
+                <td>8 Techs</td>
+                <td>WC-CNC-501, WC-ADD-503</td>
+                <td><strong style="color:#10b981;">92%</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Shift Beta (Afternoon)</strong></td>
+                <td>14:00 - 22:00</td>
+                <td>Suresh Kumar</td>
+                <td>6 Techs</td>
+                <td>WC-ROBO-502</td>
+                <td><strong style="color:#0284c7;">84%</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Shift Gamma (Night)</strong></td>
+                <td>22:00 - 06:00</td>
+                <td>Anil Verma</td>
+                <td>4 Techs</td>
+                <td>WC-ASSY-504</td>
+                <td><strong style="color:#f59e0b;">78%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 6: INVENTORY                                                   -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-inventory">
+        <div class="page-header">
+          <h1 class="page-title">Inventory Management</h1>
+          <p class="page-subtitle">Warehouse stock levels, bin tracking, and safety stock thresholds</p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-lbl">Total Stock</div><div class="kpi-val">283</div><div class="kpi-trend trend-up">All warehouses</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">Available</div><div class="kpi-val" style="color:#10b981;">210</div><div class="kpi-trend trend-up">Ready for issue</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">Reserved</div><div class="kpi-val" style="color:#0284c7;">43</div><div class="kpi-trend">Committed to POs</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">Low Stock Alerts</div><div class="kpi-val" style="color:#ef4444;">5</div><div class="kpi-trend trend-down">Below safety limit</div></div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">⚠️ Critical Components Below Safety Stock</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>MATERIAL CODE</th>
+                <th>ITEM DESCRIPTION</th>
+                <th>CURRENT STOCK</th>
+                <th>SAFETY STOCK</th>
+                <th>SHORTAGE</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a class="link-code">MAT-BRG-201</a></td>
+                <td>Ceramic Ball Bearings 45mm</td>
+                <td><strong style="color:#ef4444;">7</strong></td>
+                <td>10</td>
+                <td>3 Units</td>
+                <td><span class="badge-pill" style="background:#fee2e2; color:#b91c1c;">Critical Shortage</span></td>
+              </tr>
+              <tr>
+                <td><a class="link-code">MAT-202</a></td>
+                <td>High-Temp Hydraulic Seal</td>
+                <td><strong style="color:#f59e0b;">8</strong></td>
+                <td>15</td>
+                <td>7 Units</td>
+                <td><span class="badge-pill badge-approved">Below SS</span></td>
+              </tr>
+              <tr>
+                <td><a class="link-code">MAT-205</a></td>
+                <td>Grade 8 Titanium Fasteners</td>
+                <td><strong>25</strong></td>
+                <td>30</td>
+                <td>5 Units</td>
+                <td><span class="badge-pill" style="background:#fef3c7; color:#d97706;">Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 7: SUPPLIERS                                                   -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-suppliers">
+        <div class="page-header">
+          <h1 class="page-title">Supplier Performance &amp; Directory</h1>
+          <p class="page-subtitle">Vendor lead times, quality acceptance rates, and active purchase contracts</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">]]>🚚<![CDATA[ Approved Industrial Vendors</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>SUPPLIER NAME</th>
+                <th>CATEGORY</th>
+                <th>ON-TIME DELIVERY</th>
+                <th>QUALITY RATING</th>
+                <th>ACTIVE POs</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>SKF Precision Bearings Ltd</strong></td>
+                <td>Precision Bearings</td>
+                <td>94.8%</td>
+                <td>98.2%</td>
+                <td>3</td>
+                <td><span class="badge-pill badge-active">Preferred Tier 1</span></td>
+              </tr>
+              <tr>
+                <td><strong>Tata Advanced Alloys</strong></td>
+                <td>Raw Materials / Steel</td>
+                <td>96.2%</td>
+                <td>99.1%</td>
+                <td>4</td>
+                <td><span class="badge-pill badge-active">Preferred Tier 1</span></td>
+              </tr>
+              <tr>
+                <td><strong>Sundaram Fasteners</strong></td>
+                <td>Hardware / Fasteners</td>
+                <td>91.5%</td>
+                <td>97.0%</td>
+                <td>2</td>
+                <td><span class="badge-pill badge-approved">Certified</span></td>
+              </tr>
+              <tr>
+                <td><strong>Precision Seal Systems</strong></td>
+                <td>Hydraulic Seals</td>
+                <td>89.0%</td>
+                <td>95.4%</td>
+                <td>1</td>
+                <td><span class="badge-pill badge-approved">Certified</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 8: ALERTS &amp; EXCEPTIONS                                         -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-alerts">
+        <div class="page-header">
+          <h1 class="page-title">Alerts &amp; Exceptions</h1>
+          <p class="page-subtitle">Real-time shop floor anomalies, downtime risks, and sensor alarms</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">]]>🚨<![CDATA[ Active Alarm Stream</span>
+            <span class="count-badge" style="background:#ef4444;">168 Total</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>SEVERITY</th>
+                <th>ASSET / ORDER</th>
+                <th>ALARM DETAILS</th>
+                <th>IMPACT</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge-pill" style="background:#fee2e2; color:#b91c1c;">CRITICAL</span></td>
+                <td><strong>WC-CNC-501</strong></td>
+                <td>Spindle vibration exceeded threshold (0.19 mm/s)</td>
+                <td>PO-101 Halted</td>
+                <td><button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('digital-twin')">Simulate Reroute</button></td>
+              </tr>
+              <tr>
+                <td><span class="badge-pill" style="background:#ffedd5; color:#ea580c;">HIGH</span></td>
+                <td><strong>PO-2026-101</strong></td>
+                <td>Material shortage: Ceramic Bearings (3 missing)</td>
+                <td>Assembly blocked</td>
+                <td><button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')">Expedite PO</button></td>
+              </tr>
+              <tr>
+                <td><span class="badge-pill" style="background:#fef3c7; color:#d97706;">MEDIUM</span></td>
+                <td><strong>MAT-BRG-201</strong></td>
+                <td>Stock dipped below safety stock level</td>
+                <td>Reorder point reached</td>
+                <td><button class="btn-action" style="padding:4px 10px; font-size:11px;" onclick="switchTab('procurement')">Create Requisition</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 9: DEMAND FORECASTING                                          -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-forecasting">
+        <div class="page-header">
+          <h1 class="page-title">Demand Forecasting &amp; MRP Engine</h1>
+          <p class="page-subtitle">Moving average consumption models, lead time buffers, and replenishment forecasts</p>
+        </div>
+
+        <div class="content-card">
+          <div class="card-head">
+            <span class="card-title">]]>📈<![CDATA[ 90-Day Projected Demand by Product Family</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>PRODUCT FAMILY</th>
+                <th>30-DAY DEMAND</th>
+                <th>60-DAY DEMAND</th>
+                <th>90-DAY DEMAND</th>
+                <th>TREND</th>
+                <th>BUFFER STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Aerospace Fuel Valves</strong></td>
+                <td>120 Units</td>
+                <td>240 Units</td>
+                <td>380 Units</td>
+                <td><span style="color:#10b981; font-weight:700;">↑ +14%</span></td>
+                <td><span class="badge-pill badge-active">Adequate</span></td>
+              </tr>
+              <tr>
+                <td><strong>Hydraulic Pump Subsystems</strong></td>
+                <td>80 Units</td>
+                <td>150 Units</td>
+                <td>210 Units</td>
+                <td><span style="color:#0284c7; font-weight:700;">→ Stable</span></td>
+                <td><span class="badge-pill badge-active">Adequate</span></td>
+              </tr>
+              <tr>
+                <td><strong>Cryogenic Control Valves</strong></td>
+                <td>45 Units</td>
+                <td>95 Units</td>
+                <td>160 Units</td>
+                <td><span style="color:#10b981; font-weight:700;">↑ +18%</span></td>
+                <td><span class="badge-pill badge-approved">Review Buffer</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 10: DIGITAL TWIN &amp; WHAT-IF SIMULATOR                           -->
+      <!-- =================================================================== -->
+      <section class="tab-view" id="view-digital-twin">
+        <div class="page-header">
+          <h1 class="page-title">Digital Twin &amp; What-If Simulation</h1>
+          <p class="page-subtitle">Simulate machine breakdowns, re-route production batches, and evaluate delivery impact</p>
+        </div>
+
+        <div class="sim-box">
+          <h3 style="font-size:15px; font-weight:700; margin-bottom:12px;">Disruption Parameters</h3>
+          <div class="sim-grid">
+            <div class="sim-field">
+              <label>Scenario</label>
+              <select id="simScenario">
+                <option>]]>🚨<![CDATA[ CNC-501 Spindle Breakdown</option>
+                <option>]]>📦<![CDATA[ Ceramic Bearings Delay</option>
+                <option>⚡ Priority Order Surge</option>
+              </select>
+            </div>
+            <div class="sim-field">
+              <label>Affected Cell</label>
+              <select id="simCell">
+                <option>WC-CNC-501 (Milling)</option>
+                <option>WC-ADD-503 (3D Printer)</option>
+                <option>WC-ROBO-502 (Welder)</option>
+              </select>
+            </div>
+            <div class="sim-field">
+              <label>Estimated Outage</label>
+              <select id="simOutage">
+                <option>4 Hours</option>
+                <option>8 Hours</option>
+                <option>24 Hours</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-action" onclick="runDigitalTwinSim()">▶ Run Digital Twin Simulation</button>
+        </div>
+
+        <div id="simResultsContainer" style="display:none;">
+          <div class="content-card">
+            <div class="card-head">
+              <span class="card-title">]]>🔮<![CDATA[ Simulation Recommendations (Adaptive Decision Engine)</span>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>STRATEGY</th>
+                  <th>RE-ROUTED ASSET</th>
+                  <th>ESTIMATED FINISH</th>
+                  <th>ON-TIME DELIVERY</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background:#ecfdf5;">
+                  <td><strong style="color:#059669;">Alternative A (Recommended - Best)</strong></td>
+                  <td>WC-ADD-503 (3D Printer)</td>
+                  <td>15:00 Today</td>
+                  <td><strong style="color:#059669;">96% (+12% Saved)</strong></td>
+                  <td><button class="btn-action btn-success" onclick="applyDigitalTwinPlan()">Approve &amp; Dispatch</button></td>
+                </tr>
+                <tr>
+                  <td><strong>Alternative B</strong></td>
+                  <td>Wait for CNC-501 Repair</td>
+                  <td>18:00 (Delayed)</td>
+                  <td>84% (-8% Loss)</td>
+                  <td><span class="records-info">Sub-optimal</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <div class="page-footer">
+        Industrial Inventory &amp; Production Management • Powered by ServiceNow dev445579
+      </div>
+    </div>
+  </div>
+
+  
+
+</div>
+
+</j:jelly>]]></html>
         <name>dashboard</name>
         <processing_script/>
         <sys_class_name>sys_ui_page</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-19 05:55:11</sys_created_on>
         <sys_id>3fa6e2419f1b49eaa5fe5530954b1fbc</sys_id>
-        <sys_mod_count>6</sys_mod_count>
+        <sys_mod_count>17</sys_mod_count>
         <sys_name>dashboard</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ui_page_3fa6e2419f1b49eaa5fe5530954b1fbc</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-07 16:08:40</sys_updated_on>
+        <sys_updated_on>2026-10-08 07:22:30</sys_updated_on>
     </sys_ui_page>
     <sn_glider_source_artifact_m2m action="INSERT_OR_UPDATE">
         <application_file display_value="dashboard">3fa6e2419f1b49eaa5fe5530954b1fbc</application_file>
@@ -79,28 +1802,28 @@ window.g_ck = "$[gs.getSession().getSessionToken() || gs.getSessionToken()]";</s
         <compressed>true</compressed>
         <content_type>application/zip</content_type>
         <file_name>x_2056099_indust_0_dashboard.do - BYOUI Files.zip</file_name>
-        <hash>351436a166e74b7dc064f0912d015174d36cc87b8e144057b8aca617b2c49ac6</hash>
+        <hash>4833f18311efbdb31297a0b91e9c8e94feb77fd8ad5ab1167b253df58e868695</hash>
         <image_height/>
         <image_width/>
-        <size_bytes>57521</size_bytes>
-        <size_compressed>11897</size_compressed>
+        <size_bytes>59006</size_bytes>
+        <size_compressed>12154</size_compressed>
         <state/>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-07 15:55:41</sys_created_on>
-        <sys_id>e6bed17ba7907d66eb850d4f595b00c3</sys_id>
+        <sys_created_on>2026-10-08 06:20:23</sys_created_on>
+        <sys_id>550d5487701e565f7e5c82c937f24a91</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-07 15:55:41</sys_updated_on>
+        <sys_updated_on>2026-10-08 06:20:23</sys_updated_on>
         <table_name>sn_glider_source_artifact</table_name>
         <table_sys_id>33a06b8c6eed4ad2be8c370915e720e7</table_sys_id>
     </sys_attachment>
     <sys_attachment_doc action="INSERT_OR_UPDATE">
-        <data>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</data>
+        <data>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</data>
         <length/>
         <position>0</position>
-        <sys_attachment display_value="x_2056099_indust_0_dashboard.do - BYOUI Files.zip" sys_id="e6bed17ba7907d66eb850d4f595b00c3">e6bed17ba7907d66eb850d4f595b00c3</sys_attachment>
+        <sys_attachment display_value="x_2056099_indust_0_dashboard.do - BYOUI Files.zip" sys_id="550d5487701e565f7e5c82c937f24a91">550d5487701e565f7e5c82c937f24a91</sys_attachment>
         <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-07 15:55:41</sys_created_on>
-        <sys_id>59e92ae861a933523a4884a23db19ff9</sys_id>
+        <sys_created_on>2026-10-08 06:20:23</sys_created_on>
+        <sys_id>695d5596fd387f3852c53bfd8e739748</sys_id>
     </sys_attachment_doc>
 </record_update>

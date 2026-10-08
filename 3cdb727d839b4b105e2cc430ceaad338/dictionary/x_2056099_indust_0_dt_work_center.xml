@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="ca07acbe5363471045b132a0a0490ea1" label="Digital Twin Work Center" max_length="40" name="x_2056099_indust_0_dt_work_center" type="collection">
+        <element label="Facility Location" max_length="32" name="facility_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Current Loading %" max_length="15" name="current_loading_pct" type="decimal"/>
+        <element label="Digital Twin Calibration Date" max_length="10" name="calibration_date" type="glide_date"/>
+        <element label="Daily Capacity (Hours)" max_length="15" name="daily_capacity_hours" type="decimal"/>
+        <element label="Work Center Code" mandatory="true" max_length="30" name="work_center_code" type="string" unique="true"/>
         <element default="javascript:current.getTableName();" label="Class" max_length="80" name="sys_class_name" type="sys_class_name"/>
-        <element label="Vibration (mm/s)" max_length="15" name="vibration_mms" type="decimal"/>
         <element choice="1" default="optimal" label="Operational Status" max_length="40" name="operational_status" type="string">
             <choice>
-                <element inactive_on_update="false" label="Optimal" sequence="100" value="optimal"/>
-                <element inactive_on_update="false" label="Offline" sequence="600" value="offline"/>
-                <element inactive_on_update="false" label="Sensor Warning" sequence="400" value="sensor_warning"/>
-                <element inactive_on_update="false" label="Under Repair" sequence="500" value="under_repair"/>
                 <element inactive_on_update="false" label="Maintenance Alert" sequence="300" value="maintenance_alert"/>
+                <element inactive_on_update="false" label="Offline" sequence="600" value="offline"/>
                 <element inactive_on_update="false" label="Standby Ready" sequence="200" value="standby_ready"/>
                 <element inactive_on_update="false" label="Standby Ready" sequence="200" value="standby_ready"/>
+                <element inactive_on_update="false" label="Under Repair" sequence="500" value="under_repair"/>
+                <element inactive_on_update="false" label="Sensor Warning" sequence="400" value="sensor_warning"/>
+                <element inactive_on_update="false" label="Optimal" sequence="100" value="optimal"/>
             </choice>
         </element>
-        <element choice="1" label="Process Type" max_length="40" name="process_type" type="string">
-            <choice>
-                <element inactive_on_update="false" label="Turning / Trimming" sequence="200" value="turning_trimming"/>
-                <element inactive_on_update="false" label="Rework / Lapping" sequence="900" value="rework_lapping"/>
-                <element inactive_on_update="false" label="Precision Assembly" sequence="500" value="precision_assembly"/>
-                <element inactive_on_update="false" label="Pressure Test Standby" sequence="800" value="pressure_test_standby"/>
-                <element inactive_on_update="false" label="Specialized Assembly" sequence="400" value="specialized_assembly"/>
-                <element inactive_on_update="false" label="Machining / Boring" sequence="100" value="machining_boring"/>
-                <element inactive_on_update="false" label="Pressure Test" sequence="700" value="pressure_test"/>
-                <element inactive_on_update="false" label="Specialized Assembly" sequence="400" value="specialized_assembly"/>
-                <element inactive_on_update="false" label="Cryo Assembly" sequence="600" value="cryo_assembly"/>
-                <element inactive_on_update="false" label="Final Assembly" sequence="300" value="final_assembly"/>
-                <element inactive_on_update="false" label="Fugitive Emission Test" sequence="1000" value="fugitive_emission_test"/>
-            </choice>
-        </element>
-        <element label="Facility Location" max_length="32" name="facility_location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Daily Capacity (Hours)" max_length="15" name="daily_capacity_hours" type="decimal"/>
         <element label="Health Index %" max_length="15" name="health_index_pct" type="decimal"/>
-        <element label="Digital Twin Work Center" max_length="40" name="digital_twin_work_center" type="a0e0cbd2c3203000bac1addbdfba8f59"/>
-        <element label="Current Loading %" max_length="15" name="current_loading_pct" type="decimal"/>
-        <element label="Work Center Code" mandatory="true" max_length="30" name="work_center_code" type="string" unique="true"/>
         <element label="Work Center Name" mandatory="true" max_length="200" name="work_center_name" type="string"/>
         <element label="Assigned Shift Crew" max_length="200" name="assigned_shift_crew" type="string"/>
-        <element label="Digital Twin Calibration Date" max_length="10" name="calibration_date" type="glide_date"/>
+        <element label="Vibration (mm/s)" max_length="15" name="vibration_mms" type="decimal"/>
+        <element choice="1" label="Process Type" max_length="40" name="process_type" type="string">
+            <choice>
+                <element inactive_on_update="false" label="Pressure Test Standby" sequence="800" value="pressure_test_standby"/>
+                <element inactive_on_update="false" label="Specialized Assembly" sequence="400" value="specialized_assembly"/>
+                <element inactive_on_update="false" label="Specialized Assembly" sequence="400" value="specialized_assembly"/>
+                <element inactive_on_update="false" label="Final Assembly" sequence="300" value="final_assembly"/>
+                <element inactive_on_update="false" label="Pressure Test" sequence="700" value="pressure_test"/>
+                <element inactive_on_update="false" label="Fugitive Emission Test" sequence="1000" value="fugitive_emission_test"/>
+                <element inactive_on_update="false" label="Cryo Assembly" sequence="600" value="cryo_assembly"/>
+                <element inactive_on_update="false" label="Turning / Trimming" sequence="200" value="turning_trimming"/>
+                <element inactive_on_update="false" label="Machining / Boring" sequence="100" value="machining_boring"/>
+                <element inactive_on_update="false" label="Rework / Lapping" sequence="900" value="rework_lapping"/>
+                <element inactive_on_update="false" label="Precision Assembly" sequence="500" value="precision_assembly"/>
+            </choice>
+        </element>
+        <element label="Digital Twin Work Center" max_length="40" name="digital_twin_work_center" type="a0e0cbd2c3203000bac1addbdfba8f59"/>
         <element label="Operating Temperature (C)" max_length="15" name="operating_temp_c" type="decimal"/>
         <index name="index">
             <element name="facility_location"/>

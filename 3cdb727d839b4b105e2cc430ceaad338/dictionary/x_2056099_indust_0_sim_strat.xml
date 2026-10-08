@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="fcdf5a55294f478bb99dd7f311b9cc6d" label="Simulation Strategy" name="x_2056099_indust_0_sim_strat" type="collection">
-        <element label="Affected Production Orders" max_length="4000" name="affected_prod_orders" type="string"/>
-        <element display="true" label="Strategy" mandatory="true" max_length="40" name="strategy_name" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Local Available Stock" sequence="1" value="local_available_stock"/>
-                <element inactive_on_update="false" label="Alternate Warehouse Transfer" sequence="4" value="alt_warehouse_transfer"/>
-                <element inactive_on_update="false" label="Alternate Warehouse Available Stock" sequence="3" value="alt_warehouse_available"/>
-                <element inactive_on_update="false" label="Local Supplier Procurement" sequence="7" value="local_supplier_procurement"/>
-                <element inactive_on_update="false" label="Reserved Stock Reallocation" sequence="6" value="reserved_reallocation"/>
-                <element inactive_on_update="false" label="Alternate Supplier Procurement" sequence="5" value="alt_supplier_procurement"/>
-                <element inactive_on_update="false" label="Safety Stock Consumption" sequence="2" value="safety_stock_consumption"/>
-            </choice>
-        </element>
-        <element label="Strategy Notes" max_length="4000" name="strategy_notes" type="string"/>
-        <element label="Simulation" mandatory="true" max_length="32" name="simulation" reference="x_2056099_indust_0_fulfill_sim" type="reference"/>
-        <element default="0" label="Stock Remaining" max_length="15" name="stock_remaining" type="decimal"/>
+        <element default="0" label="Rank" max_length="40" name="strategy_rank" type="integer"/>
+        <element default="0" label="Quantity Available" max_length="15" name="quantity_available" type="decimal"/>
         <element default="not_feasible" label="Customer Delivery Impact" max_length="40" name="customer_delivery_impact" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Critical Delay" sequence="3" value="critical_delay"/>
                 <element inactive_on_update="false" label="Delayed" sequence="2" value="delayed"/>
                 <element inactive_on_update="false" label="On Time" sequence="1" value="on_time"/>
                 <element inactive_on_update="false" label="Not Feasible" sequence="4" value="not_feasible"/>
-                <element inactive_on_update="false" label="Critical Delay" sequence="3" value="critical_delay"/>
             </choice>
         </element>
-        <element default="0" label="Procurement Quantity" max_length="15" name="procurement_quantity" type="decimal"/>
-        <element label="Feasible" max_length="40" name="feasible" type="boolean"/>
         <element label="Procurement Required" max_length="40" name="procurement_required" type="boolean"/>
-        <element default="0" label="Stock Consumed" max_length="15" name="stock_consumed" type="decimal"/>
-        <element label="Expected Fulfillment Date" max_length="40" name="expected_fulfillment_date" type="glide_date"/>
-        <element default="0" label="Rank" max_length="40" name="strategy_rank" type="integer"/>
-        <element default="0" label="Transfer Lead Time (Days)" max_length="40" name="transfer_lead_time_days" type="integer"/>
         <element default="0" label="Safety Stock Impact" max_length="15" name="safety_stock_impact" type="decimal"/>
-        <element label="Supplier" max_length="32" name="supplier" reference="core_company" type="reference"/>
-        <element default="0" label="Supplier Lead Time (Days)" max_length="40" name="supplier_lead_time_days" type="integer"/>
-        <element default="0" label="Quantity Available" max_length="15" name="quantity_available" type="decimal"/>
+        <element default="0" label="Transfer Lead Time (Days)" max_length="40" name="transfer_lead_time_days" type="integer"/>
         <element label="Source Warehouse" max_length="32" name="source_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element default="0" label="Procurement Quantity" max_length="15" name="procurement_quantity" type="decimal"/>
+        <element label="Affected Production Orders" max_length="4000" name="affected_prod_orders" type="string"/>
+        <element display="true" label="Strategy" mandatory="true" max_length="40" name="strategy_name" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Alternate Warehouse Available Stock" sequence="3" value="alt_warehouse_available"/>
+                <element inactive_on_update="false" label="Local Supplier Procurement" sequence="7" value="local_supplier_procurement"/>
+                <element inactive_on_update="false" label="Safety Stock Consumption" sequence="2" value="safety_stock_consumption"/>
+                <element inactive_on_update="false" label="Reserved Stock Reallocation" sequence="6" value="reserved_reallocation"/>
+                <element inactive_on_update="false" label="Local Available Stock" sequence="1" value="local_available_stock"/>
+                <element inactive_on_update="false" label="Alternate Warehouse Transfer" sequence="4" value="alt_warehouse_transfer"/>
+                <element inactive_on_update="false" label="Alternate Supplier Procurement" sequence="5" value="alt_supplier_procurement"/>
+            </choice>
+        </element>
+        <element default="0" label="Stock Consumed" max_length="15" name="stock_consumed" type="decimal"/>
+        <element label="Supplier" max_length="32" name="supplier" reference="core_company" type="reference"/>
+        <element label="Simulation" mandatory="true" max_length="32" name="simulation" reference="x_2056099_indust_0_fulfill_sim" type="reference"/>
+        <element label="Feasible" max_length="40" name="feasible" type="boolean"/>
+        <element label="Strategy Notes" max_length="4000" name="strategy_notes" type="string"/>
+        <element label="Expected Fulfillment Date" max_length="40" name="expected_fulfillment_date" type="glide_date"/>
+        <element default="0" label="Supplier Lead Time (Days)" max_length="40" name="supplier_lead_time_days" type="integer"/>
+        <element default="0" label="Stock Remaining" max_length="15" name="stock_remaining" type="decimal"/>
         <index name="index">
             <element name="simulation"/>
         </index>
