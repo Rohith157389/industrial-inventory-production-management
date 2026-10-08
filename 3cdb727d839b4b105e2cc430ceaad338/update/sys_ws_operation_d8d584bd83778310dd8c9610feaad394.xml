@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>GET</http_method>
+        <name>Get Dashboard Data</name>
+        <operation_script><![CDATA[(function process(request, response) {
+  // Smart Manufacturing mobile dashboard - single live-data payload for the UI page.
+  var P = 'x_2056099_indust_0_';
+  var now = new GlideDateTime().getNumericValue();
+  var DAY = 86400000;
+
+  function num(v) { var n = parseFloat(v); return isNaN(n) ? 0 : n; }
+  function ms(gr, f) { var v = gr.getValue(f); return v ? new GlideDateTime(v).getNumericValue() : 0; }
+  function pct(a, b) { return b > 0 ? Math.round((a / b) * 100) : 0; }
+  function round1(n) { return Math.round(n * 10) / 10; }
+
+  // ---------- user ----------
+  var u = gs.getUser();
+  var first = u.getFirstName() || u.getDisplayName() || 'there';
+  var out = { generatedAt: now, user: { first: first + '', name: u.getDisplayName() + '', initial: (first + '').charAt(0).toUpperCase() } };
+
+  // ---------- materials (id + name lookup) ----------
+  var mat = {};
+  var m = new GlideRecord(P + 'mat_master');
+  m.query();
+  while (m.next()) mat[m.getUniqueValue()] = {
+    id: m.getValue('material_product_id') + '', name: m.getValue('name') + '',
+    safety: num(m.getValue('safety_stock')), reorder: num(m.getValue('reorder_level')), uom: m.getValue('unit_of_measure') + ''
+  };
+  function matOf(id) { return mat[id] || { id: '', name: '' }; }
+  var lead = {};
+  var sm0 = new GlideRecord(P + 'supp_mat');
+  sm0.query();
+  while (sm0.next()) lead[sm0.getValue('material_product')] = num(sm0.getValue('lead_time_days'));
+  var bomByProduct = {};
+  var cb = new GlideRecord(P + 'customer_bom');
+  cb.addQuery('status', 'active');
+  cb.query();
+  while (cb.next()) bomByProduct[cb.getValue('finished_product')] = cb.getValue('number') + '';
+
+  // ---------- resources ----------
+  var res = {}, effSum = 0, effN = 0;
+  var r = new GlideRecord(P + 'prod_res');
+  r.query();
+  while (r.next()) {
+    res[r.getUniqueValue()] = { id: r.getValue('resource_id') + '', name: r.getValue('resource_name') + '', cap: num(r.getValue('capacity_per_day')) };
+    effSum += num(r.getValue('efficiency_percentage')); effN++;
+  }
+
+  // ---------- inventory stock ----------
+  // Tiles count stock lines; low stock is rolled up per material (all locations) against the material master thresholds.
+  var inv = { total: 0, available: 0, reserved: 0, quarantine: 0, incoming: 0, low: 0, belowSafety: 0, materials: 0, lowItems: [] };
+  var availByMat = {}, stocked = {}, invTypes = {};
+  var s = new GlideRecord(P + 'inv_stock');
+  s.addNotNullQuery('material_product');
+  s.query();
+  while (s.next()) {
+    var st = s.getValue('status') + '';
+    var av = num(s.getValue('available_quantity'));
+    var mid = s.getValue('material_product');
+    inv.total++;
+    var itype = (s.getValue('inventory_type') || 'unclassified') + '';
+    if (!invTypes[itype]) invTypes[itype] = { type: itype, lines: 0, qty: 0 };
+    invTypes[itype].lines++; invTypes[itype].qty += av;
+    stocked[mid] = true;
+    if (st == 'available' && av > 0) inv.available++;
+    if (num(s.getValue('reserved_quantity')) > 0 || st == 'reserved') inv.reserved++;
+    if (st == 'quarantined' || st == 'blocked' || st == 'inspection' || st == 'expired') inv.quarantine++;
+    if (st == 'available') availByMat[mid] = (availByMat[mid] || 0) + av;
+  }
+  for (var sm in stocked) {
+    var mm = mat[sm];
+    if (!mm) continue;
+    inv.materials++;
+    var have0 = availByMat[sm] || 0;
+    var level = have0 < mm.safety ? 'below_ss' : (have0 < mm.reorder ? 'low' : '');
+    if (!level) continue;
+    inv.low++;
+    if (level == 'below_ss') inv.belowSafety++;
+    var target = level == 'below_ss' ? mm.safety : mm.reorder;
+    inv.lowItems.push({
+      material: sm, matId: mm.id, name: mm.name, qty: have0, safety: mm.safety, reorder: mm.reorder, uom: mm.uom,
+      level: level, shortfall: Math.max(Math.max(mm.safety, mm.reorder) - have0, 0), ratio: target > 0 ? have0 / target : 1
+    });
+  }
+  inv.lowItems.sort(function (a, b) { return (a.level == b.level ? 0 : (a.level == 'below_ss' ? -1 : 1)) || (a.ratio - b.ratio); });
+  inv.lowItems = inv.lowItems.slice(0, 15);
+  var po = new GlideAggregate(P + 'proc_order');
+  po.addQuery('status', 'NOT IN', 'received,closed,cancelled,completed,rejected,draft');
+  po.addAggregate('COUNT');
+  po.query();
+  if (po.next()) inv.incoming = parseInt(po.getAggregate('COUNT'), 10) || 0;
+  inv.health = inv.materials ? Math.round(((inv.materials - inv.belowSafety) / inv.materials) * 100) : 0;
+  inv.types = [];
+  for (var itk in invTypes) inv.types.push(invTypes[itk]);
+  inv.types.sort(function (x, y) { return y.lines - x.lines; });
+  out.inventory = inv;
+
+  // ---------- production orders ----------
+  var PR = { critical: 'P1', high: 'P1', medium: 'P2', low: 'P3' };
+  var orders = [], byNumber = {};
+  var today = { planned: 0, produced: 0, remaining: 0 };
+  var cnt = { in_production: 0, planned: 0, completed: 0, on_hold: 0, open: 0, onTrack: 0, atRisk: 0 };
+  var o = new GlideRecord(P + 'production_order');
+  o.addQuery('status', '!=', 'cancelled');
+  o.orderBy('number');
+  o.query();
+  while (o.next()) {
+    var status = o.getValue('status') + '';
+    var planned = num(o.getValue('quantity_planned'));
+    var produced = num(o.getValue('quantity_produced'));
+    var remaining = Math.max(planned - produced, 0);
+    var rs = res[o.getValue('assigned_resource')] || { id: '', name: '', cap: 0 };
+    var cap = num(o.getValue('required_capacity_per_day')) || rs.cap;
+    var due = ms(o, 'planned_end_date');
+    var risk = 'On Track';
+    if (status == 'completed') risk = 'Completed';
+    else if (remaining > 0 && due && due < now) risk = 'Delayed';
+    else if (status == 'on_hold') risk = 'At Risk';
+    else if (remaining > 0 && due && cap > 0 && (remaining / cap) * DAY > (due - now)) risk = 'At Risk';
+    var fp = matOf(o.getValue('finished_product'));
+    var rec = {
+      sys_id: o.getUniqueValue(), number: o.getValue('number') + '',
+      product: (o.getValue('description') || fp.name || '') + '', productId: fp.id,
+      priority: o.getValue('priority') + '', pri: PR[o.getValue('priority')] || 'P3',
+      status: status, statusLabel: o.getDisplayValue('status') + '',
+      planned: planned, produced: produced, remaining: remaining, pct: pct(produced, planned),
+      resource: rs.name, resourceId: rs.id, location: o.getDisplayValue('production_location') + '',
+      customerOrder: o.getDisplayValue('customer_order') + '',
+      customer: (o.customer_order.customer.getDisplayValue() || '') + '',
+      bom: bomByProduct[o.getValue('finished_product')] || '',
+      capacity: cap, projected: (status != 'completed' && cap > 0) ? now + (remaining / cap) * DAY : 0,
+      start: ms(o, 'planned_start_date'), due: due, risk: risk, materials: [], activity: []
+    };
+    orders.push(rec); byNumber[rec.number] = rec;
+    if (cnt[status] !== undefined) cnt[status]++;
+    if (status != 'completed') {
+      cnt.open++;
+      if (risk == 'On Track') cnt.onTrack++; else cnt.atRisk++;
+    }
+    if (status == 'in_production') { today.planned += planned; today.produced += produced; today.remaining += remaining; }
+  }
+  today.pct = pct(today.produced, today.planned);
+  out.today = today;
+
+  // BOM / material requirements per order, with live availability
+  var bySys = {};
+  for (var i = 0; i < orders.length; i++) bySys[orders[i].sys_id] = orders[i];
+  var usedBy = {};
+  var pm = new GlideRecord(P + 'production_material');
+  pm.orderBy('number');
+  pm.query();
+  while (pm.next()) {
+    var ord = bySys[pm.getValue('production_order')];
+    if (!ord) continue;
+    var pmid = pm.getValue('material_product');
+    if (ord.status != 'completed') { if (!usedBy[pmid]) usedBy[pmid] = []; if (usedBy[pmid].length < 4) usedBy[pmid].push(ord.sys_id); }
+    var req = num(pm.getValue('required_quantity'));
+    var need = Math.max(req - num(pm.getValue('issued_quantity')), 0);
+    var have = availByMat[pmid] || 0;
+    ord.materials.push({
+      number: pm.getValue('number') + '', material: pmid, matId: matOf(pmid).id, name: matOf(pmid).name,
+      required: req, issued: num(pm.getValue('issued_quantity')), available: have,
+      shortage: Math.max(need - have, 0), uom: pm.getValue('unit_of_measure') + '', status: pm.getValue('status') + '',
+      leadDays: lead[pmid] || 0
+    });
+  }
+  // Activity = inventory requests raised against the order
+  var ir = new GlideRecord(P + 'inv_req');
+  ir.orderByDesc('sys_created_on');
+  ir.query();
+  while (ir.next()) {
+    var ao = byNumber[ir.getValue('related_production_order')];
+    if (!ao || ao.activity.length >= 6) continue;
+    ao.activity.push({
+      number: ir.getValue('number') + '', type: ir.getDisplayValue('request_type') + '', status: ir.getDisplayValue('status') + '',
+      material: matOf(ir.getValue('material_product')).name, qty: num(ir.getValue('quantity_requested')), at: ms(ir, 'sys_created_on')
+    });
+  }
+  inv.materialList = [];
+  for (var lm in stocked) {
+    var lmm = mat[lm];
+    if (!lmm) continue;
+    var lq = availByMat[lm] || 0;
+    inv.materialList.push({
+      material: lm, matId: lmm.id, name: lmm.name, qty: lq, safety: lmm.safety, reorder: lmm.reorder, uom: lmm.uom,
+      level: lq < lmm.safety ? 'below_ss' : (lq < lmm.reorder ? 'low' : 'ok'), leadDays: lead[lm] || 0, orders: usedBy[lm] || []
+    });
+  }
+  var lvRank = { below_ss: 0, low: 1, ok: 2 };
+  inv.materialList.sort(function (x, y) { return (lvRank[x.level] - lvRank[y.level]) || (x.name < y.name ? -1 : 1); });
+
+  var rank = { in_production: 0, on_hold: 1, materials_reserved: 2, material_check: 2, planned: 3, draft: 4, completed: 5 };
+  orders.sort(function (a, b) { return (rank[a.status] - rank[b.status]) || (a.number < b.number ? -1 : 1); });
+  out.orders = orders;
+
+  // ---------- customer orders (+ lines and the production orders raised for them) ----------
+  var custOrders = [], coById = {}, coCnt = { total: 0, open: 0, urgent: 0, active: 0 };
+  var co = new GlideRecord(P + 'cust_order');
+  co.orderBy('requested_delivery_date');
+  co.orderBy('number');
+  co.query();
+  while (co.next()) {
+    var cst = co.getValue('status') + '', cpr = co.getValue('priority') + '';
+    var closed = cst == 'completed' || cst == 'delivered' || cst == 'closed' || cst == 'cancelled' || cst == 'rejected';
+    var isActive = co.getValue('active') == '1';
+    coCnt.total++;
+    if (isActive) coCnt.active++;
+    if (!closed) { coCnt.open++; if (cpr == 'critical' || cpr == 'high') coCnt.urgent++; }
+    var cx = {
+      sys_id: co.getUniqueValue(), number: (co.getValue('number') || '') + '', customer: co.getDisplayValue('customer') + '',
+      status: cst, priority: cpr, type: co.getValue('order_type') + '', qty: num(co.getValue('total_order_quantity')),
+      reference: (co.getValue('customer_reference') || '') + '', orderDate: ms(co, 'order_date'), due: ms(co, 'requested_delivery_date'),
+      deliverTo: (co.getValue('delivery_location') || co.getDisplayValue('preferred_delivery_location') || '') + '',
+      open: !closed, active: isActive, created: ms(co, 'sys_created_on'), items: [], production: []
+    };
+    custOrders.push(cx); coById[cx.sys_id] = cx;
+  }
+  var ci = new GlideRecord(P + 'cust_ord_item');
+  ci.orderBy('number');
+  ci.query();
+  while (ci.next()) {
+    var pc = coById[ci.getValue('customer_order')];
+    if (!pc) continue;
+    var cim = matOf(ci.getValue('material_product'));
+    pc.items.push({ number: ci.getValue('number') + '', matId: cim.id, name: cim.name, qty: num(ci.getValue('quantity_ordered')), status: ci.getValue('item_status') + '' });
+  }
+  var lk = new GlideRecord(P + 'production_order');
+  lk.addNotNullQuery('customer_order');
+  lk.addQuery('status', '!=', 'cancelled');
+  lk.orderBy('number');
+  lk.query();
+  while (lk.next()) {
+    var lc = coById[lk.getValue('customer_order')], lo = bySys[lk.getUniqueValue()];
+    if (lc && lo) lc.production.push({ sys_id: lo.sys_id, number: lo.number, status: lo.status, pct: lo.pct, risk: lo.risk });
+  }
+  // active (entered through the app) first, newest on top; the rest stay in due-date order
+  custOrders.sort(function (x, y) { return (x.active === y.active ? 0 : (x.active ? -1 : 1)) || (x.active ? y.created - x.created : 0); });
+  out.customerOrders = custOrders;
+  out.customerOrderCounts = coCnt;
+
+  // ---------- schedule ----------
+  out.schedule = [];
+  var sc = new GlideRecord(P + 'prod_sched');
+  sc.orderBy('step_sequence');
+  sc.query();
+  while (sc.next()) {
+    out.schedule.push({
+      number: sc.getValue('number') + '', order: sc.getDisplayValue('production_order') + '', orderId: sc.getValue('production_order') + '',
+      machine: sc.getDisplayValue('machine') + '', qty: num(sc.getValue('planned_quantity')),
+      start: ms(sc, 'planned_start'), end: ms(sc, 'planned_end'), status: sc.getDisplayValue('status') + ''
+    });
+  }
+
+  // ---------- alerts ----------
+  var sevRank = { critical: 0, high: 1, medium: 2, low: 3 };
+  var alerts = [], ac = { critical: 0, high: 0, medium: 0, low: 0, open: 0 }, alertTypes = {};
+  var a = new GlideRecord(P + 'inv_alert');
+  a.addQuery('status', 'IN', 'open,acknowledged,in_progress');
+  a.orderByDesc('alert_date');
+  a.query();
+  while (a.next()) {
+    var sev = a.getValue('severity') + '';
+    ac.open++; if (ac[sev] !== undefined) ac[sev]++;
+    var am = matOf(a.getValue('material_product'));
+    var atype = a.getValue('alert_type') + '';
+    alertTypes[atype] = (alertTypes[atype] || 0) + 1;
+    alerts.push({
+      sys_id: a.getUniqueValue(), number: (a.getValue('number') || '') + '', sev: sev, type: atype,
+      typeLabel: a.getDisplayValue('alert_type') + '', matId: am.id, material: am.name,
+      message: (a.getValue('alert_message') || '') + '', qty: num(a.getValue('current_quantity')),
+      threshold: num(a.getValue('threshold_quantity')), at: ms(a, 'alert_date'),
+      stock: a.getDisplayValue('inventory_stock') + '', batch: a.getDisplayValue('batch_lot') + '', materialId: a.getValue('material_product') + '',
+      screen: atype == 'quality_failure' ? '13' : '5'
+    });
+  }
+  alerts.sort(function (x, y) { return (sevRank[x.sev] - sevRank[y.sev]) || (y.at - x.at); });
+  out.alertCounts = ac;
+  out.alertTypes = [];
+  for (var atk in alertTypes) out.alertTypes.push({ type: atk, count: alertTypes[atk] });
+  out.alertTypes.sort(function (x, y) { return y.count - x.count; });
+  out.alerts = alerts.slice(0, 60);
+
+  // ---------- work centers, machines, maintenance, downtime ----------
+  var wcs = [], healthSum = 0, overloaded = 0;
+  var w = new GlideRecord(P + 'dt_work_center');
+  w.orderByDesc('current_loading_pct');
+  w.query();
+  while (w.next()) {
+    var load = num(w.getValue('current_loading_pct'));
+    healthSum += num(w.getValue('health_index_pct'));
+    if (load > 80) overloaded++;
+    wcs.push({
+      code: w.getValue('work_center_code') + '', name: w.getValue('work_center_name') + '', load: load,
+      health: num(w.getValue('health_index_pct')), crew: w.getValue('assigned_shift_crew') + '',
+      status: w.getDisplayValue('operational_status') + '', vibration: num(w.getValue('vibration_mms')), temp: num(w.getValue('operating_temp_c'))
+    });
+  }
+  out.workCenters = wcs;
+
+  var machDown = 0, machTotal = 0;
+  var mc = new GlideRecord(P + 'machine');
+  mc.query();
+  while (mc.next()) {
+    machTotal++;
+    var mst = mc.getValue('status') + '';
+    if (mst == 'broken_down' || mst == 'out_of_service' || mst == 'under_maintenance' || mst == 'replacement_required') machDown++;
+  }
+
+  var maint = { active: 0, inProgress: 0, complete: 0, items: [] };
+  var mt = new GlideRecord(P + 'mach_maint');
+  mt.orderByDesc('start_date');
+  mt.query();
+  while (mt.next()) {
+    var ms2 = mt.getValue('status') + '';
+    if (ms2 == 'in_progress') maint.inProgress++;
+    if (ms2 == 'completed' || ms2 == 'verified' || ms2 == 'closed') maint.complete++;
+    else if (ms2 != 'cancelled' && ms2 != 'draft') maint.active++;
+    if (maint.items.length < 5) maint.items.push({
+      number: mt.getValue('number') + '', machine: mt.getDisplayValue('machine') + '', status: mt.getDisplayValue('status') + '',
+      type: mt.getDisplayValue('maintenance_type') + '', reason: (mt.getValue('failure_reason') || '') + ''
+    });
+  }
+  out.maintenance = maint;
+
+  var downMin = 0;
+  var md = new GlideRecord(P + 'mach_down');
+  md.query();
+  while (md.next()) {
+    var ds = ms(md, 'start_time'), de = ms(md, 'end_time') || now;
+    if (ds && (now - Math.min(ds, de)) <= 30 * DAY) downMin += Math.abs(de - ds) / 60000;
+  }
+
+  // ---------- workforce ----------
+  var wf = { available: 0, assigned: 0, absent: 0, overloaded: overloaded, teams: [] };
+  var teamCount = {};
+  var h = new GlideRecord(P + 'hr_profile');
+  h.query();
+  while (h.next()) {
+    var es = h.getValue('employment_status') + '';
+    if (es == 'active') {
+      wf.available++;
+      var team = (h.getValue('assignment_group') || '') + '';
+      if (/^[0-9a-f]{32}$/.test(team)) team = h.getDisplayValue('assignment_group') + '';
+      if (team) { wf.assigned++; teamCount[team] = (teamCount[team] || 0) + 1; }
+    }
+    else if (es == 'on_leave' || es == 'suspended') wf.absent++;
+  }
+  for (var tn in teamCount) wf.teams.push({ name: tn, count: teamCount[tn] });
+  wf.teams.sort(function (x, y) { return y.count - x.count; });
+  out.workforce = wf;
+
+  // ---------- quality ----------
+  var qc = { inspections: 0, inspected: 0, passed: 0, failed: 0, withDefects: 0, items: [] };
+  var qi = new GlideRecord(P + 'qc_insp');
+  qi.orderByDesc('inspection_date');
+  qi.query();
+  while (qi.next()) {
+    var qf = num(qi.getValue('quantity_failed'));
+    qc.inspections++;
+    qc.inspected += num(qi.getValue('quantity_inspected'));
+    qc.passed += num(qi.getValue('quantity_passed'));
+    qc.failed += qf;
+    if (qf > 0) qc.withDefects++;
+    var qm = matOf(qi.getValue('material_product'));
+    qc.items.push({
+      number: qi.getValue('number') + '', material: qm.name, matId: qm.id, type: qi.getValue('inspection_type') + '',
+      inspected: num(qi.getValue('quantity_inspected')), failed: qf, result: qi.getValue('result') + '',
+      defect: (qi.getValue('defect_details') || '') + '', batch: qi.getDisplayValue('batch_lot') + '', at: ms(qi, 'inspection_date')
+    });
+  }
+  qc.items.sort(function (x, y) { return (y.failed - x.failed) || (y.at - x.at); });
+  qc.passRate = qc.inspected ? Math.round((qc.passed / qc.inspected) * 1000) / 10 : 0;
+  out.quality = qc;
+
+  // ---------- suppliers ----------
+  out.suppliers = [];
+  var supSum = { total: 0, active: 0, belowThreshold: 0, avgScore: 0 }, supScore = 0;
+  var sp = new GlideRecord(P + 'supplier');
+  sp.orderByDesc('cumulative_score');
+  sp.orderBy('name');
+  sp.query();
+  while (sp.next()) {
+    var sscore = num(sp.getValue('cumulative_score')), sthr = num(sp.getValue('threshold_score'));
+    supSum.total++; supScore += sscore;
+    if (sp.getValue('status') == 'active') supSum.active++;
+    if (sscore < sthr) supSum.belowThreshold++;
+    out.suppliers.push({
+      name: sp.getValue('name') + '', score: sscore, threshold: sthr, category: sp.getValue('category') + '',
+      status: sp.getValue('status') + '', availability: sp.getValue('availability') + '',
+      orders: num(sp.getValue('total_orders')), ratings: num(sp.getValue('total_ratings')),
+      phone: (sp.getValue('contact_phone') || '') + '', address: (sp.getValue('address') || '') + ''
+    });
+  }
+  supSum.avgScore = supSum.total ? round1(supScore / supSum.total) : 0;
+  // Scorecards are not linked to individual suppliers on this instance, so they are reported as overall averages.
+  var dims = [['avg_delivery_score', 'Delivery'], ['avg_quality_score', 'Quality'], ['avg_quantity_score', 'Quantity'],
+    ['avg_cost_score', 'Cost'], ['avg_documentation_score', 'Documentation']];
+  var dimSum = [0, 0, 0, 0, 0], cards = 0, perf = {};
+  var sk = new GlideRecord(P + 'supp_score');
+  sk.query();
+  while (sk.next()) {
+    cards++;
+    for (var di = 0; di < dims.length; di++) dimSum[di] += num(sk.getValue(dims[di][0]));
+    var pf = sk.getValue('performance_status') + '';
+    perf[pf] = (perf[pf] || 0) + 1;
+  }
+  supSum.scorecards = cards;
+  supSum.dimensions = [];
+  for (var dj = 0; dj < dims.length && cards; dj++) supSum.dimensions.push({ name: dims[dj][1], score: Math.round((dimSum[dj] / cards) * 100) / 100 });
+  supSum.performance = [];
+  for (var pk in perf) supSum.performance.push({ status: pk, count: perf[pk] });
+  out.supplierSummary = supSum;
+
+  // ---------- what-if scenarios (+ impacted schedule runs) ----------
+  var scen = [], scenById = {};
+  var sn = new GlideRecord(P + 'sim_scenario');
+  sn.orderBy('scenario_id');
+  sn.query();
+  while (sn.next()) {
+    var sx = {
+      sys_id: sn.getUniqueValue(), id: sn.getValue('scenario_id') + '', name: sn.getValue('scenario_name') + '',
+      category: sn.getValue('disruption_category') + '', categoryLabel: sn.getDisplayValue('disruption_category') + '',
+      parameter: sn.getValue('disruption_parameter') + '', strategy: sn.getValue('recommended_strategy') + '',
+      baseline: num(sn.getValue('baseline_otd')), unmitigated: num(sn.getValue('simulated_otd_unmitigated')),
+      optimized: num(sn.getValue('optimized_otd')), cost: num(sn.getValue('cost_delta')),
+      impacted: num(sn.getValue('impacted_order_count')), status: sn.getValue('simulation_status') + '',
+      delay: 0, recovered: 0, runs: []
+    };
+    scen.push(sx); scenById[sx.sys_id] = sx;
+  }
+  var sr = new GlideRecord(P + 'sim_schedule_run');
+  sr.query();
+  while (sr.next()) {
+    var ps = scenById[sr.getValue('scenario')];
+    if (!ps) continue;
+    var dl = num(sr.getValue('delay_unmitigated')), rc = num(sr.getValue('net_delay_recovered'));
+    ps.delay += dl; ps.recovered += rc;
+    ps.runs.push({
+      order: sr.getValue('customer_order_ref') + '', customer: sr.getValue('customer_name') + '', machine: sr.getValue('assigned_machine') + '',
+      qty: num(sr.getValue('order_qty')), delay: dl, recovered: rc, finish: (sr.getValue('baseline_planned_finish') || '') + ''
+    });
+  }
+  for (var k = 0; k < scen.length; k++) { scen[k].delay = round1(scen[k].delay); scen[k].recovered = round1(scen[k].recovered); }
+  scen.sort(function (x, y) { return (y.baseline - y.unmitigated) - (x.baseline - x.unmitigated); });
+  out.scenarios = scen;
+
+  // ---------- KPIs ----------
+  var availability = wcs.length ? healthSum / wcs.length : 0;
+  var performance = effN ? effSum / effN : 0;
+  var qualityRate = qc.inspected ? (qc.passed / qc.inspected) * 100 : 0;
+  var statusTxt = 'Healthy';
+  if (ac.critical > 0 || machDown > 0) statusTxt = 'Critical';
+  else if (ac.high > 0 || cnt.atRisk > 0 || maint.inProgress > 0) statusTxt = 'Attention';
+  out.kpi = {
+    status: statusTxt,
+    oee: round1((availability / 100) * (performance / 100) * (qualityRate / 100) * 100),
+    availability: round1(availability), performance: round1(performance), quality: round1(qualityRate),
+    ordersActive: cnt.in_production, ordersPlanned: cnt.planned, ordersOnHold: cnt.on_hold, ordersCompleted: cnt.completed,
+    alertsOpen: ac.open, alertsHigh: ac.high + ac.critical,
+    otd: pct(cnt.onTrack, cnt.open), atRisk: cnt.atRisk,
+    downtimeMin: Math.round(downMin), machines: machTotal, machinesDown: machDown,
+    inventoryHealth: inv.health
+  };
+
+  response.setStatus(200);
+  response.setBody(out);
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/smart_mfg_api/data</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/data</relative_path>
+        <request_example/>
+        <requires_acl_authorization>false</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 10:02:31</sys_created_on>
+        <sys_id>d8d584bd83778310dd8c9610feaad394</sys_id>
+        <sys_mod_count>5</sys_mod_count>
+        <sys_name>Get Dashboard Data</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_d8d584bd83778310dd8c9610feaad394</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 10:57:28</sys_updated_on>
+        <web_service_definition display_value="Smart Mfg Mobile API">91c5c0bd83778310dd8c9610feaad3c6</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

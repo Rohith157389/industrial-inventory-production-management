@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>POST</http_method>
+        <name>Run Action</name>
+        <operation_script><![CDATA[(function process(request, response) {
+  // Smart Manufacturing mobile dashboard - write-back actions from the UI page.
+  var P = 'x_2056099_indust_0_';
+  var ROLES = ['production_operator', 'production_supervisor', 'production_manager', 'production_planner',
+    'plant_manager', 'operations_manager', 'inventory_manager', 'material_planner'];
+
+  function fail(code, msg) { response.setStatus(code); response.setBody({ success: false, error: msg }); }
+  function ok(msg, extra) { var b = extra || {}; b.success = true; b.message = msg; response.setStatus(200); response.setBody(b); }
+
+  var allowed = gs.hasRole('admin');
+  for (var i = 0; i < ROLES.length && !allowed; i++) allowed = gs.hasRole('x_2056099_indust_0.' + ROLES[i]);
+  if (!allowed) return fail(403, 'Insufficient role for this operation');
+
+  var body = request.body && request.body.data ? request.body.data : {};
+  var action = body.action + '';
+
+  function getOrder() {
+    var gr = new GlideRecord(P + 'production_order');
+    if (!body.sys_id || !gr.get(body.sys_id)) { fail(404, 'Production order not found'); return null; }
+    return gr;
+  }
+
+  if (action == 'log_units') {
+    var o = getOrder(); if (!o) return;
+    var qty = parseFloat(body.qty);
+    if (isNaN(qty) || qty <= 0) return fail(400, 'Quantity must be greater than 0');
+    if (o.getValue('status') != 'in_production') return fail(400, 'Order must be In Production to log units (currently ' + o.getDisplayValue('status') + ')');
+    var planned = parseFloat(o.getValue('quantity_planned')) || 0;
+    var produced = parseFloat(o.getValue('quantity_produced')) || 0;
+    if (produced + qty > planned) return fail(400, 'Only ' + (planned - produced) + ' units remain on ' + o.getValue('number'));
+    o.setValue('quantity_produced', produced + qty);
+    o.setValue('quantity_remaining', planned - produced - qty);
+    if (!o.update()) return fail(400, 'Update was rejected for ' + o.getValue('number'));
+    return ok('Logged ' + qty + ' units for ' + o.getValue('number'));
+  }
+
+  if (action == 'set_status') {
+    var p = getOrder(); if (!p) return;
+    var from = p.getValue('status') + '', to = body.to + '';
+    var legal = {
+      in_production: ['planned', 'materials_reserved', 'on_hold'],
+      on_hold: ['in_production'],
+      completed: ['in_production']
+    };
+    if (!legal[to] || legal[to].indexOf(from) < 0) return fail(400, 'Cannot move ' + p.getValue('number') + ' from ' + p.getDisplayValue('status') + ' to ' + to);
+    if (to == 'completed' && (parseFloat(p.getValue('quantity_produced')) || 0) < (parseFloat(p.getValue('quantity_planned')) || 0))
+      return fail(400, 'Log the remaining units before completing ' + p.getValue('number'));
+    p.setValue('status', to);
+    if (to == 'in_production' && !p.getValue('actual_start_date')) p.setValue('actual_start_date', new GlideDateTime());
+    if (to == 'completed') p.setValue('actual_end_date', new GlideDateTime());
+    if (!p.update()) return fail(400, 'Update was rejected for ' + p.getValue('number'));
+    var names = { in_production: 'In Production', on_hold: 'On Hold', completed: 'Completed' };
+    return ok(p.getValue('number') + ' is now ' + names[to]);
+  }
+
+  if (action == 'report_issue') {
+    var ri = getOrder(); if (!ri) return;
+    var note = ((body.note || '') + '').replace(/^\s+|\s+$/g, '').substring(0, 500);
+    if (!note) return fail(400, 'Describe the issue before submitting');
+    var stamp = new GlideDateTime().getDisplayValue() + ' ' + gs.getUserDisplayName() + ' (mobile): ';
+    var prev = ri.getValue('notes') || '';
+    ri.setValue('notes', (stamp + note + (prev ? '\n' + prev : '')).substring(0, 4000));
+    var held = ri.getValue('status') == 'in_production' && body.hold !== false;
+    if (held) ri.setValue('status', 'on_hold');
+    if (!ri.update()) return fail(400, 'Update was rejected for ' + ri.getValue('number'));
+    return ok('Issue logged on ' + ri.getValue('number') + (held ? ' and order put on hold' : ''));
+  }
+
+  if (action == 'approve_scenario') {
+    var s = new GlideRecord(P + 'sim_scenario');
+    if (!body.sys_id || !s.get(body.sys_id)) return fail(404, 'Simulation scenario not found');
+    s.setValue('simulation_status', 'approved');
+    s.update();
+    return ok('Approved: ' + s.getValue('recommended_strategy') + ' (' + s.getValue('scenario_id') + ')');
+  }
+
+  if (action == 'request_material') {
+    var qtyReq = parseFloat(body.qty);
+    if (!body.material || isNaN(qtyReq) || qtyReq <= 0) return fail(400, 'Material and quantity are required');
+    var mm = new GlideRecord(P + 'mat_master');
+    if (!mm.get(body.material)) return fail(404, 'Material not found');
+    var typeMap = { raw_material: 'raw_materials', finished_goods: 'finished_goods', mro: 'mro' };
+    var rq = new GlideRecord(P + 'inv_req');
+    rq.newRecord();
+    rq.setValue('request_type', body.order ? 'inventory_transfer' : 'safety_stock_replenishment');
+    rq.setValue('status', 'submitted');
+    rq.setValue('priority', 'high');
+    rq.setValue('inventory_type', typeMap[mm.getValue('material_type')] || 'raw_materials');
+    rq.setValue('material_product', mm.getUniqueValue());
+    rq.setValue('quantity_requested', qtyReq);
+    rq.setValue('requested_by', gs.getUserID());
+    rq.setValue('requested_date', new GlideDateTime());
+    rq.setValue('reason', 'Raised from Smart Manufacturing mobile' + (body.order ? ' - shortage on ' + body.order : ' - stock below safety level'));
+    if (body.order) {
+      rq.setValue('related_production_order', body.order);
+      var po = new GlideRecord(P + 'production_order');
+      if (po.get('number', body.order)) rq.setValue('destination_location', po.getValue('production_location'));
+    }
+    if (!rq.getValue('number')) {
+      var last = new GlideAggregate(P + 'inv_req');
+      last.addQuery('number', 'STARTSWITH', 'REQ0');
+      last.addAggregate('MAX', 'number');
+      last.setGroup(false);
+      last.query();
+      var n = last.next() ? parseInt((last.getAggregate('MAX', 'number') + '').replace(/\D/g, ''), 10) || 0 : 0;
+      rq.setValue('number', 'REQ' + ('0000000' + (n + 1)).slice(-7));
+    }
+    var id = rq.insert();
+    if (!id) return fail(400, 'Request could not be created');
+    return ok('Request ' + rq.getValue('number') + ' raised for ' + qtyReq + ' x ' + mm.getValue('name'), { number: rq.getValue('number') + '', sys_id: id + '' });
+  }
+
+  return fail(400, 'Unknown action: ' + action);
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/smart_mfg_api/action</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/action</relative_path>
+        <request_example/>
+        <requires_acl_authorization>false</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 10:02:38</sys_created_on>
+        <sys_id>39d5c4bd83778310dd8c9610feaad308</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Run Action</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_39d5c4bd83778310dd8c9610feaad308</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 10:57:34</sys_updated_on>
+        <web_service_definition display_value="Smart Mfg Mobile API">91c5c0bd83778310dd8c9610feaad3c6</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

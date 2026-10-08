@@ -45,7 +45,7 @@
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_hub_flow_e6c7341b02c0450b8ec3fc94b7eeb246</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-07 18:56:28</sys_updated_on>
+        <sys_updated_on>2026-10-08 07:58:07</sys_updated_on>
         <type>subflow</type>
         <updation_source/>
         <version>2</version>
@@ -1411,23 +1411,23 @@
     <sys_hub_flow_variable action="delete_multiple" query="model=e6c7341b02c0450b8ec3fc94b7eeb246"/>
     <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_e6c7341b02c0450b8ec3fc94b7eeb246"/>
     <sys_documentation action="INSERT_OR_UPDATE">
-        <element>customerOrderSysId</element>
+        <element>shortageQuantity</element>
         <help/>
         <hint/>
-        <label>Customer Order sys_id</label>
+        <label>Shortage Quantity</label>
         <language>en</language>
         <name>var__m_sys_hub_flow_input_e6c7341b02c0450b8ec3fc94b7eeb246</name>
-        <plural>Customer Order sys_ids</plural>
+        <plural>Shortage Quantities</plural>
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:29</sys_created_on>
-        <sys_id>328338e983b30f10624454d6feaad3dd</sys_id>
+        <sys_id>57e62fe183ff4310dd8c9610feaad316</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name>Customer Order sys_id</sys_name>
+        <sys_name>Shortage Quantity</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_e6c7341b02c0450b8ec3fc94b7eeb246_customerOrderSysId_en</sys_update_name>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_e6c7341b02c0450b8ec3fc94b7eeb246_shortageQuantity_en</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-01 04:59:29</sys_updated_on>
         <url/>
@@ -1444,7 +1444,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:29</sys_created_on>
-        <sys_id>3e8378e983b30f10624454d6feaad302</sys_id>
+        <sys_id>5fe6ebe183ff4310dd8c9610feaad3f0</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Material sys_id</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -1467,13 +1467,36 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:29</sys_created_on>
-        <sys_id>3e8378e983b30f10624454d6feaad321</sys_id>
+        <sys_id>d3e62fe183ff4310dd8c9610feaad310</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Production Order sys_id</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_e6c7341b02c0450b8ec3fc94b7eeb246_productionOrderSysId_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 04:59:29</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>customerOrderSysId</element>
+        <help/>
+        <hint/>
+        <label>Customer Order sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_e6c7341b02c0450b8ec3fc94b7eeb246</name>
+        <plural>Customer Order sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 04:59:29</sys_created_on>
+        <sys_id>d7e6ebe183ff4310dd8c9610feaad3cb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Customer Order sys_id</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_e6c7341b02c0450b8ec3fc94b7eeb246_customerOrderSysId_en</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-01 04:59:29</sys_updated_on>
         <url/>
@@ -1490,36 +1513,13 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:29</sys_created_on>
-        <sys_id>ba8338e983b30f10624454d6feaad3fc</sys_id>
+        <sys_id>dbe6ebe183ff4310dd8c9610feaad3ea</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Destination Warehouse sys_id</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_e6c7341b02c0450b8ec3fc94b7eeb246_destinationWarehouseSysId_en</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 04:59:29</sys_updated_on>
-        <url/>
-        <url_target/>
-    </sys_documentation>
-    <sys_documentation action="INSERT_OR_UPDATE">
-        <element>shortageQuantity</element>
-        <help/>
-        <hint/>
-        <label>Shortage Quantity</label>
-        <language>en</language>
-        <name>var__m_sys_hub_flow_input_e6c7341b02c0450b8ec3fc94b7eeb246</name>
-        <plural>Shortage Quantities</plural>
-        <sys_class_name>sys_documentation</sys_class_name>
-        <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-01 04:59:29</sys_created_on>
-        <sys_id>be8378e983b30f10624454d6feaad327</sys_id>
-        <sys_mod_count>0</sys_mod_count>
-        <sys_name>Shortage Quantity</sys_name>
-        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-        <sys_policy/>
-        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_e6c7341b02c0450b8ec3fc94b7eeb246_shortageQuantity_en</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-01 04:59:29</sys_updated_on>
         <url/>
@@ -1537,7 +1537,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:29</sys_created_on>
-        <sys_id>0693bce983b30f10624454d6feaad315</sys_id>
+        <sys_id>01f6632583ff4310dd8c9610feaad3f0</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Reallocation Feasible</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -1560,7 +1560,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:29</sys_created_on>
-        <sys_id>82937ce983b30f10624454d6feaad3dd</sys_id>
+        <sys_id>0df6632583ff4310dd8c9610feaad3d0</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Decision Record sys_id</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -2989,6 +2989,29 @@
     <sys_hub_flow_variable action="delete_multiple" query="model=d86df21b93af4310e61e3b277bba101e"/>
     <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_d86df21b93af4310e61e3b277bba101e"/>
     <sys_documentation action="INSERT_OR_UPDATE">
+        <element>productionOrderSysId</element>
+        <help/>
+        <hint/>
+        <label>Production Order sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e</name>
+        <plural>Production Order sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 04:59:44</sys_created_on>
+        <sys_id>0be6abe183ff4310dd8c9610feaad3fe</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Production Order sys_id</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e_productionOrderSysId_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 04:59:44</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
         <element>materialSysId</element>
         <help/>
         <hint/>
@@ -2999,7 +3022,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:43</sys_created_on>
-        <sys_id>168338e983b30f10624454d6feaad32f</sys_id>
+        <sys_id>3ae6abe183ff4310dd8c9610feaad3df</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Material sys_id</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -3012,23 +3035,46 @@
         <url_target/>
     </sys_documentation>
     <sys_documentation action="INSERT_OR_UPDATE">
-        <element>productionOrderSysId</element>
+        <element>shortageQuantity</element>
         <help/>
         <hint/>
-        <label>Production Order sys_id</label>
+        <label>Shortage Quantity</label>
         <language>en</language>
         <name>var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e</name>
-        <plural>Production Order sys_ids</plural>
+        <plural>Shortage Quantities</plural>
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:44</sys_created_on>
-        <sys_id>5e8338e983b30f10624454d6feaad341</sys_id>
+        <sys_id>8be6ebe183ff4310dd8c9610feaad304</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name>Production Order sys_id</sys_name>
+        <sys_name>Shortage Quantity</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e_productionOrderSysId_en</sys_update_name>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e_shortageQuantity_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 04:59:44</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>customerOrderSysId</element>
+        <help/>
+        <hint/>
+        <label>Customer Order sys_id</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e</name>
+        <plural>Customer Order sys_ids</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 04:59:44</sys_created_on>
+        <sys_id>b2e6abe183ff4310dd8c9610feaad3ba</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Customer Order sys_id</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e_customerOrderSysId_en</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-01 04:59:44</sys_updated_on>
         <url/>
@@ -3045,7 +3091,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:43</sys_created_on>
-        <sys_id>928338e983b30f10624454d6feaad329</sys_id>
+        <sys_id>b6e6abe183ff4310dd8c9610feaad3d9</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Destination Warehouse sys_id</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -3054,52 +3100,6 @@
         <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e_destinationWarehouseSysId_en</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-01 04:59:43</sys_updated_on>
-        <url/>
-        <url_target/>
-    </sys_documentation>
-    <sys_documentation action="INSERT_OR_UPDATE">
-        <element>customerOrderSysId</element>
-        <help/>
-        <hint/>
-        <label>Customer Order sys_id</label>
-        <language>en</language>
-        <name>var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e</name>
-        <plural>Customer Order sys_ids</plural>
-        <sys_class_name>sys_documentation</sys_class_name>
-        <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-01 04:59:44</sys_created_on>
-        <sys_id>9e8338e983b30f10624454d6feaad309</sys_id>
-        <sys_mod_count>0</sys_mod_count>
-        <sys_name>Customer Order sys_id</sys_name>
-        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-        <sys_policy/>
-        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e_customerOrderSysId_en</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 04:59:44</sys_updated_on>
-        <url/>
-        <url_target/>
-    </sys_documentation>
-    <sys_documentation action="INSERT_OR_UPDATE">
-        <element>shortageQuantity</element>
-        <help/>
-        <hint/>
-        <label>Shortage Quantity</label>
-        <language>en</language>
-        <name>var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e</name>
-        <plural>Shortage Quantities</plural>
-        <sys_class_name>sys_documentation</sys_class_name>
-        <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-01 04:59:44</sys_created_on>
-        <sys_id>de8338e983b30f10624454d6feaad347</sys_id>
-        <sys_mod_count>0</sys_mod_count>
-        <sys_name>Shortage Quantity</sys_name>
-        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-        <sys_policy/>
-        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_d86df21b93af4310e61e3b277bba101e_shortageQuantity_en</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 04:59:44</sys_updated_on>
         <url/>
         <url_target/>
     </sys_documentation>
@@ -3115,7 +3115,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:44</sys_created_on>
-        <sys_id>02937ce983b30f10624454d6feaad3d7</sys_id>
+        <sys_id>89f6632583ff4310dd8c9610feaad3ca</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Reallocation Feasible</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -3138,7 +3138,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 04:59:45</sys_created_on>
-        <sys_id>f9937ce983b30f10624454d6feaad360</sys_id>
+        <sys_id>cdf6632583ff4310dd8c9610feaad39e</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Decision Record sys_id</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>

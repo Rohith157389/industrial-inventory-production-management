@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="41c47037c5c24e329a3339ffeaf0b50e" label="Feasibility Component" name="x_2056099_indust_0_feas_comp" type="collection">
+        <element label="Fulfillment Method" max_length="100" name="fulfillment_method" type="string"/>
+        <element label="Material ID" max_length="40" name="material_id" type="string"/>
+        <element label="Local Status" max_length="40" name="local_status" type="string"/>
+        <element label="Incoming Quantity" name="incoming_qty" type="integer"/>
+        <element label="Required Quantity" name="required_qty" type="integer"/>
+        <element label="Material" max_length="200" name="material_name" type="string"/>
+        <element label="Procurement Quantity" name="procurement_qty" type="integer"/>
+        <element label="Component Status" max_length="40" name="component_status" type="string"/>
+        <element label="Selected WH Available" name="local_available" type="integer"/>
+        <element label="Expected Availability" max_length="60" name="earliest_date" type="string"/>
+        <element label="Feasibility Check" mandatory="true" name="check_ref" reference="x_2056099_indust_0_feas_check" type="reference"/>
+        <element label="Remaining Shortage" name="remaining_shortage" type="integer"/>
+        <element label="Transfer Sources" max_length="500" name="transfer_sources" type="string"/>
+        <element label="Total Fulfilled" name="fulfilled_qty" type="integer"/>
+        <element label="Supplier" max_length="200" name="procurement_supplier" type="string"/>
+        <element label="Transfer Quantity" name="transfer_qty" type="integer"/>
+        <index name="index">
+            <element name="check_ref"/>
+        </index>
+    </element>
+</database>

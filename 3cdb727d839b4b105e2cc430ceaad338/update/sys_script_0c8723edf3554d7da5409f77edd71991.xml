@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>false</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_proc_rpt</collection>
+        <condition/>
+        <description>Generates procurement report number derived from parent Procurement Order number (e.g. PO-2026-001-RPT-001). Falls back to RPT-YYYY-NNN if no parent procurement order is set.</description>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Auto Generate Procurement Report Number</name>
+        <order>50</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function(current, previous) {
+    var val = current.getValue('report_number');
+    if (val && ('' + val).trim() !== '') return;
+
+    var parentRef = current.getValue('procurement_order');
+    var parentNumber = '';
+
+    if (parentRef) {
+        var parentGr = new GlideRecord('x_2056099_indust_0_proc_order');
+        if (parentGr.get(parentRef)) {
+            parentNumber = '' + parentGr.getValue('number');
+        }
+    }
+
+    if (parentNumber) {
+        var itemPrefix = parentNumber + '-RPT-';
+
+        var ga = new GlideAggregate('x_2056099_indust_0_proc_rpt');
+        ga.addQuery('procurement_order', parentRef);
+        ga.addAggregate('COUNT');
+        ga.query();
+        var count = 0;
+        if (ga.next()) {
+            count = parseInt(ga.getAggregate('COUNT'), 10);
+        }
+
+        var gr = new GlideRecord('x_2056099_indust_0_proc_rpt');
+        gr.addQuery('report_number', 'STARTSWITH', itemPrefix);
+        gr.query();
+        var maxSeq = 0;
+        while (gr.next()) {
+            var numVal = '' + gr.getValue('report_number');
+            var parts = numVal.split('-');
+            var lastPart = parts[parts.length - 1];
+            var num = parseInt(lastPart, 10);
+            if (!isNaN(num) && num > maxSeq) maxSeq = num;
+        }
+
+        var nextSeq = count + 1;
+        if (nextSeq <= maxSeq) nextSeq = maxSeq + 1;
+
+        var pad = '' + nextSeq;
+        while (pad.length < 3) pad = '0' + pad;
+        var candidate = itemPrefix + pad;
+
+        var check = new GlideRecord('x_2056099_indust_0_proc_rpt');
+        check.addQuery('report_number', candidate);
+        check.setLimit(1);
+        check.query();
+        while (check.hasNext()) {
+            check.next();
+            nextSeq++;
+            pad = '' + nextSeq;
+            while (pad.length < 3) pad = '0' + pad;
+            candidate = itemPrefix + pad;
+            check = new GlideRecord('x_2056099_indust_0_proc_rpt');
+            check.addQuery('report_number', candidate);
+            check.setLimit(1);
+            check.query();
+        }
+
+        current.setValue('report_number', candidate);
+    } else {
+        var gen = new AutoNumberGenerator();
+        current.setValue('report_number', gen.generate('x_2056099_indust_0_proc_rpt', 'report_number', 'RPT', 3, true));
+    }
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 10:53:05</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>0c8723edf3554d7da5409f77edd71991</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Auto Generate Procurement Report Number</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_0c8723edf3554d7da5409f77edd71991</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 10:53:05</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=0c8723edf3554d7da5409f77edd71991"/>
+</record_update>

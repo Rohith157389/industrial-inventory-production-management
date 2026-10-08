@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>false</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_proc_order</collection>
+        <condition/>
+        <description>Generates procurement order number derived from parent Production Order number (e.g. ORD-2026-066-PROD-001-PO-001). Falls back to PO-YYYY-NNN if no parent production order is set.</description>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Auto Generate Procurement Order Number</name>
+        <order>50</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function(current, previous) {
+    var val = current.getValue('number');
+    if (val && ('' + val).trim() !== '') return;
+
+    var orderRef = current.getValue('production_order');
+    var orderNumber = '';
+
+    // Look up the parent Production Order's number
+    if (orderRef) {
+        var orderGr = new GlideRecord('x_2056099_indust_0_production_order');
+        if (orderGr.get(orderRef)) {
+            orderNumber = '' + orderGr.getValue('number');
+        }
+    }
+
+    if (orderNumber) {
+        // Generate procurement order number derived from parent: {orderNumber}-PO-{NNN}
+        var itemPrefix = orderNumber + '-PO-';
+
+        // Count existing procurement orders for this production order
+        var ga = new GlideAggregate('x_2056099_indust_0_proc_order');
+        ga.addQuery('production_order', orderRef);
+        ga.addAggregate('COUNT');
+        ga.query();
+        var count = 0;
+        if (ga.next()) {
+            count = parseInt(ga.getAggregate('COUNT'), 10);
+        }
+
+        // Find max existing sequence among procurement orders for this production order
+        var gr = new GlideRecord('x_2056099_indust_0_proc_order');
+        gr.addQuery('number', 'STARTSWITH', itemPrefix);
+        gr.query();
+        var maxSeq = 0;
+        while (gr.next()) {
+            var numVal = '' + gr.getValue('number');
+            var parts = numVal.split('-');
+            var lastPart = parts[parts.length - 1];
+            var num = parseInt(lastPart, 10);
+            if (!isNaN(num) && num > maxSeq) {
+                maxSeq = num;
+            }
+        }
+
+        // Start from count+1; fall back to maxSeq+1 if collision
+        var nextSeq = count + 1;
+        if (nextSeq <= maxSeq) {
+            nextSeq = maxSeq + 1;
+        }
+
+        var pad = '' + nextSeq;
+        while (pad.length < 3) pad = '0' + pad;
+        var candidate = itemPrefix + pad;
+
+        // Collision check
+        var check = new GlideRecord('x_2056099_indust_0_proc_order');
+        check.addQuery('number', candidate);
+        check.setLimit(1);
+        check.query();
+        while (check.hasNext()) {
+            check.next();
+            nextSeq++;
+            pad = '' + nextSeq;
+            while (pad.length < 3) pad = '0' + pad;
+            candidate = itemPrefix + pad;
+            check = new GlideRecord('x_2056099_indust_0_proc_order');
+            check.addQuery('number', candidate);
+            check.setLimit(1);
+            check.query();
+        }
+
+        current.setValue('number', candidate);
+    } else {
+        // Fallback when no parent order: use PO-YYYY-NNN format
+        var gen = new AutoNumberGenerator();
+        current.setValue('number', gen.generate('x_2056099_indust_0_proc_order', 'number', 'PO', 3, true));
+    }
+})(current, previous);
+]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 10:53:05</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>017153d433704a7ba515a807fb9c3f3a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Auto Generate Procurement Order Number</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_017153d433704a7ba515a807fb9c3f3a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 10:53:05</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=017153d433704a7ba515a807fb9c3f3a"/>
+</record_update>

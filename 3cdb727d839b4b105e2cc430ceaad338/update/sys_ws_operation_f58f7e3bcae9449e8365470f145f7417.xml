@@ -28,22 +28,83 @@
     var prodName = matGr.getValue("name")||"";
     var prodId = matGr.getValue("material_product_id")||"";
 
+    // === HELPER: Aggregate stock across all inv_stock records ===
+    function _getStock(matId, locSid) {
+      var result = {total:0, reserved:0, available:0, safety_stock:0};
+      var sg = new GlideRecord(P+"inv_stock");
+      sg.addQuery("material_product", matId);
+      sg.addQuery("location", locSid);
+      sg.addQuery("active", true);
+      sg.addQuery("status", "available");
+      sg.query();
+      while (sg.next()) {
+        result.total += parseFloat(sg.getValue("total_quantity"))||0;
+        result.reserved += parseFloat(sg.getValue("reserved_quantity"))||0;
+        result.available += parseFloat(sg.getValue("available_quantity"))||0;
+        result.safety_stock += parseFloat(sg.getValue("safety_stock"))||0;
+      }
+      return result;
+    }
+
+    // === HELPER: Transfer lead time lookup ===
+    function _getTransferLeadTime(srcId, dstId) {
+      var lt = new GlideRecord(P+"transfer_lead_time");
+      lt.addQuery("source_warehouse", srcId);
+      lt.addQuery("destination_warehouse", dstId);
+      lt.addQuery("active", true);
+      lt.setLimit(1);
+      lt.query();
+      if (lt.next()) return parseFloat(lt.getValue("lead_time_days"))||0;
+      return 0;
+    }
+
     // === STEP 1: BOM RESOLUTION ===
     var resolver = new x_2056099_indust_0.BomResolver();
     var bomR = resolver.resolveByProduct(fpId);
     if (!bomR.success) { response.setBody({status:"NOT_FEASIBLE",product:prodName,product_id:prodId,requested_quantity:qty,requested_delivery_date:reqDateStr,reason:"No valid BOM found.",detail:bomR.message}); return; }
 
     // === STEP 2: RESOLVE WAREHOUSES ===
+    // FIX: Use location_type instead of active+STARTSWITH filter.
+    // Warehouses have active=0 but location_type=inventory_warehouse.
     var allWh = [];
     var whGr = new GlideRecord(P+"inv_loc");
-    whGr.addQuery("active",true); whGr.addQuery("location_id","STARTSWITH","WH-"); whGr.orderBy("location_id"); whGr.query();
+    whGr.addQuery("location_type", "inventory_warehouse");
+    whGr.addQuery("location_id", "STARTSWITH", "WH-");
+    whGr.orderBy("location_id");
+    whGr.query();
     while (whGr.next()) allWh.push({sid:whGr.getUniqueValue(),id:whGr.getValue("location_id"),name:whGr.getValue("location_name")});
     var selWh = null;
     if (locParam) { for (var w=0;w<allWh.length;w++) if (allWh[w].id===locParam) { selWh=allWh[w]; break; } }
     if (!selWh && allWh.length>0) selWh = allWh[0];
-    if (!selWh) { response.setBody({status:"NOT_FEASIBLE",reason:"No active warehouse."}); return; }
+    if (!selWh) { response.setBody({status:"NOT_FEASIBLE",reason:"No warehouse found."}); return; }
 
-    // === STEP 3: PER-COMPONENT FULFILLMENT CASCADE ===
+    // === STEP 3: PRODUCTION CAPACITY — BOTTLENECK ===
+    var resources = [];
+    var resGr = new GlideRecord(P+"prod_res");
+    resGr.addQuery("status", "available");
+    resGr.addQuery("maintenance_required", false);
+    resGr.query();
+    while (resGr.next()) {
+      var cap = (parseFloat(resGr.getValue("capacity_per_day"))||1) * ((parseFloat(resGr.getValue("efficiency_percentage"))||100)/100);
+      resources.push({name:resGr.getValue("resource_name"),id:resGr.getValue("resource_id"),cap:cap});
+    }
+    // Bottleneck = lowest effective capacity
+    resources.sort(function(a,b){return a.cap - b.cap;});
+    var bottleneck = resources.length > 0 ? resources[0] : null;
+
+    // Check committed production schedule days
+    var committedDays = 0;
+    if (bottleneck) {
+      var schedGr = new GlideRecord(P+"prod_sched");
+      schedGr.addQuery("status", "IN", "draft,scheduled,confirmed,in_progress");
+      schedGr.query();
+      while (schedGr.next()) {
+        var schedQty = parseFloat(schedGr.getValue("planned_quantity"))||0;
+        committedDays += Math.ceil(schedQty / bottleneck.cap);
+      }
+    }
+
+    // === STEP 4: PER-COMPONENT FULFILLMENT CASCADE ===
     var components = [];
     var allMatFeasible = true;
     var latestMatDate = new GlideDateTime(now);
@@ -51,110 +112,226 @@
 
     for (var i=0; i<bomR.lines.length; i++) {
       var ln = bomR.lines[i];
+      var matProductId = "";
+      var matMasterGr = new GlideRecord(P+"mat_master");
+      if (matMasterGr.get(ln.material_product)) {
+        matProductId = matMasterGr.getValue("material_product_id")||"";
+      }
       var bomQty = parseFloat(ln.quantity_required)||0;
       var scrapPct = parseFloat(ln.scrap_percentage)||0;
       var required = Math.ceil(bomQty * qty * (1 + scrapPct/100));
       var remaining = required;
 
-      // --- 3a: Selected location stock ---
-      var localAvail = 0;
-      var sg = new GlideRecord(P+"inv_stock");
-      sg.addQuery("material_product",ln.material_product); sg.addQuery("location",selWh.sid); sg.addQuery("active",true); sg.setLimit(1); sg.query();
-      if (sg.next()) localAvail = parseFloat(sg.getValue("available_quantity"))||0;
-      var fromLocal = Math.min(localAvail, remaining);
+      // --- 4a: Selected location stock (aggregated, demand-aware) ---
+      var localStock = _getStock(ln.material_product, selWh.sid);
+      var fromLocal = Math.min(localStock.available, remaining);
       remaining -= fromLocal;
       var localStatus = (remaining<=0) ? "LOCAL_STOCK_AVAILABLE" : "SHORTAGE";
 
-      // --- 3b: Other warehouses (split transfer) ---
+      // --- 4b: Other warehouses (alternate sources + split transfer) ---
       var transfers = [];
-      if (remaining > 0) {
-        for (var j=0; j<allWh.length; j++) {
-          if (allWh[j].sid === selWh.sid || remaining <= 0) continue;
-          var sg2 = new GlideRecord(P+"inv_stock");
-          sg2.addQuery("material_product",ln.material_product); sg2.addQuery("location",allWh[j].sid); sg2.addQuery("active",true); sg2.setLimit(1); sg2.query();
-          var altAvail = sg2.next() ? (parseFloat(sg2.getValue("available_quantity"))||0) : 0;
-          var altSafety = sg2.isValidRecord() ? (parseFloat(sg2.getValue("safety_stock"))||0) : 0;
-          var transferable = Math.max(0, altAvail - altSafety);
-          if (transferable <= 0) continue;
+      var altDetails = [];
+      for (var j=0; j<allWh.length; j++) {
+        if (allWh[j].sid === selWh.sid) continue;
+        var altStock = _getStock(ln.material_product, allWh[j].sid);
+        var transferable = Math.max(0, altStock.available - altStock.safety_stock);
+        var leadTimeDays = _getTransferLeadTime(allWh[j].sid, selWh.sid);
+        altDetails.push({
+          location_id: allWh[j].id,
+          location_name: allWh[j].name,
+          total_quantity: altStock.total,
+          reserved_quantity: altStock.reserved,
+          available_quantity: altStock.available,
+          safety_stock: altStock.safety_stock,
+          transferable: transferable,
+          lead_time_days: leadTimeDays
+        });
+        if (remaining > 0 && transferable > 0) {
           var take = Math.min(transferable, remaining);
-          transfers.push({location_id:allWh[j].id,location_name:allWh[j].name,available:altAvail,safety_stock:altSafety,transferable:transferable,allocated:take});
+          transfers.push({
+            location_id: allWh[j].id,
+            location_name: allWh[j].name,
+            available: altStock.available,
+            safety_stock: altStock.safety_stock,
+            transferable: transferable,
+            allocated: take,
+            lead_time_days: leadTimeDays
+          });
           remaining -= take;
         }
       }
 
-      // --- 3c: Incoming supply ---
+      // --- 4c: Incoming supply (po_line + inv_req) ---
       var incomingQty = 0;
-      var irGr = new GlideRecord(P+"inv_req");
-      irGr.addQuery("material_product",ln.material_product); irGr.addQuery("status","IN","pending,in_transit,approved");
-      irGr.query();
-      while (irGr.next() && remaining > 0) {
-        var iq = parseFloat(irGr.getValue("quantity_requested"))||0;
-        var take2 = Math.min(iq, remaining);
-        incomingQty += take2;
-        remaining -= take2;
+      var incomingDetails = [];
+      var poGr2 = new GlideRecord(P+"po_line");
+      poGr2.addQuery("material_product", ln.material_product);
+      poGr2.addQuery("status", "IN", "pending,ordered,partially_received,open");
+      poGr2.addQuery("remaining_quantity", ">", 0);
+      poGr2.query();
+      while (poGr2.next() && remaining > 0) {
+        var remQ = parseFloat(poGr2.getValue("remaining_quantity"))||0;
+        var expDate = poGr2.getValue("expected_delivery_date")||"";
+        var countThis = true;
+        if (expDate && reqDateStr) {
+          var expDt = new GlideDateTime(expDate);
+          if (expDt.compareTo(reqDt) > 0) countThis = false;
+        }
+        if (countThis && remQ > 0) {
+          var take3 = Math.min(remQ, remaining);
+          incomingQty += take3;
+          incomingDetails.push({source:poGr2.getDisplayValue("procurement_order"),quantity:take3,expected_date:expDate,status:poGr2.getValue("status")});
+          remaining -= take3;
+        }
+      }
+      if (remaining > 0) {
+        var irGr = new GlideRecord(P+"inv_req");
+        irGr.addQuery("material_product", ln.material_product);
+        irGr.addQuery("status", "IN", "pending,in_transit,approved");
+        irGr.query();
+        while (irGr.next() && remaining > 0) {
+          var iq = parseFloat(irGr.getValue("quantity_requested"))||0;
+          var take4 = Math.min(iq, remaining);
+          incomingQty += take4;
+          incomingDetails.push({source:"Transfer: "+irGr.getValue("number"),quantity:take4,expected_date:"",status:irGr.getValue("status")});
+          remaining -= take4;
+        }
       }
 
-      // --- 3d: Procurement ---
-      var procQty = 0; var procDays = 0; var procSupplier = "";
+      // --- 4d: Procurement ---
+      var procQty = 0;
+      var procDays = 0;
+      var procSupplier = "";
       if (remaining > 0) {
-        var slt = new GlideRecord(P+"supp_lead_time");
-        slt.addQuery("material_product",ln.material_product); slt.addQuery("active",true); slt.orderBy("lead_time_days"); slt.setLimit(1); slt.query();
-        if (slt.next()) {
-          procQty = remaining;
-          procDays = parseInt(slt.getValue("lead_time_days"))||14;
-          procSupplier = slt.getDisplayValue("supplier");
-          remaining -= procQty;
+        var smGr = new GlideRecord(P+"supp_mat");
+        smGr.addQuery("material_product", ln.material_product);
+        smGr.addQuery("active", true);
+        smGr.orderByDesc("preferred");
+        smGr.orderBy("lead_time_days");
+        smGr.setLimit(1);
+        smGr.query();
+        if (smGr.next()) {
+          procDays = parseInt(smGr.getValue("lead_time_days"))||14;
+          procSupplier = smGr.getDisplayValue("supplier");
+        }
+        if (!procSupplier) {
+          var slt = new GlideRecord(P+"supp_lead_time");
+          slt.addQuery("material_product", ln.material_product);
+          slt.addQuery("active", true);
+          slt.orderBy("lead_time_days");
+          slt.setLimit(1);
+          slt.query();
+          if (slt.next()) {
+            procDays = parseInt(slt.getValue("lead_time_days"))||14;
+            procSupplier = slt.getDisplayValue("supplier");
+          }
+        }
+        if (procSupplier) {
+          var procArrival = new GlideDateTime(now);
+          procArrival.addDaysLocalTime(procDays);
+          var graceLimit = new GlideDateTime(reqDt);
+          graceLimit.addDaysLocalTime(GRACE_DAYS);
+          if (procArrival.compareTo(graceLimit) <= 0) {
+            procQty = remaining;
+            remaining -= procQty;
+          }
         }
       }
 
       var fulfilled = required - remaining;
       var matFeasible = (remaining <= 0);
-      if (!matFeasible) { allMatFeasible = false; matReasons.push(ln.material_name+": shortage of "+remaining+" units after all sources checked"); }
+      if (!matFeasible) { allMatFeasible = false; matReasons.push((ln.material_name||"unknown")+": shortage of "+remaining+" units after all sources checked"); }
 
       // Material readiness date
       var matReadyDate = new GlideDateTime(now);
-      if (procDays > 0) matReadyDate.addDaysLocalTime(procDays);
+      if (procQty > 0 && procDays > 0) {
+        var procReady = new GlideDateTime(now);
+        procReady.addDaysLocalTime(procDays);
+        if (procReady.compareTo(matReadyDate) > 0) matReadyDate = new GlideDateTime(procReady);
+      }
+      for (var t=0; t<transfers.length; t++) {
+        if (transfers[t].lead_time_days > 0) {
+          var transReady = new GlideDateTime(now);
+          transReady.addDaysLocalTime(transfers[t].lead_time_days);
+          if (transReady.compareTo(matReadyDate) > 0) matReadyDate = new GlideDateTime(transReady);
+        }
+      }
       if (matReadyDate.compareTo(latestMatDate)>0) latestMatDate = new GlideDateTime(matReadyDate);
 
+      var decisionType = "UNFULFILLABLE";
+      if (matFeasible) {
+        if (fromLocal >= required) decisionType = "LOCAL_AVAILABLE_STOCK";
+        else if (transfers.length > 0 && procQty === 0) decisionType = "INTER_WAREHOUSE_TRANSFER";
+        else if (procQty > 0) decisionType = "PROCUREMENT_LOCAL_SUPPLIER";
+        else decisionType = "MIXED_FULFILLMENT";
+      }
+
+      var summaryText = "";
+      if (matFeasible) {
+        var parts = [];
+        if (fromLocal > 0) parts.push(fromLocal + " local");
+        if (transfers.length > 0) {
+          var txfTotal = 0;
+          for (var tt=0;tt<transfers.length;tt++) txfTotal += transfers[tt].allocated;
+          parts.push(txfTotal + " transfer");
+        }
+        if (incomingQty > 0) parts.push(incomingQty + " incoming");
+        if (procQty > 0) parts.push(procQty + " procurement");
+        summaryText = "Fulfilled: " + parts.join(", ");
+      } else {
+        summaryText = "Shortage of " + remaining + " units";
+      }
+
       components.push({
-        material: ln.material_name||"",required_quantity: required,available_quantity: localAvail,decision_type: matFeasible?(remaining<=0&&fromLocal>=required?"LOCAL_AVAILABLE_STOCK":(transfers.length>0?"INTER_WAREHOUSE_TRANSFER":"PROCUREMENT_LOCAL_SUPPLIER")):"UNFULFILLABLE",summary: matFeasible?("Fulfilled: "+fromLocal+" local"+(transfers.length>0?", "+transfers.reduce(function(s,t){return s+t.allocated},0)+" transfer":"")+(procQty>0?", "+procQty+" procurement":"")):("Shortage of "+remaining+" units"),
+        material: ln.material_name||"",
+        material_id: matProductId,
         required: required,
         bom_qty_per_unit: bomQty,
         scrap_pct: scrapPct,
-        selected_location_available: localAvail,
-        from_local: fromLocal,
+        selected_location: {
+          location_id: selWh.id,
+          location_name: selWh.name,
+          total_quantity: localStock.total,
+          reserved_quantity: localStock.reserved,
+          available_quantity: localStock.available,
+          safety_stock: localStock.safety_stock,
+          from_local: fromLocal
+        },
         local_status: localStatus,
+        alternate_sources: altDetails,
         transfers: transfers,
         incoming: incomingQty,
+        incoming_details: incomingDetails,
         procurement: procQty,
         procurement_days: procDays,
         procurement_supplier: procSupplier,
         fulfilled: fulfilled,
         remaining_shortage: remaining,
-        feasible: matFeasible
+        feasible: matFeasible,
+        decision_type: decisionType,
+        summary: summaryText,
+        earliest_material_date: matReadyDate.getDate().toString()
       });
     }
 
-    // === STEP 4: PRODUCTION CAPACITY ===
-    var resGr = new GlideRecord(P+"prod_res");
-    resGr.addQuery("active",true); resGr.addQuery("status","available"); resGr.addQuery("maintenance_required",false);
-    resGr.orderByDesc("capacity_per_day"); resGr.setLimit(1); resGr.query();
-    var resName="",effCap=0,prodDays=0,earliestProdEnd="";
-    if (resGr.next()) {
-      resName = resGr.getValue("resource_name")||"";
-      effCap = (parseFloat(resGr.getValue("capacity_per_day"))||1)*((parseFloat(resGr.getValue("efficiency_percentage"))||100)/100);
-      if (effCap<=0) effCap=1;
-      prodDays = Math.ceil(qty/effCap);
-      if (prodDays<1) prodDays=1;
+    // === STEP 5: PRODUCTION DAYS (bottleneck) ===
+    var prodDays = 0;
+    var resName = "";
+    var effCap = 0;
+    if (bottleneck && bottleneck.cap > 0) {
+      resName = bottleneck.name;
+      effCap = bottleneck.cap;
+      prodDays = Math.ceil(qty / bottleneck.cap);
+      prodDays += committedDays;
     }
+    if (prodDays < 1 && bottleneck) prodDays = 1;
 
-    // Earliest completion = max(material ready, production end)
     var prodStart = new GlideDateTime(latestMatDate);
     var prodEnd = new GlideDateTime(prodStart);
     prodEnd.addDaysLocalTime(prodDays);
-    earliestProdEnd = prodEnd.getDisplayValue();
+    var earliestProdEnd = prodEnd.getDisplayValue();
 
-    // === STEP 5: DATE DECISION ===
+    // === STEP 6: DATE DECISION ===
     var graceDate = new GlideDateTime(reqDt);
     graceDate.addDaysLocalTime(GRACE_DAYS);
     var finalStatus = "NOT_FEASIBLE";
@@ -184,6 +361,67 @@
     for (var k=0;k<components.length;k++) if (components[k].local_status==="SHORTAGE") hasLocalShortage=true;
     var matSummary = allMatFeasible ? (hasLocalShortage ? "Local stock shortage — alternate fulfillment available" : "All materials available at selected location") : "Material shortage — insufficient inventory across all sources";
 
+    // === PERSIST FEASIBILITY RESULTS ===
+    var checkNumber = "";
+    try {
+      var chk = new GlideRecord("x_2056099_indust_0_feas_check");
+      chk.initialize();
+      chk.setValue("finished_product", fpId);
+      chk.setValue("product_id", prodId);
+      chk.setValue("product_name", prodName);
+      chk.setValue("quantity", qty);
+      chk.setValue("location_id", selWh.id);
+      chk.setValue("location_name", selWh.name);
+      chk.setValue("requested_date", reqDateStr);
+      chk.setValue("status", finalStatus === "FEASIBLE" ? "feasible" : finalStatus === "FEASIBLE_WITH_ALTERNATE_DATE" ? "feasible_alt" : "not_feasible");
+      chk.setValue("bom_name", bomR.bom_name || "");
+      chk.setValue("bom_number", bomR.bom_number || "");
+      chk.setValue("earliest_completion", earliestProdEnd || "");
+      chk.setValue("production_days", prodDays);
+      chk.setValue("bottleneck_resource", resName);
+      chk.setValue("effective_capacity", effCap);
+      chk.setValue("component_count", bomR.line_count || components.length);
+      chk.setValue("material_status", matSummary);
+      chk.setValue("reason", (finalStatus !== "FEASIBLE" && matReasons.length > 0) ? matReasons.join("\n") : "");
+      chk.setValue("delivery_status", deliveryStatus);
+      var checkSysId = chk.insert();
+      checkNumber = chk.getValue("number") || "";
+
+      for (var ci = 0; ci < components.length; ci++) {
+        var comp = components[ci];
+        var cg = new GlideRecord("x_2056099_indust_0_feas_comp");
+        cg.initialize();
+        cg.setValue("check_ref", checkSysId);
+        cg.setValue("material_name", comp.material || "");
+        cg.setValue("material_id", comp.material_id || "");
+        cg.setValue("required_qty", comp.required || 0);
+        cg.setValue("local_available", comp.selected_location ? (comp.selected_location.available_quantity || 0) : 0);
+        cg.setValue("local_status", comp.local_status || "");
+        var txfTotal2 = 0;
+        var txfSources = [];
+        if (comp.transfers && comp.transfers.length > 0) {
+          for (var ti = 0; ti < comp.transfers.length; ti++) {
+            txfTotal2 += comp.transfers[ti].allocated || 0;
+            txfSources.push(comp.transfers[ti].location_name + ":" + comp.transfers[ti].allocated);
+          }
+        }
+        cg.setValue("transfer_qty", txfTotal2);
+        cg.setValue("transfer_sources", txfSources.join(", "));
+        cg.setValue("incoming_qty", comp.incoming || 0);
+        cg.setValue("procurement_qty", comp.procurement || 0);
+        cg.setValue("procurement_supplier", comp.procurement_supplier || "");
+        cg.setValue("fulfilled_qty", comp.fulfilled || 0);
+        cg.setValue("remaining_shortage", comp.remaining_shortage || 0);
+        cg.setValue("component_status", comp.decision_type || "");
+        cg.setValue("fulfillment_method", comp.decision_type || "");
+        cg.setValue("earliest_date", comp.earliest_material_date || "");
+        cg.insert();
+      }
+    } catch (persistErr) {
+      // Persistence failure must not break the API response
+      checkNumber = "";
+    }
+
     response.setBody({
       status: finalStatus,
       product: prodName,
@@ -208,15 +446,21 @@
         resource: resName,
         effective_capacity_per_day: effCap,
         production_days: prodDays,
+        committed_days: committedDays,
+        bottleneck_resource: bottleneck ? bottleneck.name : "",
+        bottleneck_id: bottleneck ? bottleneck.id : "",
+        total_resources: resources.length,
         earliest_production_end: earliestProdEnd
       },
-      reasons: finalStatus!=="FEASIBLE" ? matReasons.concat(finalStatus==="FEASIBLE_WITH_ALTERNATE_DATE"?["Delivery delayed by "+additionalDays+" day(s)"]:[deliveryStatus]) : undefined
+      reasons: finalStatus!=="FEASIBLE" ? matReasons.concat(finalStatus==="FEASIBLE_WITH_ALTERNATE_DATE"?["Delivery delayed by "+additionalDays+" day(s)"]:[deliveryStatus]) : undefined,
+      feasibility_check_number: checkNumber || undefined
     });
   } catch(e) {
     response.setStatus(500);
     response.setBody({status:"ERROR",message:"Internal error: "+e.message});
   }
-})(request, response);]]></operation_script>
+})(request, response);
+]]></operation_script>
         <operation_uri>/api/x_2056099_indust_0/customer_feasibility_api/check</operation_uri>
         <produces>application/json</produces>
         <produces_customized>false</produces_customized>

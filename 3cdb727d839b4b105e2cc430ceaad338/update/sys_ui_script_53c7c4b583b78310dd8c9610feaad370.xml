@@ -1,0 +1,1078 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_script">
+    <sys_ui_script action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description>Client code for the smart_mfg_mobile UI page</description>
+        <global>false</global>
+        <ignore_in_now_experience>false</ignore_in_now_experience>
+        <name>x_2056099_indust_0.smart_mfg_mobile</name>
+        <script><![CDATA[// Smart Manufacturing mobile dashboard - renders every screen from /api/x_2056099_indust_0/smart_mfg_api/data.
+// Served as a UI Script (.jsdbx). Every number on screen comes from the API payload; nothing is hard-coded.
+var API = '/api/x_2056099_indust_0/smart_mfg_api';
+var D = null;
+var screenHistory = [];
+var currentScreen = '1';
+var UI = {
+  order: null, scenario: null, simRun: false, alertFilter: 'all', prodTab: 'orders', prodFilter: 'open', detTab: 'progress',
+  issueOpen: false, matFilter: 'attention', matQuery: '', matMax: 12, coFilter: null, coOpen: null, supFilter: 'all', supShowAll: false, busy: false
+};
+
+// ---------- helpers ----------
+function $id(id) { return document.getElementById(id); }
+function esc(v) {
+  return String(v === null || v === undefined ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function n(v) { return Number(v || 0).toLocaleString('en-US', { maximumFractionDigits: 1 }); }
+var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+function fmtDate(ms) {
+  if (!ms) return '-';
+  var d = new Date(ms);
+  return d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+}
+function fmtDay(ms) {
+  if (!ms) return '-';
+  var d = new Date(ms);
+  return d.getDate() + ' ' + MONTHS[d.getMonth()];
+}
+function ago(ms) {
+  if (!ms) return '';
+  var m = Math.max(Math.round((D.generatedAt - ms) / 60000), 0);
+  if (m < 60) return m + 'm ago';
+  if (m < 1440) return Math.round(m / 60) + 'h ago';
+  return Math.round(m / 1440) + 'd ago';
+}
+function label(v) {
+  return String(v || '').replace(/_/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+}
+function toast(txt, isError) {
+  var t = $id('toastPop');
+  t.innerText = txt;
+  t.className = 'toast-popup show' + (isError ? ' error' : '');
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(function () { t.className = 'toast-popup'; }, isError ? 4500 : 3000);
+}
+// onclick attribute builder: on('openOrder', id) -> onclick="openOrder('id')"
+function on(fn) {
+  var a = [];
+  for (var i = 1; i < arguments.length; i++) {
+    var v = arguments[i];
+    a.push(typeof v === 'number' ? v : "'" + String(v).replace(/[^\w .:\/-]/g, '') + "'");
+  }
+  return ' onclick="' + fn + '(' + a.join(',') + ')"';
+}
+
+var ICONS = {
+  home: 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
+  factory: 'M3 21V10l6 4v-4l6 4V5h4v16z',
+  box: 'M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8',
+  bell: 'M6 9a6 6 0 1 1 12 0c0 6 2 7 2 7H4s2-1 2-7M10 20a2 2 0 0 0 4 0',
+  grid: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',
+  spark: 'M11 3l1.9 5.1L18 10l-5.1 1.9L11 17l-1.9-5.1L4 10l5.1-1.9zM18.5 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z',
+  users: 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M2 21a7 7 0 0 1 14 0M17 3.5a4 4 0 0 1 0 7.5M22 21a7 7 0 0 0-4-6.3',
+  wrench: 'M15 4a5 5 0 0 0-4.6 6.9L4 17.3V20h2.7l6.4-6.4A5 5 0 0 0 20 9l-3 3-3-1-1-3z',
+  truck: 'M2 6h11v10H2zM13 9h5l4 4v3h-9zM6.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4M17.5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4',
+  shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4',
+  chart: 'M4 20V10M10 20V4M16 20v-7M22 20H2',
+  cpu: 'M7 7h10v10H7zM10 10h4v4h-4zM9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4',
+  globe: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18',
+  clipboard: 'M6 5h12v16H6zM9 3h6v4H9zM9 12l2 2 4-4',
+  doc: 'M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6',
+  link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1',
+  receipt: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6',
+  clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18M12 7v5l3 2',
+  alert: 'M12 4 2.5 20h19zM12 10v4M12 17h.01',
+  thermo: 'M14 14V5a2 2 0 0 0-4 0v9a4 4 0 1 0 4 0z',
+  wave: 'M2 12h3l2-6 4 12 3-9 2 3h6',
+  right: 'M5 12h14M13 6l6 6-6 6',
+  play: 'M7 4l13 8-13 8z',
+  pause: 'M8 5v14M16 5v14',
+  plus: 'M12 5v14M5 12h14',
+  search: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14M21 21l-4.5-4.5',
+  gauge: 'M4 18a9 9 0 1 1 16 0M12 13l4-5',
+  flag: 'M5 21V4h11l-2 4 2 4H5',
+  check: 'M5 12l5 5L20 7',
+  user: 'M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 21a8 8 0 0 1 16 0',
+  pin: 'M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5',
+  layers: 'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5M3 17l9 5 9-5'
+};
+function ic(name, size) {
+  var s = size || 16;
+  return '<svg class="ic" width="' + s + '" height="' + s + '" viewBox="0 0 24 24"><path d="' + ICONS[name] + '"/></svg>';
+}
+var COLOR = { ok: '#10b981', warn: '#f59e0b', bad: '#ef4444', info: '#2563eb', ai: '#7c3aed', mute: '#9aa9bd' };
+function chip(kind, txt) { return '<span class="chip chip-' + kind + '"><i></i>' + esc(txt) + '</span>'; }
+var PILL_MAP = { red: 'bad', amber: 'warn', yellow: 'warn', green: 'ok', blue: 'info', gray: 'mute' };
+function pill(cls, txt) { return chip(PILL_MAP[cls] || 'mute', txt); }
+function icBox(kind, name) { return '<div class="ic-box ib-' + kind + '">' + ic(name, 18) + '</div>'; }
+function bar(pct, color) {
+  return '<div class="progress-track"><div class="progress-fill" style="width:' + Math.min(Math.max(pct, 0), 100) + '%;' +
+    (color ? ' background:' + color + ';' : '') + '"></div></div>';
+}
+function stack(parts) {
+  var total = 0, i, h = '<div class="stack">';
+  for (i = 0; i < parts.length; i++) total += parts[i][0];
+  for (i = 0; i < parts.length; i++) if (parts[i][0] > 0) h += '<span style="width:' + (parts[i][0] / (total || 1)) * 100 + '%; background:' + parts[i][1] + ';"></span>';
+  return h + '</div>';
+}
+function ring(pct, size, stroke, color, inner, track) {
+  var r = (size - stroke) / 2, c = 2 * Math.PI * r, p = Math.min(Math.max(pct, 0), 100);
+  return '<div class="ring" style="width:' + size + 'px; height:' + size + 'px;"><svg width="' + size + '" height="' + size + '">' +
+    '<circle cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" stroke="' + (track || '#e6ecf5') + '" stroke-width="' + stroke + '"/>' +
+    '<circle cx="' + size / 2 + '" cy="' + size / 2 + '" r="' + r + '" stroke="' + color + '" stroke-width="' + stroke + '" stroke-dasharray="' + c.toFixed(1) +
+    '" stroke-dashoffset="' + (c * (1 - p / 100)).toFixed(1) + '"/></svg><div class="ring-in">' + inner + '</div></div>';
+}
+function secHead(title, linkTxt, linkJs) {
+  return '<div class="sec-head"><div class="sec-title">' + esc(title) + '</div>' +
+    (linkTxt ? (linkJs ? '<div class="sec-link" onclick="' + linkJs + '">' + esc(linkTxt) + '</div>' : '<div class="sec-note">' + esc(linkTxt) + '</div>') : '') + '</div>';
+}
+function tile(bg, fg, num, lbl) {
+  return '<div class="pastel-tile" style="background:' + bg + '; color:' + fg + ';"><div class="num">' + n(num) + '</div><div class="lbl">' + esc(lbl) + '</div></div>';
+}
+function meta(icon, lbl, val) { return '<div class="meta">' + ic(icon, 14) + '<span class="cut">' + lbl + ' <b>' + esc(val) + '</b></span></div>'; }
+function metric(val, lbl) { return '<div class="metric"><b>' + val + '</b><span>' + lbl + '</span></div>'; }
+
+var SEV = {
+  critical: { kind: 'bad', txt: 'Critical' }, high: { kind: 'warn', txt: 'High' },
+  medium: { kind: 'mute', txt: 'Medium' }, low: { kind: 'info', txt: 'Info' }
+};
+var STATUS_KIND = { in_production: 'info', planned: 'mute', materials_reserved: 'mute', material_check: 'mute', on_hold: 'warn', completed: 'ok', draft: 'mute' };
+var STATUS_TXT = { in_production: 'In Progress', planned: 'Scheduled', on_hold: 'On Hold', completed: 'Completed' };
+var RISK_KIND = { 'On Track': 'ok', 'At Risk': 'warn', 'Delayed': 'bad', 'Completed': 'mute' };
+var PRI_KIND = { P1: 'bad', P2: 'warn', P3: 'mute' };
+function statusTxt(o) { return STATUS_TXT[o.status] || label(o.status); }
+function healthKind(h) { return h >= 88 ? 'ok' : (h >= 80 ? 'warn' : 'bad'); }
+
+function orderById(id) {
+  for (var i = 0; i < D.orders.length; i++) if (D.orders[i].sys_id === id) return D.orders[i];
+  return null;
+}
+function scenarioById(id) {
+  for (var i = 0; i < D.scenarios.length; i++) if (D.scenarios[i].sys_id === id) return D.scenarios[i];
+  return null;
+}
+function shortages(o) {
+  var out = [];
+  for (var i = 0; i < o.materials.length; i++) if (o.materials[i].shortage > 0) out.push(o.materials[i]);
+  return out;
+}
+function openOrders() {
+  var out = [];
+  for (var i = 0; i < D.orders.length; i++) if (D.orders[i].status !== 'completed') out.push(D.orders[i]);
+  return out;
+}
+function currentOrder() {
+  var o = UI.order && orderById(UI.order);
+  if (o) return o;
+  var i;
+  for (i = 0; i < D.orders.length; i++) if (D.orders[i].status !== 'completed' && shortages(D.orders[i]).length) return D.orders[i];
+  for (i = 0; i < D.orders.length; i++) if (D.orders[i].risk === 'At Risk' || D.orders[i].risk === 'Delayed') return D.orders[i];
+  return D.orders[0] || null;
+}
+function currentScenario() { return (UI.scenario && scenarioById(UI.scenario)) || D.scenarios[0] || null; }
+function topScenario() {
+  for (var i = 0; i < D.scenarios.length; i++) if (D.scenarios[i].status !== 'approved') return D.scenarios[i];
+  return null;
+}
+function scenarioMachines(s) {
+  var seen = {}, out = [];
+  for (var i = 0; i < s.runs.length; i++) if (s.runs[i].machine && !seen[s.runs[i].machine]) { seen[s.runs[i].machine] = 1; out.push(s.runs[i].machine); }
+  return out;
+}
+
+// ---------- data ----------
+function api(method, path, body, done) {
+  var x = new XMLHttpRequest();
+  x.open(method, API + path, true);
+  x.setRequestHeader('Accept', 'application/json');
+  x.setRequestHeader('Content-Type', 'application/json');
+  if (window.SMM_CK) x.setRequestHeader('X-UserToken', window.SMM_CK);
+  x.onreadystatechange = function () {
+    if (x.readyState !== 4) return;
+    var json = null;
+    try { json = JSON.parse(x.responseText); } catch (e) { json = null; }
+    var payload = json && (json.result || json);
+    if (x.status >= 200 && x.status < 300 && payload) return done(null, payload);
+    var msg = (payload && (payload.error && payload.error.message || payload.error || payload.message)) ||
+      (x.status === 401 ? 'Session expired - reopen the dashboard' : 'Request failed (' + x.status + ')');
+    done(String(msg));
+  };
+  x.send(body ? JSON.stringify(body) : null);
+}
+function loadData(manual) {
+  var btn = $id('refreshBtn');
+  btn.className = 'icon-btn spin';
+  api('GET', '/data', null, function (err, data) {
+    btn.className = 'icon-btn';
+    if (err) {
+      if (!D) $id('stateBox').innerHTML = 'Could not load production data.<br>' + esc(err) + '<br><br><span class="sec-link" onclick="loadData(true)">Try again</span>';
+      else toast(err, true);
+      return;
+    }
+    D = data;
+    $id('stateBox').style.display = 'none';
+    renderAll();
+    if (manual) toast('Live data refreshed from ServiceNow');
+  });
+}
+function act(body, onDone) {
+  if (UI.busy) return;
+  UI.busy = true;
+  api('POST', '/action', body, function (err, res) {
+    UI.busy = false;
+    if (err || !res.success) return toast(err || res.error || 'Action failed', true);
+    toast(res.message);
+    if (onDone) onDone(res);
+    loadData(false);
+  });
+}
+
+// ---------- shared cards ----------
+function aiCard(s, compact) {
+  var approved = s.status === 'approved', machines = scenarioMachines(s), i;
+  var h = '<div class="ai-card"><div class="ai-in"><div class="row"><div class="ai-head">' + ic('spark', 16) + 'AI Recommendation</div>' +
+    (approved ? chip('ok', 'Approved') : chip('ai', s.id)) + '</div>' +
+    '<div class="ai-title">' + esc(s.strategy) + '</div>' +
+    '<div class="t-sub">Trigger: ' + esc(s.parameter) + ' &middot; ' + n(s.impacted) + ' orders impacted</div>' +
+    '<div class="metric-row">' + metric('-' + n(s.recovered) + ' d', 'Delay recovered') + metric('+' + n(s.optimized - s.unmitigated) + '%', 'On-time delivery') + metric('+' + n(s.cost), 'Cost impact') + '</div>';
+  if (!compact && machines.length) {
+    h += '<div class="t-mute" style="margin-bottom:6px;">Affected resources</div><div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">';
+    for (i = 0; i < machines.length && i < 4; i++) h += chip('mute', machines[i]);
+    h += '</div>';
+  }
+  h += '<div class="btn-row" style="margin-top:0;"><button class="btn btn-outline"' + on('simulateScenario', s.sys_id) + '>' + ic('globe', 15) + 'Simulate</button>' +
+    '<button class="btn btn-ai"' + (approved ? ' disabled' : on('approveScenario', s.sys_id)) + '>' + ic('check', 15) + (approved ? 'Approved' : 'Approve') + '</button></div></div></div>';
+  return h;
+}
+
+// ---------- screen 1: dashboard ----------
+function kpi(kind, icon, lbl, val, sub, viz, screen) {
+  return '<div class="kpi"' + on('jumpToScreen', screen) + '><div class="row">' + icBox(kind, icon) + '<span class="t-mute" style="font-weight:700; text-align:right;">' + lbl + '</span></div>' +
+    '<div class="kpi-val mono">' + val + '</div><div class="t-mute">' + sub + '</div>' + (viz || '') + '</div>';
+}
+function render1() {
+  var k = D.kpi, t = D.today, v = D.inventory, ac = D.alertCounts, h = '', i;
+  var stKind = k.status === 'Healthy' ? 'ok' : (k.status === 'Critical' ? 'bad' : 'warn');
+  var open = openOrders();
+
+  h += '<div class="greet"><div><div class="t-mute" style="font-weight:700;">' + fmtDate(D.generatedAt) + '</div><h2>Hello, ' + esc(D.user.first) + '</h2></div>' + chip(stKind, 'Factory ' + k.status) + '</div>';
+
+  // hero: factory health ring + OEE breakdown + work-center status lights
+  h += '<div class="hero"><div class="hero-top">' +
+    ring(k.availability, 104, 10, COLOR[healthKind(k.availability)], '<span class="mono" style="font-size:24px; font-weight:800;">' + Math.round(k.availability) + '</span><span style="font-size:9.5px; color:#8fa6c7; font-weight:700;">HEALTH</span>', 'rgba(255,255,255,0.12)') +
+    '<div class="grow"><div class="eyebrow">Overall equipment effectiveness</div><div class="hero-big mono">' + k.oee + '<span style="font-size:18px;">%</span></div>' +
+    '<div class="hero-row"><span>Availability</span><div class="hero-bar"><span style="width:' + k.availability + '%; background:#60a5fa;"></span></div><b>' + k.availability + '%</b></div>' +
+    '<div class="hero-row"><span>Performance</span><div class="hero-bar"><span style="width:' + k.performance + '%; background:#a78bfa;"></span></div><b>' + k.performance + '%</b></div>' +
+    '<div class="hero-row"><span>Quality</span><div class="hero-bar"><span style="width:' + k.quality + '%; background:#34d399;"></span></div><b>' + k.quality + '%</b></div></div></div>';
+  h += '<div class="glass"' + on('jumpToScreen', '15') + ' style="cursor:pointer;"><div class="row"><span style="font-size:11px; font-weight:700;">' + ic('cpu', 14) + ' Work centers</span>' +
+    '<span style="font-size:10.5px; color:#b8c9e3; font-weight:600;">' + D.workCenters.length + ' monitored &middot; ' + n(D.workforce.overloaded) + ' overloaded &middot; ' + n(k.machinesDown) + ' down</span></div><div class="lights">';
+  for (i = 0; i < D.workCenters.length; i++) {
+    var w = D.workCenters[i], wk = w.load > 80 ? 'warn' : healthKind(w.health);
+    h += '<span title="' + esc(w.code) + ' health ' + w.health + '% load ' + w.load + '%" style="background:' + COLOR[wk] + '; opacity:' + (wk === 'ok' ? '0.85' : '1') + ';"></span>';
+  }
+  h += '</div></div></div>';
+
+  h += '<div class="kpi-grid">' +
+    kpi('info', 'factory', 'Active orders', n(k.ordersActive), n(k.ordersPlanned) + ' scheduled &middot; ' + n(k.ordersOnHold) + ' on hold',
+      stack([[k.ordersActive, COLOR.info], [k.ordersPlanned, '#b6c3d6'], [k.ordersOnHold, COLOR.warn]]), '2') +
+    kpi(k.atRisk > 0 ? 'warn' : 'ok', 'clock', 'On-time delivery', k.otd + '<small>%</small>', n(k.atRisk) + ' of ' + open.length + ' open orders at risk',
+      stack([[open.length - k.atRisk, COLOR.ok], [k.atRisk, COLOR.warn]]), '2') +
+    kpi('ok', 'gauge', 'Production today', t.pct + '<small>%</small>', n(t.produced) + ' of ' + n(t.planned) + ' units', bar(t.pct), '2') +
+    kpi(k.downtimeMin > 0 ? 'warn' : 'ok', 'wrench', 'Downtime', n(k.downtimeMin) + '<small> min</small>', 'last 30 days &middot; ' + n(D.maintenance.inProgress) + ' repair in progress', '', '15') +
+    kpi(v.low > 0 ? 'warn' : 'ok', 'box', 'Inventory health', k.inventoryHealth + '<small>%</small>', n(v.low) + ' of ' + n(v.materials) + ' materials low', bar(k.inventoryHealth, v.belowSafety > 0 ? COLOR.warn : COLOR.ok), '5') +
+    kpi(ac.critical > 0 ? 'bad' : (ac.high > 0 ? 'warn' : 'ok'), 'bell', 'Open alerts', n(ac.open), n(ac.critical) + ' critical &middot; ' + n(ac.high) + ' high &middot; ' + n(ac.medium) + ' medium',
+      stack([[ac.critical, COLOR.bad], [ac.high, COLOR.warn], [ac.medium, '#fcd34d'], [ac.low, COLOR.info]]), '7') + '</div>';
+
+  // order progress distribution (one column per open order)
+  h += '<div class="card"><div class="row"><div><div class="t-title">Order progress</div><div class="t-mute">' + open.length + ' open production orders &middot; tap a bar to open</div></div>' + icBox('info', 'chart') + '</div><div class="cols">';
+  for (i = 0; i < open.length; i++) {
+    var o = open[i];
+    h += '<span title="' + esc(o.number) + ' ' + o.pct + '% ' + esc(o.risk) + '"' + on('openOrder', o.sys_id) + ' style="height:' + Math.max(o.pct, 4) + '%; background:' + COLOR[RISK_KIND[o.risk] || 'mute'] + ';"></span>';
+  }
+  h += '</div><div class="legend"><span><i style="background:' + COLOR.ok + ';"></i>On track</span><span><i style="background:' + COLOR.warn + ';"></i>At risk</span><span><i style="background:' + COLOR.bad + ';"></i>Delayed</span><span>height = % complete</span></div></div>';
+
+  var sc = topScenario();
+  if (sc) h += aiCard(sc, true);
+
+  // critical issues
+  var issues = [];
+  if (D.maintenance.items.length && D.maintenance.active > 0) {
+    var mi = D.maintenance.items[0];
+    issues.push({ kind: 'bad', icon: 'wrench', name: mi.machine, desc: label(mi.type) + ' maintenance &middot; ' + label(mi.status), chip: chip('bad', 'Critical'), js: on('jumpToScreen', '15') });
+  }
+  for (i = 0; i < D.orders.length; i++) {
+    var r = D.orders[i];
+    if (r.risk === 'At Risk' || r.risk === 'Delayed') {
+      issues.push({ kind: 'warn', icon: 'clock', name: r.number, desc: esc(r.risk) + ' &middot; ' + n(r.remaining) + ' units left, due ' + fmtDay(r.due), chip: chip('warn', 'High'), js: on('openOrder', r.sys_id) });
+      break;
+    }
+  }
+  for (i = 0; i < D.alerts.length && issues.length < 4; i++) {
+    var a = D.alerts[i], s = SEV[a.sev] || SEV.low;
+    issues.push({ kind: s.kind, icon: 'box', name: a.matId || a.number, desc: esc(a.typeLabel) + ' &middot; ' + esc(a.material), chip: chip(s.kind, s.txt), js: on('jumpToScreen', '7') });
+  }
+  h += secHead('Critical issues', 'View all', "jumpToScreen('7')");
+  h += '<div class="card">';
+  if (!issues.length) h += '<div class="empty-note">No open issues</div>';
+  for (i = 0; i < issues.length; i++) {
+    h += '<div class="issue-item" style="cursor:pointer;"' + issues[i].js + '><div class="issue-left">' + icBox(issues[i].kind, issues[i].icon) +
+      '<div class="grow"><div class="issue-name cut">' + esc(issues[i].name) + '</div><div class="issue-desc">' + issues[i].desc + '</div></div></div>' + issues[i].chip + '</div>';
+  }
+  h += '</div>';
+
+  var cc = D.customerOrderCounts;
+  h += secHead('Customer orders', 'View all', "jumpToScreen('11')");
+  h += '<div class="card tap"' + on('jumpToScreen', '11') + '><div class="metric-row" style="margin:0;">' + metric(n(cc.active), 'Active') + metric(n(cc.urgent), 'High priority') + metric(n(cc.total), 'Total') + '</div></div>';
+  $id('view-1').innerHTML = h;
+}
+
+// ---------- screen 2: production ----------
+function orderCard(o) {
+  var eta = o.status === 'completed' ? 'Done' : (o.projected ? fmtDay(o.projected) : '-');
+  return '<div class="card tap"' + on('openOrder', o.sys_id) + '>' +
+    '<div class="row"><div class="row-l"><span class="t-title mono">' + esc(o.number) + '</span>' + chip(PRI_KIND[o.pri] || 'mute', o.pri) + '</div>' + chip(STATUS_KIND[o.status] || 'mute', statusTxt(o)) + '</div>' +
+    '<div class="t-sub cut" style="margin-top:4px; font-weight:700; color:var(--ink);">' + esc(o.product) + '</div>' +
+    '<div class="t-mute cut">' + esc(o.customer || 'No customer linked') + '</div>' +
+    '<div class="row" style="margin-top:10px; font-size:11px; font-weight:700;"><span class="mono">' + n(o.produced) + ' / ' + n(o.planned) + ' units</span><span class="mono">' + o.pct + '%</span></div>' +
+    bar(o.pct, COLOR[o.status === 'completed' ? 'mute' : (RISK_KIND[o.risk] || 'info')]) +
+    '<div class="row" style="margin-top:2px;"><div class="meta grow">' + ic('cpu', 14) + '<span class="cut"><b>' + esc(o.resource || '-') + '</b></span></div>' +
+    '<div class="meta">' + ic('clock', 14) + '<span>ETA <b>' + eta + '</b></span></div>' + chip(RISK_KIND[o.risk] || 'mute', o.risk) + '</div></div>';
+}
+var PROD_FILTERS = [['open', 'Open'], ['in_production', 'In progress'], ['planned', 'Scheduled'], ['risk', 'At risk'], ['completed', 'Completed']];
+function prodMatch(o) {
+  var f = UI.prodFilter;
+  if (f === 'open') return o.status !== 'completed';
+  if (f === 'risk') return o.risk === 'At Risk' || o.risk === 'Delayed';
+  return o.status === f;
+}
+function render2() {
+  var h = '', i, shown = 0;
+  h += '<div class="segmented-control">' +
+    '<button class="seg-btn' + (UI.prodTab === 'orders' ? ' active' : '') + '"' + on('setProdTab', 'orders') + '>Orders</button>' +
+    '<button class="seg-btn' + (UI.prodTab === 'timeline' ? ' active' : '') + '"' + on('setProdTab', 'timeline') + '>Timeline</button>' +
+    '<button class="seg-btn"' + on('jumpToScreen', '10') + '>AI Planner</button>' +
+    '<button class="seg-btn"' + on('jumpToScreen', '4') + '>What-If</button></div>';
+  if (UI.prodTab === 'timeline') h += ganttHtml();
+  else {
+    h += '<div class="chips-scroll">';
+    for (i = 0; i < PROD_FILTERS.length; i++) {
+      var cnt = 0, saved = UI.prodFilter;
+      UI.prodFilter = PROD_FILTERS[i][0];
+      for (var j = 0; j < D.orders.length; j++) if (prodMatch(D.orders[j])) cnt++;
+      UI.prodFilter = saved;
+      h += '<button class="fchip' + (saved === PROD_FILTERS[i][0] ? ' active' : '') + '"' + on('setProdFilter', PROD_FILTERS[i][0]) + '>' + PROD_FILTERS[i][1] + ' ' + cnt + '</button>';
+    }
+    h += '</div>';
+    for (i = 0; i < D.orders.length; i++) if (prodMatch(D.orders[i])) { h += orderCard(D.orders[i]); shown++; }
+    if (!shown) h += '<div class="card"><div class="empty-note">No production orders in this view</div></div>';
+  }
+  h += '<button class="fab-btn" onclick="newOrder()" aria-label="New production order">' + ic('plus', 22) + '</button>';
+  $id('view-2').innerHTML = h;
+}
+function ganttHtml() {
+  var list = openOrders(), i, t0 = Infinity, t1 = 0, now = D.generatedAt, DAY = 86400000;
+  if (!list.length) return '<div class="card"><div class="empty-note">No open production orders to schedule</div></div>';
+  for (i = 0; i < list.length; i++) {
+    if (list[i].start) t0 = Math.min(t0, list[i].start);
+    t1 = Math.max(t1, list[i].due || 0, list[i].projected || 0);
+  }
+  t0 = Math.min(t0, now); t1 = Math.max(t1, now) + DAY / 2;
+  function x(ms) { return ((ms - t0) / (t1 - t0)) * 100; }
+  var groups = {}, order = [];
+  for (i = 0; i < list.length; i++) {
+    var g = list[i].resource || 'Unassigned';
+    if (!groups[g]) { groups[g] = []; order.push(g); }
+    groups[g].push(list[i]);
+  }
+  var h = '<div class="card"><div class="row"><div><div class="t-title">Production timeline</div><div class="t-mute">Planned window, progress and projected finish by resource</div></div>' + icBox('info', 'layers') + '</div>' +
+    '<div class="legend"><span><i style="background:#dbe5f3;"></i>Planned window</span><span><i style="background:' + COLOR.info + ';"></i>Progress</span>' +
+    '<span><i style="background:repeating-linear-gradient(135deg,#f59e0b 0,#f59e0b 3px,#fde3ae 3px,#fde3ae 6px);"></i>Projected overrun</span>' +
+    '<span><i style="background:var(--ink); transform:rotate(45deg); border-radius:1px;"></i>Projected finish</span><span><i style="background:' + COLOR.bad + '; width:2px;"></i>Now</span></div>' +
+    '<div class="gantt" style="margin-top:10px;"><div class="gantt-in"><div class="g-axis"><span></span><div class="g-scale">';
+  var d0 = new Date(t0); d0.setHours(0, 0, 0, 0);
+  for (var tk = d0.getTime() + DAY; tk < t1; tk += DAY) h += '<span style="left:' + x(tk) + '%;">' + fmtDay(tk) + '</span>';
+  h += '</div></div>';
+  for (var gi = 0; gi < order.length; gi++) {
+    var rows = groups[order[gi]], risky = 0;
+    for (i = 0; i < rows.length; i++) if (rows[i].risk !== 'On Track') risky++;
+    h += '<div class="g-group">' + ic('cpu', 13) + esc(order[gi]) + ' <span class="t-mute">' + rows.length + ' orders</span>' + (risky ? chip('warn', risky + ' at risk') : '') + '</div>';
+    for (i = 0; i < rows.length; i++) {
+      var o = rows[i], left = x(o.start || t0), width = Math.max(x(o.due) - left, 1);
+      h += '<div class="g-row"' + on('openOrder', o.sys_id) + ' title="' + esc(o.number) + ' ' + o.pct + '% due ' + fmtDay(o.due) + '"><span class="g-lbl">' + esc(o.number) + '</span><div class="g-lane">' +
+        '<div class="g-win" style="left:' + left + '%; width:' + width + '%;"><span style="width:' + o.pct + '%; background:' + (o.status === 'on_hold' ? COLOR.warn : COLOR.info) + ';"></span></div>';
+      if (o.projected && o.projected > o.due) h += '<div class="g-over" style="left:' + x(o.due) + '%; width:' + (x(o.projected) - x(o.due)) + '%;"></div>';
+      if (o.projected) h += '<div class="g-eta" style="left:' + x(o.projected) + '%;"></div>';
+      h += '<div class="g-now" style="left:' + x(now) + '%;"></div></div></div>';
+    }
+  }
+  h += '</div></div><div class="t-mute" style="margin-top:8px;">Projected finish = remaining units at the order\'s daily capacity. Scroll sideways for the full window.</div></div>';
+  return h;
+}
+function setProdTab(tab) { UI.prodTab = tab; render2(); }
+function setProdFilter(f) { UI.prodFilter = f; render2(); }
+function newOrder() { window.location.href = '/x_2056099_indust_0_production_order.do?sys_id=-1'; }
+function openOrder(id) { UI.order = id; UI.detTab = 'progress'; UI.issueOpen = false; render3(); render6(); jumpToScreen('3'); }
+
+// ---------- screen 3: production order details ----------
+function stepRow(cls, name, chipHtml) { return '<div class="step ' + cls + '"><span>' + name + '</span>' + chipHtml + '</div>'; }
+function render3() {
+  var o = currentOrder(), h = '', i;
+  if (!o) { $id('view-3').innerHTML = '<div class="card"><div class="empty-note">No production order selected</div></div>'; return; }
+  var rk = RISK_KIND[o.risk] || 'mute', done = o.status === 'completed', sh = shortages(o);
+  h += '<div class="card"><div class="detail-hero">' +
+    ring(o.pct, 92, 9, COLOR[done ? 'ok' : (rk === 'mute' ? 'info' : rk)], '<span class="mono" style="font-size:20px; font-weight:800;">' + o.pct + '%</span><span class="t-mute" style="font-size:9.5px; font-weight:700;">' + n(o.produced) + ' / ' + n(o.planned) + '</span>') +
+    '<div class="grow"><div class="eyebrow">' + esc(o.number) + '</div><div class="t-title" style="font-size:15px; margin:2px 0;">' + esc(o.product) + '</div>' +
+    '<div class="t-sub cut">' + esc(o.customer || 'No customer linked') + '</div>' +
+    '<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">' + chip(PRI_KIND[o.pri] || 'mute', o.pri + ' ' + label(o.priority)) + chip(STATUS_KIND[o.status] || 'mute', statusTxt(o)) + chip(rk, o.risk) + '</div></div></div>';
+  // schedule strip: start -> due, with now and projected finish
+  var end = Math.max(o.due, o.projected || 0, D.generatedAt), span = (end - o.start) || 1;
+  function px(ms) { return Math.min(Math.max(((ms - o.start) / span) * 100, 0), 100); }
+  h += '<div class="tl"><div class="tl-track"></div><div class="tl-fill" style="width:' + px(Math.min(D.generatedAt, end)) + '%; background:' + COLOR.info + '; opacity:0.35;"></div>' +
+    '<div class="tl-pin" style="left:' + px(D.generatedAt) + '%; background:' + COLOR.bad + ';" title="Now"></div>' +
+    '<div class="tl-pin" style="left:' + px(o.due) + '%; background:var(--ink);" title="Due"></div>' +
+    (o.projected ? '<div class="tl-pin" style="left:' + px(o.projected) + '%; background:' + COLOR[o.projected > o.due ? 'warn' : 'ok'] + ';" title="Projected finish"></div>' : '') + '</div>' +
+    '<div class="legend" style="margin-top:2px;"><span>Start ' + fmtDay(o.start) + '</span><span><i style="background:' + COLOR.bad + '; width:3px;"></i>Now</span>' +
+    '<span><i style="background:var(--ink); width:3px;"></i>Due ' + fmtDay(o.due) + '</span>' +
+    (o.projected ? '<span><i style="background:' + COLOR[o.projected > o.due ? 'warn' : 'ok'] + '; width:3px;"></i>Projected finish ' + fmtDay(o.projected) + '</span>' : '') + '</div>';
+  h += '<div class="meta-grid">' + meta('cpu', 'Machine', o.resource || '-') + meta('pin', 'Location', o.location || '-') +
+    meta('receipt', 'Customer order', o.customerOrder || '-') + meta('gauge', 'Capacity', n(o.capacity) + ' / day') +
+    meta('box', 'Remaining', n(o.remaining) + ' units') + meta('layers', 'BOM', o.bom || (o.materials.length + ' components')) + '</div></div>';
+
+  h += '<div class="segmented-control">' +
+    '<button class="seg-btn' + (UI.detTab === 'progress' ? ' active' : '') + '"' + on('setDetTab', 'progress') + '>Progress</button>' +
+    '<button class="seg-btn' + (UI.detTab === 'bom' ? ' active' : '') + '"' + on('setDetTab', 'bom') + '>BOM' + (sh.length ? ' (' + sh.length + ' short)' : '') + '</button>' +
+    '<button class="seg-btn' + (UI.detTab === 'activity' ? ' active' : '') + '"' + on('setDetTab', 'activity') + '>Activity</button></div>';
+
+  if (UI.detTab === 'activity') {
+    h += '<div class="card">';
+    if (!o.activity.length) h += '<div class="empty-note">No material requests logged against this order</div>';
+    for (i = 0; i < o.activity.length; i++) {
+      var a = o.activity[i];
+      h += '<div class="issue-item"><div class="issue-left">' + icBox('info', 'doc') + '<div class="grow"><div class="issue-name cut">' + esc(a.number) + ' &middot; ' + esc(a.type) + '</div>' +
+        '<div class="issue-desc cut">' + n(a.qty) + ' x ' + esc(a.material) + ' &middot; ' + ago(a.at) + '</div></div></div>' + chip('mute', a.status) + '</div>';
+    }
+    h += '</div>';
+  } else if (UI.detTab === 'bom') {
+    h += '<div class="card">';
+    if (!o.materials.length) h += '<div class="empty-note">No material requirements recorded for this order</div>';
+    for (i = 0; i < o.materials.length; i++) {
+      var m = o.materials[i], short = m.shortage > 0;
+      h += '<div class="issue-item"><div class="issue-left">' + icBox(short ? 'bad' : 'ok', 'box') + '<div class="grow"><div class="issue-name cut">' + esc(m.name) + '</div>' +
+        '<div class="issue-desc mono">need ' + n(m.required) + ' &middot; stock ' + n(m.available) + '</div></div></div>' + chip(short ? 'bad' : 'ok', short ? 'Short ' + n(m.shortage) : 'Available') + '</div>';
+    }
+    h += '<button class="btn btn-outline btn-block" style="margin-top:12px;"' + on('jumpToScreen', '6') + '>' + ic('link', 15) + 'Open traceability</button></div>';
+  } else {
+    var started = done || o.status === 'in_production' || o.status === 'on_hold';
+    h += '<div class="card"><div class="stepper">' +
+      stepRow(!o.materials.length ? '' : (sh.length ? 'bad' : 'done'), 'Material check', !o.materials.length ? chip('mute', 'No BOM') : (sh.length ? chip('bad', sh.length + ' short') : chip('ok', 'Completed'))) +
+      stepRow(done ? 'done' : (started ? 'now' : ''), 'Production', done ? chip('ok', 'Completed') : (o.status === 'in_production' ? chip('info', 'In progress') : (o.status === 'on_hold' ? chip('warn', 'On hold') : chip('mute', 'Pending')))) +
+      stepRow(done ? 'done' : '', 'Quality inspection', done ? chip('ok', 'Completed') : chip('mute', 'Pending')) +
+      stepRow(done ? 'done' : '', 'Completion', done ? chip('ok', 'Completed') : chip('mute', 'Pending')) + '</div></div>';
+  }
+
+  // actions
+  if (!done) {
+    h += '<div class="card"><div class="eyebrow" style="margin-bottom:8px;">Actions</div>';
+    if (o.status === 'in_production' && o.remaining > 0) {
+      h += '<div class="btn-row" style="margin-top:0;"><input class="qty-input" id="logQty" type="number" min="1" max="' + o.remaining + '" value="' + Math.min(5, o.remaining) + '" aria-label="Units to log" />' +
+        '<button class="btn btn-green"' + on('logUnits', o.sys_id) + '>' + ic('plus', 15) + 'Log Production</button></div>';
+    }
+    h += '<div class="action-bar" style="margin-top:8px;">';
+    if (o.status === 'in_production') h += '<button class="btn btn-amber"' + on('setStatus', o.sys_id, 'on_hold') + '>' + ic('pause', 15) + 'Pause</button>';
+    if (o.status === 'on_hold') h += '<button class="btn btn-green"' + on('setStatus', o.sys_id, 'in_production') + '>' + ic('play', 15) + 'Resume</button>';
+    if (o.status === 'planned' || o.status === 'materials_reserved') h += '<button class="btn btn-green"' + on('setStatus', o.sys_id, 'in_production') + '>' + ic('play', 15) + 'Start</button>';
+    h += '<button class="btn btn-soft"' + on('toggleIssue') + '>' + ic('flag', 15) + 'Report Issue</button>';
+    if (o.status === 'in_production') h += '<button class="btn btn-blue" style="grid-column:1 / -1;"' + (o.remaining > 0 ? ' disabled' : on('setStatus', o.sys_id, 'completed')) + '>' + ic('check', 15) + (o.remaining > 0 ? 'Complete (log ' + n(o.remaining) + ' more units first)' : 'Complete Order') + '</button>';
+    h += '</div>';
+    if (UI.issueOpen) {
+      h += '<div style="margin-top:10px;"><label class="field-label">Describe the issue</label><input class="field-input" id="issueNote" maxlength="300" placeholder="e.g. spindle vibration, material defect" />' +
+        '<button class="btn btn-amber btn-block"' + on('submitIssue', o.sys_id) + '>Submit issue' + (o.status === 'in_production' ? ' and hold order' : '') + '</button></div>';
+    }
+    h += '</div>';
+  }
+  $id('view-3').innerHTML = h;
+}
+function setDetTab(tab) { UI.detTab = tab; render3(); }
+function toggleIssue() { UI.issueOpen = !UI.issueOpen; render3(); if (UI.issueOpen) { var el = $id('issueNote'); if (el) el.focus(); } }
+function submitIssue(id) {
+  var note = ($id('issueNote').value || '').replace(/^\s+|\s+$/g, '');
+  if (!note) return toast('Describe the issue first', true);
+  act({ action: 'report_issue', sys_id: id, note: note }, function () { UI.issueOpen = false; });
+}
+function logUnits(id) {
+  var qty = parseFloat($id('logQty').value);
+  if (!qty || qty <= 0) return toast('Enter the number of units produced', true);
+  act({ action: 'log_units', sys_id: id, qty: qty });
+}
+function setStatus(id, to) { act({ action: 'set_status', sys_id: id, to: to }); }
+
+// ---------- screen 4: what-if simulation ----------
+function vsCol(best, title, otd, delay, extraLbl, extraVal, color) {
+  return '<div class="vs-col' + (best ? ' best' : '') + '"><div class="row"><span class="eyebrow" style="' + (best ? 'color:var(--ai-ink);' : '') + '">' + title + '</span>' + (best ? ic('spark', 14) : '') + '</div>' +
+    '<div class="vs-num mono">' + otd + '%</div><div class="t-mute">on-time delivery</div>' +
+    '<div class="progress-track"><div class="progress-fill" style="width:' + otd + '%; background:' + color + ';"></div></div>' +
+    '<div class="vs-line"><span>Total delay</span><b>' + n(delay) + ' d</b></div><div class="vs-line"><span>' + extraLbl + '</span><b>' + extraVal + '</b></div></div>';
+}
+function render4() {
+  var sc = currentScenario(), h = '', i;
+  if (!sc) { $id('view-4').innerHTML = '<div class="card"><div class="empty-note">No simulation scenarios available</div></div>'; return; }
+  h += '<div class="sim-hero"><div class="eyebrow">' + ic('globe', 13) + ' Digital twin &middot; what-if</div><div class="sim-q">What if: ' + esc(sc.parameter) + '?</div>' +
+    '<select class="field-select" onchange="pickScenario(this.value)" aria-label="Scenario">';
+  for (i = 0; i < D.scenarios.length; i++) {
+    var x = D.scenarios[i];
+    h += '<option value="' + x.sys_id + '"' + (x.sys_id === sc.sys_id ? ' selected' : '') + '>' + esc(x.categoryLabel) + ' - ' + esc(x.name) + '</option>';
+  }
+  h += '</select><div class="row" style="font-size:11px; color:#c9c1f5; font-weight:600; margin-bottom:12px;"><span>' + n(sc.impacted) + ' orders impacted</span><span>Baseline OTD ' + sc.baseline + '%</span><span>' + esc(sc.id) + '</span></div>' +
+    '<button class="btn btn-ai btn-block" onclick="runSimulationUI()">' + ic('play', 15) + 'Run Simulation</button></div>';
+
+  if (UI.simRun) {
+    var approved = sc.status === 'approved', residual = Math.max(sc.delay - sc.recovered, 0), maxDelay = 0.1;
+    for (i = 0; i < sc.runs.length; i++) maxDelay = Math.max(maxDelay, sc.runs[i].delay);
+    h += '<div class="vs">' + vsCol(false, 'Current plan', sc.unmitigated, sc.delay, 'Mitigation', 'None', COLOR.warn) +
+      vsCol(true, 'AI optimized', sc.optimized, residual, 'Cost impact', '+' + n(sc.cost), COLOR.ai) + '</div>';
+    h += '<div class="ai-card"><div class="ai-in"><div class="row"><div class="ai-head">' + ic('spark', 16) + 'Recommended plan</div>' + (approved ? chip('ok', 'Applied') : chip('ai', 'Best option')) + '</div>' +
+      '<div class="ai-title">' + esc(sc.strategy) + '</div>' +
+      '<div class="metric-row">' + metric('+' + n(sc.optimized - sc.unmitigated) + '%', 'On-time delivery') + metric('-' + n(sc.recovered) + ' d', 'Delay recovered') + metric('+' + n(sc.cost), 'Cost impact') + '</div>' +
+      '<button class="btn btn-ai btn-block"' + (approved ? ' disabled' : on('approveScenario', sc.sys_id)) + '>' + ic('check', 15) + (approved ? 'Recommendation applied' : 'Apply Recommendation') + '</button></div></div>';
+    if (sc.runs.length) {
+      h += secHead('Order-by-order impact', 'delay in days');
+      h += '<div class="card"><div class="legend" style="margin:0 0 8px;"><span><i style="background:' + COLOR.warn + ';"></i>Current plan</span><span><i style="background:' + COLOR.ai + ';"></i>AI optimized</span></div>';
+      for (i = 0; i < sc.runs.length; i++) {
+        var r = sc.runs[i], after = Math.max(r.delay - r.recovered, 0);
+        h += '<div class="issue-item" style="display:block;"><div class="row"><div class="grow"><div class="issue-name cut">' + esc(r.order) + ' &middot; ' + esc(r.customer) + '</div>' +
+          '<div class="issue-desc cut">' + ic('cpu', 12) + ' ' + esc(r.machine) + ' &middot; ' + n(r.qty) + ' units</div></div>' +
+          '<div class="mono" style="font-size:11px; font-weight:700; text-align:right;">' + n(r.delay) + ' d &rarr; ' + n(after) + ' d</div></div>' +
+          '<div class="cmp"><div style="width:' + (r.delay / maxDelay) * 100 + '%; background:' + COLOR.warn + ';"></div><div style="width:' + (after / maxDelay) * 100 + '%; background:' + COLOR.ai + ';"></div></div></div>';
+      }
+      h += '</div>';
+    }
+  } else {
+    h += '<div class="card"><div class="empty-note">Run the simulation to compare the current plan with the AI optimized plan.</div></div>';
+  }
+  $id('view-4').innerHTML = h;
+}
+function pickScenario(id) { UI.scenario = id; UI.simRun = false; render4(); }
+function runSimulationUI() { UI.simRun = true; render4(); toast('Simulation loaded: ' + currentScenario().strategy); }
+function simulateScenario(id) { UI.scenario = id; UI.simRun = true; render4(); jumpToScreen('4'); }
+function approveScenario(id) { act({ action: 'approve_scenario', sys_id: id }); }
+
+// ---------- screen 5: inventory ----------
+var MAT_FILTERS = [['attention', 'Needs attention'], ['below_ss', 'Below safety'], ['low', 'Low'], ['all', 'All materials']];
+function matMatch(m) {
+  var q = UI.matQuery.toLowerCase();
+  if (q && (m.name + ' ' + m.matId).toLowerCase().indexOf(q) < 0) return false;
+  if (UI.matFilter === 'attention') return m.level !== 'ok';
+  if (UI.matFilter === 'all') return true;
+  return m.level === UI.matFilter;
+}
+function matCard(m) {
+  var kind = m.level === 'below_ss' ? 'bad' : (m.level === 'low' ? 'warn' : 'ok');
+  var target = Math.max(m.reorder, m.safety, 1), shortfall = Math.max(target - m.qty, 0);
+  var h = '<div class="card" style="padding:12px;"><div class="row"><div class="row-l grow">' + icBox(kind, 'box') + '<div class="grow"><div class="issue-name cut">' + esc(m.name) + '</div><div class="issue-desc mono">' + esc(m.matId) + '</div></div></div>' +
+    chip(kind, m.level === 'below_ss' ? 'Below safety' : (m.level === 'low' ? 'Low stock' : 'Healthy')) + '</div>' +
+    bar((m.qty / target) * 100, COLOR[kind]) +
+    '<div class="row t-mute"><span class="mono" style="color:var(--ink); font-weight:700;">' + n(m.qty) + ' ' + esc(m.uom) + '</span><span>safety ' + n(m.safety) + ' &middot; reorder ' + n(m.reorder) + (m.leadDays ? ' &middot; lead ' + n(m.leadDays) + ' d' : '') + '</span></div>';
+  if (m.level !== 'ok' || m.orders.length) {
+    h += '<div class="btn-row">';
+    if (m.level !== 'ok') h += '<button class="btn btn-sm btn-outline-green"' + on('requestMaterial', m.material, shortfall, '') + '>' + ic('truck', 13) + 'Request ' + n(shortfall) + '</button>';
+    if (m.orders.length) h += '<button class="btn btn-sm btn-outline"' + on('openTrace', m.orders[0]) + '>' + ic('link', 13) + 'Traceability</button>';
+    h += '</div>';
+  }
+  return h + '</div>';
+}
+function renderMatList() {
+  var list = D.inventory.materialList, h = '', shown = 0, total = 0, i;
+  for (i = 0; i < list.length; i++) {
+    if (!matMatch(list[i])) continue;
+    total++;
+    if (shown < UI.matMax) { h += matCard(list[i]); shown++; }
+  }
+  if (!total) h = '<div class="card"><div class="empty-note">No materials match</div></div>';
+  if (total > shown) h += '<button class="btn btn-soft btn-block"' + on('moreMats') + '>Show more (' + (total - shown) + ' remaining)</button>';
+  $id('matList').innerHTML = h;
+}
+function render5() {
+  var v = D.inventory, h = '', i;
+  h += '<div class="card"><div class="detail-hero">' +
+    ring(v.health, 96, 9, COLOR[v.belowSafety > 0 ? 'warn' : 'ok'], '<span class="mono" style="font-size:21px; font-weight:800;">' + v.health + '%</span><span class="t-mute" style="font-size:9.5px; font-weight:700;">HEALTH</span>') +
+    '<div class="grow"><div class="t-title">Inventory health</div><div class="t-mute">' + n(v.materials - v.belowSafety) + ' of ' + n(v.materials) + ' materials at or above safety stock</div>' +
+    '<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">' + chip(v.belowSafety ? 'bad' : 'ok', n(v.belowSafety) + ' below safety') + chip(v.low - v.belowSafety ? 'warn' : 'ok', n(v.low - v.belowSafety) + ' low') + '</div></div></div></div>';
+  h += '<div class="pastel-grid">' + tile('#e8f0fe', '#1d4ed8', v.total, 'Stock lines') + tile('#e7f8f1', '#047857', v.available, 'Available') + tile('#fef4e2', '#b45309', v.reserved, 'Reserved') +
+    tile('#f1eafe', '#6d28d9', v.incoming, 'Incoming') + tile(v.quarantine ? '#fdecec' : '#eef2f7', v.quarantine ? '#b91c1c' : '#44546a', v.quarantine, 'Quarantine') + tile('#fef4e2', '#b45309', v.low, 'Low stock') + '</div>';
+  h += '<div class="card"><div class="t-title" style="margin-bottom:4px;">Stock by type</div>';
+  for (i = 0; i < v.types.length; i++) {
+    var ty = v.types[i];
+    h += '<div class="row" style="font-size:11px; font-weight:700; margin-top:8px;"><span>' + (ty.type === 'mro' ? 'MRO' : label(ty.type)) + '</span><span class="mono">' + n(ty.lines) + ' lines &middot; ' + n(ty.qty) + ' units</span></div>' + bar((ty.lines / v.total) * 100, COLOR.info);
+  }
+  h += '</div>';
+  h += secHead('Materials', n(v.materials) + ' tracked');
+  h += '<div class="search-box">' + ic('search', 16) + '<input class="field-input" id="matSearch" placeholder="Search material name or ID" value="' + esc(UI.matQuery) + '" oninput="searchMats(this.value)" /></div><div class="chips-scroll">';
+  for (i = 0; i < MAT_FILTERS.length; i++) h += '<button class="fchip' + (UI.matFilter === MAT_FILTERS[i][0] ? ' active' : '') + '"' + on('setMatFilter', MAT_FILTERS[i][0]) + '>' + MAT_FILTERS[i][1] + '</button>';
+  h += '</div><div id="matList"></div>';
+  h += '<button class="btn btn-outline btn-block" style="margin-top:4px;"' + on('jumpToScreen', '6') + '>' + ic('link', 15) + 'Check BOM and traceability</button>';
+  $id('view-5').innerHTML = h;
+  renderMatList();
+}
+function searchMats(q) { UI.matQuery = q; UI.matMax = 12; renderMatList(); }
+function setMatFilter(f) { UI.matFilter = f; UI.matMax = 12; render5(); }
+function moreMats() { UI.matMax += 15; renderMatList(); }
+function requestMaterial(material, qty, order) { act({ action: 'request_material', material: material, qty: qty, order: order }); }
+function openTrace(orderId) { UI.order = orderId; render6(); render3(); jumpToScreen('6'); }
+
+// ---------- screen 6: BOM and material traceability ----------
+function render6() {
+  var o = currentOrder(), h = '', i;
+  if (!o) { $id('view-6').innerHTML = '<div class="card"><div class="empty-note">No production order selected</div></div>'; return; }
+  var sh = shortages(o), covered = o.materials.length - sh.length, minLead = 0, maxLead = 0, withLead = 0;
+  for (i = 0; i < o.materials.length; i++) if (o.materials[i].leadDays) { withLead++; minLead = minLead ? Math.min(minLead, o.materials[i].leadDays) : o.materials[i].leadDays; maxLead = Math.max(maxLead, o.materials[i].leadDays); }
+  h += '<label class="field-label">Production order</label><select class="field-select" onchange="pickBomOrder(this.value)">';
+  for (i = 0; i < D.orders.length; i++) {
+    var x = D.orders[i];
+    if (x.status === 'completed' && x.sys_id !== o.sys_id) continue;
+    h += '<option value="' + x.sys_id + '"' + (x.sys_id === o.sys_id ? ' selected' : '') + '>' + esc(x.number) + ' - ' + esc(x.product) + (shortages(x).length ? ' (shortage)' : '') + '</option>';
+  }
+  h += '</select>';
+  // 1. order
+  h += '<div class="node"><div class="row"><div class="row-l grow">' + icBox('info', 'factory') + '<div class="grow"><div class="eyebrow">Production order</div><div class="issue-name cut">' + esc(o.number) + ' &middot; ' + esc(o.product) + '</div>' +
+    '<div class="issue-desc">' + n(o.planned) + ' units &middot; ' + esc(o.customer || 'no customer') + '</div></div></div><span class="sec-link"' + on('openOrder', o.sys_id) + '>Open</span></div></div><div class="link-v"></div>';
+  // 2. BOM
+  h += '<div class="node"><div class="row"><div class="row-l grow">' + icBox('ai', 'layers') + '<div class="grow"><div class="eyebrow">Bill of materials</div><div class="issue-name">' + esc(o.bom || 'Material requirements') + '</div>' +
+    '<div class="issue-desc">' + o.materials.length + ' components' + (o.bom ? '' : ' &middot; no customer BOM linked to this product') + '</div></div></div>' + chip(sh.length ? 'bad' : 'ok', sh.length ? sh.length + ' short' : 'Covered') + '</div></div><div class="link-v"></div>';
+  // 3. components -> stock -> lead time
+  h += '<div class="node' + (sh.length ? ' bad' : '') + '"><div class="row-l">' + icBox(sh.length ? 'bad' : 'ok', 'box') + '<div><div class="eyebrow">Components</div><div class="issue-name">Required vs available stock</div></div></div>';
+  if (!o.materials.length) h += '<div class="empty-note" style="margin-top:8px;">No material requirements recorded</div>';
+  for (i = 0; i < o.materials.length; i++) {
+    var m = o.materials[i], short = m.shortage > 0;
+    h += '<div class="comp"' + (i === 0 ? ' style="margin-top:8px;"' : '') + '><div class="row"><div class="grow"><div class="issue-name cut">' + esc(m.name) + '</div><div class="issue-desc mono">' + esc(m.matId) + '</div></div>' + chip(short ? 'bad' : 'ok', short ? 'Short ' + n(m.shortage) : 'Available') + '</div>' +
+      '<div class="hop"><div>Required<b>' + n(m.required) + '</b></div>' + ic('right', 12) + '<div>In stock<b>' + n(m.available) + '</b></div>' + ic('right', 12) + '<div>Lead time<b>' + (m.leadDays ? n(m.leadDays) + ' d' : 'n/a') + '</b></div></div>' +
+      (short ? '<button class="btn btn-sm btn-blue btn-block" style="margin-top:8px;"' + on('requestMaterial', m.material, m.shortage, o.number) + '>' + ic('truck', 13) + 'Request ' + n(m.shortage) + ' ' + esc(m.uom) + '</button>' : '') + '</div>';
+  }
+  h += '</div><div class="link-v"></div>';
+  // 4. inventory
+  h += '<div class="node' + (sh.length ? ' warn' : '') + '"><div class="row"><div class="row-l grow">' + icBox(sh.length ? 'warn' : 'ok', 'home') + '<div class="grow"><div class="eyebrow">Inventory</div><div class="issue-name">' + covered + ' of ' + o.materials.length + ' components fully covered</div>' +
+    '<div class="issue-desc">Stock summed across all warehouse locations</div></div></div><span class="sec-link"' + on('jumpToScreen', '5') + '>Stock</span></div></div><div class="link-v"></div>';
+  // 5. supplier
+  h += '<div class="node"><div class="row"><div class="row-l grow">' + icBox('mute', 'truck') + '<div class="grow"><div class="eyebrow">Supplier</div><div class="issue-name">' + (withLead ? 'Lead time ' + (minLead === maxLead ? n(minLead) : n(minLead) + '-' + n(maxLead)) + ' days' : 'No supplier lead times recorded') + '</div>' +
+    '<div class="issue-desc">' + withLead + ' of ' + o.materials.length + ' components have a supplier profile; supplier names are not linked on the profiles</div></div></div><span class="sec-link"' + on('jumpToScreen', '12') + '>Suppliers</span></div></div>';
+  $id('view-6').innerHTML = h;
+}
+function pickBomOrder(id) { UI.order = id; render6(); render3(); }
+
+// ---------- screen 7: alerts ----------
+var ALERT_FILTERS = { all: null, critical: ['critical', 'high'], warning: ['medium'], info: ['low'] };
+var ALERT_ICON = { below_safety_stock: 'box', material_shortage: 'alert', expiry_warning: 'clock', quality_failure: 'shield' };
+function alertAction(a) {
+  if (a.type === 'below_safety_stock') {
+    var gap = a.threshold - a.qty;
+    if (gap > 0) return { txt: 'Replenish ' + n(gap) + ' units to reach the safety level', btn: 'Request stock', js: on('requestMaterial', a.materialId, gap, '') };
+    return { txt: 'Stock is back above the threshold - review and close', btn: 'View stock', js: on('jumpToScreen', '5') };
+  }
+  if (a.type === 'material_shortage') return { txt: 'Check BOM coverage for orders using this material', btn: 'Check BOM', js: on('jumpToScreen', '6') };
+  if (a.type === 'expiry_warning') return { txt: 'Use or quarantine ' + (a.batch || 'the batch') + ' before it expires', btn: 'View stock', js: on('jumpToScreen', '5') };
+  return { txt: 'Review the failed inspection and hold affected stock', btn: 'View quality', js: on('jumpToScreen', '13') };
+}
+function render7() {
+  var ac = D.alertCounts, h = '', i, shown = 0, keys = ['all', 'critical', 'warning', 'info'], allow = ALERT_FILTERS[UI.alertFilter];
+  h += '<div class="metric-row" style="margin-top:0;">' + metric(n(ac.critical + ac.high), 'Critical / high') + metric(n(ac.medium), 'Warning') + metric(n(ac.low), 'Info') + '</div>';
+  h += '<div class="segmented-control">';
+  for (i = 0; i < keys.length; i++) h += '<button class="seg-btn' + (UI.alertFilter === keys[i] ? ' active' : '') + '"' + on('setAlertFilter', keys[i]) + '>' + label(keys[i]) + '</button>';
+  h += '</div>';
+  for (i = 0; i < D.alerts.length; i++) {
+    var a = D.alerts[i], s = SEV[a.sev] || SEV.low;
+    if (allow && allow.indexOf(a.sev) < 0) continue;
+    shown++;
+    var rec = alertAction(a);
+    h += '<div class="card" style="padding:12px;"><div class="row" style="align-items:flex-start;"><div class="row-l grow" style="align-items:flex-start;">' + icBox(s.kind, ALERT_ICON[a.type] || 'bell') +
+      '<div class="grow"><div class="row"><span class="issue-name cut">' + esc(a.typeLabel) + '</span>' + chip(s.kind, s.txt) + '</div>' +
+      '<div class="t-sub cut">' + esc(a.material) + ' <span class="mono t-mute">' + esc(a.matId) + '</span></div>' +
+      '<div class="t-mute mono" style="margin-top:2px;">' + n(a.qty) + ' on hand &middot; threshold ' + n(a.threshold) + (a.stock ? ' &middot; ' + esc(a.stock) : '') + '</div>' +
+      '<div class="t-mute" style="margin-top:2px;">' + (a.number ? esc(a.number) + ' &middot; ' : '') + ago(a.at) + '</div></div></div></div>' +
+      '<div class="row" style="margin-top:10px; padding-top:10px; border-top:1px solid var(--line-2);"><span class="t-sub grow">' + ic('spark', 13) + ' ' + esc(rec.txt) + '</span>' +
+      '<button class="btn btn-sm btn-outline"' + rec.js + '>' + rec.btn + '</button></div></div>';
+  }
+  if (!shown) h += '<div class="card"><div class="empty-note">No ' + (UI.alertFilter === 'all' ? '' : UI.alertFilter + ' ') + 'alerts</div></div>';
+  else if (!allow && ac.open > D.alerts.length) h += '<div class="empty-note">Showing the ' + D.alerts.length + ' most severe of ' + n(ac.open) + ' open alerts</div>';
+  $id('view-7').innerHTML = h;
+}
+function setAlertFilter(f) { UI.alertFilter = f; render7(); }
+
+// ---------- screen 8: control center ----------
+function moduleTile(kind, icon, name, desc, screen) {
+  return '<div class="module-tile"' + on('jumpToScreen', screen) + '>' + icBox(kind, icon) + '<div class="module-name">' + name + '</div><div class="module-desc">' + desc + '</div></div>';
+}
+function render8() {
+  var pending = 0, i;
+  for (i = 0; i < D.scenarios.length; i++) if (D.scenarios[i].status !== 'approved') pending++;
+  $id('view-8').innerHTML = '<div class="module-grid">' +
+    moduleTile('info', 'cpu', 'Work Centers', D.workCenters.length + ' monitored &middot; ' + n(D.workforce.overloaded) + ' overloaded', '15') +
+    moduleTile('ai', 'spark', 'AI Recommendations', pending + ' awaiting decision', '10') +
+    moduleTile('ai', 'globe', 'Digital Twin', D.scenarios.length + ' what-if scenarios', '4') +
+    moduleTile('info', 'link', 'Traceability', 'Order to BOM to stock', '6') +
+    moduleTile('ok', 'users', 'Workforce', n(D.workforce.available) + ' active &middot; ' + n(D.workforce.absent) + ' absent', '9') +
+    moduleTile(D.maintenance.active ? 'warn' : 'ok', 'wrench', 'Maintenance', n(D.maintenance.inProgress) + ' in progress', '9') +
+    moduleTile('info', 'truck', 'Suppliers', n(D.supplierSummary.total) + ' suppliers &middot; avg ' + D.supplierSummary.avgScore, '12') +
+    moduleTile('ok', 'shield', 'Quality', D.quality.passRate + '% pass rate', '13') +
+    moduleTile('info', 'chart', 'Analytics', 'OEE ' + D.kpi.oee + '% &middot; OTD ' + D.kpi.otd + '%', '14') +
+    moduleTile('info', 'receipt', 'Customer Orders', n(D.customerOrderCounts.active) + ' active &middot; ' + n(D.customerOrderCounts.total) + ' total', '11') +
+    moduleTile('warn', 'clipboard', 'Approvals', pending + ' plans to approve', '10') +
+    moduleTile('info', 'doc', 'Work Orders', openOrders().length + ' open orders', '2') + '</div>';
+}
+
+// ---------- screen 9: workforce / maintenance ----------
+function loadRow(name, right, pct, color, first) {
+  return '<div style="font-size:11px; font-weight:700; margin:' + (first ? '0' : '10px') + ' 0 4px; display:flex; justify-content:space-between;"><span>' + esc(name) + '</span><span>' + right + '</span></div>' + bar(pct, color);
+}
+function render9() {
+  var w = D.workforce, m = D.maintenance, h = '', i;
+  h += secHead('Today\'s Workforce');
+  h += '<div class="pastel-grid">' + tile('#dcfce7', '#15803d', w.available, 'Available') + tile('#dbeafe', '#1d4ed8', w.assigned, 'Assigned') + tile('#ffedd5', '#c2410c', w.absent, 'Absent') + '</div>';
+  h += '<div class="card" style="background:' + (w.overloaded ? '#fef2f2' : '#ecfdf5') + '; border:1px solid ' + (w.overloaded ? '#fecaca' : '#a7f3d0') + '; margin-bottom:14px;">' +
+    '<div style="display:flex; justify-content:space-between; align-items:center;"><strong style="color:' + (w.overloaded ? '#b91c1c' : '#047857') + '; font-size:12px;">Overloaded work centers (&gt;80% load)</strong>' +
+    pill(w.overloaded ? 'red' : 'green', w.overloaded) + '</div></div>';
+
+  h += secHead('Team Coverage');
+  h += '<div class="card">';
+  if (!w.teams.length) h += '<div class="empty-note">No team assignments recorded</div>';
+  var maxTeam = w.teams.length ? w.teams[0].count : 1, colors = ['#2563eb', '#0284c7', '#10b981', '#f59e0b', '#8b5cf6'];
+  for (i = 0; i < w.teams.length; i++) h += loadRow(w.teams[i].name, n(w.teams[i].count) + '/' + n(w.available), (w.teams[i].count / maxTeam) * 100, colors[i % colors.length], i === 0);
+  h += '</div>';
+
+  h += secHead('Work Center Load');
+  h += '<div class="card">';
+  if (!D.workCenters.length) h += '<div class="empty-note">No work centers</div>';
+  for (i = 0; i < D.workCenters.length; i++) {
+    var c = D.workCenters[i];
+    h += loadRow(c.code + ' \u00b7 ' + c.name, c.load + '% \u00b7 ' + esc(c.crew), c.load, c.load > 80 ? '#ef4444' : (c.load > 70 ? '#f59e0b' : '#10b981'), i === 0);
+  }
+  h += '</div>';
+
+  h += secHead('Maintenance');
+  h += '<div class="pastel-grid">' + tile('#fee2e2', '#b91c1c', m.active, 'Active') + tile('#dbeafe', '#1d4ed8', m.inProgress, 'In Progress') + tile('#dcfce7', '#15803d', m.complete, 'Complete') + '</div>';
+  if (m.items.length) {
+    h += '<div class="card">';
+    for (i = 0; i < m.items.length; i++) {
+      h += '<div class="issue-item"><div class="issue-left"><div class="dot-icon dot-amber"></div><div><div class="issue-name">' + esc(m.items[i].number) + ' \u00b7 ' + esc(m.items[i].machine) + '</div>' +
+        '<div class="issue-desc">' + esc(m.items[i].reason) + '</div></div></div>' + pill('amber', label(m.items[i].status)) + '</div>';
+    }
+    h += '</div>';
+  }
+  $id('view-9').innerHTML = h;
+}
+
+
+// ---------- screen 10: AI command center ----------
+function render10() {
+  var h = '', i, gain = 0, pending = 0;
+  for (i = 0; i < D.scenarios.length; i++) if (D.scenarios[i].status !== 'approved') { pending++; gain = Math.max(gain, D.scenarios[i].optimized - D.scenarios[i].unmitigated); }
+  h += '<div class="sim-hero" style="background:radial-gradient(110% 130% at 100% 0%, rgba(37,99,235,0.6), rgba(37,99,235,0) 60%), linear-gradient(135deg, #1a0f3d, #2a1a6b);"><div class="eyebrow">' + ic('spark', 13) + ' AI command center</div>' +
+    '<div class="sim-q" style="text-transform:none; margin-bottom:4px;">' + pending + ' recommendation' + (pending === 1 ? '' : 's') + ' awaiting your decision</div>' +
+    '<div style="font-size:11.5px; color:#c9c1f5; font-weight:600;">Best available gain: up to +' + n(gain) + '% on-time delivery. Based on ' + D.scenarios.length + ' evaluated digital-twin scenarios.</div></div>';
+  for (i = 0; i < D.scenarios.length; i++) h += aiCard(D.scenarios[i], false);
+  var low = D.inventory.lowItems[0];
+  if (low) {
+    h += '<div class="card"><div class="row"><div class="row-l grow">' + icBox('warn', 'box') + '<div class="grow"><div class="eyebrow">Inventory insight</div><div class="t-title cut">Replenish ' + esc(low.matId) + '</div></div></div>' + chip('warn', 'Medium') + '</div>' +
+      '<div class="t-sub" style="margin:8px 0 10px;">' + esc(low.name) + ': ' + n(low.qty) + ' on hand, ' + (low.level === 'below_ss' ? 'below safety stock of ' + n(low.safety) : 'below reorder level of ' + n(low.reorder)) + '.</div>' +
+      '<button class="btn btn-blue btn-block"' + on('requestMaterial', low.material, low.shortfall, '') + '>' + ic('truck', 15) + 'Create replenishment request (' + n(low.shortfall) + ')</button></div>';
+  }
+  if (D.workforce.overloaded > 0 && D.workCenters.length) {
+    var wc = D.workCenters[0];
+    h += '<div class="card"><div class="row"><div class="row-l grow">' + icBox('info', 'cpu') + '<div class="grow"><div class="eyebrow">Capacity insight</div><div class="t-title cut">Rebalance work center load</div></div></div>' + chip('mute', 'Low') + '</div>' +
+      '<div class="t-sub" style="margin:8px 0 10px;">' + esc(wc.code) + ' (' + esc(wc.crew) + ') is at ' + wc.load + '% load; ' + n(D.workforce.overloaded) + ' work centers are above 80%.</div>' +
+      '<button class="btn btn-soft btn-block"' + on('jumpToScreen', '15') + '>View work centers</button></div>';
+  }
+  $id('view-10').innerHTML = h;
+}
+
+// ---------- screen 11: customer orders ----------
+var CO_PRI = { critical: 'red', high: 'amber', medium: 'yellow', low: 'gray' };
+var CO_FILTERS = ['active', 'urgent', 'in production', 'all'];
+function coMatches(o) {
+  if (UI.coFilter === 'active') return o.active;
+  if (UI.coFilter === 'urgent') return o.open && (o.priority === 'critical' || o.priority === 'high');
+  if (UI.coFilter === 'in production') return o.production.length > 0;
+  return true;
+}
+function render11() {
+  var h = '', i, j, shown = 0, list = D.customerOrders || [];
+  if (!UI.coFilter) UI.coFilter = D.customerOrderCounts.active > 0 ? 'active' : 'all';
+  h += '<div class="segmented-control">';
+  for (i = 0; i < CO_FILTERS.length; i++) h += '<button class="seg-btn' + (UI.coFilter === CO_FILTERS[i] ? ' active' : '') + '" onclick="setCoFilter(\'' + CO_FILTERS[i] + '\')">' + label(CO_FILTERS[i]) + '</button>';
+  h += '</div>';
+  for (i = 0; i < list.length; i++) {
+    var o = list[i];
+    if (!coMatches(o)) continue;
+    shown++;
+    var expanded = UI.coOpen === o.sys_id;
+    h += '<div class="card" style="cursor:pointer;" onclick="toggleCo(\'' + o.sys_id + '\')">' +
+      '<div style="display:flex; justify-content:space-between; align-items:center;"><div><strong style="font-size:14px;">' + esc(o.number || 'No number') + '</strong> ' + pill(CO_PRI[o.priority] || 'gray', label(o.priority)) + '</div>' +
+      '<span>' + (o.active ? '' : pill('gray', 'Inactive') + ' ') + pill(o.open ? 'blue' : 'gray', label(o.status)) + '</span></div>' +
+      '<div style="font-size:12px; color:#64748b; margin:2px 0 6px;">' + esc(o.customer) + (o.reference ? ' \u00b7 ' + esc(o.reference) : '') + '</div>' +
+      '<div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700;"><span>' + n(o.qty) + ' units \u00b7 ' + o.items.length + ' line' + (o.items.length === 1 ? '' : 's') + '</span><span>Due ' + fmtDate(o.due) + '</span></div>' +
+      '<div style="font-size:11px; color:#64748b; margin-top:4px;">Production: <strong>' + (o.production.length ? o.production.length + ' order' + (o.production.length === 1 ? '' : 's') : 'not started') + '</strong> \u00b7 ' + label(o.type) + ' order</div>';
+    if (expanded) {
+      h += '<div style="border-top:1px solid #edf2f7; margin-top:10px; padding-top:8px; font-size:11px; line-height:1.8;">' +
+        'Ordered: <strong>' + fmtDate(o.orderDate) + '</strong> \u00b7 entered ' + ago(o.created) + '<br>Deliver to: <strong>' + esc(o.deliverTo || '\u2014') + '</strong></div>';
+      for (j = 0; j < o.items.length; j++) {
+        h += '<div class="issue-item"><div class="issue-left"><div class="dot-icon dot-blue"></div><div><div class="issue-name">' + esc(o.items[j].name) + '</div>' +
+          '<div class="issue-desc">' + esc(o.items[j].number) + ' \u00b7 ' + esc(o.items[j].matId) + '</div></div></div><strong style="font-size:13px;">' + n(o.items[j].qty) + '</strong></div>';
+      }
+      for (j = 0; j < o.production.length; j++) {
+        var p = o.production[j];
+        h += '<div class="issue-item" onclick="event.stopPropagation(); openOrder(\'' + p.sys_id + '\')"><div class="issue-left"><div class="dot-icon dot-amber"></div><div><div class="issue-name">' + esc(p.number) + ' \u203a</div>' +
+          '<div class="issue-desc">' + esc(STATUS_TXT[p.status] || label(p.status)) + ' \u00b7 ' + p.pct + '%</div></div></div>' +
+          pill(p.risk === 'On Track' ? 'green' : (p.risk === 'Completed' ? 'gray' : 'amber'), p.risk) + '</div>';
+      }
+    }
+    h += '</div>';
+  }
+  if (!shown) h += '<div class="card"><div class="empty-note">No customer orders in this view</div></div>';
+  $id('view-11').innerHTML = h;
+}
+function setCoFilter(f) { UI.coFilter = f; render11(); }
+function toggleCo(id) { UI.coOpen = UI.coOpen === id ? null : id; render11(); }
+
+// ---------- screen 12: suppliers ----------
+function scoreColor(score, threshold) { return score < threshold ? '#ef4444' : (score >= 93 ? '#10b981' : '#2563eb'); }
+function cleanAddr(a) {
+  var parts = String(a || '').split(','), out = [];
+  for (var i = 0; i < parts.length; i++) {
+    var p = parts[i].replace(/^\s+|\s+$/g, '');
+    if (p && p !== 'null') out.push(p);
+  }
+  return out.join(', ');
+}
+function render12() {
+  var S = D.supplierSummary, list = D.suppliers, h = '', i, shown = 0, max = UI.supShowAll ? list.length : 8;
+  h += '<div class="pastel-grid">' + tile('#e0f2fe', '#0369a1', S.total, 'Suppliers') + tile('#dcfce7', '#15803d', S.active, 'Active') +
+    tile(S.belowThreshold ? '#fee2e2' : '#dcfce7', S.belowThreshold ? '#b91c1c' : '#15803d', S.belowThreshold, 'Below Target') + '</div>';
+
+  h += secHead('Average Scorecard', n(S.scorecards) + ' scorecards');
+  h += '<div class="card">';
+  if (!S.dimensions.length) h += '<div class="empty-note">No supplier scorecards yet</div>';
+  for (i = 0; i < S.dimensions.length; i++) {
+    var d = S.dimensions[i];
+    h += loadRow(d.name, d.score.toFixed(1) + ' / 10', d.score * 10, d.score >= 9.5 ? '#10b981' : (d.score >= 9 ? '#2563eb' : '#f59e0b'), i === 0);
+  }
+  if (S.performance.length) {
+    h += '<div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:10px;">';
+    for (i = 0; i < S.performance.length; i++) h += pill(S.performance[i].status === 'excellent' ? 'green' : 'blue', n(S.performance[i].count) + ' ' + label(S.performance[i].status));
+    h += '</div>';
+  }
+  h += '</div>';
+
+  var cats = ['all', 'raw_materials', 'industrial_components'];
+  h += '<div class="sec-head"><div class="sec-title">Supplier Ranking</div><div style="font-size:11px; color:#64748b; font-weight:600;">avg score ' + S.avgScore + '</div></div>';
+  h += '<div class="segmented-control">';
+  for (i = 0; i < cats.length; i++) h += '<button class="seg-btn' + (UI.supFilter === cats[i] ? ' active' : '') + '" onclick="setSupFilter(\'' + cats[i] + '\')">' + (cats[i] === 'industrial_components' ? 'Components' : label(cats[i])) + '</button>';
+  h += '</div>';
+  var total = 0;
+  for (i = 0; i < list.length; i++) if (UI.supFilter === 'all' || list[i].category === UI.supFilter) total++;
+  for (i = 0; i < list.length; i++) {
+    var s = list[i];
+    if (UI.supFilter !== 'all' && s.category !== UI.supFilter) continue;
+    if (shown >= max) break;
+    shown++;
+    var below = s.score < s.threshold;
+    h += '<div class="card" style="padding:12px 14px; margin-bottom:8px;' + (below ? ' border-left:4px solid #ef4444;' : '') + '">' +
+      '<div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">' +
+      '<div style="min-width:0;"><div class="issue-name"><span style="color:#94a3b8; font-family:var(--font-mono); font-size:11px;">#' + shown + '</span> ' + esc(s.name) + '</div>' +
+      '<div class="issue-desc">' + esc(label(s.category)) + ' \u00b7 ' + n(s.orders) + ' order' + (s.orders === 1 ? '' : 's') + (s.phone ? ' \u00b7 ' + esc(s.phone) : '') + '</div></div>' +
+      '<div style="text-align:right; flex:none;"><strong style="font-size:16px; font-family:var(--font-mono); color:' + scoreColor(s.score, s.threshold) + ';">' + n(s.score) + '</strong>' +
+      '<div style="font-size:10px; color:#94a3b8;">target ' + n(s.threshold) + '</div></div></div>' +
+      bar(s.score, scoreColor(s.score, s.threshold)) +
+      '<div style="display:flex; justify-content:space-between; align-items:center;">' + pill(s.status === 'active' ? 'green' : 'gray', label(s.status)) +
+      '<span style="font-size:10px; color:#64748b;">' + esc(label(s.availability)) + (cleanAddr(s.address) ? ' \u00b7 ' + esc(cleanAddr(s.address)) : '') + '</span></div></div>';
+  }
+  if (!shown) h += '<div class="card"><div class="empty-note">No suppliers in this category</div></div>';
+  if (total > 8) h += '<button class="btn btn-soft btn-block" onclick="toggleSupAll()">' + (UI.supShowAll ? 'Show top 8' : 'Show all ' + total + ' suppliers') + '</button>';
+  $id('view-12').innerHTML = h;
+}
+function setSupFilter(f) { UI.supFilter = f; UI.supShowAll = false; render12(); }
+function toggleSupAll() { UI.supShowAll = !UI.supShowAll; render12(); }
+
+// ---------- screen 13: quality ----------
+function render13() {
+  var q = D.quality, h = '', i;
+  h += '<div class="pastel-grid">' + tile('#e0f2fe', '#0369a1', q.inspections, 'Inspections') + tile('#dcfce7', '#15803d', q.passed, 'Units Passed') +
+    tile(q.failed ? '#fee2e2' : '#dcfce7', q.failed ? '#b91c1c' : '#15803d', q.failed, 'Units Failed') + '</div>';
+  h += '<div class="card"><div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="font-size:12px; font-weight:700;">Pass rate</span>' +
+    '<strong style="font-size:20px; font-family:var(--font-mono); color:#059669;">' + q.passRate + '%</strong></div>' + bar(q.passRate) +
+    '<div style="font-size:11px; color:#64748b;">' + n(q.passed) + ' of ' + n(q.inspected) + ' units passed \u00b7 ' + n(q.withDefects) + ' of ' + n(q.inspections) + ' inspections found defects</div></div>';
+  h += secHead('Inspections', 'defects first');
+  h += '<div class="card">';
+  if (!q.items.length) h += '<div class="empty-note">No inspections recorded</div>';
+  for (i = 0; i < q.items.length; i++) {
+    var it = q.items[i];
+    h += '<div class="issue-item"><div class="issue-left"><div class="dot-icon dot-' + (it.failed ? 'amber' : 'blue') + '"></div><div><div class="issue-name">' + esc(it.number) + ' \u00b7 ' + esc(it.material) + '</div>' +
+      '<div class="issue-desc">' + (it.defect ? esc(it.defect) : (it.failed ? 'Defect details not recorded' : 'No defects')) + ' \u00b7 ' + fmtDate(it.at) + '</div></div></div>' +
+      '<div style="text-align:right; flex:none;">' + pill(it.failed ? 'amber' : 'green', it.failed ? n(it.failed) + ' failed' : 'Passed') +
+      '<div style="font-size:10px; color:#94a3b8; margin-top:3px;">of ' + n(it.inspected) + '</div></div></div>';
+  }
+  h += '</div>';
+  $id('view-13').innerHTML = h;
+}
+
+// ---------- screen 14: analytics ----------
+function statCard(lbl, val, sub, color) {
+  return '<div class="card" style="margin:0; padding:12px;"><div style="font-size:11px; color:#64748b; font-weight:600;">' + lbl + '</div>' +
+    '<div style="font-size:22px; font-weight:800; font-family:var(--font-mono); color:' + (color || '#0f172a') + '; margin:2px 0;">' + val + '</div>' +
+    '<div style="font-size:10px; color:#64748b;">' + sub + '</div></div>';
+}
+function render14() {
+  var k = D.kpi, t = D.today, h = '', i, o;
+  h += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:4px;">' +
+    statCard('OEE', k.oee + '%', 'availability \u00d7 performance \u00d7 quality', k.oee >= 85 ? '#059669' : '#dc2626') +
+    statCard('On-Time Delivery', k.otd + '%', n(k.atRisk) + ' of ' + n(k.ordersActive + k.ordersPlanned + k.ordersOnHold) + ' open orders at risk', k.otd >= 85 ? '#059669' : '#d97706') +
+    statCard('Plan Attainment', t.pct + '%', n(t.produced) + ' of ' + n(t.planned) + ' units produced', '#2563eb') +
+    statCard('Downtime', n(k.downtimeMin) + ' min', 'last 30 days \u00b7 ' + n(k.machinesDown) + ' of ' + n(k.machines) + ' machines down') + '</div>';
+
+  h += secHead('OEE Breakdown');
+  h += '<div class="card">' +
+    loadRow('Availability (work-center health)', k.availability + '%', k.availability, '#2563eb', true) +
+    loadRow('Performance (resource efficiency)', k.performance + '%', k.performance, '#0284c7') +
+    loadRow('Quality (inspection pass rate)', k.quality + '%', k.quality, '#10b981') + '</div>';
+
+  var statuses = [['in_production', 'In Production', '#10b981'], ['planned', 'Scheduled', '#2563eb'], ['on_hold', 'On Hold', '#f59e0b'], ['completed', 'Completed', '#94a3b8']];
+  var byStatus = {}, byRes = {}, resList = [];
+  for (i = 0; i < D.orders.length; i++) {
+    o = D.orders[i];
+    byStatus[o.status] = (byStatus[o.status] || 0) + 1;
+    if (o.status === 'completed') continue;
+    var rk = o.resource || 'Unassigned';
+    if (!byRes[rk]) { byRes[rk] = { name: rk, planned: 0, produced: 0, orders: 0, atRisk: 0 }; resList.push(byRes[rk]); }
+    byRes[rk].planned += o.planned; byRes[rk].produced += o.produced; byRes[rk].orders++;
+    if (o.risk !== 'On Track') byRes[rk].atRisk++;
+  }
+  h += secHead('Orders by Status', n(D.orders.length) + ' orders');
+  h += '<div class="card">';
+  var first = true;
+  for (i = 0; i < statuses.length; i++) {
+    var cnt = byStatus[statuses[i][0]] || 0;
+    if (!cnt) continue;
+    h += loadRow(statuses[i][1], n(cnt), (cnt / D.orders.length) * 100, statuses[i][2], first);
+    first = false;
+  }
+  h += '</div>';
+
+  resList.sort(function (x, y) { return y.planned - x.planned; });
+  h += secHead('Output by Resource', 'open orders');
+  h += '<div class="card">';
+  if (!resList.length) h += '<div class="empty-note">No open production orders</div>';
+  for (i = 0; i < resList.length; i++) {
+    var r = resList[i], rp = r.planned ? Math.round((r.produced / r.planned) * 100) : 0;
+    h += loadRow(r.name, n(r.produced) + ' / ' + n(r.planned) + ' \u00b7 ' + rp + '%', rp, r.atRisk ? '#f59e0b' : '#10b981', i === 0) +
+      '<div style="font-size:10px; color:#64748b; margin-top:-4px;">' + n(r.orders) + ' orders' + (r.atRisk ? ' \u00b7 <span style="color:#d97706; font-weight:700;">' + n(r.atRisk) + ' at risk</span>' : '') + '</div>';
+  }
+  h += '</div>';
+
+  h += secHead('Open Alerts by Type', n(D.alertCounts.open) + ' open');
+  h += '<div class="card">';
+  if (!D.alertTypes.length) h += '<div class="empty-note">No open alerts</div>';
+  var alertColors = { below_safety_stock: '#f59e0b', material_shortage: '#ef4444', expiry_warning: '#eab308', quality_failure: '#8b5cf6' };
+  for (i = 0; i < D.alertTypes.length; i++) {
+    var at = D.alertTypes[i];
+    h += loadRow(label(at.type), n(at.count), (at.count / D.alertCounts.open) * 100, alertColors[at.type] || '#64748b', i === 0);
+  }
+  h += '</div>';
+
+  h += secHead('Stock Lines by Type', n(D.inventory.total) + ' lines');
+  h += '<div class="card">';
+  for (i = 0; i < D.inventory.types.length; i++) {
+    var ty = D.inventory.types[i];
+    h += loadRow(ty.type === 'mro' ? 'MRO' : label(ty.type), n(ty.lines) + ' lines \u00b7 ' + n(ty.qty) + ' units', (ty.lines / D.inventory.total) * 100, ['#2563eb', '#10b981', '#8b5cf6', '#64748b'][i % 4], i === 0);
+  }
+  h += '</div>';
+  $id('view-14').innerHTML = h;
+}
+
+
+// ---------- screen 15: work centers ----------
+function render15() {
+  var list = D.workCenters.slice(), m = D.maintenance, h = '', i, sum = 0;
+  list.sort(function (a, b) { return (a.health - b.health) || (b.load - a.load); });
+  for (i = 0; i < list.length; i++) sum += list[i].health;
+  if (m.active > 0 && m.items.length) {
+    h += '<div class="alarm-card"><div class="row"><div class="row-l grow">' + icBox('bad', 'wrench') + '<div class="grow"><div class="eyebrow" style="color:var(--bad-ink);">Machine under repair</div><div class="t-title cut">' + esc(m.items[0].machine) + '</div></div></div>' + chip('bad', label(m.items[0].status)) + '</div>' +
+      '<div class="t-sub" style="margin-top:8px;">' + esc(m.items[0].number) + ' &middot; ' + esc(label(m.items[0].type)) + ' maintenance. ' + esc(m.items[0].reason) + '</div></div>';
+  }
+  h += '<div class="metric-row" style="margin-top:0;">' + metric(list.length, 'Monitored') + metric((list.length ? Math.round(sum / list.length) : 0) + '%', 'Avg health') + metric(n(D.workforce.overloaded), 'Overloaded') + '</div>';
+  h += '<div class="wc-grid">';
+  for (i = 0; i < list.length; i++) {
+    var w = list[i], hk = healthKind(w.health), hot = w.load > 80;
+    h += '<div class="wc' + (hot ? ' hot' : '') + '"><div class="row"><div class="row-l grow"><span class="light" style="background:' + COLOR[hot ? 'warn' : hk] + '; box-shadow:0 0 0 3px ' + (hot ? 'var(--warn-bg)' : 'var(--' + hk + '-bg)') + ';"></span>' +
+      '<span class="mono" style="font-size:11px; font-weight:700;">' + esc(w.code) + '</span></div>' + (hot ? chip('warn', 'Overloaded') : chip('ok', w.status)) + '</div>' +
+      '<div class="issue-name cut" style="margin-top:6px;">' + esc(w.name) + '</div>' +
+      '<div class="row" style="margin-top:8px;">' + ring(w.health, 58, 6, COLOR[hk], '<span class="mono" style="font-size:13px; font-weight:800;">' + w.health + '</span><span style="font-size:8px; color:var(--ink-3); font-weight:700;">HEALTH</span>') +
+      '<div class="grow"><div class="sensor" style="margin-top:0;"><span>Load</span><b>' + w.load + '%</b></div>' + bar(w.load, COLOR[hot ? 'warn' : 'info']) + '</div></div>' +
+      '<div class="sensor"><span>' + ic('thermo', 13) + ' Temperature</span><b>' + w.temp + ' &deg;C</b></div>' +
+      '<div class="sensor"><span>' + ic('wave', 13) + ' Vibration</span><b>' + w.vibration + ' mm/s</b></div>' +
+      '<div class="sensor"><span>' + ic('users', 13) + ' Crew</span><b style="font-family:var(--font-sans);">' + esc(w.crew) + '</b></div></div>';
+  }
+  h += '</div>';
+  if (!list.length) h += '<div class="card"><div class="empty-note">No work centers</div></div>';
+  $id('view-15').innerHTML = h;
+}
+
+// ---------- shell ----------
+var TITLES = {
+  '1': ['Smart Manufacturing', 'ServiceNow &middot; live'], '2': ['Production', 'Control center'], '3': ['Production Order', 'Details'],
+  '4': ['What-If Simulation', 'Digital twin'], '5': ['Inventory', 'Stock control'], '6': ['Traceability', 'BOM and material'],
+  '7': ['Alerts', 'Notification center'], '8': ['Control Center', 'All modules'], '9': ['Workforce', 'People and maintenance'],
+  '10': ['AI Recommendations', 'Command center'], '11': ['Customer Orders', 'Demand'], '12': ['Suppliers', 'Scorecards'],
+  '13': ['Quality', 'Inspections'], '14': ['Analytics', 'Performance'], '15': ['Work Centers', 'Machine monitoring']
+};
+function renderAll() {
+  $id('userAvatar').innerText = D.user.initial;
+  var badge = $id('navBadge'), open = D.alertCounts.open;
+  badge.style.display = open > 0 ? 'inline' : 'none';
+  badge.innerText = open > 99 ? '99+' : open;
+  render1(); render2(); render3(); render4(); render5(); render6(); render7(); render8(); render9(); render10();
+  render11(); render12(); render13(); render14(); render15();
+  setHeader(currentScreen);
+}
+function setHeader(id) {
+  var t = TITLES[id] || TITLES['1'], o = D && currentOrder(), root = id === '1' || id === '2' || id === '5' || id === '7' || id === '8';
+  $id('headerTitle').innerHTML = id === '3' && o ? esc(o.number) : t[0];
+  $id('headerSub').innerHTML = t[1] + (D ? ' &middot; updated ' + new Date(D.generatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '');
+  $id('headerBackBtn').style.display = root ? 'none' : 'flex';
+  $id('brandMark').style.display = root ? 'flex' : 'none';
+}
+function jumpToScreen(id) {
+  if (!D) return;
+  id = String(id);
+  if (id !== currentScreen) screenHistory.push(currentScreen);
+  currentScreen = id;
+  var views = document.querySelectorAll('.screen-view'), navs = document.querySelectorAll('.nav-item'), i;
+  for (i = 0; i < views.length; i++) views[i].classList.remove('active');
+  var target = $id('view-' + id);
+  if (target) target.classList.add('active');
+  setHeader(id);
+  for (i = 0; i < navs.length; i++) navs[i].classList.remove('active');
+  var tab = id === '1' ? 'tabNav1' : (id === '2' || id === '3' || id === '4') ? 'tabNav2' : (id === '5' || id === '6') ? 'tabNav5' : id === '7' ? 'tabNav7' : 'tabNav8';
+  $id(tab).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function goBack() {
+  var prev = screenHistory.pop() || '1';
+  jumpToScreen(prev);
+  screenHistory.pop();
+}
+
+loadData(false);
+]]></script>
+        <script_name>smart_mfg_mobile</script_name>
+        <sys_class_name>sys_ui_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 10:11:12</sys_created_on>
+        <sys_id>53c7c4b583b78310dd8c9610feaad370</sys_id>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>x_2056099_indust_0.smart_mfg_mobile</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ui_script_53c7c4b583b78310dd8c9610feaad370</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 11:09:55</sys_updated_on>
+        <ui_type>10</ui_type>
+        <use_scoped_format>false</use_scoped_format>
+    </sys_ui_script>
+</record_update>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.AutoNumberGenerator</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Reusable server-side ID generator for all application tables. Generates sequential identifiers preserving existing PREFIX-YYYY-NNN or PREFIX-NNN patterns. Called by before-insert business rules.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>AutoNumberGenerator</name>
+        <sandbox_callable>true</sandbox_callable>
+        <script><![CDATA[var AutoNumberGenerator = Class.create();
+AutoNumberGenerator.prototype = {
+    initialize: function() {},
+
+    /**
+     * Generates the next sequential ID for a given table/field.
+     * Formula: PREFIX-YYYY-NNN where NNN = total records + 1 (with collision fallback).
+     *
+     * @param {string} tableName  - Full scoped table name
+     * @param {string} fieldName  - Field to populate
+     * @param {string} prefix     - ID prefix (e.g. 'ORD', 'ITEM')
+     * @param {number} padding    - Zero-pad width for the sequence number
+     * @param {boolean} includeYear - true to include YYYY in the pattern
+     * @returns {string} The generated identifier
+     */
+    generate: function(tableName, fieldName, prefix, padding, includeYear) {
+        var year = '';
+        var searchPrefix = '';
+
+        if (includeYear) {
+            var gdt = new GlideDateTime();
+            year = '' + gdt.getYearUTC();
+            searchPrefix = prefix + '-' + year + '-';
+        } else {
+            searchPrefix = prefix + '-';
+        }
+
+        // Count total records in the table
+        var ga = new GlideAggregate(tableName);
+        ga.addAggregate('COUNT');
+        ga.query();
+        var totalCount = 0;
+        if (ga.next()) {
+            totalCount = parseInt(ga.getAggregate('COUNT'), 10);
+        }
+
+        // Find the max existing sequence number for collision avoidance
+        var gr = new GlideRecord(tableName);
+        gr.addQuery(fieldName, 'STARTSWITH', searchPrefix);
+        gr.query();
+
+        var maxSeq = 0;
+        while (gr.next()) {
+            var value = '' + gr.getValue(fieldName);
+            var parts = value.split('-');
+            var lastPart = parts[parts.length - 1];
+            var num = parseInt(lastPart, 10);
+            if (!isNaN(num) && num > maxSeq) {
+                maxSeq = num;
+            }
+        }
+
+        // Start from count+1; if that collides (≤ maxSeq), fall back to maxSeq+1
+        var nextSeq = totalCount + 1;
+        if (nextSeq <= maxSeq) {
+            nextSeq = maxSeq + 1;
+        }
+
+        // Build candidate
+        var paddedSeq = '' + nextSeq;
+        while (paddedSeq.length < padding) {
+            paddedSeq = '0' + paddedSeq;
+        }
+
+        var candidate;
+        if (includeYear) {
+            candidate = prefix + '-' + year + '-' + paddedSeq;
+        } else {
+            candidate = prefix + '-' + paddedSeq;
+        }
+
+        // Collision check — keep incrementing until a free number is found
+        var checkGr = new GlideRecord(tableName);
+        checkGr.addQuery(fieldName, candidate);
+        checkGr.setLimit(1);
+        checkGr.query();
+        while (checkGr.hasNext()) {
+            nextSeq++;
+            paddedSeq = '' + nextSeq;
+            while (paddedSeq.length < padding) {
+                paddedSeq = '0' + paddedSeq;
+            }
+            if (includeYear) {
+                candidate = prefix + '-' + year + '-' + paddedSeq;
+            } else {
+                candidate = prefix + '-' + paddedSeq;
+            }
+            checkGr = new GlideRecord(tableName);
+            checkGr.addQuery(fieldName, candidate);
+            checkGr.setLimit(1);
+            checkGr.query();
+        }
+
+        return candidate;
+    },
+
+    type: 'AutoNumberGenerator'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 08:57:21</sys_created_on>
+        <sys_id>53b6e77a580942cea8451f7cc1a11dc8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>AutoNumberGenerator</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_53b6e77a580942cea8451f7cc1a11dc8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 08:57:21</sys_updated_on>
+    </sys_script_include>
+</record_update>

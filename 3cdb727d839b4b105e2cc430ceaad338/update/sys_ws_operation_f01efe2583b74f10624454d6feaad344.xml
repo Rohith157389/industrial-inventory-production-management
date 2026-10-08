@@ -10,7 +10,7 @@
         <operation_script><![CDATA[(function process(request, response) {
   var locations = [];
   var gr = new GlideRecord("x_2056099_indust_0_inv_loc");
-  gr.addQuery("active", true);
+  gr.addQuery("location_type", "inventory_warehouse");
   gr.addQuery("location_id", "STARTSWITH", "WH-");
   gr.orderBy("location_id");
   gr.query();
@@ -23,7 +23,8 @@
     });
   }
   response.setBody({ locations: locations });
-})(request, response);]]></operation_script>
+})(request, response);
+]]></operation_script>
         <operation_uri>/api/x_2056099_indust_0/customer_context_api/locations</operation_uri>
         <produces>application/json</produces>
         <produces_customized>false</produces_customized>
@@ -32,7 +33,7 @@
         <requires_acl_authorization>false</requires_acl_authorization>
         <requires_authentication>true</requires_authentication>
         <requires_snc_internal_role>true</requires_snc_internal_role>
-        <short_description>Returns active customer-facing warehouse locations for portal dropdowns</short_description>
+        <short_description>Returns warehouse locations for portal dropdowns using location_type filter</short_description>
         <support_trailing_slash>false</support_trailing_slash>
         <sys_class_name>sys_ws_operation</sys_class_name>
         <sys_created_by>admin</sys_created_by>

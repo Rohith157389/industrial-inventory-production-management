@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="4765f4714fc3469883fc2cf3afa8d173" label="Machine" name="x_2056099_indust_0_machine" type="collection">
-        <element label="Installation Date" max_length="40" name="installation_date" type="glide_date"/>
-        <element label="Assigned Operator" max_length="32" name="assigned_operator" reference="sys_user" type="reference"/>
-        <element label="Condition" max_length="40" name="machine_condition" type="choice">
+        <element label="Criticality" max_length="40" name="criticality" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Poor" sequence="4" value="poor"/>
-                <element inactive_on_update="false" label="Fair" sequence="3" value="fair"/>
-                <element inactive_on_update="false" label="Good" sequence="2" value="good"/>
-                <element inactive_on_update="false" label="Critical" sequence="5" value="critical"/>
-                <element inactive_on_update="false" label="New" sequence="1" value="new_condition"/>
+                <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
+                <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
+                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
+                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
             </choice>
         </element>
-        <element label="Machine ID" mandatory="true" max_length="40" name="number" type="string"/>
+        <element label="Notes" max_length="4000" name="notes" type="string"/>
+        <element label="Installation Date" max_length="40" name="installation_date" type="glide_date"/>
         <element label="Minimum Production Threshold" max_length="15" name="production_threshold" type="decimal"/>
-        <element label="Production Area" max_length="200" name="production_area" type="string"/>
+        <element label="Next Scheduled Maintenance" max_length="40" name="next_scheduled_maint" type="glide_date_time"/>
+        <element label="Assigned Operator" max_length="32" name="assigned_operator" reference="sys_user" type="reference"/>
         <element default="available" label="Status" mandatory="true" max_length="40" name="status" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Under Maintenance" sequence="4" value="under_maintenance"/>
-                <element inactive_on_update="false" label="Temporarily Unavailable" sequence="8" value="temporarily_unavailable"/>
                 <element inactive_on_update="false" label="Idle" sequence="3" value="idle"/>
-                <element inactive_on_update="false" label="Broken Down" sequence="7" value="broken_down"/>
-                <element inactive_on_update="false" label="Running" sequence="2" value="running"/>
-                <element inactive_on_update="false" label="Decommissioned" sequence="6" value="decommissioned"/>
                 <element inactive_on_update="false" label="Retired" sequence="10" value="retired"/>
-                <element inactive_on_update="false" label="Out of Service" sequence="5" value="out_of_service"/>
-                <element inactive_on_update="false" label="Available" sequence="1" value="available"/>
+                <element inactive_on_update="false" label="Broken Down" sequence="7" value="broken_down"/>
                 <element inactive_on_update="false" label="Replacement Required" sequence="9" value="replacement_required"/>
-            </choice>
-        </element>
-        <element label="Location" max_length="32" name="location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Current Production Step" max_length="32" name="current_production_step" reference="x_2056099_indust_0_prod_sched" type="reference"/>
-        <element label="Next Scheduled Maintenance" max_length="40" name="next_scheduled_maint" type="glide_date_time"/>
-        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
-        <element default="0" label="Current Production Count" max_length="15" name="current_production_count" type="decimal"/>
-        <element label="Production Capacity Per Day" max_length="15" name="production_capacity" type="decimal"/>
-        <element label="Criticality" max_length="40" name="criticality" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Medium" sequence="3" value="medium"/>
-                <element inactive_on_update="false" label="High" sequence="2" value="high"/>
-                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
-                <element inactive_on_update="false" label="Low" sequence="4" value="low"/>
+                <element inactive_on_update="false" label="Decommissioned" sequence="6" value="decommissioned"/>
+                <element inactive_on_update="false" label="Running" sequence="2" value="running"/>
+                <element inactive_on_update="false" label="Available" sequence="1" value="available"/>
+                <element inactive_on_update="false" label="Temporarily Unavailable" sequence="8" value="temporarily_unavailable"/>
+                <element inactive_on_update="false" label="Out of Service" sequence="5" value="out_of_service"/>
             </choice>
         </element>
         <element label="Last Maintenance Date" max_length="40" name="last_maintenance_date" type="glide_date_time"/>
-        <element label="Serial Number" max_length="100" name="serial_number" type="string"/>
-        <element label="Model" max_length="200" name="model" type="string"/>
-        <element label="Manufacturer" max_length="200" name="manufacturer" type="string"/>
-        <element label="Notes" max_length="4000" name="notes" type="string"/>
         <element label="Machine Type" max_length="32" name="machine_type" reference="x_2056099_indust_0_mach_type" type="reference"/>
+        <element label="Production Area" max_length="200" name="production_area" type="string"/>
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="Serial Number" max_length="100" name="serial_number" type="string"/>
         <element display="true" label="Machine Name" mandatory="true" max_length="200" name="name" type="string"/>
-        <element label="Current Production Order" max_length="32" name="current_production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
+        <element default="0" label="Current Production Count" max_length="15" name="current_production_count" type="decimal"/>
         <element default="0" label="Total Production Count" max_length="15" name="total_production_count" type="decimal"/>
+        <element label="Condition" max_length="40" name="machine_condition" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Fair" sequence="3" value="fair"/>
+                <element inactive_on_update="false" label="Good" sequence="2" value="good"/>
+                <element inactive_on_update="false" label="New" sequence="1" value="new_condition"/>
+                <element inactive_on_update="false" label="Critical" sequence="5" value="critical"/>
+                <element inactive_on_update="false" label="Poor" sequence="4" value="poor"/>
+            </choice>
+        </element>
+        <element label="Location" max_length="32" name="location" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Production Capacity Per Day" max_length="15" name="production_capacity" type="decimal"/>
+        <element label="Manufacturer" max_length="200" name="manufacturer" type="string"/>
+        <element label="Machine ID" mandatory="true" max_length="40" name="number" type="string"/>
+        <element label="Current Production Step" max_length="32" name="current_production_step" reference="x_2056099_indust_0_prod_sched" type="reference"/>
+        <element label="Model" max_length="200" name="model" type="string"/>
+        <element label="Current Production Order" max_length="32" name="current_production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
         <index name="index">
             <element name="assigned_operator"/>
         </index>

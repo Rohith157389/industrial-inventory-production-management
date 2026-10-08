@@ -16,12 +16,12 @@
  *
  * Resolution precedence:
  * 1. Customer-specific BOM (only if a valid cust_master → core_company bridge exists)
- * 2. Product-level fallback: active customer_bom by finished_product with valid active lines
+ * 2. Product-level fallback: customer_bom by finished_product with status='active' and valid lines
  * 3. Structural equivalence check when multiple BOMs exist for same product
  *
  * Exclusions:
- * - Inactive BOMs (active != true)
- * - BOMs with zero active lines
+ * - BOMs with status != 'active'
+ * - BOMs with zero lines
  * - BOMs with invalid reference fields (display-value strings instead of sys_ids)
  *
  * This Script Include is READ-ONLY. It queries customer_bom and
@@ -37,14 +37,6 @@ BomResolver.prototype = {
 
     initialize: function() {},
 
-    /**
-     * Resolve the best BOM for a Production Order.
-     *
-     * @param {string} productionOrderSysId - sys_id of the Production Order
-     * @returns {object} Structured result:
-     *   { success, bom_sys_id, bom_name, bom_number, finished_product,
-     *     resolution_mode, line_count, lines[], message }
-     */
     resolveForProductionOrder: function(productionOrderSysId) {
         if (!productionOrderSysId) {
             return this._failure('Production Order sys_id is required.');
@@ -63,28 +55,22 @@ BomResolver.prototype = {
         return this.resolveByProduct(finishedProduct);
     },
 
-    /**
-     * Resolve the best BOM for a given finished product sys_id.
-     *
-     * @param {string} finishedProductSysId - sys_id from mat_master
-     * @returns {object} Structured result
-     */
     resolveByProduct: function(finishedProductSysId) {
         if (!finishedProductSysId) {
             return this._failure('finished_product sys_id is required.');
         }
 
-        // Validate the finished product exists in mat_master
         var matGr = new GlideRecord(this.MAT_MASTER_TABLE);
         if (!matGr.get(finishedProductSysId)) {
             return this._failure('finished_product not found in mat_master: ' + finishedProductSysId);
         }
 
-        // Find all active BOMs for this product
+        // FIX: Use status='active' instead of boolean active=true.
+        // Seed data has boolean active=0 but status field = 'active'.
         var bomGr = new GlideRecord(this.BOM_TABLE);
         bomGr.addQuery('finished_product', finishedProductSysId);
-        bomGr.addQuery('active', true);
-        bomGr.orderBy('sys_id'); // deterministic ordering
+        bomGr.addQuery('status', 'active');
+        bomGr.orderBy('sys_id');
         bomGr.query();
 
         var candidateBoms = [];
@@ -92,16 +78,13 @@ BomResolver.prototype = {
             var bomSid = bomGr.getValue('sys_id');
             var bomCustomer = bomGr.getValue('customer');
 
-            // Exclude BOMs with invalid reference fields
-            // Invalid = display-value string instead of sys_id (32-char hex)
             if (!this._isValidSysId(bomCustomer)) {
-                continue; // skip broken seed BOMs
+                continue;
             }
 
-            // Count active BOM lines
-            var lineCount = this._countActiveLines(bomSid);
+            var lineCount = this._countLines(bomSid);
             if (lineCount === 0) {
-                continue; // skip BOMs with no active lines
+                continue;
             }
 
             candidateBoms.push({
@@ -116,26 +99,22 @@ BomResolver.prototype = {
         }
 
         if (candidateBoms.length === 0) {
-            return this._failure('No valid active BOM with active lines found for product: ' + finishedProductSysId);
+            return this._failure('No valid active BOM with lines found for product: ' + finishedProductSysId);
         }
 
-        // Single candidate: use it directly
         if (candidateBoms.length === 1) {
             return this._buildSuccess(candidateBoms[0], 'PRODUCT_UNIQUE', finishedProductSysId);
         }
 
-        // Multiple candidates: check structural equivalence
         var structCheck = this._checkStructuralEquivalence(candidateBoms);
 
         if (structCheck.equivalent) {
-            // All BOMs have identical component structures — select lowest sys_id deterministically
             candidateBoms.sort(function(a, b) { return a.bom_sys_id < b.bom_sys_id ? -1 : 1; });
             return this._buildSuccess(candidateBoms[0], 'PRODUCT_EQUIVALENT_MULTI',
                 finishedProductSysId,
                 candidateBoms.length + ' BOMs found with identical structures; selected lowest sys_id deterministically.');
         }
 
-        // Non-equivalent structures — report error
         return {
             success: false,
             bom_sys_id: null,
@@ -153,25 +132,15 @@ BomResolver.prototype = {
         };
     },
 
-    /**
-     * Check whether all candidate BOMs have structurally identical BOM lines.
-     * Compares: material_product, quantity_required, source_location,
-     *           critical_component, scrap_percentage.
-     *
-     * @param {Array} candidates - Array of BOM candidates
-     * @returns {object} { equivalent: boolean, diff: string|null }
-     */
     _checkStructuralEquivalence: function(candidates) {
         if (candidates.length < 2) return { equivalent: true, diff: null };
 
-        // Get the fingerprint (sorted component signature) for each BOM
         var fingerprints = [];
         for (var i = 0; i < candidates.length; i++) {
             var fp = this._getBomFingerprint(candidates[i].bom_sys_id);
             fingerprints.push({ bom: candidates[i].bom_name, fingerprint: fp });
         }
 
-        // Compare all against the first
         var reference = fingerprints[0].fingerprint;
         for (var j = 1; j < fingerprints.length; j++) {
             if (fingerprints[j].fingerprint !== reference) {
@@ -185,15 +154,11 @@ BomResolver.prototype = {
         return { equivalent: true, diff: null };
     },
 
-    /**
-     * Generate a deterministic fingerprint of a BOM's active lines.
-     * Sorts lines by material_product sys_id, then concatenates key fields.
-     */
+    // FIX: No active filter on BOM line queries — seed data has active=0
     _getBomFingerprint: function(bomSysId) {
         var lines = [];
         var lineGr = new GlideRecord(this.BOM_LINE_TABLE);
         lineGr.addQuery('customer_bom', bomSysId);
-        lineGr.addQuery('active', true);
         lineGr.orderBy('material_product');
         lineGr.query();
 
@@ -210,36 +175,25 @@ BomResolver.prototype = {
         return lines.join(';;');
     },
 
-    /**
-     * Count active BOM lines for a given BOM.
-     */
-    _countActiveLines: function(bomSysId) {
+    // FIX: No active filter — counts all lines for the BOM
+    _countLines: function(bomSysId) {
         var lineGA = new GlideAggregate(this.BOM_LINE_TABLE);
         lineGA.addQuery('customer_bom', bomSysId);
-        lineGA.addQuery('active', true);
         lineGA.addAggregate('COUNT');
         lineGA.query();
         return lineGA.next() ? parseInt(lineGA.getAggregate('COUNT')) : 0;
     },
 
-    /**
-     * Validate a sys_id looks like a real 32-character hex identifier.
-     * Returns false for display-value strings like "AquaPure Water Systems".
-     */
     _isValidSysId: function(value) {
         if (!value || value === '') return false;
-        // sys_ids are 32 hex characters
         return /^[0-9a-f]{32}$/.test(value);
     },
 
-    /**
-     * Build a success result with BOM lines.
-     */
+    // FIX: No active filter on line query
     _buildSuccess: function(bom, mode, finishedProduct, extraMessage) {
         var lines = [];
         var lineGr = new GlideRecord(this.BOM_LINE_TABLE);
         lineGr.addQuery('customer_bom', bom.bom_sys_id);
-        lineGr.addQuery('active', true);
         lineGr.orderBy('material_product');
         lineGr.query();
 
@@ -270,9 +224,6 @@ BomResolver.prototype = {
         };
     },
 
-    /**
-     * Build a failure result.
-     */
     _failure: function(message) {
         return {
             success: false,

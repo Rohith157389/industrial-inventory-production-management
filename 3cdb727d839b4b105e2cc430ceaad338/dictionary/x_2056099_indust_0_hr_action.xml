@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" audit="true" db_object_id="6a3298cf245b401498bef26a67996f48" label="HR Performance Action" name="x_2056099_indust_0_hr_action" type="collection">
         <element label="Escalation Reason" mandatory="true" max_length="4000" name="escalation_reason" type="multi_two_lines"/>
-        <element label="Worker" mandatory="true" max_length="32" name="worker" reference="sys_user" type="reference"/>
-        <element label="Due Date" max_length="40" name="due_date" type="glide_date"/>
-        <element label="Action Owner" max_length="32" name="action_owner" reference="sys_user" type="reference"/>
         <element label="Manager Summary" mandatory="true" max_length="4000" name="manager_summary" type="multi_two_lines"/>
+        <element label="HR Comments" max_length="40" name="hr_comments" type="journal_input"/>
+        <element display="true" label="HR Action ID" mandatory="true" max_length="20" name="hr_action_id" read_only="true" read_only_option="instance_configured" type="string"/>
+        <element label="Worker" mandatory="true" max_length="32" name="worker" reference="sys_user" type="reference"/>
         <element label="Source Weekly Rating" max_length="32" name="source_weekly_rating" reference="x_2056099_indust_0_wk_rating" type="reference"/>
-        <element label="Employee Profile" max_length="32" name="employee_profile" reference="x_2056099_indust_0_hr_profile" type="reference"/>
+        <element label="Source Monthly Report" max_length="32" name="source_monthly_report" reference="x_2056099_indust_0_mo_perf" type="reference"/>
+        <element label="Action Required" max_length="2000" name="action_required" type="multi_two_lines"/>
+        <element label="Due Date" max_length="40" name="due_date" type="glide_date"/>
         <element label="Closed Date" max_length="40" name="closed_date" type="glide_date_time"/>
+        <element label="Employee Profile" max_length="32" name="employee_profile" reference="x_2056099_indust_0_hr_profile" type="reference"/>
+        <element label="Resolution" max_length="4000" name="resolution" type="multi_two_lines"/>
+        <element label="HR Assigned To" max_length="32" name="hr_assigned_to" reference="sys_user" type="reference"/>
+        <element label="Action Owner" max_length="32" name="action_owner" reference="sys_user" type="reference"/>
         <element choice="3" default="new" label="HR Status" mandatory="true" max_length="40" name="hr_status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Monitoring" sequence="8" value="monitoring"/>
-                <element inactive_on_update="false" label="Employee Discussion Required" sequence="4" value="employee_discussion"/>
-                <element inactive_on_update="false" label="New" sequence="1" value="new"/>
-                <element inactive_on_update="false" label="Closed" sequence="10" value="closed"/>
-                <element inactive_on_update="false" label="PIP Initiated" sequence="7" value="pip_initiated"/>
-                <element inactive_on_update="false" label="Manager Clarification Required" sequence="3" value="manager_clarification"/>
                 <element inactive_on_update="false" label="Training Required" sequence="6" value="training_required"/>
                 <element inactive_on_update="false" label="Under HR Review" sequence="2" value="under_review"/>
-                <element inactive_on_update="false" label="Resolved" sequence="9" value="resolved"/>
                 <element inactive_on_update="false" label="Action Planned" sequence="5" value="action_planned"/>
+                <element inactive_on_update="false" label="Closed" sequence="10" value="closed"/>
+                <element inactive_on_update="false" label="New" sequence="1" value="new"/>
+                <element inactive_on_update="false" label="Resolved" sequence="9" value="resolved"/>
+                <element inactive_on_update="false" label="Employee Discussion Required" sequence="4" value="employee_discussion"/>
+                <element inactive_on_update="false" label="PIP Initiated" sequence="7" value="pip_initiated"/>
+                <element inactive_on_update="false" label="Manager Clarification Required" sequence="3" value="manager_clarification"/>
+                <element inactive_on_update="false" label="Monitoring" sequence="8" value="monitoring"/>
             </choice>
         </element>
-        <element label="HR Comments" max_length="40" name="hr_comments" type="journal_input"/>
-        <element label="Source Monthly Report" max_length="32" name="source_monthly_report" reference="x_2056099_indust_0_mo_perf" type="reference"/>
-        <element label="Resolution" max_length="4000" name="resolution" type="multi_two_lines"/>
-        <element label="Escalating Manager" mandatory="true" max_length="32" name="manager" reference="sys_user" type="reference"/>
         <element choice="3" label="Escalation Type" mandatory="true" max_length="40" name="escalation_type" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Coaching" sequence="2" value="coaching"/>
-                <element inactive_on_update="false" label="Other" sequence="10" value="other"/>
-                <element inactive_on_update="false" label="Workplace Conduct Review" sequence="6" value="workplace_conduct"/>
-                <element inactive_on_update="false" label="Recognition" sequence="9" value="recognition"/>
-                <element inactive_on_update="false" label="Attendance Review" sequence="5" value="attendance_review"/>
-                <element inactive_on_update="false" label="Performance Review" sequence="1" value="performance_review"/>
                 <element inactive_on_update="false" label="Performance Improvement Plan" sequence="8" value="pip"/>
                 <element inactive_on_update="false" label="Skill Development" sequence="4" value="skill_development"/>
+                <element inactive_on_update="false" label="Coaching" sequence="2" value="coaching"/>
+                <element inactive_on_update="false" label="Performance Review" sequence="1" value="performance_review"/>
                 <element inactive_on_update="false" label="Safety / Compliance Review" sequence="7" value="safety_compliance"/>
+                <element inactive_on_update="false" label="Other" sequence="10" value="other"/>
+                <element inactive_on_update="false" label="Workplace Conduct Review" sequence="6" value="workplace_conduct"/>
                 <element inactive_on_update="false" label="Training Required" sequence="3" value="training_required"/>
+                <element inactive_on_update="false" label="Recognition" sequence="9" value="recognition"/>
+                <element inactive_on_update="false" label="Attendance Review" sequence="5" value="attendance_review"/>
             </choice>
         </element>
-        <element display="true" label="HR Action ID" mandatory="true" max_length="20" name="hr_action_id" read_only="true" read_only_option="instance_configured" type="string"/>
-        <element label="Action Required" max_length="2000" name="action_required" type="multi_two_lines"/>
-        <element label="HR Assigned To" max_length="32" name="hr_assigned_to" reference="sys_user" type="reference"/>
+        <element label="Escalating Manager" mandatory="true" max_length="32" name="manager" reference="sys_user" type="reference"/>
         <element label="Other Escalation Description" max_length="1000" name="other_escalation_desc" type="multi_two_lines"/>
         <index name="index">
             <element name="action_owner"/>
