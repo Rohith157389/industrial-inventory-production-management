@@ -1,160 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element audit="true" db_object_id="c64fd1db10e840a0be803373d44f24d6" label="Worker Weekly Activity Report" name="x_2056099_indust_0_wk_act" type="collection">
-        <element label="Work Center" name="work_center" reference="x_2056099_indust_0_dt_work_center" reference_cascade_rule="none" type="reference"/>
-        <element label="Week End Date" mandatory="true" name="week_end_date" type="glide_date"/>
-        <element label="Support Needed from HR / Management" max_length="2000" name="support_needed" type="multi_two_lines"/>
-        <element label="Job Title" max_length="100" name="job_title" type="string"/>
-        <element label="Tasks / Jobs Completed" name="tasks_completed" type="integer"/>
-        <element choice="3" default="draft" label="Report Status" mandatory="true" name="report_status" type="choice">
+        <element label="Work Completed This Week" mandatory="true" max_length="4000" name="work_summary" type="multi_two_lines"/>
+        <element label="Reporting Week" mandatory="true" max_length="10" name="reporting_week" type="string"/>
+        <element label="Work Center" max_length="32" name="work_center" reference="x_2056099_indust_0_dt_work_center" reference_cascade_rule="none" type="reference"/>
+        <element label="Week Start Date" mandatory="true" max_length="40" name="week_start_date" type="glide_date"/>
+        <element label="Escalation Required" max_length="40" name="escalation_required" type="boolean"/>
+        <element display="true" label="Report Number" mandatory="true" max_length="20" name="report_number" read_only="true" read_only_option="instance_configured" type="string"/>
+        <element label="Quantified Impact" max_length="15" name="impact_value" type="decimal"/>
+        <element choice="1" label="Location Category" max_length="40" name="location_category" read_only="true" read_only_option="instance_configured" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Production Area" sequence="1" value="production_area"/>
+                <element inactive_on_update="false" label="Raw Material Warehouse" sequence="2" value="raw_material_warehouse"/>
+                <element inactive_on_update="false" label="Finished Goods Warehouse" sequence="3" value="finished_goods_warehouse"/>
+                <element inactive_on_update="false" label="Inventory Warehouse" sequence="4" value="inventory_warehouse"/>
+                <element inactive_on_update="false" label="MRO Store" sequence="5" value="mro_store"/>
+                <element inactive_on_update="false" label="Temporary Storage" sequence="6" value="temporary_storage"/>
+                <element inactive_on_update="false" label="Quarantine Area" sequence="7" value="quarantine_area"/>
+                <element inactive_on_update="false" label="Disposal Area" sequence="8" value="disposal_area"/>
+            </choice>
+        </element>
+        <element label="Composite Performance Score" max_length="15" name="performance_score" read_only="true" read_only_option="instance_configured" type="decimal"/>
+        <element label="Key Accomplishments" max_length="4000" name="key_accomplishments" type="multi_two_lines"/>
+        <element label="Worker Self Rating (1-10)" max_length="15" name="self_rating" type="decimal"/>
+        <element label="Issues / Blockers Faced" max_length="2000" name="issues_faced" type="multi_two_lines"/>
+        <element label="Hours Worked" max_length="15" name="hours_worked" type="decimal"/>
+        <element label="Rework Count" max_length="40" name="rework_count" type="integer"/>
+        <element label="Worker Name" max_length="100" name="worker_name" type="string"/>
+        <element label="Supervisor Name" max_length="100" name="supervisor_name" type="string"/>
+        <element label="Employee ID" max_length="20" name="employee_id" type="string"/>
+        <element choice="3" default="draft" label="Report Status" mandatory="true" max_length="40" name="report_status" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
                 <element inactive_on_update="false" label="Submitted to HR" sequence="2" value="submitted"/>
-                <element inactive_on_update="false" label="Returned to Worker" sequence="5" value="returned_to_worker"/>
+                <element inactive_on_update="false" label="HR Review In Progress" sequence="3" value="hr_review"/>
                 <element inactive_on_update="false" label="HR Reviewed" sequence="4" value="hr_reviewed"/>
+                <element inactive_on_update="false" label="Returned to Worker" sequence="5" value="returned_to_worker"/>
                 <element inactive_on_update="false" label="Escalated to HR Action" sequence="6" value="escalated"/>
                 <element inactive_on_update="false" label="Closed" sequence="7" value="closed"/>
-                <element inactive_on_update="false" label="HR Review In Progress" sequence="3" value="hr_review"/>
             </choice>
         </element>
-        <element label="Week Start Date" mandatory="true" name="week_start_date" type="glide_date"/>
-        <element label="Units Produced" name="units_produced" type="integer"/>
-        <element label="HR Assessment Rating (1-10)" name="hr_rating" type="decimal"/>
-        <element label="Quality Pass Rate (%)" name="quality_pass_rate" type="decimal"/>
-        <element label="Employee Profile" mandatory="true" name="employee_profile" reference="x_2056099_indust_0_hr_profile" reference_cascade_rule="none" type="reference"/>
-        <element label="Scrap / Reject Count" name="scrap_count" type="integer"/>
-        <element display="true" label="Report Number" mandatory="true" max_length="20" name="report_number" read_only="true" read_only_option="instance_configured" type="string"/>
-        <element label="Plan for Next Week" max_length="2000" name="next_week_plan" type="multi_two_lines"/>
-        <element label="Overtime Hours" name="overtime_hours" type="decimal"/>
-        <element choice="1" label="Impact Unit" name="impact_unit" type="choice">
+        <element choice="1" label="Primary Impact Area" max_length="40" name="impact_category" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Safety Improvement" sequence="5" value="safety_improvement"/>
+                <element inactive_on_update="false" label="Process Improvement" sequence="6" value="process_improvement"/>
+                <element inactive_on_update="false" label="Inventory Accuracy" sequence="7" value="inventory_accuracy"/>
+                <element inactive_on_update="false" label="On-Time Delivery Protected" sequence="8" value="on_time_delivery"/>
+                <element inactive_on_update="false" label="Training / Knowledge Sharing" sequence="9" value="training_delivered"/>
+                <element inactive_on_update="false" label="No Measurable Impact This Week" sequence="10" value="no_measurable_impact"/>
+                <element inactive_on_update="false" label="Cost Saving" sequence="3" value="cost_saving"/>
+                <element inactive_on_update="false" label="Downtime Reduction" sequence="4" value="downtime_reduction"/>
+                <element inactive_on_update="false" label="Output / Throughput Increase" sequence="1" value="output_increase"/>
+                <element inactive_on_update="false" label="Quality Improvement" sequence="2" value="quality_improvement"/>
+            </choice>
+        </element>
+        <element choice="1" label="Impact Unit" max_length="40" name="impact_unit" type="choice">
             <choice>
                 <element inactive_on_update="false" label="Units" sequence="1" value="units"/>
                 <element inactive_on_update="false" label="Hours" sequence="2" value="hours"/>
                 <element inactive_on_update="false" label="INR" sequence="3" value="inr"/>
-                <element inactive_on_update="false" label="Count" sequence="5" value="count"/>
                 <element inactive_on_update="false" label="Percent" sequence="4" value="percent"/>
+                <element inactive_on_update="false" label="Count" sequence="5" value="count"/>
             </choice>
         </element>
-        <element label="Quantified Impact" name="impact_value" type="decimal"/>
-        <element label="Output Attainment (%)" name="output_attainment_pct" read_only="true" read_only_option="instance_configured" type="decimal"/>
-        <element label="Worker" name="worker" reference="sys_user" reference_cascade_rule="none" type="reference"/>
-        <element label="Days Present" name="attendance_days" type="integer"/>
-        <element label="Composite Performance Score" name="performance_score" read_only="true" read_only_option="instance_configured" type="decimal"/>
-        <element choice="3" default="not_submitted" label="HR Review Status" name="hr_review_status" type="choice">
+        <element label="Scrap / Reject Count" max_length="40" name="scrap_count" type="integer"/>
+        <element label="Quality Pass Rate (%)" max_length="15" name="quality_pass_rate" type="decimal"/>
+        <element label="HR Comments" max_length="40" name="hr_comments" type="journal_input"/>
+        <element label="Days Present" max_length="40" name="attendance_days" type="integer"/>
+        <element label="Plant / Warehouse" mandatory="true" max_length="32" name="plant_location" reference="x_2056099_indust_0_inv_loc" reference_cascade_rule="none" reference_qual="active=true" type="reference"/>
+        <element label="Supervisor" max_length="32" name="supervisor" reference="sys_user" reference_cascade_rule="none" type="reference"/>
+        <element label="Target Units" max_length="40" name="target_units" type="integer"/>
+        <element label="Submitted to HR" max_length="32" name="hr_department" reference="x_2056099_indust_0_hr_dept" reference_cascade_rule="none" reference_qual="active=true" type="reference"/>
+        <element choice="1" label="HR Decision" max_length="40" name="hr_decision" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Not Submitted" sequence="1" value="not_submitted"/>
-                <element inactive_on_update="false" label="Accepted" sequence="4" value="accepted"/>
-                <element inactive_on_update="false" label="Escalated" sequence="6" value="escalated"/>
-                <element inactive_on_update="false" label="Clarification Requested" sequence="5" value="clarification_requested"/>
-                <element inactive_on_update="false" label="In Review" sequence="3" value="in_review"/>
-                <element inactive_on_update="false" label="Pending HR Review" sequence="2" value="pending"/>
-            </choice>
-        </element>
-        <element default="0" label="Safety Observations Raised" name="safety_observations" type="integer"/>
-        <element label="Supervisor" name="supervisor" reference="sys_user" reference_cascade_rule="none" type="reference"/>
-        <element label="Worker Self Rating (1-10)" name="self_rating" type="decimal"/>
-        <element label="Submitted On" name="submitted_on" read_only="true" read_only_option="instance_configured" type="glide_date_time"/>
-        <element label="HR Reviewed On" name="hr_reviewed_on" read_only="true" read_only_option="instance_configured" type="glide_date_time"/>
-        <element label="Plant / Warehouse" mandatory="true" name="plant_location" reference="x_2056099_indust_0_inv_loc" reference_cascade_rule="none" reference_qual="active=true" type="reference"/>
-        <element label="Key Accomplishments" max_length="4000" name="key_accomplishments" type="multi_two_lines"/>
-        <element label="HR Comments" name="hr_comments" type="journal_input"/>
-        <element choice="1" label="Location Category" name="location_category" read_only="true" read_only_option="instance_configured" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Temporary Storage" sequence="6" value="temporary_storage"/>
-                <element inactive_on_update="false" label="MRO Store" sequence="5" value="mro_store"/>
-                <element inactive_on_update="false" label="Quarantine Area" sequence="7" value="quarantine_area"/>
-                <element inactive_on_update="false" label="Disposal Area" sequence="8" value="disposal_area"/>
-                <element inactive_on_update="false" label="Production Area" sequence="1" value="production_area"/>
-                <element inactive_on_update="false" label="Inventory Warehouse" sequence="4" value="inventory_warehouse"/>
-                <element inactive_on_update="false" label="Raw Material Warehouse" sequence="2" value="raw_material_warehouse"/>
-                <element inactive_on_update="false" label="Finished Goods Warehouse" sequence="3" value="finished_goods_warehouse"/>
-            </choice>
-        </element>
-        <element label="Downtime Hours" name="downtime_hours" type="decimal"/>
-        <element label="Related HR Action" name="related_hr_action" reference="x_2056099_indust_0_hr_action" reference_cascade_rule="none" type="reference"/>
-        <element label="Submitted to HR" name="hr_department" reference="x_2056099_indust_0_hr_dept" reference_cascade_rule="none" reference_qual="active=true" type="reference"/>
-        <element label="Hours Worked" name="hours_worked" type="decimal"/>
-        <element label="Acknowledged by Worker" name="acknowledged_by_worker" type="boolean"/>
-        <element choice="1" label="HR Decision" name="hr_decision" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Escalate to HR Action" sequence="6" value="escalate_to_action"/>
-                <element inactive_on_update="false" label="Training Required" sequence="4" value="training"/>
                 <element inactive_on_update="false" label="Acknowledge" sequence="1" value="acknowledge"/>
-                <element inactive_on_update="false" label="Coaching Required" sequence="3" value="coaching"/>
                 <element inactive_on_update="false" label="Recommend Recognition" sequence="2" value="recognition"/>
+                <element inactive_on_update="false" label="Coaching Required" sequence="3" value="coaching"/>
+                <element inactive_on_update="false" label="Training Required" sequence="4" value="training"/>
                 <element inactive_on_update="false" label="PIP Recommended" sequence="5" value="pip_recommended"/>
+                <element inactive_on_update="false" label="Escalate to HR Action" sequence="6" value="escalate_to_action"/>
             </choice>
         </element>
-        <element label="Rework Count" name="rework_count" type="integer"/>
-        <element label="Related Weekly Rating" name="related_weekly_rating" reference="x_2056099_indust_0_wk_rating" reference_cascade_rule="none" type="reference"/>
-        <element choice="1" label="Shift" name="shift" type="choice">
+        <element default="0" label="Safety Incidents" max_length="40" name="safety_incidents" type="integer"/>
+        <element label="Support Needed from HR / Management" max_length="2000" name="support_needed" type="multi_two_lines"/>
+        <element label="Tasks / Jobs Completed" max_length="40" name="tasks_completed" type="integer"/>
+        <element label="Impact of This Work" mandatory="true" max_length="4000" name="impact_summary" type="multi_two_lines"/>
+        <element label="Overtime Hours" max_length="15" name="overtime_hours" type="decimal"/>
+        <element label="Employee Profile" mandatory="true" max_length="32" name="employee_profile" reference="x_2056099_indust_0_hr_profile" reference_cascade_rule="none" type="reference"/>
+        <element label="Worker" max_length="32" name="worker" reference="sys_user" reference_cascade_rule="none" type="reference"/>
+        <element label="HR Assessment Rating (1-10)" max_length="15" name="hr_rating" type="decimal"/>
+        <element default="0" label="Safety Observations Raised" max_length="40" name="safety_observations" type="integer"/>
+        <element label="HR Reviewed On" max_length="40" name="hr_reviewed_on" read_only="true" read_only_option="instance_configured" type="glide_date_time"/>
+        <element choice="1" label="Shift" max_length="40" name="shift" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Morning" sequence="2" value="morning"/>
                 <element inactive_on_update="false" label="General" sequence="1" value="general"/>
+                <element inactive_on_update="false" label="Morning" sequence="2" value="morning"/>
+                <element inactive_on_update="false" label="Afternoon" sequence="3" value="afternoon"/>
                 <element inactive_on_update="false" label="Night" sequence="4" value="night"/>
                 <element inactive_on_update="false" label="Rotational" sequence="5" value="rotational"/>
-                <element inactive_on_update="false" label="Afternoon" sequence="3" value="afternoon"/>
             </choice>
         </element>
-        <element label="Target Units" name="target_units" type="integer"/>
-        <element label="Issues / Blockers Faced" max_length="2000" name="issues_faced" type="multi_two_lines"/>
-        <element label="Worker Name" max_length="100" name="worker_name" type="string"/>
-        <element label="Work Completed This Week" mandatory="true" max_length="4000" name="work_summary" type="multi_two_lines"/>
-        <element default="0" label="Trainings Completed" name="trainings_completed" type="integer"/>
-        <element label="Impact of This Work" mandatory="true" max_length="4000" name="impact_summary" type="multi_two_lines"/>
-        <element choice="1" label="Primary Impact Area" name="impact_category" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Downtime Reduction" sequence="4" value="downtime_reduction"/>
-                <element inactive_on_update="false" label="No Measurable Impact This Week" sequence="10" value="no_measurable_impact"/>
-                <element inactive_on_update="false" label="Inventory Accuracy" sequence="7" value="inventory_accuracy"/>
-                <element inactive_on_update="false" label="On-Time Delivery Protected" sequence="8" value="on_time_delivery"/>
-                <element inactive_on_update="false" label="Output / Throughput Increase" sequence="1" value="output_increase"/>
-                <element inactive_on_update="false" label="Cost Saving" sequence="3" value="cost_saving"/>
-                <element inactive_on_update="false" label="Quality Improvement" sequence="2" value="quality_improvement"/>
-                <element inactive_on_update="false" label="Process Improvement" sequence="6" value="process_improvement"/>
-                <element inactive_on_update="false" label="Training / Knowledge Sharing" sequence="9" value="training_delivered"/>
-                <element inactive_on_update="false" label="Safety Improvement" sequence="5" value="safety_improvement"/>
-            </choice>
-        </element>
-        <element label="Escalation Required" name="escalation_required" type="boolean"/>
-        <element label="Employee ID" max_length="20" name="employee_id" type="string"/>
-        <element label="Reporting Week" mandatory="true" max_length="10" name="reporting_week" type="string"/>
+        <element label="Related HR Action" max_length="32" name="related_hr_action" reference="x_2056099_indust_0_hr_action" reference_cascade_rule="none" type="reference"/>
+        <element label="Acknowledged by Worker" max_length="40" name="acknowledged_by_worker" type="boolean"/>
         <element label="HR Feedback" max_length="4000" name="hr_feedback" type="multi_two_lines"/>
-        <element default="0" label="Safety Incidents" name="safety_incidents" type="integer"/>
-        <element label="Supervisor Name" max_length="100" name="supervisor_name" type="string"/>
+        <element label="Week End Date" mandatory="true" max_length="40" name="week_end_date" type="glide_date"/>
+        <element label="Units Produced" max_length="40" name="units_produced" type="integer"/>
+        <element label="Job Title" max_length="100" name="job_title" type="string"/>
+        <element default="0" label="Trainings Completed" max_length="40" name="trainings_completed" type="integer"/>
+        <element label="Plan for Next Week" max_length="2000" name="next_week_plan" type="multi_two_lines"/>
+        <element label="Output Attainment (%)" max_length="15" name="output_attainment_pct" read_only="true" read_only_option="instance_configured" type="decimal"/>
+        <element choice="3" default="not_submitted" label="HR Review Status" max_length="40" name="hr_review_status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Not Submitted" sequence="1" value="not_submitted"/>
+                <element inactive_on_update="false" label="Pending HR Review" sequence="2" value="pending"/>
+                <element inactive_on_update="false" label="In Review" sequence="3" value="in_review"/>
+                <element inactive_on_update="false" label="Accepted" sequence="4" value="accepted"/>
+                <element inactive_on_update="false" label="Clarification Requested" sequence="5" value="clarification_requested"/>
+                <element inactive_on_update="false" label="Escalated" sequence="6" value="escalated"/>
+            </choice>
+        </element>
+        <element label="Submitted On" max_length="40" name="submitted_on" read_only="true" read_only_option="instance_configured" type="glide_date_time"/>
+        <element label="Related Weekly Rating" max_length="32" name="related_weekly_rating" reference="x_2056099_indust_0_wk_rating" reference_cascade_rule="none" type="reference"/>
+        <element label="Downtime Hours" max_length="15" name="downtime_hours" type="decimal"/>
         <index name="index">
             <element name="employee_profile"/>
         </index>
         <index name="index2">
-            <element name="hr_department"/>
+            <element name="work_center"/>
         </index>
         <index name="index3">
+            <element name="worker"/>
+        </index>
+        <index name="index4">
+            <element name="hr_department"/>
+        </index>
+        <index name="index5">
             <element name="hr_review_status"/>
             <element name="hr_department"/>
         </index>
-        <index name="index4">
+        <index name="index6">
             <element name="plant_location"/>
         </index>
-        <index name="index5">
+        <index name="index7">
             <element name="related_hr_action"/>
         </index>
-        <index name="index6">
+        <index name="index8">
             <element name="related_weekly_rating"/>
         </index>
-        <index name="index7" unique="true">
+        <index name="index9">
             <element name="report_number"/>
         </index>
-        <index name="index8">
+        <index name="index10">
             <element name="reporting_week"/>
             <element name="plant_location"/>
         </index>
-        <index name="index9">
-            <element name="supervisor"/>
-        </index>
-        <index name="index10">
-            <element name="work_center"/>
-        </index>
         <index name="index11">
-            <element name="worker"/>
+            <element name="supervisor"/>
         </index>
     </element>
 </database>

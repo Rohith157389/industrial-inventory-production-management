@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element audit="true" db_object_id="d53b3238085e4cf3b0c6480ba641a64e" label="HR Department Representative" name="x_2056099_indust_0_hr_dept" type="collection">
-        <element label="HR ID" mandatory="true" max_length="20" name="hr_id" read_only="true" read_only_option="instance_configured" type="string"/>
-        <element label="Additional Plants Covered" name="coverage_plants" reference="x_2056099_indust_0_inv_loc" type="glide_list"/>
-        <element default="Human Resources" label="HR Department" max_length="100" name="hr_department_name" type="string"/>
-        <element label="Phone" max_length="40" name="phone" type="string"/>
-        <element label="Platform User" name="hr_user" reference="sys_user" reference_cascade_rule="none" type="reference"/>
-        <element label="Escalation Contact" name="escalation_contact" type="boolean"/>
-        <element label="Covers All Plants" name="covers_all_plants" type="boolean"/>
-        <element label="Email" max_length="100" name="email" type="email"/>
+        <element label="Additional Plants Covered" max_length="1024" name="coverage_plants" reference="x_2056099_indust_0_inv_loc" type="glide_list"/>
         <element display="true" label="HR Representative" mandatory="true" max_length="100" name="hr_name" type="string"/>
-        <element label="Primary Plant / Warehouse" name="primary_plant" reference="x_2056099_indust_0_inv_loc" reference_cascade_rule="none" reference_qual="active=true" type="reference"/>
-        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
-        <element choice="3" default="hr_business_partner" label="HR Role" mandatory="true" name="hr_role" type="choice">
+        <element label="Escalation Contact" max_length="40" name="escalation_contact" type="boolean"/>
+        <element default="25" label="Weekly Review Capacity" max_length="40" name="review_capacity" type="integer"/>
+        <element label="Email" max_length="100" name="email" type="email"/>
+        <element label="Platform User" max_length="32" name="hr_user" reference="sys_user" reference_cascade_rule="none" type="reference"/>
+        <element choice="3" default="hr_business_partner" label="HR Role" mandatory="true" max_length="40" name="hr_role" type="choice">
             <choice>
-                <element inactive_on_update="false" label="HR Manager" sequence="2" value="hr_manager"/>
-                <element inactive_on_update="false" label="HR Operations Executive" sequence="5" value="hr_ops_executive"/>
-                <element inactive_on_update="false" label="HR Safety &amp; Welfare Officer" sequence="7" value="hr_safety_welfare"/>
                 <element inactive_on_update="false" label="Head of HR" sequence="1" value="hr_head"/>
-                <element inactive_on_update="false" label="HR Generalist" sequence="4" value="hr_generalist"/>
-                <element inactive_on_update="false" label="HR Training &amp; Development Lead" sequence="6" value="hr_training_lead"/>
+                <element inactive_on_update="false" label="HR Manager" sequence="2" value="hr_manager"/>
                 <element inactive_on_update="false" label="HR Business Partner" sequence="3" value="hr_business_partner"/>
+                <element inactive_on_update="false" label="HR Generalist" sequence="4" value="hr_generalist"/>
+                <element inactive_on_update="false" label="HR Operations Executive" sequence="5" value="hr_ops_executive"/>
+                <element inactive_on_update="false" label="HR Training &amp; Development Lead" sequence="6" value="hr_training_lead"/>
+                <element inactive_on_update="false" label="HR Safety &amp; Welfare Officer" sequence="7" value="hr_safety_welfare"/>
             </choice>
         </element>
-        <element default="25" label="Weekly Review Capacity" name="review_capacity" type="integer"/>
-        <element default="true" label="Active" name="active" type="boolean"/>
-        <index name="index" unique="true">
+        <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
+        <element label="HR ID" mandatory="true" max_length="20" name="hr_id" read_only="true" read_only_option="instance_configured" type="string"/>
+        <element label="Phone" max_length="40" name="phone" type="string"/>
+        <element label="Notes" max_length="1000" name="notes" type="multi_two_lines"/>
+        <element label="Covers All Plants" max_length="40" name="covers_all_plants" type="boolean"/>
+        <element default="Human Resources" label="HR Department" max_length="100" name="hr_department_name" type="string"/>
+        <element label="Primary Plant / Warehouse" max_length="32" name="primary_plant" reference="x_2056099_indust_0_inv_loc" reference_cascade_rule="none" reference_qual="active=true" type="reference"/>
+        <index name="index">
             <element name="hr_id"/>
         </index>
         <index name="index2">
