@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.PlanningConstraints</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Material, supplier, workforce, quality and machine constraints for the production scheduler</description>
+        <mobile_callable>false</mobile_callable>
+        <name>PlanningConstraints</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * PlanningConstraints
+ *
+ * Extra rule-based checks the ProductionScheduler applies on top of its existing logic
+ * (priority, due date, capacity, efficiency, maintenance): material availability, supplier lead time / delay,
+ * workforce availability, quality holds, and machine availability. No machine learning is involved.
+ */
+var PlanningConstraints = Class.create();
+PlanningConstraints.prototype = {
+    P: 'x_2056099_indust_0_',
+    DAY: 86400000,
+    DEFAULT_LEAD_DAYS: 7,
+    SUPPLIER_DELAY_DAYS: 3,
+    // which team staffs which kind of resource (hr_profile.assignment_group)
+    TEAM: { 'CNC Machine': 'Production Operations', 'Production Line': 'Production Operations', 'Finishing Station': 'Production Operations',
+        'Assembly Station': 'Assembly Operations', 'Testing Station': 'Quality Assurance' },
+
+    initialize: function() {},
+
+    /**
+     * @param po        GlideRecord production order
+     * @param resource  { sys_id, resource_name, capacity_per_day, efficiency_percentage } chosen by the scheduler
+     * @param dates     { planned_start, planned_end, days_needed } from the scheduler
+     * @returns { blocked, reason, dates, machine, machine_name, summary, checks }
+     */
+    evaluate: function(po, resource, dates) {
+        var start = new GlideDateTime(dates.planned_start).getNumericValue();
+        var days = dates.days_needed || 1, notes = [], checks = {};
+
+        // quality: an unreleased quality hold stops planning
+        checks.quality = this.quality(po);
+        if (checks.quality.blocked) {
+            return { blocked: true, reason: 'Quality hold: ' + checks.quality.reason, dates: dates, checks: checks, summary: 'Blocked by quality hold' };
+        }
+        if (checks.quality.note) notes.push(checks.quality.note);
+
+        // material + supplier: a shortage delays the start by the supplier lead time (plus any open supplier delay)
+        var plan = new x_2056099_indust_0.MaterialIntelligence().planForOrder(po);
+        checks.material = { status: plan.status, shortage_components: plan.shortage_components || 0 };
+        checks.supplier = { delay_days: 0, materials: [] };
+        if (plan.status == 'shortage') {
+            var wait = 0;
+            for (var i = 0; i < plan.components.length; i++) {
+                var c = plan.components[i];
+                if (c.status != 'shortage') continue;
+                var lead = (c.lead_time_days || this.DEFAULT_LEAD_DAYS) + (this._supplierDelayed(c.material) ? this.SUPPLIER_DELAY_DAYS : 0);
+                checks.supplier.materials.push({ material: c.name, shortage: c.shortage_quantity, lead_time_days: lead });
+                if (lead > wait) wait = lead;
+            }
+            checks.supplier.delay_days = wait;
+            start += wait * this.DAY;
+            notes.push('Material shortage on ' + plan.shortage_components + ' component(s); start moved ' + wait + ' day(s) for supplier lead time');
+        } else if (plan.status == 'below_safety_stock') {
+            notes.push('Materials available but ' + plan.below_safety_components + ' component(s) dip below safety stock');
+        } else if (plan.status == 'available') {
+            notes.push('Materials available');
+        }
+
+        // workforce: nobody available on the team that staffs this resource halves the effective capacity
+        checks.workforce = this.workforce(resource.sys_id);
+        if (checks.workforce.team && checks.workforce.available === 0) {
+            days = days * 2;
+            notes.push('Workforce shortage in ' + checks.workforce.team + ' (0 of ' + checks.workforce.headcount + ' available); duration doubled');
+        } else if (checks.workforce.team) {
+            notes.push('Workforce: ' + checks.workforce.available + ' available in ' + checks.workforce.team);
+        }
+
+        // machine: least-loaded operational machine
+        var machine = this.machine(parseFloat(po.getValue('quantity_planned')) || 0);
+        checks.machine = machine || { note: 'no operational machine' };
+        if (machine) notes.push('Machine ' + machine.name + ' at ' + Math.round(machine.utilization * 100) + '% load');
+
+        var s = new GlideDateTime(); s.setNumericValue(start);
+        var e = new GlideDateTime(); e.setNumericValue(start + days * this.DAY);
+        return {
+            blocked: false, checks: checks, machine: machine ? machine.sys_id : '', machine_name: machine ? machine.name : '',
+            dates: { planned_start: s.getValue(), planned_end: e.getValue(), days_needed: days, effective_capacity_per_day: dates.effective_capacity_per_day },
+            summary: ('Constraint check: ' + notes.join('; ') + '.').substring(0, 3900)
+        };
+    },
+
+    quality: function(po) {
+        if ((po.getValue('notes') || '').indexOf('[QUALITY HOLD ') > -1) {
+            return { blocked: true, reason: po.getValue('number') + ' is on quality hold until the quality alert is resolved' };
+        }
+        var al = new GlideRecord(this.P + 'inv_alert');
+        al.addQuery('alert_type', 'quality_failure');
+        al.addQuery('status', 'NOT IN', 'resolved,dismissed');
+        al.addQuery('material_product', po.getValue('finished_product'));
+        al.addQuery('alert_message', 'STARTSWITH', '[Weekly Quality]');
+        al.setLimit(1);
+        al.query();
+        if (al.next()) {
+            return { blocked: true, reason: 'open quality alert ' + (al.getValue('number') || '') + ' on ' + po.getDisplayValue('finished_product') };
+        }
+        return { blocked: false, note: '' };
+    },
+
+    workforce: function(resourceSysId) {
+        var res = new GlideRecord(this.P + 'prod_res');
+        if (!resourceSysId || !res.get(resourceSysId)) return { team: '' };
+        var team = this.TEAM[res.getValue('resource_type')] || '';
+        if (!team) return { team: '' };
+        var headcount = 0, available = 0;
+        var h = new GlideRecord(this.P + 'hr_profile');
+        h.query();
+        while (h.next()) {
+            var grp = h.getValue('assignment_group') || '';
+            if (/^[0-9a-f]{32}$/.test(grp)) grp = h.getDisplayValue('assignment_group');
+            if (grp != team) continue;
+            headcount++;
+            if (h.getValue('employment_status') == 'active') available++;
+        }
+        return { team: team, headcount: headcount, available: available };
+    },
+
+    machine: function(qty) {
+        var r = new x_2056099_indust_0.AdaptiveRescheduler();
+        return r._pick(r._alternativeMachines(''), qty);
+    },
+
+    _supplierDelayed: function(material) {
+        var al = new GlideRecord(this.P + 'inv_alert');
+        al.addQuery('alert_type', 'supplier_delay');
+        al.addQuery('material_product', material);
+        al.addQuery('status', 'NOT IN', 'resolved,dismissed');
+        al.setLimit(1);
+        al.query();
+        return al.hasNext();
+    },
+
+    type: 'PlanningConstraints'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 17:34:46</sys_created_on>
+        <sys_id>895d69354737c310527276a4416d43ab</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>PlanningConstraints</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_895d69354737c310527276a4416d43ab</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 17:34:46</sys_updated_on>
+    </sys_script_include>
+</record_update>

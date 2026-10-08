@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>false</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_prod_sched</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Schedule - Apply Planning Constraints</name>
+        <order>60</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous) {
+    // Material, supplier, workforce, quality and machine constraints for every new draft schedule
+    // (on top of the scheduler's own priority / due date / capacity / efficiency / maintenance logic).
+    if (current.production_order.nil() || current.getValue('status') != 'draft' || (current.getValue('notes') || '').indexOf('Constraint check') > -1) {
+        return;
+    }
+    var po = current.production_order.getRefRecord();
+    var res = current.production_resource.getRefRecord();
+    if (!po.isValidRecord()) {
+        return;
+    }
+    var start = new GlideDateTime(current.getValue('planned_start') || new GlideDateTime().getValue());
+    var end = new GlideDateTime(current.getValue('planned_end') || start.getValue());
+    var days = Math.max(1, Math.ceil((end.getNumericValue() - start.getNumericValue()) / 86400000));
+    var c = new x_2056099_indust_0.PlanningConstraints().evaluate(po,
+        { sys_id: res.isValidRecord() ? res.getUniqueValue() : '', resource_name: res.isValidRecord() ? res.getValue('resource_name') : '' },
+        { planned_start: start.getValue(), planned_end: end.getValue(), days_needed: days });
+    if (c.blocked) {
+        gs.addErrorMessage(c.reason);
+        current.setAbortAction(true);
+        return;
+    }
+    current.setValue('planned_start', c.dates.planned_start);
+    current.setValue('planned_end', c.dates.planned_end);
+    if (c.machine && current.machine.nil()) {
+        current.setValue('machine', c.machine);
+    }
+    current.setValue('notes', (c.summary + (current.getValue('notes') ? ' | ' + current.getValue('notes') : '')).substring(0, 4000));
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 17:51:44</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>593139fd4737c310527276a4416d431b</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Schedule - Apply Planning Constraints</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_593139fd4737c310527276a4416d431b</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 17:52:47</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=593139fd4737c310527276a4416d431b"/>
+</record_update>

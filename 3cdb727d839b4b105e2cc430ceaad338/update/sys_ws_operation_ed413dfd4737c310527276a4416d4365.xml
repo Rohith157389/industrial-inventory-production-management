@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>POST</http_method>
+        <name>What-If Scenarios</name>
+        <operation_script><![CDATA[(function process(request, response) {
+    var ROLES = ['production_planner', 'production_manager', 'production_supervisor', 'plant_manager', 'operations_manager'];
+    var ok = gs.hasRole('admin');
+    for (var i = 0; i < ROLES.length && !ok; i++) ok = gs.hasRole('x_2056099_indust_0.' + ROLES[i]);
+    if (!ok) { response.setStatus(403); response.setBody({ success: false, error: 'Insufficient role for this operation' }); return; }
+    var body = {};
+    try { body = typeof request.body.data === 'string' ? JSON.parse(request.body.data) : (request.body.data || {}); } catch (e) { body = {}; }
+    // All scenario types in one place: machine_breakdown, workforce_shortage, supplier_delay, urgent_order, quality_issue
+    // (WhatIfScenarios) plus the original resource_down, capacity_reduction, quantity_change, material_shortage, schedule_shift.
+    var result;
+    if (body.action == 'apply') {
+        result = new x_2056099_indust_0.AdaptiveRescheduler().applyScenario(body.scenario_sys_id);
+    } else {
+        var extra = new x_2056099_indust_0.WhatIfScenarios();
+        result = extra.supports(body.scenario_type) ? extra.simulate(body) : new x_2056099_indust_0.WhatIfSimulationEngine().simulate(body);
+    }
+    if (!result.success) response.setStatus(400);
+    response.setBody(result);
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/operator_api/whatif</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/whatif</relative_path>
+        <request_example/>
+        <requires_acl_authorization>false</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 17:52:01</sys_created_on>
+        <sys_id>ed413dfd4737c310527276a4416d4365</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>What-If Scenarios</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_ed413dfd4737c310527276a4416d4365</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 18:07:35</sys_updated_on>
+        <web_service_definition display_value="Operator API">7acd7c17725147d9a550963b7da0fe53</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

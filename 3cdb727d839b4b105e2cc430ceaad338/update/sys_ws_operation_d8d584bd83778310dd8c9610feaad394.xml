@@ -134,7 +134,7 @@
       customer: (o.customer_order.customer.getDisplayValue() || '') + '',
       bom: bomByProduct[o.getValue('finished_product')] || '',
       capacity: cap, projected: (status != 'completed' && cap > 0) ? now + (remaining / cap) * DAY : 0,
-      start: ms(o, 'planned_start_date'), due: due, risk: risk, materials: [], activity: []
+      start: ms(o, 'planned_start_date'), due: due, risk: risk, created: ms(o, 'sys_created_on'), materials: [], activity: []
     };
     orders.push(rec); byNumber[rec.number] = rec;
     if (cnt[status] !== undefined) cnt[status]++;
@@ -174,8 +174,10 @@
   ir.orderByDesc('sys_created_on');
   ir.query();
   while (ir.next()) {
-    var ao = byNumber[ir.getValue('related_production_order')];
-    if (!ao || ao.activity.length >= 6) continue;
+    // seeded requests reference the order number, flow-generated ones the order sys_id
+    var ao = byNumber[ir.getValue('related_production_order')] || bySys[ir.getValue('related_production_order')];
+    // requests are linked by order number text, so ignore ones raised before the order existed (reused numbers)
+    if (!ao || ao.activity.length >= 6 || ms(ir, 'sys_created_on') < ao.created) continue;
     ao.activity.push({
       number: ir.getValue('number') + '', type: ir.getDisplayValue('request_type') + '', status: ir.getDisplayValue('status') + '',
       material: matOf(ir.getValue('material_product')).name, qty: num(ir.getValue('quantity_requested')), at: ms(ir, 'sys_created_on')
@@ -485,14 +487,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-08 10:02:31</sys_created_on>
         <sys_id>d8d584bd83778310dd8c9610feaad394</sys_id>
-        <sys_mod_count>5</sys_mod_count>
+        <sys_mod_count>6</sys_mod_count>
         <sys_name>Get Dashboard Data</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ws_operation_d8d584bd83778310dd8c9610feaad394</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-08 10:57:28</sys_updated_on>
+        <sys_updated_on>2026-10-08 13:23:56</sys_updated_on>
         <web_service_definition display_value="Smart Mfg Mobile API">91c5c0bd83778310dd8c9610feaad3c6</web_service_definition>
         <web_service_version/>
     </sys_ws_operation>

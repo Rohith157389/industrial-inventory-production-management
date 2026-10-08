@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.WorkforceReportUtil</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Weekly workforce reporting engine: report numbering, derived worker and plant context, composite performance score, HR routing by plant coverage, and post-review edit locking.</description>
+        <mobile_callable>false</mobile_callable>
+        <name>WorkforceReportUtil</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var WorkforceReportUtil = Class.create();
+WorkforceReportUtil.prototype = {
+
+    WK_ACT: 'x_2056099_indust_0_wk_act',
+    HR_DEPT: 'x_2056099_indust_0_hr_dept',
+    HR_PROFILE: 'x_2056099_indust_0_hr_profile',
+    INV_LOC: 'x_2056099_indust_0_inv_loc',
+
+    LOCKED_FIELDS: [
+        'work_summary', 'key_accomplishments', 'impact_summary', 'impact_category',
+        'impact_value', 'impact_unit', 'units_produced', 'target_units', 'hours_worked',
+        'overtime_hours', 'downtime_hours', 'attendance_days', 'rework_count',
+        'scrap_count', 'quality_pass_rate', 'safety_incidents', 'safety_observations',
+        'trainings_completed', 'self_rating', 'reporting_week', 'week_start_date',
+        'week_end_date', 'employee_profile', 'plant_location'
+    ],
+
+    initialize: function() {},
+
+    /* ─────────────── numeric helpers ─────────────── */
+
+    _num: function(raw) {
+        if (raw === null || raw === undefined || raw === '') return 0;
+        var parsed = parseFloat(String(raw));
+        return isNaN(parsed) ? 0 : parsed;
+    },
+
+    _round2: function(value) {
+        return Math.round(value * 100) / 100;
+    },
+
+    _clamp: function(value, low, high) {
+        if (value < low) return low;
+        if (value > high) return high;
+        return value;
+    },
+
+    /**
+     * Next sequential identifier for a table, e.g. WAR-2026-0001 or HRD-001.
+     * Reads the highest existing value so deletes never cause a collision.
+     */
+    nextSequence: function(table, field, prefix, digits, includeYear) {
+        var stem = includeYear
+            ? prefix + '-' + new GlideDateTime().getYearLocalTime() + '-'
+            : prefix + '-';
+
+        var gr = new GlideRecord(table);
+        gr.addQuery(field, 'STARTSWITH', stem);
+        gr.orderByDesc(field);
+        gr.setLimit(1);
+        gr.query();
+
+        var next = 1;
+        if (gr.next()) {
+            var tail = String(gr.getValue(field) || '').substring(stem.length);
+            var parsed = parseInt(tail, 10);
+            if (!isNaN(parsed)) next = parsed + 1;
+        }
+
+        var padded = String(next);
+        while (padded.length < digits) padded = '0' + padded;
+        return stem + padded;
+    },
+
+    /**
+     * Composite 0-10 performance score: weighted across output attainment,
+     * quality, attendance and self assessment, penalised for safety incidents
+     * and rework / scrap.
+     */
+    computeMetrics: function(current) {
+        var unitsProduced = this._num(current.getValue('units_produced'));
+        var targetUnits = this._num(current.getValue('target_units'));
+        var qualityPassRate = this._num(current.getValue('quality_pass_rate'));
+        var attendanceDays = this._num(current.getValue('attendance_days'));
+        var selfRating = this._num(current.getValue('self_rating'));
+        var safetyIncidents = this._num(current.getValue('safety_incidents'));
+        var reworkCount = this._num(current.getValue('rework_count'));
+        var scrapCount = this._num(current.getValue('scrap_count'));
+
+        var attainment = targetUnits > 0
+            ? this._round2((unitsProduced / targetUnits) * 100)
+            : 0;
+
+        var outputComponent = this._clamp(attainment, 0, 120) / 12;
+        var qualityComponent = this._clamp(qualityPassRate, 0, 100) / 10;
+        var attendanceComponent = this._clamp((attendanceDays / 6) * 10, 0, 10);
+        var selfComponent = this._clamp(selfRating, 0, 10);
+
+        var safetyPenalty = safetyIncidents * 1.5;
+        var reworkPenalty = this._clamp((reworkCount + scrapCount) / 10, 0, 2);
+
+        var raw = (outputComponent * 0.35)
+            + (qualityComponent * 0.30)
+            + (attendanceComponent * 0.15)
+            + (selfComponent * 0.20)
+            - safetyPenalty
+            - reworkPenalty;
+
+        return {
+            attainment: attainment,
+            score: this._round2(this._clamp(raw, 0, 10))
+        };
+    },
+
+    /* ─────────────── lifecycle steps ─────────────── */
+
+    /**
+     * Report number, denormalised worker / plant context, and derived metrics.
+     * Called before insert and before update.
+     */
+    deriveContext: function(current) {
+        if (!current.getValue('report_number')) {
+            current.setValue(
+                'report_number',
+                this.nextSequence(this.WK_ACT, 'report_number', 'WAR', 4, true)
+            );
+        }
+
+        var profileId = current.getValue('employee_profile');
+        if (profileId) {
+            var profile = new GlideRecord(this.HR_PROFILE);
+            if (profile.get(profileId)) {
+                var employeeId = profile.getValue('employee_id') || '';
+                var jobTitle = profile.getValue('job_title') || '';
+
+                if (!current.getValue('employee_id')) {
+                    current.setValue('employee_id', employeeId);
+                }
+                if (!current.getValue('job_title')) {
+                    current.setValue('job_title', jobTitle);
+                }
+                if (!current.getValue('worker_name')) {
+                    // Legacy profile rows carry synthetic worker references, so
+                    // the readable name is built from job title + employee id.
+                    current.setValue(
+                        'worker_name',
+                        jobTitle ? jobTitle + ' (' + employeeId + ')' : employeeId
+                    );
+                }
+                if (!current.getValue('shift') && profile.getValue('shift')) {
+                    current.setValue('shift', profile.getValue('shift'));
+                }
+            }
+        }
+
+        // Plant / warehouse category lets the dashboard separate production
+        // plant work from warehouse work.
+        var plantId = current.getValue('plant_location');
+        var category = '';
+        if (plantId) {
+            var loc = new GlideRecord(this.INV_LOC);
+            if (loc.get(plantId)) {
+                category = loc.getValue('location_type') || '';
+            }
+        }
+        current.setValue('location_category', category);
+
+        var metrics = this.computeMetrics(current);
+        current.setValue('output_attainment_pct', metrics.attainment);
+        current.setValue('performance_score', metrics.score);
+    },
+
+    /**
+     * Finds the HR representative covering a plant: an active rep whose primary
+     * plant matches, otherwise an active rep flagged as covering all plants.
+     */
+    findHrForPlant: function(plantId) {
+        if (plantId) {
+            var byPlant = new GlideRecord(this.HR_DEPT);
+            byPlant.addQuery('active', true);
+            byPlant.addQuery('primary_plant', plantId);
+            byPlant.setLimit(1);
+            byPlant.query();
+            if (byPlant.next()) return byPlant.getUniqueValue();
+        }
+
+        var fallback = new GlideRecord(this.HR_DEPT);
+        fallback.addQuery('active', true);
+        fallback.addQuery('covers_all_plants', true);
+        fallback.setLimit(1);
+        fallback.query();
+        if (fallback.next()) return fallback.getUniqueValue();
+
+        return '';
+    },
+
+    /**
+     * Routes a submitted report into the HR department review queue: stamps the
+     * submission time and assigns the HR rep who covers the plant.
+     */
+    routeToHr: function(current) {
+        var status = current.getValue('report_status');
+
+        if (!status || status === 'draft') {
+            current.setValue('hr_review_status', 'not_submitted');
+            return;
+        }
+
+        if (status === 'returned_to_worker') {
+            current.setValue('hr_review_status', 'clarification_requested');
+            return;
+        }
+
+        if (!current.getValue('submitted_on')) {
+            current.setValue('submitted_on', new GlideDateTime().getDisplayValue());
+        }
+
+        if (!current.getValue('hr_department')) {
+            var hrId = this.findHrForPlant(current.getValue('plant_location'));
+            if (hrId) {
+                current.setValue('hr_department', hrId);
+            } else {
+                gs.addInfoMessage('No active HR representative covers this plant. '
+                    + 'Assign one on the HR Department Representative table.');
+            }
+        }
+
+        if (status === 'submitted') {
+            var reviewStatus = current.getValue('hr_review_status');
+            if (!reviewStatus || reviewStatus === 'not_submitted') {
+                current.setValue('hr_review_status', 'pending');
+            }
+        }
+    },
+
+    /**
+     * Keeps report status in step with the HR review outcome and stamps the
+     * review timestamp.
+     */
+    applyReviewOutcome: function(current) {
+        var reviewStatus = current.getValue('hr_review_status');
+
+        if (reviewStatus === 'accepted'
+            || reviewStatus === 'clarification_requested'
+            || reviewStatus === 'escalated') {
+            current.setValue('hr_reviewed_on', new GlideDateTime().getDisplayValue());
+        }
+
+        if (reviewStatus === 'accepted') {
+            current.setValue('report_status', 'hr_reviewed');
+        } else if (reviewStatus === 'clarification_requested') {
+            current.setValue('report_status', 'returned_to_worker');
+        } else if (reviewStatus === 'escalated') {
+            current.setValue('report_status', 'escalated');
+            current.setValue('escalation_required', true);
+        } else if (reviewStatus === 'in_review') {
+            current.setValue('report_status', 'hr_review');
+        }
+
+        var decision = current.getValue('hr_decision');
+        if (decision === 'pip_recommended' || decision === 'escalate_to_action') {
+            current.setValue('escalation_required', true);
+        }
+    },
+
+    /**
+     * Once HR has reviewed or closed a report, the worker-authored narrative and
+     * metrics are frozen. HR review fields stay editable.
+     * Returns true when the update must be aborted.
+     */
+    isFrozenEdit: function(current, previous) {
+        var priorStatus = previous.getValue('report_status');
+        if (priorStatus !== 'hr_reviewed' && priorStatus !== 'closed') return false;
+
+        for (var i = 0; i < this.LOCKED_FIELDS.length; i++) {
+            var field = this.LOCKED_FIELDS[i];
+            if (current.getValue(field) !== previous.getValue(field)) return true;
+        }
+        return false;
+    },
+
+    type: 'WorkforceReportUtil'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 15:38:43</sys_created_on>
+        <sys_id>184f5706e9954507b8e80e4a17e7b0e2</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>WorkforceReportUtil</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_184f5706e9954507b8e80e4a17e7b0e2</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 15:38:43</sys_updated_on>
+    </sys_script_include>
+</record_update>

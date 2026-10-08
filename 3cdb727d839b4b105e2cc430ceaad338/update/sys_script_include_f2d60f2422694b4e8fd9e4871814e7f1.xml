@@ -42,6 +42,29 @@ ProductionOrderCreator.prototype = {
     DEFAULT_PRODUCTION_LOCATION: '337551e883ffc310dd8c9610feaad36f',
 
     initialize: function() {},
+    /**
+     * The production location must exist on this instance: prefer the "PROD-FLOOR" location,
+     * then any production area, and only then the historical default sys_id.
+     */
+    _resolveProductionLocation: function() {
+        var loc = new GlideRecord('x_2056099_indust_0_inv_loc');
+        loc.addQuery('location_id', 'PROD-FLOOR');
+        loc.setLimit(1);
+        loc.query();
+        if (loc.next()) {
+            return loc.getUniqueValue();
+        }
+        loc = new GlideRecord('x_2056099_indust_0_inv_loc');
+        loc.addQuery('location_type', 'CONTAINS', 'production');
+        loc.orderBy('location_id');
+        loc.setLimit(1);
+        loc.query();
+        if (loc.next()) {
+            return loc.getUniqueValue();
+        }
+        return this.DEFAULT_PRODUCTION_LOCATION;
+    },
+
 
     /**
      * Create a Production Order from a Customer Order Item.
@@ -130,7 +153,7 @@ ProductionOrderCreator.prototype = {
         poGr.setValue('priority', priority);
         poGr.setValue('status', 'draft');
         poGr.setValue('active', true);
-        poGr.setValue('production_location', this.DEFAULT_PRODUCTION_LOCATION);
+        poGr.setValue('production_location', this._resolveProductionLocation());
         // fulfillment_location: left empty — the existing BR
         // "Propagate Warehouse from Customer Order" handles this on insert
 
@@ -241,13 +264,13 @@ ProductionOrderCreator.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-04 19:20:58</sys_created_on>
         <sys_id>f2d60f2422694b4e8fd9e4871814e7f1</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>1</sys_mod_count>
         <sys_name>ProductionOrderCreator</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_script_include_f2d60f2422694b4e8fd9e4871814e7f1</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-04 19:20:58</sys_updated_on>
+        <sys_updated_on>2026-10-08 13:08:26</sys_updated_on>
     </sys_script_include>
 </record_update>

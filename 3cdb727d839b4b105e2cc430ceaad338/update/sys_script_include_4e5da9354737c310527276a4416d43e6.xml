@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.WhatIfScenarios</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>What-if scenarios: machine breakdown, workforce shortage, supplier delay, urgent order, quality issue</description>
+        <mobile_callable>false</mobile_callable>
+        <name>WhatIfScenarios</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * WhatIfScenarios
+ *
+ * Additional what-if scenario types for the existing WhatIfSimulationEngine (which keeps its own
+ * resource_down, capacity_reduction, quantity_change, material_shortage and schedule_shift):
+ *   machine_breakdown, workforce_shortage, supplier_delay, urgent_order, quality_issue.
+ * Every scenario returns trigger, affected records, impact, recommended action and proposals, and is stored as a
+ * Simulation Scenario whose proposal can be applied with AdaptiveRescheduler.applyScenario().
+ * Simulating never changes schedules or orders; only applying does.
+ */
+var WhatIfScenarios = Class.create();
+WhatIfScenarios.prototype = {
+    P: 'x_2056099_indust_0_',
+    DAY: 86400000,
+    TYPES: ['machine_breakdown', 'workforce_shortage', 'supplier_delay', 'urgent_order', 'quality_issue'],
+    RANK: { critical: 0, high: 1, medium: 2, low: 3 },
+
+    initialize: function() {
+        this.rs = new x_2056099_indust_0.AdaptiveRescheduler();
+        this.now = new GlideDateTime().getNumericValue();
+    },
+
+    supports: function(type) { return this.TYPES.indexOf(type) > -1; },
+
+    simulate: function(params) {
+        switch (params.scenario_type) {
+            case 'machine_breakdown': return this._machineBreakdown(params);
+            case 'workforce_shortage': return this._workforceShortage(params);
+            case 'supplier_delay': return this._supplierDelay(params);
+            case 'urgent_order': return this._urgentOrder(params);
+            case 'quality_issue': return this._qualityIssue(params);
+        }
+        return this._fail('Unsupported scenario_type: ' + params.scenario_type);
+    },
+
+    // ---------------------------------------------------------------- A. machine breakdown
+    _machineBreakdown: function(p) {
+        var id = p.machine_id || p.machine_sys_id || '';
+        var m = new GlideRecord(this.P + 'machine');
+        if (!id || !(m.get(id) || m.get('number', id) || m.get('name', id))) return this._fail('machine_id (sys_id, number or name) is required for machine_breakdown');
+        return this.rs.propose(m.getUniqueValue(), { simulate_only: false });
+    },
+
+    // ---------------------------------------------------------------- C. workforce shortage
+    _workforceShortage: function(p) {
+        var pc = new x_2056099_indust_0.PlanningConstraints();
+        var team = p.team || '', absent = parseInt(p.absent_count, 10);
+        if (!team && p.resource_id) team = pc.workforce(p.resource_id).team;
+        if (!team) return this._fail('team (e.g. "Production Operations") or resource_id is required for workforce_shortage');
+        var headcount = 0;
+        var h = new GlideRecord(this.P + 'hr_profile');
+        h.addQuery('employment_status', 'active');
+        h.query();
+        while (h.next()) {
+            var grp = h.getValue('assignment_group') || '';
+            if (/^[0-9a-f]{32}$/.test(grp)) grp = h.getDisplayValue('assignment_group');
+            if (grp == team) headcount++;
+        }
+        if (!headcount) return this._fail('No active workforce found in team "' + team + '"');
+        if (isNaN(absent) || absent < 1) absent = 1;
+        absent = Math.min(absent, headcount);
+        var factor = (headcount - absent) / headcount;
+        var types = [];
+        for (var t in pc.TEAM) if (pc.TEAM[t] == team) types.push(t);
+        var scheds = this._openSchedules('production_resource.resource_typeIN' + types.join(','));
+        var alt = this._bestResource(types);
+        var proposals = [], stat = this._stat();
+        for (var i = 0; i < scheds.length; i++) {
+            var s = scheds[i], pr = this._base(s);
+            var days = this.rs._days(s.remaining, s.capacity, s.efficiency);
+            var slowEnd = Math.max(this.now, s.start || this.now) + (factor > 0 ? Math.ceil(days / factor) : days + 14) * this.DAY;
+            pr.unmitigated_end = slowEnd;
+            if (factor <= 0.5 && alt && alt.sys_id != s.resource) {
+                pr.action = 'reassign_resource'; pr.to_resource = alt.sys_id; pr.to_resource_name = alt.name; pr.resource_changed = true;
+                pr.proposed_start = Math.max(this.now, s.start || this.now);
+                pr.proposed_end = pr.proposed_start + this.rs._days(s.remaining, alt.capacity, alt.efficiency) * this.DAY;
+                pr.strategy_label = 'Move to ' + alt.name + ' (staffed by another team)';
+                pr.reason = team + ' is down to ' + (headcount - absent) + ' of ' + headcount + ' people; ' + alt.name + ' is staffed by another team and available.';
+            } else {
+                pr.action = 'shift'; pr.proposed_start = Math.max(this.now, s.start || this.now); pr.proposed_end = slowEnd;
+                pr.strategy_label = 'Extend schedule for reduced crew';
+                pr.reason = team + ' is down to ' + (headcount - absent) + ' of ' + headcount + ' people; capacity falls to ' + Math.round(factor * 100) + '%.';
+            }
+            this._score(pr, s, stat);
+            proposals.push(pr);
+        }
+        return this._finish({
+            type: 'workforce_shortage', name: 'Workforce Shortage: ' + team, category: 'workforce_shortage', target: team,
+            trigger: absent + ' of ' + headcount + ' people unavailable in ' + team,
+            strategy: proposals.length ? 'Extend or move ' + proposals.length + ' schedule(s) staffed by ' + team : 'No open schedules are staffed by ' + team,
+            affected: scheds, proposals: proposals, stat: stat,
+            impact: { team: team, headcount: headcount, absent: absent, capacity_pct: Math.round(factor * 100) }
+        });
+    },
+
+    // ---------------------------------------------------------------- D. supplier delay
+    _supplierDelay: function(p) {
+        var mat = this._material(p.material_id);
+        if (!mat) return this._fail('material_id (sys_id or material ID) is required for supplier_delay');
+        var delay = parseInt(p.delay_days, 10) || 7;
+        var mi = new x_2056099_indust_0.MaterialIntelligence();
+        var stock = mi._stock(mat.getUniqueValue()).available;
+        var orders = this._ordersUsing(mat.getUniqueValue());
+        var proposals = [], stat = this._stat(), covered = 0, remainingStock = stock;
+        for (var i = 0; i < orders.length; i++) {
+            var o = orders[i], pr = this._base(o);
+            pr.material_status = remainingStock >= o.required ? 'covered by stock' : 'waits for supplier';
+            if (remainingStock >= o.required) {
+                remainingStock -= o.required; covered++;
+                pr.action = 'none'; pr.proposed_start = o.start; pr.proposed_end = o.end; pr.unmitigated_end = o.end;
+                pr.strategy_label = 'No change - covered by stock on hand';
+                pr.reason = 'Needs ' + o.required + ' ' + mat.getValue('name') + '; stock on hand covers it.';
+            } else {
+                var days = Math.max(1, Math.ceil(((o.end || 0) - (o.start || 0)) / this.DAY)) || 1;
+                pr.action = o.sys_id ? 'shift' : 'hold';
+                pr.proposed_start = Math.max(this.now, o.start || this.now) + delay * this.DAY;
+                pr.proposed_end = pr.proposed_start + days * this.DAY;
+                pr.unmitigated_end = pr.proposed_end;
+                pr.strategy_label = o.sys_id ? 'Shift schedule by ' + delay + ' day(s)' : 'Hold until material arrives';
+                pr.reason = 'Needs ' + o.required + ' ' + mat.getValue('name') + ' but only ' + Math.max(remainingStock, 0) + ' remain after higher-priority orders; supplier is ' + delay + ' day(s) late.';
+            }
+            this._score(pr, o, stat);
+            proposals.push(pr);
+        }
+        return this._finish({
+            type: 'supplier_delay', name: 'Supplier Delay: ' + mat.getValue('name'), category: 'supplier_delay', target: mat.getValue('name'),
+            trigger: 'Supply of ' + mat.getValue('name') + ' delayed by ' + delay + ' day(s)',
+            strategy: orders.length ? covered + ' order(s) covered by stock; shift ' + (orders.length - covered) + ' order(s) by ' + delay + ' day(s), highest priority served first' :
+                'No open orders use this material',
+            affected: orders, proposals: proposals, stat: stat,
+            impact: { material: mat.getValue('name'), delay_days: delay, stock_available: stock, orders_using_material: orders.length, orders_covered_by_stock: covered }
+        });
+    },
+
+    // ---------------------------------------------------------------- E. urgent customer order
+    _urgentOrder: function(p) {
+        var prod = this._material(p.finished_product || p.material_id);
+        var qty = parseFloat(p.quantity) || 0;
+        if (!prod || qty <= 0) return this._fail('finished_product and quantity are required for urgent_order');
+        var due = p.due_date ? new GlideDateTime(p.due_date).getNumericValue() : this.now + 3 * this.DAY;
+        var res = this._bestResource();
+        if (!res) return this._fail('No production resource is available');
+        var days = this.rs._days(qty, res.capacity, res.efficiency);
+        var urgentEnd = this.now + days * this.DAY;
+        var scheds = this._openSchedules('production_resource=' + res.sys_id);
+        var proposals = [], stat = this._stat();
+        for (var i = 0; i < scheds.length; i++) {
+            var s = scheds[i];
+            if ((this.RANK[s.priority] === undefined ? 2 : this.RANK[s.priority]) <= 0) continue;   // critical work is not displaced
+            if (s.status == 'in_progress' || (s.start && s.start > urgentEnd)) continue;            // running or not overlapping
+            var pr = this._base(s);
+            pr.action = 'shift';
+            pr.proposed_start = Math.max(s.start || this.now, this.now) + days * this.DAY;
+            pr.proposed_end = (s.end || pr.proposed_start) + days * this.DAY;
+            pr.unmitigated_end = s.end;
+            pr.strategy_label = 'Shift by ' + days + ' day(s) behind the urgent order';
+            pr.reason = 'Urgent order for ' + qty + ' x ' + prod.getValue('name') + ' takes ' + res.name + ' for ' + days + ' day(s); this ' + s.priority + '-priority schedule moves behind it.';
+            this._score(pr, s, stat);
+            proposals.push(pr);
+        }
+        var mi = new x_2056099_indust_0.MaterialIntelligence();
+        var probe = new GlideRecord(this.P + 'production_order');
+        probe.initialize(); probe.setValue('finished_product', prod.getUniqueValue()); probe.setValue('quantity_planned', qty); probe.setValue('quantity_produced', 0);
+        var plan = mi.planForOrder(probe);
+        return this._finish({
+            type: 'urgent_order', name: 'Urgent Order: ' + qty + ' x ' + prod.getValue('name'), category: 'urgent_order_ingestion', target: prod.getValue('name'),
+            trigger: 'Urgent order for ' + qty + ' x ' + prod.getValue('name') + ' due ' + this.rs._date(due),
+            strategy: 'Run the urgent order on ' + res.name + ' first (' + days + ' day(s), finishes ' + this.rs._date(urgentEnd) + '); shift ' + proposals.length + ' lower-priority schedule(s)',
+            affected: scheds, proposals: proposals, stat: stat,
+            impact: { resource: res.name, days_needed: days, urgent_finish: this.rs._date(urgentEnd), meets_due_date: urgentEnd <= due, conflicts: proposals.length,
+                material_status: plan.status, material_shortages: plan.shortage_components || 0 }
+        });
+    },
+
+    // ---------------------------------------------------------------- F. quality issue
+    _qualityIssue: function(p) {
+        var mat = this._material(p.material_id), batchId = p.batch_id || '';
+        var batch = new GlideRecord(this.P + 'inv_batch');
+        if (batchId && (batch.get(batchId) || batch.get('batch_number', batchId))) {
+            if (!mat) mat = batch.material_product.getRefRecord();
+        } else {
+            batchId = '';
+        }
+        if (!mat || !mat.isValidRecord()) return this._fail('material_id or batch_id is required for quality_issue');
+        var units = 0, lines = 0;
+        var st = new GlideRecord(this.P + 'inv_stock');
+        st.addQuery('material_product', mat.getUniqueValue());
+        if (batchId) st.addQuery('batch_lot', batch.getUniqueValue());
+        st.addQuery('active', true);
+        st.query();
+        while (st.next()) { lines++; units += parseFloat(st.getValue('available_quantity')) || 0; }
+        var orders = this._ordersUsing(mat.getUniqueValue());
+        var proposals = [], stat = this._stat();
+        for (var i = 0; i < orders.length; i++) {
+            var o = orders[i], pr = this._base(o);
+            pr.action = 'hold';
+            pr.proposed_start = o.start; pr.proposed_end = o.end ? o.end + 2 * this.DAY : 0; pr.unmitigated_end = pr.proposed_end;
+            pr.strategy_label = 'Hold order pending inspection';
+            pr.material_status = 'quality hold';
+            pr.reason = 'Quality issue on ' + mat.getValue('name') + (batchId ? ' batch ' + batch.getValue('batch_number') : '') + '; hold until inspection and corrective action are complete.';
+            this._score(pr, o, stat);
+            proposals.push(pr);
+        }
+        return this._finish({
+            type: 'quality_issue', name: 'Quality Issue: ' + mat.getValue('name'), category: 'quality_issue', target: mat.getValue('name'),
+            trigger: 'Quality issue detected on ' + mat.getValue('name') + (batchId ? ' (batch ' + batch.getValue('batch_number') + ')' : ''),
+            strategy: 'Block ' + units + ' unit(s) on ' + lines + ' stock line(s) and hold ' + proposals.length + ' production order(s) until inspected',
+            affected: orders, proposals: proposals, stat: stat,
+            impact: { material: mat.getValue('name'), batch: batchId ? batch.getValue('batch_number') : '', stock_lines: lines, units_at_risk: units, orders_at_risk: orders.length },
+            block_batch: batchId ? batch.getUniqueValue() : '', block_material: batchId ? '' : mat.getUniqueValue()
+        });
+    },
+
+    // ---------------------------------------------------------------- shared
+    _openSchedules: function(encoded) {
+        var rows = [];
+        var s = new GlideRecord(this.P + 'prod_sched');
+        s.addQuery('status', 'NOT IN', this.rs.CLOSED_SCHED);
+        if (encoded) s.addEncodedQuery(encoded);
+        s.query();
+        while (s.next()) {
+            var po = s.production_order.getRefRecord();
+            if (!po.isValidRecord() || po.getValue('status') == 'completed' || po.getValue('status') == 'cancelled') continue;
+            var planned = parseFloat(s.getValue('planned_quantity')) || 0, rem = parseFloat(po.getValue('quantity_remaining'));
+            rows.push({
+                sys_id: s.getUniqueValue(), number: s.getValue('number') || '', status: s.getValue('status'), po_sys_id: po.getUniqueValue(), po_number: po.getValue('number'),
+                customer: po.customer_order.customer.getDisplayValue() + '', priority: po.getValue('priority') || 'medium', remaining: isNaN(rem) || rem <= 0 ? planned : rem,
+                resource: s.getValue('production_resource') || '', resource_name: s.getDisplayValue('production_resource'), machine_name: s.getDisplayValue('machine'),
+                capacity: parseFloat(s.production_resource.capacity_per_day + '') || 1, efficiency: parseFloat(s.production_resource.efficiency_percentage + '') || 100,
+                start: this.rs._ms(s.getValue('planned_start')), end: this.rs._ms(s.getValue('planned_end')),
+                due: this.rs._ms(po.customer_order.requested_delivery_date + '' || po.getValue('planned_end_date') || '')
+            });
+        }
+        return this._sort(rows);
+    },
+
+    /** Open production orders that consume a material (BOM of their product or material requirement rows), with their schedule if any. */
+    _ordersUsing: function(material) {
+        var mi = new x_2056099_indust_0.MaterialIntelligence(), rows = [];
+        var po = new GlideRecord(this.P + 'production_order');
+        po.addQuery('status', 'NOT IN', 'completed,cancelled');
+        po.query();
+        while (po.next()) {
+            var plan = mi.planForOrder(po), need = 0;
+            for (var i = 0; i < plan.components.length; i++) if (plan.components[i].material == material) need += plan.components[i].required_quantity;
+            if (po.getValue('finished_product') == material) need += plan.quantity_to_produce;
+            if (need <= 0) continue;
+            var s = new GlideRecord(this.P + 'prod_sched');
+            s.addQuery('production_order', po.getUniqueValue());
+            s.addQuery('status', 'NOT IN', this.rs.CLOSED_SCHED);
+            s.setLimit(1);
+            s.query();
+            var has = s.next();
+            rows.push({
+                sys_id: has ? s.getUniqueValue() : '', number: has ? (s.getValue('number') || '') : '', status: has ? s.getValue('status') : '',
+                po_sys_id: po.getUniqueValue(), po_number: po.getValue('number'), po_status: po.getValue('status'),
+                customer: po.customer_order.customer.getDisplayValue() + '', priority: po.getValue('priority') || 'medium', required: need, remaining: plan.quantity_to_produce,
+                resource: has ? s.getValue('production_resource') : po.getValue('assigned_resource'), resource_name: has ? s.getDisplayValue('production_resource') : po.getDisplayValue('assigned_resource'),
+                machine_name: has ? s.getDisplayValue('machine') : '',
+                start: this.rs._ms(has ? s.getValue('planned_start') : po.getValue('planned_start_date')), end: this.rs._ms(has ? s.getValue('planned_end') : po.getValue('planned_end_date')),
+                due: this.rs._ms(po.customer_order.requested_delivery_date + '' || po.getValue('planned_end_date') || '')
+            });
+        }
+        return this._sort(rows);
+    },
+
+    _sort: function(rows) {
+        var rank = this.RANK;
+        rows.sort(function(x, y) {
+            var a = rank[x.priority] === undefined ? 2 : rank[x.priority], b = rank[y.priority] === undefined ? 2 : rank[y.priority];
+            return (a - b) || ((x.due || 9e15) - (y.due || 9e15));
+        });
+        return rows;
+    },
+
+    _bestResource: function(excludeTypes) {
+        var best = null;
+        var r = new GlideRecord(this.P + 'prod_res');
+        r.addQuery('status', 'available');
+        r.addQuery('maintenance_required', false);
+        if (excludeTypes && excludeTypes.length) r.addQuery('resource_type', 'NOT IN', excludeTypes.join(','));
+        r.query();
+        while (r.next()) {
+            var c = this.rs._res(r);
+            if (!best || c.capacity * c.efficiency > best.capacity * best.efficiency) best = c;
+        }
+        return best;
+    },
+
+    _material: function(id) {
+        var m = new GlideRecord(this.P + 'mat_master');
+        return id && (m.get(id) || m.get('material_product_id', id)) ? m : null;
+    },
+
+    _base: function(s) {
+        return { schedule: s.sys_id, schedule_number: s.number, order: s.po_sys_id, order_number: s.po_number, customer: s.customer, priority: s.priority,
+            quantity: s.remaining, from_resource: s.resource, from_resource_name: s.resource_name, from_machine_name: s.machine_name || s.resource_name,
+            original_start: s.start, original_end: s.end, due: s.due, material_status: s.material_status || '' };
+    },
+    _stat: function() { return { n: 0, before: 0, unmitigated: 0, after: 0 }; },
+    _score: function(pr, s, stat) {
+        pr.delay_unmitigated_days = s.due && pr.unmitigated_end ? Math.max(0, Math.ceil((pr.unmitigated_end - s.due) / this.DAY)) : 0;
+        pr.delay_after_days = s.due && pr.proposed_end ? Math.max(0, Math.ceil((pr.proposed_end - s.due) / this.DAY)) : 0;
+        pr.delay_recovered_days = Math.max(0, pr.delay_unmitigated_days - pr.delay_after_days);
+        pr.on_time = pr.delay_after_days === 0;
+        stat.n++;
+        if (!s.due || (s.end || 0) <= s.due) stat.before++;
+        if (pr.delay_unmitigated_days === 0) stat.unmitigated++;
+        if (pr.on_time) stat.after++;
+    },
+
+    _finish: function(d) {
+        var n = d.stat.n || 1, actionable = 0;
+        for (var i = 0; i < d.proposals.length; i++) {
+            var p = d.proposals[i];
+            if (p.action == 'reassign_resource') {       // applied as a schedule update on the same machine with a new resource
+                p.action = 'shift'; p.shift_resource = true;
+            }
+            if (p.action != 'none') actionable++;
+        }
+        var apply = [];
+        for (var j = 0; j < d.proposals.length; j++) if (d.proposals[j].action != 'none') apply.push(d.proposals[j]);
+        var id = this.rs.storeScenario({
+            name: d.name, category: d.category, target: d.target, parameter: d.trigger, strategy: d.strategy, impacted: d.affected.length,
+            baseline: Math.round(d.stat.before / n * 100), unmitigated: Math.round(d.stat.unmitigated / n * 100), optimized: Math.round(d.stat.after / n * 100),
+            status: 'evaluated', payload: this._payload(d, apply)
+        }, d.proposals);
+        return {
+            success: true, scenario_type: d.type, scenario_sys_id: id, trigger: d.trigger, affected_records: d.affected, impact: d.impact,
+            recommended_action: d.strategy, proposals: d.proposals, can_apply: actionable > 0,
+            message: d.affected.length + ' record(s) affected. ' + d.strategy + '.'
+        };
+    },
+
+    _payload: function(d, apply) {
+        var p = { type: d.type, applied: false, proposals: apply };
+        if (d.block_batch) p.block_batch = d.block_batch;
+        if (d.block_material) p.block_material = d.block_material;
+        return p;
+    },
+
+    _fail: function(msg) { return { success: false, error: msg }; },
+
+    type: 'WhatIfScenarios'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 17:34:51</sys_created_on>
+        <sys_id>4e5da9354737c310527276a4416d43e6</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>WhatIfScenarios</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_4e5da9354737c310527276a4416d43e6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 17:55:38</sys_updated_on>
+    </sys_script_include>
+</record_update>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>POST</http_method>
+        <name>Adaptive Rescheduling</name>
+        <operation_script><![CDATA[(function process(request, response) {
+    var ROLES = ['production_planner', 'production_manager', 'production_supervisor', 'plant_manager', 'operations_manager'];
+    var ok = gs.hasRole('admin');
+    for (var i = 0; i < ROLES.length && !ok; i++) ok = gs.hasRole('x_2056099_indust_0.' + ROLES[i]);
+    if (!ok) { response.setStatus(403); response.setBody({ success: false, error: 'Insufficient role for this operation' }); return; }
+    var body = {};
+    try { body = typeof request.body.data === 'string' ? JSON.parse(request.body.data) : (request.body.data || {}); } catch (e) { body = {}; }
+    var rs = new x_2056099_indust_0.AdaptiveRescheduler(), result;
+    if (body.action == 'apply') {
+        result = rs.applyScenario(body.scenario_sys_id);
+    } else {
+        var m = new GlideRecord('x_2056099_indust_0_machine'), id = body.machine_id || body.machine_sys_id || '';
+        result = id && (m.get(id) || m.get('number', id) || m.get('name', id)) ? rs.propose(m.getUniqueValue()) : { success: false, error: 'machine_id (sys_id, number or name) is required' };
+    }
+    if (!result.success) response.setStatus(400);
+    response.setBody(result);
+})(request, response);]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/operator_api/reschedule</operation_uri>
+        <produces>application/json,application/xml,text/xml</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/reschedule</relative_path>
+        <request_example/>
+        <requires_acl_authorization>false</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 17:35:25</sys_created_on>
+        <sys_id>2e7d25754737c310527276a4416d432a</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>Adaptive Rescheduling</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_2e7d25754737c310527276a4416d432a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 18:07:24</sys_updated_on>
+        <web_service_definition display_value="Operator API">7acd7c17725147d9a550963b7da0fe53</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

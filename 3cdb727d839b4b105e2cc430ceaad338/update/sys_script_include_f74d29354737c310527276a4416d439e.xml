@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.MaterialIntelligence</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>BOM x order quantity material planning and stock classification (excess / obsolete)</description>
+        <mobile_callable>false</mobile_callable>
+        <name>MaterialIntelligence</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * MaterialIntelligence
+ *
+ * Material planning against the real order quantity (BOM quantity x production quantity), plus stock
+ * classification (shortage / low / healthy / excess / obsolete) on the existing inventory tables.
+ * Extends the existing reservation and shortage-alert logic; it does not replace it.
+ */
+var MaterialIntelligence = Class.create();
+MaterialIntelligence.prototype = {
+    P: 'x_2056099_indust_0_',
+    AUTO_RESERVATION: 'Automatically generated material reservation request from Production Order material availability check',
+    EXCESS_FACTOR: 3,      // on hand above 3x the larger of reorder level / safety stock
+    OBSOLETE_DAYS: 180,    // no movement for this long and no open demand
+
+    initialize: function() {},
+
+    /**
+     * Material plan for one production order.
+     * required = BOM quantity per unit x quantity still to produce; compared with available, reserved and safety stock.
+     */
+    planForOrder: function(po) {
+        if (typeof po == 'string') {
+            var gr = new GlideRecord(this.P + 'production_order');
+            if (!gr.get(po)) return { success: false, error: 'Production order not found: ' + po };
+            po = gr;
+        }
+        var planned = parseFloat(po.getValue('quantity_planned')) || 0;
+        var produced = parseFloat(po.getValue('quantity_produced')) || 0;
+        var qty = Math.max(planned - produced, 0);
+        var lines = this._bomLines(po), components = [], shortages = 0, belowSafety = 0;
+        for (var i = 0; i < lines.length; i++) {
+            var l = lines[i], s = this._stock(l.material);
+            var required = Math.round(l.per_unit * qty * 1000) / 1000;
+            var c = {
+                material: l.material, material_id: l.material_id, name: l.name, uom: l.uom, bom_quantity_per_unit: l.per_unit,
+                order_quantity: qty, required_quantity: required, available_quantity: s.available, reserved_quantity: s.reserved,
+                safety_stock: l.safety, shortage_quantity: Math.max(0, Math.round((required - s.available) * 1000) / 1000),
+                blocked_quantity: s.blocked, lead_time_days: this._leadTime(l.material)
+            };
+            c.status = c.shortage_quantity > 0 ? 'shortage' : (s.available - required < l.safety ? 'below_safety_stock' : 'available');
+            if (c.status == 'shortage') shortages++;
+            if (c.status == 'below_safety_stock') belowSafety++;
+            components.push(c);
+        }
+        return {
+            success: true, production_order: po.getValue('number'), finished_product: po.getDisplayValue('finished_product'),
+            order_quantity: planned, quantity_to_produce: qty, bom: lines.length ? lines[0].bom : '',
+            status: !components.length ? 'no_bom' : (shortages ? 'shortage' : (belowSafety ? 'below_safety_stock' : 'available')),
+            shortage_components: shortages, below_safety_components: belowSafety, components: components
+        };
+    },
+
+    /**
+     * Before-insert hook for inventory requests: the material-check flow requests the BOM quantity per unit.
+     * Scale it to the production order quantity and flag a real shortage against the selected stock line.
+     */
+    scaleReservation: function(req) {
+        if (req.getValue('request_type') != 'material_reservation' || (req.getValue('reason') || '').indexOf(this.AUTO_RESERVATION) !== 0) {
+            return;
+        }
+        var po = new GlideRecord(this.P + 'production_order');
+        var ref = req.getValue('related_production_order');
+        if (!ref || !(po.get(ref) || po.get('number', ref))) {
+            return;
+        }
+        var orderQty = parseFloat(po.getValue('quantity_planned')) || 0;
+        var perUnit = parseFloat(req.getValue('quantity_requested')) || 0;
+        if (orderQty <= 1 || perUnit <= 0) {
+            return;
+        }
+        var required = Math.round(perUnit * orderQty * 1000) / 1000;
+        req.setValue('quantity_requested', required);
+        var stock = this._stock(req.getValue('material_product'));
+        var line = new GlideRecord(this.P + 'inv_stock');
+        var onLine = req.getValue('related_inventory_stock') && line.get(req.getValue('related_inventory_stock')) ? (parseFloat(line.getValue('available_quantity')) || 0) : stock.available;
+        var note = 'Required ' + required + ' = BOM ' + perUnit + ' x order quantity ' + orderQty + ' for ' + po.getValue('number') + '.';
+        if (required > stock.available) {
+            req.setValue('priority', 'critical');
+            note += ' SHORTAGE of ' + (Math.round((required - stock.available) * 1000) / 1000) + ' (available across all stock: ' + stock.available + ').';
+            this._shortageAlert(req.getValue('material_product'), required, stock.available, po);
+        } else if (required > onLine) {
+            note += ' The selected stock line holds only ' + onLine + '; the balance must come from other locations (total available ' + stock.available + ').';
+        }
+        req.setValue('reason', (note + ' ' + this.AUTO_RESERVATION + '.').substring(0, 1000));
+    },
+
+    /**
+     * The reservation flow writes the request quantity straight into inv_stock.reserved_quantity (overwriting what
+     * other orders reserved). Recompute the line from its reservation requests: reserved = sum of approved / in-progress /
+     * completed reservations whose production order is still open; available = total - reserved.
+     * Lines that never had a reservation request are left untouched.
+     */
+    recomputeReserved: function(stockSysId) {
+        var stock = new GlideRecord(this.P + 'inv_stock');
+        if (!stockSysId || !stock.get(stockSysId)) return null;
+        var sum = 0, any = false;
+        var rq = new GlideRecord(this.P + 'inv_req');
+        rq.addQuery('related_inventory_stock', stockSysId);
+        rq.addQuery('request_type', 'material_reservation');
+        rq.query();
+        while (rq.next()) {
+            any = true;
+            var st = rq.getValue('status');
+            if (st != 'approved' && st != 'in_progress' && st != 'completed') continue;
+            var po = new GlideRecord(this.P + 'production_order'), ref = rq.getValue('related_production_order');
+            if (!ref || !(po.get(ref) || po.get('number', ref))) continue;
+            if (po.getValue('status') == 'completed' || po.getValue('status') == 'cancelled') continue;
+            sum += parseFloat(rq.getValue('quantity_requested')) || 0;
+        }
+        if (!any) return null;
+        sum = Math.round(sum * 1000) / 1000;
+        var total = parseFloat(stock.getValue('total_quantity')) || 0;
+        var available = Math.max(Math.round((total - sum) * 1000) / 1000, 0);
+        if ((parseFloat(stock.getValue('reserved_quantity')) || 0) != sum || (parseFloat(stock.getValue('available_quantity')) || 0) != available) {
+            stock.setValue('reserved_quantity', sum);
+            stock.setValue('available_quantity', available);
+            stock.setValue('last_updated', new GlideDateTime());
+            stock.setWorkflow(false);
+            stock.update();
+        }
+        return { stock: stock.getValue('number'), reserved: sum, available: available };
+    },
+
+    /** Recompute every stock line reserved for one production order (called when the order completes or is cancelled). */
+    recomputeForOrder: function(po) {
+        var seen = {};
+        var rq = new GlideRecord(this.P + 'inv_req');
+        rq.addQuery('request_type', 'material_reservation');
+        rq.addQuery('related_production_order', 'IN', po.getUniqueValue() + ',' + po.getValue('number'));
+        rq.addNotNullQuery('related_inventory_stock');
+        rq.query();
+        while (rq.next()) {
+            var id = rq.getValue('related_inventory_stock');
+            if (!seen[id]) { seen[id] = true; this.recomputeReserved(id); }
+        }
+    },
+
+    /** Classify every stocked material; optional production order adds its material plan. */
+    classifyStock: function() {
+        var P = this.P, mats = {}, demand = this._openDemand(), nowMs = new GlideDateTime().getNumericValue(), today = new GlideDateTime().getValue().substring(0, 10);
+        var s = new GlideRecord(P + 'inv_stock');
+        s.addNotNullQuery('material_product');
+        s.addQuery('active', true);
+        s.query();
+        while (s.next()) {
+            var id = s.getValue('material_product');
+            if (!mats[id]) mats[id] = { material: id, on_hand: 0, available: 0, reserved: 0, expired: 0, last_movement: 0, lines: 0 };
+            var m = mats[id], av = parseFloat(s.getValue('available_quantity')) || 0;
+            m.lines++; m.on_hand += parseFloat(s.getValue('total_quantity')) || 0; m.reserved += parseFloat(s.getValue('reserved_quantity')) || 0;
+            if (s.getValue('status') == 'available') m.available += av;
+            if ((s.getValue('expiry_date') && s.getValue('expiry_date') < today) || s.getValue('status') == 'expired') m.expired += av;
+            var moved = s.getValue('last_updated') ? new GlideDateTime(s.getValue('last_updated')).getNumericValue() : 0;
+            if (moved > m.last_movement) m.last_movement = moved;
+        }
+        var out = [], counts = { shortage: 0, low: 0, healthy: 0, excess: 0, obsolete: 0 }, excessQty = 0, obsoleteQty = 0;
+        var mm = new GlideRecord(P + 'mat_master');
+        mm.query();
+        while (mm.next()) {
+            var r = mats[mm.getUniqueValue()];
+            if (!r) continue;
+            var safety = parseFloat(mm.getValue('safety_stock')) || 0, reorder = parseFloat(mm.getValue('reorder_level')) || 0, target = Math.max(safety, reorder);
+            var idle = r.last_movement ? Math.floor((nowMs - r.last_movement) / 86400000) : null;
+            var cls = 'healthy', why = '';
+            if (r.expired > 0) { cls = 'obsolete'; why = r.expired + ' units past expiry date'; }
+            else if (r.available > 0 && !demand[r.material] && idle !== null && idle > this.OBSOLETE_DAYS) { cls = 'obsolete'; why = 'no movement for ' + idle + ' days and no open demand'; }
+            else if (r.available < safety) { cls = 'shortage'; why = 'below safety stock of ' + safety; }
+            else if (r.available < reorder) { cls = 'low'; why = 'below reorder level of ' + reorder; }
+            else if (target > 0 && r.available > target * this.EXCESS_FACTOR) { cls = 'excess'; why = 'more than ' + this.EXCESS_FACTOR + 'x the reorder/safety level of ' + target; }
+            counts[cls]++;
+            if (cls == 'excess') excessQty += r.available - target;
+            if (cls == 'obsolete') obsoleteQty += r.expired || r.available;
+            out.push({ material: r.material, material_id: mm.getValue('material_product_id'), name: mm.getValue('name'), available: r.available, reserved: r.reserved,
+                on_hand: r.on_hand, safety_stock: safety, reorder_level: reorder, open_demand: demand[r.material] || 0, days_since_movement: idle,
+                classification: cls, reason: why, excess_quantity: cls == 'excess' ? r.available - target : 0 });
+        }
+        var order = { obsolete: 0, shortage: 1, low: 2, excess: 3, healthy: 4 };
+        out.sort(function(a, b) { return (order[a.classification] - order[b.classification]) || (a.name < b.name ? -1 : 1); });
+        return { success: true, materials: out.length, counts: counts, excess_quantity: Math.round(excessQty), obsolete_quantity: Math.round(obsoleteQty), items: out };
+    },
+
+    // ---------------------------------------------------------------- helpers
+    /** BOM lines of the order's finished product (active customer BOM); falls back to the order's material requirement rows. */
+    _bomLines: function(po) {
+        var P = this.P, lines = [], planned = parseFloat(po.getValue('quantity_planned')) || 1;
+        var bom = new GlideRecord(P + 'customer_bom');
+        bom.addQuery('finished_product', po.getValue('finished_product'));
+        bom.addQuery('status', 'active');
+        bom.orderByDesc('sys_updated_on');
+        bom.setLimit(1);
+        bom.query();
+        if (bom.next()) {
+            var bl = new GlideRecord(P + 'customer_bom_line');
+            bl.addQuery('customer_bom', bom.getUniqueValue());
+            bl.orderBy('line_number');
+            bl.query();
+            while (bl.next()) lines.push(this._line(bl.material_product.getRefRecord(), parseFloat(bl.getValue('quantity_required')) || 0, bom.getValue('number')));
+        }
+        if (!lines.length) {
+            var pm = new GlideRecord(P + 'production_material');
+            pm.addQuery('production_order', po.getUniqueValue());
+            pm.query();
+            while (pm.next()) lines.push(this._line(pm.material_product.getRefRecord(), (parseFloat(pm.getValue('required_quantity')) || 0) / planned, 'material requirements'));
+        }
+        return lines;
+    },
+    _line: function(mat, perUnit, bom) {
+        return { material: mat.getUniqueValue(), material_id: mat.getValue('material_product_id'), name: mat.getValue('name'), uom: mat.getValue('unit_of_measure'),
+            safety: parseFloat(mat.getValue('safety_stock')) || 0, per_unit: perUnit, bom: bom };
+    },
+
+    _stock: function(material) {
+        var out = { available: 0, reserved: 0, blocked: 0 };
+        var s = new GlideRecord(this.P + 'inv_stock');
+        s.addQuery('material_product', material);
+        s.addQuery('active', true);
+        s.query();
+        while (s.next()) {
+            var av = parseFloat(s.getValue('available_quantity')) || 0, st = s.getValue('status');
+            out.reserved += parseFloat(s.getValue('reserved_quantity')) || 0;
+            if (st == 'available' && s.batch_lot.status + '' != 'blocked') out.available += av; else out.blocked += av;
+        }
+        out.available = Math.round(out.available * 1000) / 1000;
+        return out;
+    },
+
+    _leadTime: function(material) {
+        var best = 0;
+        var t = new GlideRecord(this.P + 'supp_mat');
+        t.addQuery('material_product', material);
+        t.query();
+        while (t.next()) { var d = parseFloat(t.getValue('lead_time_days')) || 0; if (d && (!best || d < best)) best = d; }
+        if (best) return best;
+        t = new GlideRecord(this.P + 'supp_lead_time');
+        t.addQuery('material_product', material);
+        t.query();
+        while (t.next()) { var e = parseFloat(t.getValue('lead_time_days')) || 0; if (e && (!best || e < best)) best = e; }
+        return best;
+    },
+
+    /** Materials needed by open production orders (via their BOM), as material -> required quantity. */
+    _openDemand: function() {
+        var P = this.P, demand = {}, bomOf = {};
+        var po = new GlideRecord(P + 'production_order');
+        po.addQuery('status', 'NOT IN', 'completed,cancelled');
+        po.query();
+        while (po.next()) {
+            var fp = po.getValue('finished_product'), qty = Math.max((parseFloat(po.getValue('quantity_planned')) || 0) - (parseFloat(po.getValue('quantity_produced')) || 0), 0);
+            demand[fp] = (demand[fp] || 0) + qty;
+            if (bomOf[fp] === undefined) bomOf[fp] = this._bomLines(po);
+            for (var i = 0; i < bomOf[fp].length; i++) demand[bomOf[fp][i].material] = (demand[bomOf[fp][i].material] || 0) + bomOf[fp][i].per_unit * qty;
+        }
+        return demand;
+    },
+
+    _shortageAlert: function(material, required, available, po) {
+        var al = new GlideRecord(this.P + 'inv_alert');
+        al.addQuery('material_product', material);
+        al.addQuery('alert_type', 'material_shortage');
+        al.addQuery('related_production_order', po.getUniqueValue());
+        al.addQuery('status', 'NOT IN', 'resolved,dismissed');
+        al.setLimit(1);
+        al.query();
+        if (al.hasNext()) return;
+        al = new GlideRecord(this.P + 'inv_alert');
+        al.newRecord();
+        al.setValue('alert_type', 'material_shortage');
+        al.setValue('severity', 'high');
+        al.setValue('status', 'open');
+        al.setValue('material_product', material);
+        al.setValue('related_production_order', po.getUniqueValue());
+        al.setValue('current_quantity', available);
+        al.setValue('threshold_quantity', required);
+        al.setValue('alert_date', new GlideDateTime());
+        al.setValue('alert_message', 'Material shortage for ' + po.getValue('number') + ': required ' + required + ' (BOM x order quantity), available ' + available + '.');
+        al.insert();
+    },
+
+    type: 'MaterialIntelligence'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 17:34:41</sys_created_on>
+        <sys_id>f74d29354737c310527276a4416d439e</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>MaterialIntelligence</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_f74d29354737c310527276a4416d439e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 17:43:36</sys_updated_on>
+    </sys_script_include>
+</record_update>

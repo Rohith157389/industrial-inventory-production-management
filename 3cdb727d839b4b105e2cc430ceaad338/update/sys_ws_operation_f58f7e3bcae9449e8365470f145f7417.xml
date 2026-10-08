@@ -61,18 +61,16 @@
     // === STEP 1: BOM RESOLUTION ===
     var resolver = new x_2056099_indust_0.BomResolver();
     var bomR = resolver.resolveByProduct(fpId);
-    if (!bomR.success) { response.setBody({status:"NOT_FEASIBLE",product:prodName,product_id:prodId,requested_quantity:qty,requested_delivery_date:reqDateStr,reason:"No valid BOM found.",detail:bomR.message}); return; }
+    if (!bomR.success) { var _wh=null;var _wg=new GlideRecord(P+"inv_loc");_wg.addQuery("location_type","inventory_warehouse");_wg.addQuery("location_id","STARTSWITH","WH-");if(locParam)_wg.addQuery("location_id",locParam);_wg.setLimit(1);_wg.query();if(_wg.next())_wh={id:_wg.getValue("location_id"),city:_wg.getValue("city")||_wg.getValue("location_name")};var _reason=bomR.message||"No valid BOM found for this product.";response.setBody({status:"NOT_FEASIBLE",product:prodName,product_id:prodId,requested_quantity:qty,requested_delivery_date:reqDateStr,selected_location:_wh?_wh.city:"",selected_location_id:_wh?_wh.id:"",earliest_completion_date:"",proposed_delivery_date:"",delivery_status:_reason,reasons:[_reason],bom:{name:"",number:"",component_count:0},material_feasibility:{all_materials_feasible:false,summary:_reason,components:[]},capacity:{resource:"",effective_capacity_per_day:0,production_days:0}}); return; }
 
     // === STEP 2: RESOLVE WAREHOUSES ===
-    // FIX: Use location_type instead of active+STARTSWITH filter.
-    // Warehouses have active=0 but location_type=inventory_warehouse.
     var allWh = [];
     var whGr = new GlideRecord(P+"inv_loc");
     whGr.addQuery("location_type", "inventory_warehouse");
     whGr.addQuery("location_id", "STARTSWITH", "WH-");
     whGr.orderBy("location_id");
     whGr.query();
-    while (whGr.next()) allWh.push({sid:whGr.getUniqueValue(),id:whGr.getValue("location_id"),name:whGr.getValue("location_name")});
+    while (whGr.next()) allWh.push({sid:whGr.getUniqueValue(),id:whGr.getValue("location_id"),name:whGr.getValue("location_name"),city:whGr.getValue("city")||whGr.getValue("location_name")});
     var selWh = null;
     if (locParam) { for (var w=0;w<allWh.length;w++) if (allWh[w].id===locParam) { selWh=allWh[w]; break; } }
     if (!selWh && allWh.length>0) selWh = allWh[0];
@@ -88,11 +86,9 @@
       var cap = (parseFloat(resGr.getValue("capacity_per_day"))||1) * ((parseFloat(resGr.getValue("efficiency_percentage"))||100)/100);
       resources.push({name:resGr.getValue("resource_name"),id:resGr.getValue("resource_id"),cap:cap});
     }
-    // Bottleneck = lowest effective capacity
     resources.sort(function(a,b){return a.cap - b.cap;});
     var bottleneck = resources.length > 0 ? resources[0] : null;
 
-    // Check committed production schedule days
     var committedDays = 0;
     if (bottleneck) {
       var schedGr = new GlideRecord(P+"prod_sched");
@@ -122,13 +118,13 @@
       var required = Math.ceil(bomQty * qty * (1 + scrapPct/100));
       var remaining = required;
 
-      // --- 4a: Selected location stock (aggregated, demand-aware) ---
+      // --- 4a: Selected location stock ---
       var localStock = _getStock(ln.material_product, selWh.sid);
       var fromLocal = Math.min(localStock.available, remaining);
       remaining -= fromLocal;
       var localStatus = (remaining<=0) ? "LOCAL_STOCK_AVAILABLE" : "SHORTAGE";
 
-      // --- 4b: Other warehouses (alternate sources + split transfer) ---
+      // --- 4b: Other warehouses ---
       var transfers = [];
       var altDetails = [];
       for (var j=0; j<allWh.length; j++) {
@@ -161,7 +157,7 @@
         }
       }
 
-      // --- 4c: Incoming supply (po_line + inv_req) ---
+      // --- 4c: Incoming supply ---
       var incomingQty = 0;
       var incomingDetails = [];
       var poGr2 = new GlideRecord(P+"po_line");
@@ -371,7 +367,7 @@
       chk.setValue("product_name", prodName);
       chk.setValue("quantity", qty);
       chk.setValue("location_id", selWh.id);
-      chk.setValue("location_name", selWh.name);
+      chk.setValue("location_name", selWh.city || selWh.name);
       chk.setValue("requested_date", reqDateStr);
       chk.setValue("status", finalStatus === "FEASIBLE" ? "feasible" : finalStatus === "FEASIBLE_WITH_ALTERNATE_DATE" ? "feasible_alt" : "not_feasible");
       chk.setValue("bom_name", bomR.bom_name || "");
@@ -407,6 +403,12 @@
         }
         cg.setValue("transfer_qty", txfTotal2);
         cg.setValue("transfer_sources", txfSources.join(", "));
+        if (comp.transfers && comp.transfers.length > 0) {
+          for (var si = 0; si < Math.min(comp.transfers.length, 3); si++) {
+            cg.setValue("transfer_source_" + (si + 1), comp.transfers[si].location_name || "");
+            cg.setValue("transfer_quantity_" + (si + 1), comp.transfers[si].allocated || 0);
+          }
+        }
         cg.setValue("incoming_qty", comp.incoming || 0);
         cg.setValue("procurement_qty", comp.procurement || 0);
         cg.setValue("procurement_supplier", comp.procurement_supplier || "");
@@ -432,7 +434,7 @@
       proposed_delivery_date: proposedDate,
       additional_days: additionalDays,
       delivery_status: deliveryStatus,
-      selected_location: selWh.name,
+      selected_location: selWh.city || selWh.name,
       selected_location_id: selWh.id,
       grace_days: GRACE_DAYS,
       bom: {name:bomR.bom_name,number:bomR.bom_number||"",component_count:bomR.line_count},

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ws_operation">
+    <sys_ws_operation action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <consumes>application/json</consumes>
+        <consumes_customized>false</consumes_customized>
+        <default_operation_uri/>
+        <enforce_acl/>
+        <http_method>GET</http_method>
+        <name>Control Tower KPIs</name>
+        <operation_script><![CDATA[(function process(request, response) {
+    // Live control-tower KPIs for the desktop dashboard. Every value is counted from the tables at request time.
+    var P = 'x_2056099_indust_0_';
+    var now = new GlideDateTime().getNumericValue();
+
+    function count(table, query) {
+        var ga = new GlideAggregate(P + table);
+        if (query) ga.addEncodedQuery(query);
+        ga.addAggregate('COUNT');
+        ga.query();
+        return ga.next() ? parseInt(ga.getAggregate('COUNT'), 10) || 0 : 0;
+    }
+    function num(v) { var n = parseFloat(v); return isNaN(n) ? 0 : n; }
+    function ms(v) { return v ? new GlideDateTime(v).getNumericValue() : 0; }
+    function pct(a, b) { return b > 0 ? Math.round(a / b * 1000) / 10 : 0; }
+
+    var OPEN_ALERT = 'statusNOT INresolved,dismissed';
+    var out = { generated_at: new GlideDateTime().getDisplayValue() };
+
+    // ---- production orders
+    var po = new GlideRecord(P + 'production_order');
+    po.addQuery('status', '!=', 'cancelled');
+    po.query();
+    var orders = { total: 0, open: 0, in_production: 0, planned: 0, on_hold: 0, completed: 0, delayed: 0, at_risk: 0, quality_holds: 0 };
+    var plannedUnits = 0, producedUnits = 0;
+    while (po.next()) {
+        var st = po.getValue('status');
+        orders.total++;
+        if (st == 'completed') { orders.completed++; continue; }
+        orders.open++;
+        if (st == 'in_production') { orders.in_production++; plannedUnits += num(po.getValue('quantity_planned')); producedUnits += num(po.getValue('quantity_produced')); }
+        else if (st == 'on_hold') orders.on_hold++;
+        else orders.planned++;
+        if ((po.getValue('notes') || '').indexOf('[QUALITY HOLD ') > -1 && st == 'on_hold') orders.quality_holds++;
+        var remaining = Math.max(num(po.getValue('quantity_planned')) - num(po.getValue('quantity_produced')), 0);
+        var due = ms(po.getValue('planned_end_date')), cap = num(po.getValue('required_capacity_per_day')) || num(po.assigned_resource.capacity_per_day + '');
+        if (remaining > 0 && due && due < now) orders.delayed++;
+        else if (st == 'on_hold' || (remaining > 0 && due && cap > 0 && (remaining / cap) * 86400000 > (due - now))) orders.at_risk++;
+    }
+    out.production_orders = orders.open;
+    out.completed_orders = orders.completed;
+    out.delayed_orders = orders.delayed;
+    out.at_risk_orders = orders.at_risk;
+    out.orders = orders;
+    out.on_time_delivery_pct = pct(orders.open - orders.delayed - orders.at_risk, orders.open);
+    out.production_today = { planned: plannedUnits, produced: producedUnits, pct: pct(producedUnits, plannedUnits) };
+    out.customer_orders = { total: count('cust_order', ''), open: count('cust_order', 'statusNOT INcompleted,cancelled,rejected'), active: count('cust_order', 'active=true') };
+
+    // ---- alerts
+    out.active_alerts = count('inv_alert', OPEN_ALERT);
+    out.critical_alerts = count('inv_alert', OPEN_ALERT + '^severity=critical');
+    out.high_alerts = count('inv_alert', OPEN_ALERT + '^severity=high');
+    out.material_shortages = count('inv_alert', OPEN_ALERT + '^alert_typeINmaterial_shortage,below_safety_stock,low_stock,reorder_required');
+
+    // ---- machines
+    var DOWN = 'broken_down,under_maintenance,out_of_service,temporarily_unavailable,replacement_required,retired,decommissioned';
+    var machines = count('machine', ''), down = count('machine', 'statusIN' + DOWN);
+    out.machines = { total: machines, available: machines - down, down: down };
+    out.machine_availability_pct = pct(machines - down, machines);
+    // per-machine status for the shop-floor table (load = open scheduled quantity vs machine capacity)
+    var loadBy = {};
+    var ls = new GlideAggregate(P + 'prod_sched');
+    ls.addQuery('status', 'NOT IN', 'completed,cancelled,step_completed,output_transferred,step_failed');
+    ls.addNotNullQuery('machine');
+    ls.addAggregate('SUM', 'planned_quantity');
+    ls.groupBy('machine');
+    ls.query();
+    while (ls.next()) loadBy[ls.getValue('machine')] = num(ls.getAggregate('SUM', 'planned_quantity'));
+    var HEALTH = { new_condition: 98, good: 95, fair: 80, poor: 60, critical: 35 };
+    out.machine_list = [];
+    var mg = new GlideRecord(P + 'machine');
+    mg.orderBy('number');
+    mg.query();
+    while (mg.next()) {
+        var mst = mg.getValue('status'), isDown = DOWN.indexOf(mst) > -1;
+        out.machine_list.push({
+            number: mg.getValue('number') + '', name: mg.getValue('name') + '', area: (mg.getDisplayValue('location') || mg.getValue('production_area') || '') + '',
+            load_pct: pct(loadBy[mg.getUniqueValue()] || 0, num(mg.getValue('production_capacity')) || 1),
+            health_pct: isDown ? Math.min(HEALTH[mg.getValue('machine_condition')] || 95, 35) : (HEALTH[mg.getValue('machine_condition')] || 95),
+            status: mst + '', status_label: mg.getDisplayValue('status') + '', down: isDown
+        });
+    }
+    var wc = new GlideAggregate(P + 'dt_work_center');
+    wc.addAggregate('AVG', 'health_index_pct');
+    wc.addAggregate('AVG', 'current_loading_pct');
+    wc.setGroup(false);
+    wc.query();
+    out.machine_health_pct = wc.next() ? Math.round(num(wc.getAggregate('AVG', 'health_index_pct')) * 10) / 10 : 0;
+    out.work_center_load_pct = Math.round(num(wc.getAggregate('AVG', 'current_loading_pct')) * 10) / 10;
+
+    // ---- capacity (units/day on available resources) and how much of it open schedules use
+    var capacity = 0, capAll = 0, effSum = 0, effN = 0;
+    var res = new GlideRecord(P + 'prod_res');
+    res.query();
+    while (res.next()) {
+        var c = num(res.getValue('capacity_per_day'));
+        capAll += c; effSum += num(res.getValue('efficiency_percentage')); effN++;
+        if (res.getValue('status') == 'available' && res.getValue('maintenance_required') != '1') capacity += c;
+    }
+    out.production_capacity = { units_per_day: capacity, total_units_per_day: capAll, available_pct: pct(capacity, capAll) };
+
+    // ---- quality, maintenance, suppliers
+    out.quality_holds = orders.quality_holds + count('inv_batch', 'status=blocked');
+    out.quality = { orders_on_quality_hold: orders.quality_holds, blocked_batches: count('inv_batch', 'status=blocked'), open_quality_alerts: count('inv_alert', OPEN_ALERT + '^alert_type=quality_failure') };
+    var qi = new GlideAggregate(P + 'qc_insp');
+    qi.addAggregate('SUM', 'quantity_inspected');
+    qi.addAggregate('SUM', 'quantity_passed');
+    qi.setGroup(false);
+    qi.query();
+    var qRate = qi.next() ? pct(num(qi.getAggregate('SUM', 'quantity_passed')), num(qi.getAggregate('SUM', 'quantity_inspected'))) : 0;
+    out.quality.pass_rate_pct = qRate;
+    out.maintenance_issues = count('mach_maint', 'statusNOT INcompleted,verified,closed,cancelled,draft') + count('mach_down', 'status=active');
+    out.maintenance = { open_maintenance: count('mach_maint', 'statusNOT INcompleted,verified,closed,cancelled,draft'), active_downtime: count('mach_down', 'status=active') };
+    var below = 0;
+    var sup = new GlideRecord(P + 'supplier');
+    sup.query();
+    while (sup.next()) if (num(sup.getValue('cumulative_score')) < num(sup.getValue('threshold_score'))) below++;
+    out.supplier_issues = below + count('inv_alert', OPEN_ALERT + '^alert_type=supplier_delay');
+    out.suppliers = { total: count('supplier', ''), below_threshold: below, delay_alerts: count('inv_alert', OPEN_ALERT + '^alert_type=supplier_delay') };
+
+    // ---- inventory
+    out.inventory = {
+        stock_lines: count('inv_stock', 'material_productISNOTEMPTY'), available: count('inv_stock', 'material_productISNOTEMPTY^status=available^available_quantity>0'),
+        reserved: count('inv_stock', 'material_productISNOTEMPTY^reserved_quantity>0^ORstatus=reserved'),
+        quarantine: count('inv_stock', 'material_productISNOTEMPTY^statusINquarantined,blocked,inspection,expired')
+    };
+    var cls = new x_2056099_indust_0.MaterialIntelligence().classifyStock();
+    out.inventory.low_stock = cls.counts.low + cls.counts.shortage;
+    out.inventory.excess = cls.counts.excess;
+    out.inventory.obsolete = cls.counts.obsolete;
+
+    // ---- OEE (same definition as the mobile dashboard) and open rescheduling proposals
+    out.oee_pct = Math.round((out.machine_health_pct / 100) * ((effN ? effSum / effN : 0) / 100) * (qRate / 100) * 1000) / 10;
+    out.rescheduling = { open_proposals: count('sim_scenario', 'simulation_status=evaluated^proposal_payloadLIKE"applied":false^proposal_payloadLIKE"action"'), applied: count('sim_scenario', 'proposal_payloadLIKE"applied":true') };
+
+    response.setStatus(200);
+    response.setBody(out);
+})(request, response);
+]]></operation_script>
+        <operation_uri>/api/x_2056099_indust_0/dashboard_api/control-tower</operation_uri>
+        <produces>application/json</produces>
+        <produces_customized>false</produces_customized>
+        <relative_path>/control-tower</relative_path>
+        <request_example/>
+        <requires_acl_authorization>false</requires_acl_authorization>
+        <requires_authentication>true</requires_authentication>
+        <requires_snc_internal_role>true</requires_snc_internal_role>
+        <short_description/>
+        <support_trailing_slash>false</support_trailing_slash>
+        <sys_class_name>sys_ws_operation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 17:35:40</sys_created_on>
+        <sys_id>0e8de5754737c310527276a4416d436a</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Control Tower KPIs</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_ws_operation_0e8de5754737c310527276a4416d436a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 18:07:42</sys_updated_on>
+        <web_service_definition display_value="Dashboard API">0cd7b7e07d51482f91bb5e3f8ee69330</web_service_definition>
+        <web_service_version/>
+    </sys_ws_operation>
+</record_update>

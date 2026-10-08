@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.QualityMonitor</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Weekly defect-rate monitoring with production hold and release</description>
+        <mobile_callable>false</mobile_callable>
+        <name>QualityMonitor</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * QualityMonitor
+ *
+ * Weekly quality monitoring on the existing Quality Inspection data:
+ *   defect rate per material over the window -> threshold check -> quality alert -> production HOLD on the
+ *   affected production orders -> corrective action flagged on the inspections -> release when the alert is resolved.
+ * The hold is a real status change (production_order.status = on_hold) with a marker in the order notes.
+ */
+var QualityMonitor = Class.create();
+QualityMonitor.prototype = {
+    P: 'x_2056099_indust_0_',
+    MARK: '[QUALITY HOLD ',
+    PREFIX: '[Weekly Quality]',
+    HOLDABLE: 'planned,material_check,materials_reserved,in_production',
+
+    initialize: function() {},
+
+    threshold: function() {
+        return parseFloat(gs.getProperty('x_2056099_indust_0.quality.weekly_defect_threshold_pct', '2')) || 2;
+    },
+
+    /** @param opts { days: window length (default 7), threshold_pct } */
+    runWeekly: function(opts) {
+        opts = opts || {};
+        var days = parseInt(opts.days, 10) || 7, limit = parseFloat(opts.threshold_pct) || this.threshold();
+        var since = new GlideDateTime(); since.addDaysUTC(-days);
+        var byMat = {};
+        var qi = new GlideRecord(this.P + 'qc_insp');
+        qi.addQuery('inspection_date', '>=', since.getValue());
+        qi.addQuery('status', '!=', 'cancelled');
+        qi.query();
+        while (qi.next()) {
+            var id = qi.getValue('material_product');
+            if (!id) continue;
+            if (!byMat[id]) byMat[id] = { material: id, name: qi.getDisplayValue('material_product'), inspections: [], inspected: 0, failed: 0 };
+            byMat[id].inspections.push(qi.getUniqueValue());
+            byMat[id].inspected += parseFloat(qi.getValue('quantity_inspected')) || 0;
+            byMat[id].failed += parseFloat(qi.getValue('quantity_failed')) || 0;
+        }
+        var results = [], breaches = 0, held = 0, totalInspected = 0, totalFailed = 0;
+        for (var k in byMat) {
+            var m = byMat[k];
+            totalInspected += m.inspected; totalFailed += m.failed;
+            m.defect_rate_pct = m.inspected ? Math.round(m.failed / m.inspected * 10000) / 100 : 0;
+            m.breach = m.defect_rate_pct > limit;
+            if (m.breach) {
+                breaches++;
+                var alert = this._alert(m, limit, days);
+                m.alert = alert.number;
+                m.alert_sys_id = alert.sys_id;
+                m.orders_held = this._hold(m, alert);
+                held += m.orders_held.length;
+                this._flagInspections(m.inspections);
+            }
+            delete m.inspections;
+            results.push(m);
+        }
+        results.sort(function(a, b) { return b.defect_rate_pct - a.defect_rate_pct; });
+        return {
+            success: true, window_days: days, threshold_pct: limit, materials_inspected: results.length,
+            overall_defect_rate_pct: totalInspected ? Math.round(totalFailed / totalInspected * 10000) / 100 : 0,
+            breaches: breaches, orders_held: held, results: results,
+            message: results.length ? breaches + ' material(s) above the ' + limit + '% defect threshold; ' + held + ' production order(s) placed on hold.' :
+                'No inspections in the last ' + days + ' day(s).'
+        };
+    },
+
+    /** Called when a weekly quality alert is resolved/dismissed: put the held orders back to their previous status. */
+    release: function(alert) {
+        var id = alert.getUniqueValue(), released = [];
+        var po = new GlideRecord(this.P + 'production_order');
+        po.addQuery('status', 'on_hold');
+        po.addQuery('notes', 'CONTAINS', this.MARK + id);
+        po.query();
+        while (po.next()) {
+            var notes = po.getValue('notes') || '';
+            var m = notes.match(/\[QUALITY HOLD [0-9a-f]{32} prev=(\w+)\]/);
+            var prev = m ? m[1] : 'planned';
+            po.setValue('notes', ('[QUALITY RELEASED ' + new GlideDateTime().getDisplayValue() + '] Alert ' + (alert.getValue('number') || '') + ' resolved.\n' +
+                notes.replace(/\[QUALITY HOLD ([0-9a-f]{32}) prev=(\w+)\]/g, '[quality hold $1 closed, was $2]')).substring(0, 4000));
+            po.setValue('status', prev);
+            if (po.update()) released.push(po.getValue('number'));
+        }
+        return released;
+    },
+
+    /** Before-update guard on production orders: no resume while the quality hold is open. */
+    blocksResume: function(current, previous) {
+        if (!previous || previous.getValue('status') != 'on_hold' || current.getValue('status') == 'on_hold' || current.getValue('status') == 'cancelled') {
+            return '';
+        }
+        var notes = previous.getValue('notes') || '';
+        var m = notes.match(/\[QUALITY HOLD ([0-9a-f]{32}) prev=\w+\]/);
+        if (!m) return '';
+        var al = new GlideRecord(this.P + 'inv_alert');
+        if (al.get(m[1]) && al.getValue('status') != 'resolved' && al.getValue('status') != 'dismissed') {
+            return 'Quality hold: ' + current.getValue('number') + ' cannot continue until quality alert ' + (al.getValue('number') || '') +
+                ' is resolved (inspection and corrective action required).';
+        }
+        return '';
+    },
+
+    // ---------------------------------------------------------------- internals
+    _alert: function(m, limit, days) {
+        var al = new GlideRecord(this.P + 'inv_alert');
+        al.addQuery('alert_type', 'quality_failure');
+        al.addQuery('material_product', m.material);
+        al.addQuery('status', 'NOT IN', 'resolved,dismissed');
+        al.addQuery('alert_message', 'STARTSWITH', this.PREFIX);
+        al.setLimit(1);
+        al.query();
+        if (al.next()) {
+            return { sys_id: al.getUniqueValue(), number: al.getValue('number') || '' };
+        }
+        al = new GlideRecord(this.P + 'inv_alert');
+        al.newRecord();
+        al.setValue('alert_type', 'quality_failure');
+        al.setValue('severity', m.defect_rate_pct > limit * 2 ? 'critical' : 'high');
+        al.setValue('status', 'open');
+        al.setValue('material_product', m.material);
+        al.setValue('current_quantity', m.failed);
+        al.setValue('threshold_quantity', Math.round(m.inspected * limit) / 100);
+        al.setValue('alert_date', new GlideDateTime());
+        al.setValue('alert_message', this.PREFIX + ' ' + m.name + ': defect rate ' + m.defect_rate_pct + '% over the last ' + days + ' day(s) (' + m.failed + ' of ' + m.inspected +
+            ' units failed) exceeds the ' + limit + '% threshold. Production using this material is on hold; inspection and corrective action required.');
+        al.setValue('resolution_notes', 'Inspect material and machinery, record corrective action, then resolve this alert to release production.');
+        var id = al.insert();
+        return { sys_id: id, number: al.getValue('number') || '' };
+    },
+
+    /** Orders that make this material or consume it (BOM of the finished product, or material requirement rows). */
+    _affectedOrders: function(material) {
+        var ids = {}, P = this.P;
+        var products = {}; products[material] = true;
+        var bl = new GlideRecord(P + 'customer_bom_line');
+        bl.addQuery('material_product', material);
+        bl.addQuery('customer_bom.status', 'active');
+        bl.query();
+        while (bl.next()) products[bl.customer_bom.finished_product + ''] = true;
+        var list = [];
+        for (var p in products) list.push(p);
+        var po = new GlideRecord(P + 'production_order');
+        po.addQuery('finished_product', 'IN', list.join(','));
+        po.addQuery('status', 'IN', this.HOLDABLE);
+        po.query();
+        while (po.next()) ids[po.getUniqueValue()] = true;
+        var pm = new GlideRecord(P + 'production_material');
+        pm.addQuery('material_product', material);
+        pm.addQuery('production_order.status', 'IN', this.HOLDABLE);
+        pm.query();
+        while (pm.next()) ids[pm.getValue('production_order')] = true;
+        var out = [];
+        for (var id in ids) out.push(id);
+        return out;
+    },
+
+    _hold: function(m, alert) {
+        var held = [], ids = this._affectedOrders(m.material);
+        for (var i = 0; i < ids.length; i++) {
+            var po = new GlideRecord(this.P + 'production_order');
+            if (!po.get(ids[i]) || (po.getValue('notes') || '').indexOf(this.MARK) > -1) continue;
+            var prev = po.getValue('status');
+            po.setValue('notes', (this.MARK + alert.sys_id + ' prev=' + prev + '] ' + m.name + ' defect rate ' + m.defect_rate_pct + '% (alert ' + alert.number + ').\n' +
+                (po.getValue('notes') || '')).substring(0, 4000));
+            po.setValue('status', 'on_hold');
+            if (po.update()) held.push(po.getValue('number'));
+        }
+        return held;
+    },
+
+    _flagInspections: function(ids) {
+        for (var i = 0; i < ids.length; i++) {
+            var qi = new GlideRecord(this.P + 'qc_insp');
+            if (qi.get(ids[i]) && (parseFloat(qi.getValue('quantity_failed')) || 0) > 0 && qi.getValue('corrective_action_required') != '1') {
+                qi.setValue('corrective_action_required', true);
+                qi.setWorkflow(false);
+                qi.update();
+            }
+        }
+    },
+
+    type: 'QualityMonitor'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 17:34:48</sys_created_on>
+        <sys_id>695da9354737c310527276a4416d438d</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>QualityMonitor</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_695da9354737c310527276a4416d438d</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 17:34:48</sys_updated_on>
+    </sys_script_include>
+</record_update>

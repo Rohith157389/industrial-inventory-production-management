@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.AdaptiveRescheduler</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Machine breakdown -&gt; affected schedules -&gt; alternative machine -&gt; proposal -&gt; apply</description>
+        <mobile_callable>false</mobile_callable>
+        <name>AdaptiveRescheduler</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * AdaptiveRescheduler
+ *
+ * Machine breakdown -> affected schedules/orders -> alternative machine/resource -> proposal -> apply.
+ * A proposal is stored as a Simulation Scenario in status Evaluated (+ one Simulation Schedule Run per affected schedule) with the
+ * exact changes in sim_scenario.proposal_payload, so "apply" writes precisely what was shown.
+ * Rule/constraint based: priority, due date, capacity, efficiency, availability, maintenance and material status.
+ */
+var AdaptiveRescheduler = Class.create();
+AdaptiveRescheduler.prototype = {
+    P: 'x_2056099_indust_0_',
+    DAY: 86400000,
+    DOWN: ['broken_down', 'under_maintenance', 'out_of_service', 'temporarily_unavailable', 'replacement_required', 'retired', 'decommissioned'],
+    CLOSED_SCHED: 'completed,cancelled,step_completed,output_transferred,step_failed',
+    RANK: { critical: 0, high: 1, medium: 2, low: 3 },
+    DEFAULT_REPAIR_DAYS: 2,
+
+    initialize: function() {},
+
+    /** Business-rule entry point: a machine just became unavailable. Creates one open proposal per machine. */
+    onMachineDown: function(machine) {
+        var open = new GlideRecord(this.P + 'sim_scenario');
+        open.addQuery('disruption_category', 'machine_breakdown');
+        open.addQuery('simulation_status', 'evaluated');
+        open.addQuery('proposal_payload', 'CONTAINS', machine.getUniqueValue());
+        open.addQuery('proposal_payload', 'CONTAINS', '"applied":false');
+        open.setLimit(1);
+        open.query();
+        if (open.hasNext()) {
+            return { success: true, skipped: true, message: 'An open proposal already exists for this machine.' };
+        }
+        return this.propose(machine.getUniqueValue());
+    },
+
+    /** Build and store a rescheduling proposal for an unavailable machine. */
+    propose: function(machineSysId, options) {
+        options = options || {};
+        var machine = new GlideRecord(this.P + 'machine');
+        if (!machineSysId || !machine.get(machineSysId)) {
+            return this._fail('Machine not found: ' + machineSysId);
+        }
+        var now = new GlideDateTime().getNumericValue();
+        var repairEta = this._repairEta(machineSysId, now);
+        var affected = this._affectedSchedules(machineSysId);
+        var alternatives = this._alternativeMachines(machineSysId);
+        var proposals = [], onTimeBefore = 0, onTimeUnmitigated = 0, onTimeAfter = 0;
+
+        for (var i = 0; i < affected.length; i++) {
+            var a = affected[i];
+            var p = {
+                action: 'reassign', schedule: a.sys_id, schedule_number: a.number, order: a.po_sys_id, order_number: a.po_number,
+                customer: a.customer, priority: a.priority, quantity: a.remaining,
+                from_machine: machineSysId, from_machine_name: machine.getValue('name'),
+                from_resource: a.resource, from_resource_name: a.resource_name,
+                original_start: a.start, original_end: a.end, due: a.due, material_status: a.material_status
+            };
+            var res = this._resourceFor(a);
+            p.to_resource = res.sys_id; p.to_resource_name = res.name; p.resource_changed = res.sys_id != a.resource;
+            var days = this._days(a.remaining, res.capacity, res.efficiency);
+            var unmitigatedEnd = Math.max(a.end || 0, repairEta + days * this.DAY);
+            var alt = this._pick(alternatives, a.remaining);
+            if (!alt || !res.sys_id) {
+                p.action = 'manual_review';
+                p.proposed_start = a.start; p.proposed_end = unmitigatedEnd;
+                p.reason = 'No alternative machine is available; the order waits for the repair of ' + machine.getValue('name') + '.';
+            } else {
+                p.to_machine = alt.sys_id; p.to_machine_name = alt.name; p.to_machine_utilization = Math.round(alt.utilization * 100);
+                p.proposed_start = Math.max(now, a.start || now);
+                p.proposed_end = p.proposed_start + days * this.DAY;
+                p.reason = machine.getValue('name') + ' is ' + machine.getDisplayValue('status') + '. ' + alt.name + ' is ' + alt.status_label +
+                    ' at ' + p.to_machine_utilization + '% load' + (p.resource_changed ? '; resource changes to ' + res.name : '') +
+                    '. Ordered by priority (' + a.priority + ') and due date; materials: ' + a.material_status + '.';
+            }
+            p.unmitigated_end = unmitigatedEnd;
+            p.delay_unmitigated_days = a.due ? Math.max(0, Math.ceil((unmitigatedEnd - a.due) / this.DAY)) : 0;
+            p.delay_after_days = a.due ? Math.max(0, Math.ceil((p.proposed_end - a.due) / this.DAY)) : 0;
+            p.delay_recovered_days = Math.max(0, p.delay_unmitigated_days - p.delay_after_days);
+            p.on_time = p.delay_after_days === 0;
+            if (!a.due || (a.end || 0) <= a.due) onTimeBefore++;
+            if (p.delay_unmitigated_days === 0) onTimeUnmitigated++;
+            if (p.on_time) onTimeAfter++;
+            proposals.push(p);
+        }
+
+        var moved = [];
+        for (var m = 0; m < proposals.length; m++) {
+            if (proposals[m].action == 'reassign') moved.push(proposals[m].order_number + ' -> ' + proposals[m].to_machine_name);
+        }
+        var n = affected.length || 1;
+        var scenarioId = this.storeScenario({
+            name: 'Machine Breakdown: ' + machine.getValue('name'),
+            category: 'machine_breakdown',
+            target: machine.getValue('name'),
+            parameter: (machine.getValue('number') || '') + ' ' + machine.getValue('name') + ' unavailable (' + machine.getDisplayValue('status') + ')',
+            strategy: moved.length ? 'Move ' + moved.length + ' schedule(s) to alternative machines: ' + moved.join('; ') :
+                (affected.length ? 'No alternative machine available - manual review' : 'No active schedules on this machine - no action needed'),
+            impacted: affected.length,
+            baseline: Math.round(onTimeBefore / n * 100), unmitigated: Math.round(onTimeUnmitigated / n * 100), optimized: Math.round(onTimeAfter / n * 100),
+            status: 'evaluated',
+            payload: { type: 'machine_breakdown', machine: machineSysId, applied: false, proposals: proposals }
+        }, proposals);
+
+        return {
+            success: true, scenario_type: 'machine_breakdown', scenario_sys_id: scenarioId,
+            trigger: machine.getValue('name') + ' is ' + machine.getDisplayValue('status'),
+            machine: { sys_id: machineSysId, number: machine.getValue('number'), name: machine.getValue('name'), status: machine.getValue('status') },
+            impacted_schedules: affected.length, affected_orders: affected, alternative_machines: alternatives,
+            impact: { on_time_before_pct: Math.round(onTimeBefore / n * 100), on_time_unmitigated_pct: Math.round(onTimeUnmitigated / n * 100), on_time_after_pct: Math.round(onTimeAfter / n * 100) },
+            recommended_action: moved.length ? 'Apply the proposal to move ' + moved.length + ' schedule(s)' : 'Manual review',
+            proposals: proposals,
+            message: affected.length ? affected.length + ' schedule(s) affected by ' + machine.getValue('name') + '; proposal ' + (moved.length ? 'ready to apply.' : 'needs manual review.') :
+                'No active schedules on ' + machine.getValue('name') + '.'
+        };
+    },
+
+    /** Persist a scenario with its run rows. Shared with WhatIfScenarios. Returns the scenario sys_id. */
+    storeScenario: function(d, proposals) {
+        var sc = new GlideRecord(this.P + 'sim_scenario');
+        sc.initialize();
+        sc.setValue('scenario_name', (d.name || '').substring(0, 200));
+        sc.setValue('disruption_category', d.category || '');
+        sc.setValue('target_entity', (d.target || '').substring(0, 200));
+        sc.setValue('disruption_parameter', (d.parameter || '').substring(0, 500));
+        sc.setValue('recommended_strategy', (d.strategy || '').substring(0, 1000));
+        sc.setValue('impacted_order_count', d.impacted || 0);
+        sc.setValue('baseline_otd', d.baseline || 0);
+        sc.setValue('simulated_otd_unmitigated', d.unmitigated || 0);
+        sc.setValue('optimized_otd', d.optimized || 0);
+        sc.setValue('cost_delta', d.cost || 0);
+        sc.setValue('simulation_status', d.status || 'evaluated');
+        sc.setValue('proposal_payload', JSON.stringify(d.payload || {}));
+        var id = sc.insert();
+        for (var i = 0; id && i < proposals.length; i++) {
+            var p = proposals[i];
+            var run = new GlideRecord(this.P + 'sim_schedule_run');
+            run.initialize();
+            run.setValue('scenario', id);
+            run.setValue('customer_order_ref', p.order_number || '');
+            run.setValue('customer_name', p.customer || '');
+            run.setValue('order_qty', Math.round(p.quantity || 0));
+            run.setValue('assigned_machine', p.from_machine_name || p.from_resource_name || '');
+            run.setValue('adaptive_strategy', (p.strategy_label || (p.action == 'reassign' ? 'Move to ' + p.to_machine_name + (p.resource_changed ? ' / ' + p.to_resource_name : '') :
+                (p.action == 'shift' ? 'Shift schedule' : (p.action == 'hold' ? 'Hold order' : 'Manual review')))).substring(0, 500));
+            run.setValue('material_status', (p.material_status || '').substring(0, 40));
+            if (p.original_end) run.setValue('baseline_planned_finish', this._date(p.original_end));
+            if (p.unmitigated_end) run.setValue('simulated_finish', this._date(p.unmitigated_end));
+            if (p.proposed_end) run.setValue('adapted_finish', this._date(p.proposed_end));
+            run.setValue('delay_unmitigated', (p.delay_unmitigated_days || 0) + '');
+            run.setValue('net_delay_recovered', (p.delay_recovered_days || 0) + '');
+            run.setValue('final_otd_status', p.on_time === false ? 'delayed' : 'on_time');
+            run.insert();
+        }
+        return id || '';
+    },
+
+    /** Apply a stored proposal: this really updates the schedule and production order records. */
+    applyScenario: function(scenarioSysId) {
+        var sc = new GlideRecord(this.P + 'sim_scenario');
+        if (!scenarioSysId || !sc.get(scenarioSysId)) {
+            return this._fail('Simulation scenario not found: ' + scenarioSysId);
+        }
+        var payload;
+        try { payload = JSON.parse(sc.getValue('proposal_payload') || '{}'); } catch (e) { payload = {}; }
+        if (!payload.proposals || !payload.proposals.length) {
+            return this._fail('Scenario ' + sc.getValue('scenario_id') + ' has no proposal to apply.');
+        }
+        if (payload.applied) {
+            return { success: true, already_applied: true, message: 'Proposal ' + sc.getValue('scenario_id') + ' was already applied.', changes: payload.changes || [] };
+        }
+        var changes = [], skipped = [];
+        for (var i = 0; i < payload.proposals.length; i++) {
+            var r = this._applyOne(payload.proposals[i], sc.getValue('scenario_id'));
+            (r.applied ? changes : skipped).push(r);
+        }
+        if (payload.block_batch || payload.block_material) {
+            changes.push(this._blockStock(payload));
+        }
+        payload.applied = true;
+        payload.applied_on = new GlideDateTime().getValue();
+        payload.changes = changes;
+        sc.setValue('proposal_payload', JSON.stringify(payload));
+        // 'approved_released' is the app's own choice value; keep 'approved' when an approval already set it
+        if (sc.getValue('simulation_status') != 'approved') sc.setValue('simulation_status', 'approved_released');
+        sc.setValue('approved_by', gs.getUserID());
+        sc.update();
+        if (payload.machine) {
+            this._annotateBreakdownAlert(payload.machine, changes.length + ' schedule(s) rescheduled by ' + sc.getValue('scenario_id'));
+        }
+        return {
+            success: true, scenario: sc.getValue('scenario_id'), applied: changes.length, skipped: skipped.length, changes: changes, skipped_details: skipped,
+            message: changes.length + ' change(s) applied' + (skipped.length ? ', ' + skipped.length + ' skipped' : '') + ' from ' + sc.getValue('scenario_id') + '.'
+        };
+    },
+
+    _applyOne: function(p, scenarioNumber) {
+        var out = { action: p.action, order_number: p.order_number, schedule_number: p.schedule_number, applied: false };
+        var stamp = '[' + new GlideDateTime().getDisplayValue() + ' ' + scenarioNumber + '] ';
+        var po = new GlideRecord(this.P + 'production_order');
+        var hasPo = p.order && po.get(p.order);
+
+        if (p.action == 'hold') {
+            if (!hasPo) { out.note = 'order not found'; return out; }
+            if (po.getValue('status') == 'completed' || po.getValue('status') == 'cancelled' || po.getValue('status') == 'on_hold') { out.note = 'order is ' + po.getValue('status'); return out; }
+            out.from = po.getValue('status'); out.to = 'on_hold';
+            po.setValue('notes', (stamp + 'HOLD (was ' + out.from + '): ' + (p.reason || '') + '\n' + (po.getValue('notes') || '')).substring(0, 4000));
+            po.setValue('status', 'on_hold');
+            out.applied = !!po.update();
+            return out;
+        }
+        if (p.action != 'reassign' && p.action != 'shift') { out.note = 'manual review'; return out; }
+
+        var sched = new GlideRecord(this.P + 'prod_sched');
+        if (!p.schedule || !sched.get(p.schedule)) { out.note = 'schedule not found'; return out; }
+        if (this.CLOSED_SCHED.indexOf(sched.getValue('status')) > -1) { out.note = 'schedule is ' + sched.getValue('status'); return out; }
+        if (p.action == 'reassign') {
+            var target = new GlideRecord(this.P + 'machine');
+            if (!target.get(p.to_machine) || this.DOWN.indexOf(target.getValue('status')) > -1) { out.note = 'alternative machine no longer available'; return out; }
+            out.from_machine = sched.getDisplayValue('machine'); out.to_machine = target.getValue('name');
+            sched.setValue('machine', p.to_machine);
+            if (p.resource_changed && p.to_resource) {
+                out.from_resource = sched.getDisplayValue('production_resource'); out.to_resource = p.to_resource_name;
+                sched.setValue('production_resource', p.to_resource);
+            }
+        }
+        if (p.shift_resource && p.to_resource) {
+            out.from_resource = sched.getDisplayValue('production_resource'); out.to_resource = p.to_resource_name;
+            sched.setValue('production_resource', p.to_resource);
+        }
+        out.from_end = sched.getValue('planned_end');
+        if (p.proposed_start) sched.setValue('planned_start', this._gdt(p.proposed_start));
+        if (p.proposed_end) sched.setValue('planned_end', this._gdt(p.proposed_end));
+        sched.setValue('notes', (stamp + (p.action == 'reassign' ? 'Rescheduled from ' + out.from_machine + ' to ' + out.to_machine : 'Schedule shifted') + '. ' +
+            (p.reason || '') + '\n' + (sched.getValue('notes') || '')).substring(0, 4000));
+        out.applied = !!sched.update();
+        out.to_end = sched.getValue('planned_end');
+        if (out.applied && hasPo) {
+            if ((p.shift_resource || (p.action == 'reassign' && p.resource_changed)) && p.to_resource) po.setValue('assigned_resource', p.to_resource);
+            var poEnd = po.getValue('planned_end_date') ? new GlideDateTime(po.getValue('planned_end_date')).getNumericValue() : 0;
+            if (p.proposed_end && p.proposed_end > poEnd) po.setValue('planned_end_date', this._gdt(p.proposed_end));
+            po.setValue('notes', (stamp + (p.action == 'reassign' ? 'Rescheduled: ' + out.from_machine + ' -> ' + out.to_machine : 'Schedule shifted to ' + out.to_end) +
+                '\n' + (po.getValue('notes') || '')).substring(0, 4000));
+            po.update();
+        }
+        return out;
+    },
+
+    /** Quality issue: block the batch (or every active batch of the material) so it cannot be issued. */
+    _blockStock: function(payload) {
+        var n = 0;
+        var b = new GlideRecord(this.P + 'inv_batch');
+        if (payload.block_batch) b.addQuery('sys_id', payload.block_batch); else b.addQuery('material_product', payload.block_material);
+        b.addQuery('status', 'active');
+        b.query();
+        while (b.next()) {
+            b.setValue('status', 'blocked');
+            b.setValue('quality_status', 'failed');
+            if (b.update()) n++;
+        }
+        return { action: 'block_batches', applied: n > 0, batches_blocked: n };
+    },
+
+    // ---------------------------------------------------------------- lookups
+    _affectedSchedules: function(machineSysId) {
+        var rows = [];
+        var s = new GlideRecord(this.P + 'prod_sched');
+        s.addQuery('machine', machineSysId);
+        s.addQuery('status', 'NOT IN', this.CLOSED_SCHED);
+        s.query();
+        while (s.next()) {
+            var po = s.production_order.getRefRecord();
+            if (!po.isValidRecord() || po.getValue('status') == 'completed' || po.getValue('status') == 'cancelled') continue;
+            var due = po.customer_order.requested_delivery_date + '' || po.getValue('planned_end_date') || '';
+            var planned = parseFloat(s.getValue('planned_quantity')) || parseFloat(po.getValue('quantity_planned')) || 0;
+            var remaining = parseFloat(po.getValue('quantity_remaining'));
+            rows.push({
+                sys_id: s.getUniqueValue(), number: s.getValue('number') || '', status: s.getValue('status'),
+                po_sys_id: po.getUniqueValue(), po_number: po.getValue('number'), po_status: po.getValue('status'),
+                customer: po.customer_order.customer.getDisplayValue() + '', priority: po.getValue('priority') || 'medium',
+                planned_quantity: planned, remaining: isNaN(remaining) || remaining <= 0 ? planned : remaining,
+                resource: s.getValue('production_resource') || po.getValue('assigned_resource') || '',
+                resource_name: s.getDisplayValue('production_resource') || po.getDisplayValue('assigned_resource') || '',
+                start: this._ms(s.getValue('planned_start')), end: this._ms(s.getValue('planned_end')), due: this._ms(due),
+                material_status: this._materialStatus(po)
+            });
+        }
+        var rank = this.RANK;
+        rows.sort(function(x, y) {
+            var a = rank[x.priority] === undefined ? 2 : rank[x.priority], b = rank[y.priority] === undefined ? 2 : rank[y.priority];
+            return (a - b) || ((x.due || 9e15) - (y.due || 9e15));
+        });
+        return rows;
+    },
+
+    _alternativeMachines: function(excludeSysId) {
+        var down = {}, load = {}, list = [];
+        var d = new GlideRecord(this.P + 'mach_down');
+        d.addQuery('status', 'active');
+        d.query();
+        while (d.next()) down[d.getValue('machine')] = true;
+        var s = new GlideAggregate(this.P + 'prod_sched');
+        s.addQuery('status', 'NOT IN', this.CLOSED_SCHED);
+        s.addNotNullQuery('machine');
+        s.addAggregate('SUM', 'planned_quantity');
+        s.groupBy('machine');
+        s.query();
+        while (s.next()) load[s.getValue('machine')] = parseFloat(s.getAggregate('SUM', 'planned_quantity')) || 0;
+        var m = new GlideRecord(this.P + 'machine');
+        m.addQuery('sys_id', '!=', excludeSysId);
+        m.addQuery('active', true);
+        m.query();
+        while (m.next()) {
+            var id = m.getUniqueValue(), st = m.getValue('status'), cond = m.getValue('machine_condition');
+            if (this.DOWN.indexOf(st) > -1 || down[id] || cond == 'critical') continue;
+            var cap = parseFloat(m.getValue('production_capacity')) || 1;
+            list.push({ sys_id: id, number: m.getValue('number'), name: m.getValue('name'), status: st, status_label: m.getDisplayValue('status'),
+                condition: cond, capacity: cap, load: load[id] || 0, utilization: (load[id] || 0) / cap });
+        }
+        return list;
+    },
+
+    /** Least-utilised healthy machine; the chosen machine's load is increased so the next order sees it. */
+    _pick: function(alternatives, qty) {
+        var best = null;
+        for (var i = 0; i < alternatives.length; i++) {
+            var a = alternatives[i], penalty = a.condition == 'poor' ? 0.5 : (a.condition == 'fair' ? 0.1 : 0);
+            a.score = a.utilization + penalty;
+            if (!best || a.score < best.score) best = a;
+        }
+        if (!best) return null;
+        var chosen = { sys_id: best.sys_id, name: best.name, status_label: best.status_label, utilization: best.utilization };
+        best.load += qty; best.utilization = best.load / best.capacity;
+        return chosen;
+    },
+
+    /** Keep the schedule's resource when it is usable, otherwise the best available one (capacity x efficiency). */
+    _resourceFor: function(a) {
+        var r = new GlideRecord(this.P + 'prod_res');
+        if (a.resource && r.get(a.resource) && r.getValue('status') == 'available' && r.getValue('maintenance_required') != '1') {
+            return this._res(r);
+        }
+        var best = null;
+        r = new GlideRecord(this.P + 'prod_res');
+        r.addQuery('status', 'available');
+        r.addQuery('maintenance_required', false);
+        r.query();
+        while (r.next()) {
+            var c = this._res(r);
+            if (!best || c.capacity * c.efficiency > best.capacity * best.efficiency) best = c;
+        }
+        return best || { sys_id: '', name: '', capacity: 1, efficiency: 100 };
+    },
+    _res: function(r) {
+        return { sys_id: r.getUniqueValue(), name: r.getValue('resource_name'), capacity: parseFloat(r.getValue('capacity_per_day')) || 1,
+            efficiency: parseFloat(r.getValue('efficiency_percentage')) || 100 };
+    },
+
+    _materialStatus: function(po) {
+        var st = po.getValue('status');
+        if (st == 'materials_reserved' || st == 'in_production') return 'reserved';
+        try {
+            var plan = new x_2056099_indust_0.MaterialIntelligence().planForOrder(po);
+            return plan.components.length ? plan.status : 'no BOM';
+        } catch (e) {
+            return 'unknown';
+        }
+    },
+
+    _repairEta: function(machineSysId, now) {
+        var mt = new GlideRecord(this.P + 'mach_maint');
+        mt.addQuery('machine', machineSysId);
+        mt.addQuery('status', 'NOT IN', 'completed,verified,closed,cancelled');
+        mt.addNotNullQuery('expected_completion');
+        mt.orderByDesc('sys_created_on');
+        mt.setLimit(1);
+        mt.query();
+        if (mt.next()) {
+            var eta = this._ms(mt.getValue('expected_completion'));
+            if (eta > now) return eta;
+        }
+        return now + this.DEFAULT_REPAIR_DAYS * this.DAY;
+    },
+
+    _annotateBreakdownAlert: function(machineSysId, text) {
+        var al = new GlideRecord(this.P + 'inv_alert');
+        al.addQuery('related_machine', machineSysId);
+        al.addQuery('alert_type', 'machine_breakdown');
+        al.addQuery('status', 'NOT IN', 'resolved,dismissed');
+        al.orderByDesc('sys_created_on');
+        al.setLimit(1);
+        al.query();
+        if (al.next()) {
+            al.setValue('resolution_notes', (text + '. ' + (al.getValue('resolution_notes') || '')).substring(0, 1000));
+            al.setValue('status', 'acknowledged');
+            al.update();
+        }
+    },
+
+    _days: function(qty, capacity, efficiency) {
+        var eff = (capacity || 1) * ((efficiency || 100) / 100);
+        return Math.max(1, Math.ceil((qty || 0) / (eff > 0 ? eff : 1)));
+    },
+    _ms: function(v) { return v ? new GlideDateTime(v).getNumericValue() : 0; },
+    _gdt: function(ms) { var g = new GlideDateTime(); g.setNumericValue(ms); return g; },
+    _date: function(ms) { return this._gdt(ms).getValue().substring(0, 10); },
+    _fail: function(msg) { return { success: false, error: msg }; },
+
+    type: 'AdaptiveRescheduler'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 17:34:44</sys_created_on>
+        <sys_id>505d29354737c310527276a4416d43fb</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>AdaptiveRescheduler</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_505d29354737c310527276a4416d43fb</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 17:55:31</sys_updated_on>
+    </sys_script_include>
+</record_update>

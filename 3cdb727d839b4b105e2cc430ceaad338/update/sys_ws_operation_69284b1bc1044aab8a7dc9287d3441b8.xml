@@ -40,6 +40,40 @@
     }
   }
 
+  // Profile auto-fill: populate empty profile fields with defaults
+  var needsUpdate = false;
+  if (!gr.getValue('primary_contact_email')) {
+    gr.setValue('primary_contact_email', 'abcengineering@gmail.com');
+    needsUpdate = true;
+  }
+  if (!gr.getValue('primary_contact_phone')) {
+    gr.setValue('primary_contact_phone', '9180234567');
+    needsUpdate = true;
+  }
+  if (!gr.getValue('billing_address')) {
+    gr.setValue('billing_address', 'Bengaluru, Karnataka, India');
+    needsUpdate = true;
+  }
+  if (!gr.getValue('shipping_address')) {
+    gr.setValue('shipping_address', 'Bengaluru, Karnataka, India');
+    needsUpdate = true;
+  }
+  if (!gr.getValue('city')) {
+    gr.setValue('city', 'Bengaluru');
+    needsUpdate = true;
+  }
+  if (!gr.getValue('state')) {
+    gr.setValue('state', 'Karnataka');
+    needsUpdate = true;
+  }
+  if (!gr.getValue('country')) {
+    gr.setValue('country', 'India');
+    needsUpdate = true;
+  }
+  if (needsUpdate) {
+    gr.update();
+  }
+
   response.setBody({
     linked: true,
     customer: {
@@ -53,7 +87,12 @@
       credit_limit: gr.getDisplayValue('credit_limit'),
       industry: gr.getValue('industry') || '',
       notes: gr.getValue('notes') || '',
-      active: gr.getValue('active')
+      active: gr.getValue('active'),
+      billing_address: gr.getValue('billing_address') || '',
+      shipping_address: gr.getValue('shipping_address') || '',
+      city: gr.getValue('city') || '',
+      state: gr.getValue('state') || '',
+      country: gr.getValue('country') || ''
     }
   });
 })(request, response);

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_2056099_indust_0_cust_order</collection>
+        <condition/>
+        <description>Generates a unique PO-REF-NNNN customer reference when customer_reference is empty on insert or update.</description>
+        <execute_function>false</execute_function>
+        <filter_condition table="x_2056099_indust_0_cust_order">customer_referenceISEMPTY<item endquery="false" field="customer_reference" goto="false" newquery="false" operator="ISEMPTY" or="false" value=""/>
+        </filter_condition>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Auto Generate Customer Reference</name>
+        <order>50</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function() {
+    var ref = current.getValue('customer_reference');
+    if (ref && ref.trim() !== '') return;
+    var maxNum = 1000;
+    var gr = new GlideRecord('x_2056099_indust_0_cust_order');
+    gr.addQuery('customer_reference', 'STARTSWITH', 'PO-REF-');
+    gr.orderByDesc('customer_reference');
+    gr.setLimit(1);
+    gr.query();
+    if (gr.next()) {
+        var parts = gr.getValue('customer_reference').split('-');
+        var last = parseInt(parts[2], 10);
+        if (!isNaN(last) && last >= maxNum) maxNum = last;
+    }
+    var candidate = maxNum + 1;
+    var check = new GlideRecord('x_2056099_indust_0_cust_order');
+    check.addQuery('customer_reference', 'PO-REF-' + candidate);
+    check.setLimit(1);
+    check.query();
+    while (check.hasNext()) {
+        candidate++;
+        check = new GlideRecord('x_2056099_indust_0_cust_order');
+        check.addQuery('customer_reference', 'PO-REF-' + candidate);
+        check.setLimit(1);
+        check.query();
+    }
+    current.setValue('customer_reference', 'PO-REF-' + candidate);
+})()]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 18:04:58</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>57a103c6d0fe488b9dc58a1dff782f59</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Auto Generate Customer Reference</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_57a103c6d0fe488b9dc58a1dff782f59</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 18:04:58</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=57a103c6d0fe488b9dc58a1dff782f59"/>
+</record_update>

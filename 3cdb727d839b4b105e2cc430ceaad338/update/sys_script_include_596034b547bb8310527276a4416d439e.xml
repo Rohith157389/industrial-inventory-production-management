@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_2056099_indust_0.OrderToProductionSync</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Keeps customer orders, production orders and finished-goods stock in step</description>
+        <mobile_callable>false</mobile_callable>
+        <name>OrderToProductionSync</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[/**
+ * OrderToProductionSync
+ *
+ * Keeps the order-to-production chain in step:
+ *   - customer order line  -> production order (via ProductionOrderCreator)
+ *   - production order status -> order line status -> customer order status
+ *   - completed production order -> finished-goods stock + receipt transaction
+ *
+ * Called from business rules on cust_ord_item, cust_order and production_order.
+ */
+var OrderToProductionSync = Class.create();
+OrderToProductionSync.prototype = {
+    P: 'x_2056099_indust_0_',
+    // New production orders go straight into the material check so the BOM is exploded and stock reserved.
+    AUTO_MATERIAL_CHECK: true,
+    ITEM_STATUS: {
+        material_check: 'material_check', materials_reserved: 'validated', planned: 'validated',
+        in_production: 'in_production', on_hold: 'in_production', completed: 'completed'
+    },
+
+    initialize: function() {},
+
+    /** Create the production order for one order line (no-op if one already exists). */
+    createForItem: function(itemSysId) {
+        var result = new x_2056099_indust_0.ProductionOrderCreator().createFromItem(itemSysId);
+        if (!result || !result.success) {
+            return result;
+        }
+        var po = new GlideRecord(this.P + 'production_order');
+        var item = new GlideRecord(this.P + 'cust_ord_item');
+        if (po.get(result.production_order) && item.get(itemSysId)) {
+            var due = item.getValue('requested_delivery_date') || item.customer_order.requested_delivery_date + '';
+            po.setValue('planned_start_date', new GlideDateTime());
+            if (due) {
+                po.setValue('planned_end_date', due);
+            }
+            if (this.AUTO_MATERIAL_CHECK) {
+                po.setValue('status', 'material_check');
+            }
+            po.update();
+        }
+        return result;
+    },
+
+    /** Create production orders for every active line of an order that does not have one yet. */
+    createForOrder: function(orderSysId) {
+        var created = 0;
+        var item = new GlideRecord(this.P + 'cust_ord_item');
+        item.addQuery('customer_order', orderSysId);
+        item.addQuery('active', true);
+        item.addQuery('item_status', '!=', 'cancelled');
+        item.addNotNullQuery('material_product');
+        item.query();
+        while (item.next()) {
+            if (this._hasProductionOrder(item.getUniqueValue())) {
+                continue;
+            }
+            var r = this.createForItem(item.getUniqueValue());
+            if (r && r.success) {
+                created++;
+            }
+        }
+        return created;
+    },
+
+    /** Recalculate cust_order.total_order_quantity from its non-cancelled lines. */
+    rollUpOrderQuantity: function(orderSysId, excludeItemSysId) {
+        if (!orderSysId) {
+            return;
+        }
+        var total = 0;
+        var item = new GlideRecord(this.P + 'cust_ord_item');
+        item.addQuery('customer_order', orderSysId);
+        item.addQuery('item_status', '!=', 'cancelled');
+        item.query();
+        while (item.next()) {
+            if (excludeItemSysId && item.getUniqueValue() == excludeItemSysId) {
+                continue;
+            }
+            total += parseFloat(item.getValue('quantity_ordered')) || 0;
+        }
+        var order = new GlideRecord(this.P + 'cust_order');
+        if (order.get(orderSysId) && (parseFloat(order.getValue('total_order_quantity')) || 0) != total) {
+            order.setValue('total_order_quantity', total);
+            order.update();
+        }
+    },
+
+    /** Push a production order's status to its order line, then roll the lines up to the customer order. */
+    syncFromProductionOrder: function(po) {
+        var itemId = po.getValue('customer_order_item');
+        var itemStatus = this.ITEM_STATUS[po.getValue('status')];
+        if (itemId && itemStatus) {
+            var item = new GlideRecord(this.P + 'cust_ord_item');
+            if (item.get(itemId) && item.getValue('item_status') != itemStatus && item.getValue('item_status') != 'cancelled') {
+                item.setValue('item_status', itemStatus);
+                item.update();
+            }
+        }
+        this._rollUpOrderStatus(po.getValue('customer_order'));
+    },
+
+    /** Add the produced quantity to finished-goods stock and write a receipt transaction (once per order). */
+    postFinishedGoods: function(po) {
+        var qty = parseFloat(po.getValue('quantity_produced')) || 0;
+        var product = po.getValue('finished_product');
+        if (qty <= 0 || !product) {
+            return null;
+        }
+        var number = po.getValue('number');
+        var done = new GlideRecord(this.P + 'inv_txn');
+        done.addQuery('related_production_order', number);
+        done.addQuery('transaction_type', 'receipt');
+        done.addQuery('material_product', product);
+        done.addQuery('sys_created_on', '>=', po.getValue('sys_created_on'));
+        done.setLimit(1);
+        done.query();
+        if (done.hasNext()) {
+            return null;
+        }
+
+        var loc = po.getValue('fulfillment_location') || po.getValue('production_location');
+        var stock = this._findStock(product, loc);
+        if (!stock) {
+            stock = new GlideRecord(this.P + 'inv_stock');
+            stock.initialize();
+            stock.setValue('number', 'INV-FG-' + number);
+            stock.setValue('material_product', product);
+            stock.setValue('location', loc);
+            stock.setValue('inventory_type', 'finished_goods');
+            stock.setValue('status', 'available');
+            stock.setValue('active', true);
+            stock.setValue('total_quantity', qty);
+            stock.setValue('available_quantity', qty);
+            stock.setValue('last_updated', new GlideDateTime());
+            if (!loc || !stock.insert()) {
+                gs.warn('OrderToProductionSync: no stock location to receive ' + qty + ' units from ' + number);
+                return null;
+            }
+        } else {
+            stock.setValue('total_quantity', (parseFloat(stock.getValue('total_quantity')) || 0) + qty);
+            stock.setValue('available_quantity', (parseFloat(stock.getValue('available_quantity')) || 0) + qty);
+            stock.setValue('last_updated', new GlideDateTime());
+            stock.update();
+        }
+
+        var txn = new GlideRecord(this.P + 'inv_txn');
+        txn.initialize();
+        txn.setValue('number', this._nextTxnNumber());
+        txn.setValue('transaction_type', 'receipt');
+        txn.setValue('status', 'completed');
+        txn.setValue('transaction_date', new GlideDateTime());
+        txn.setValue('quantity', qty);
+        txn.setValue('material_product', product);
+        txn.setValue('inventory_stock', stock.getUniqueValue());
+        txn.setValue('requested_by', gs.getUserID());
+        txn.setValue('source_location', po.getValue('production_location'));
+        txn.setValue('destination_location', stock.getValue('location'));
+        txn.setValue('related_production_order', number);
+        txn.setValue('reason', 'Finished goods receipt from production order ' + number);
+        return txn.insert();
+    },
+
+    _hasProductionOrder: function(itemSysId) {
+        var po = new GlideRecord(this.P + 'production_order');
+        po.addQuery('customer_order_item', itemSysId);
+        po.addQuery('status', '!=', 'cancelled');
+        po.setLimit(1);
+        po.query();
+        return po.hasNext();
+    },
+
+    _rollUpOrderStatus: function(orderSysId) {
+        var order = new GlideRecord(this.P + 'cust_order');
+        if (!orderSysId || !order.get(orderSysId)) {
+            return;
+        }
+        var current = order.getValue('status');
+        if (current == 'cancelled' || current == 'rejected') {
+            return;
+        }
+        var n = { total: 0, completed: 0, in_production: 0, material_check: 0, validated: 0 };
+        var item = new GlideRecord(this.P + 'cust_ord_item');
+        item.addQuery('customer_order', orderSysId);
+        item.addQuery('item_status', '!=', 'cancelled');
+        item.query();
+        while (item.next()) {
+            n.total++;
+            var s = item.getValue('item_status');
+            if (n[s] !== undefined) {
+                n[s]++;
+            }
+        }
+        var next = '';
+        if (n.total > 0 && n.completed == n.total) {
+            next = 'completed';
+        } else if (n.completed > 0) {
+            next = 'partially_completed';
+        } else if (n.in_production > 0) {
+            next = 'in_production';
+        } else if (n.material_check > 0) {
+            next = 'under_validation';
+        } else if (n.validated > 0) {
+            next = 'approved';
+        }
+        if (next && next != current) {
+            order.setValue('status', next);
+            order.update();
+        }
+    },
+
+    _findStock: function(product, loc) {
+        var best = null, bestScore = -1;
+        var s = new GlideRecord(this.P + 'inv_stock');
+        s.addQuery('material_product', product);
+        s.addQuery('status', 'available');
+        s.query();
+        while (s.next()) {
+            var score = (loc && s.getValue('location') == loc ? 1000000 : 0) + (s.getValue('active') == '1' ? 100000 : 0) +
+                Math.min(parseFloat(s.getValue('available_quantity')) || 0, 99999);
+            if (score > bestScore) {
+                bestScore = score;
+                best = s.getUniqueValue();
+            }
+        }
+        if (!best) {
+            return null;
+        }
+        var out = new GlideRecord(this.P + 'inv_stock');
+        return out.get(best) ? out : null;
+    },
+
+    _nextTxnNumber: function() {
+        var prefix = 'TXN-' + new GlideDateTime().getYearLocalTime() + '-';
+        var last = new GlideRecord(this.P + 'inv_txn');
+        last.addQuery('number', 'STARTSWITH', prefix);
+        last.orderByDesc('number');
+        last.setLimit(1);
+        last.query();
+        var n = last.next() ? parseInt((last.getValue('number') + '').substring(prefix.length), 10) || 0 : 0;
+        return prefix + ('0000' + (n + 1)).slice(-4);
+    },
+
+    type: 'OrderToProductionSync'
+};
+]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-08 13:08:33</sys_created_on>
+        <sys_id>596034b547bb8310527276a4416d439e</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>OrderToProductionSync</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_script_include_596034b547bb8310527276a4416d439e</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-08 13:08:33</sys_updated_on>
+    </sys_script_include>
+</record_update>
