@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="22caf3c629024202bf3c7b57ad71c02d" label="Supplier Rating" name="x_2056099_indust_0_sup_rate" type="collection">
-        <element label="Quantity Rating (0-100)" max_length="40" name="quantity_rating" type="integer"/>
-        <element label="Quality Rating (0-100)" max_length="40" name="quality_rating" type="integer"/>
-        <element label="Delivery Rating (0-100)" max_length="40" name="delivery_rating" type="integer"/>
         <element label="Rating Date" mandatory="true" max_length="40" name="rating_date" type="glide_date_time"/>
-        <element label="Comments" max_length="2000" name="comments" type="multi_two_lines"/>
-        <element label="Procurement Report" mandatory="true" max_length="32" name="procurement_report" reference="x_2056099_indust_0_proc_rpt" type="reference"/>
         <element label="Supplier" mandatory="true" max_length="32" name="supplier" reference="x_2056099_indust_0_supplier" type="reference"/>
+        <element label="Delivery Rating (0-100)" max_length="40" name="delivery_rating" type="integer"/>
+        <element label="Procurement Report" mandatory="true" max_length="32" name="procurement_report" reference="x_2056099_indust_0_proc_rpt" type="reference"/>
+        <element label="Quality Rating (0-100)" max_length="40" name="quality_rating" type="integer"/>
+        <element label="Comments" max_length="2000" name="comments" type="multi_two_lines"/>
+        <element label="Quantity Rating (0-100)" max_length="40" name="quantity_rating" type="integer"/>
         <element label="Overall Rating (0-100)" mandatory="true" max_length="40" name="rating" type="integer"/>
         <index name="index">
             <element name="procurement_report"/>
