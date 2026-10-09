@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="5ac92f2dc07949719fe108ccefcffe8a" label="Fulfillment Decision" name="x_2056099_indust_0_fulfill_dec" type="collection">
-        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
-        <element label="Production Order" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
-        <element default="pending" label="Status" mandatory="true" max_length="40" name="status" type="string"/>
-        <element label="Urgency" max_length="40" name="urgency" type="string"/>
         <element label="Original Reserved Quantity" max_length="15" name="original_reserved_quantity" type="decimal"/>
-        <element label="Available Quantity" max_length="15" name="available_quantity" type="decimal"/>
-        <element label="Safety Stock Consumed" max_length="15" name="safety_stock_consumed" type="decimal"/>
-        <element label="Affected Production Order" max_length="32" name="affected_production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
-        <element label="Required Quantity" mandatory="true" max_length="15" name="required_quantity" type="decimal"/>
-        <element label="Supplier" max_length="32" name="supplier" reference="core_company" type="reference"/>
-        <element label="Source Warehouse" max_length="32" name="source_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Reallocation Quantity" max_length="15" name="reallocation_quantity" type="decimal"/>
-        <element label="Incoming Quantity" max_length="15" name="incoming_quantity" type="decimal"/>
-        <element label="Supplier Lead Time Days" max_length="15" name="supplier_lead_time_days" type="decimal"/>
-        <element label="Customer Required Date" max_length="40" name="customer_required_date" type="glide_date_time"/>
-        <element label="Material Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
-        <element label="Decision Reason" max_length="4000" name="decision_reason" type="string"/>
-        <element label="Transfer Lead Time Days" max_length="15" name="transfer_lead_time_days" type="decimal"/>
-        <element label="Replenishment Date" max_length="40" name="replenishment_date" type="glide_date_time"/>
-        <element label="Shortage Quantity" max_length="15" name="shortage_quantity" type="decimal"/>
-        <element label="Original Production Deadline" max_length="40" name="original_production_deadline" type="glide_date_time"/>
-        <element label="Assigned Warehouse" mandatory="true" max_length="32" name="assigned_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
-        <element label="Decision Type" mandatory="true" max_length="40" name="decision_type" type="string"/>
         <element label="Customer Order" max_length="32" name="customer_order" reference="x_2056099_indust_0_cust_order" type="reference"/>
+        <element label="Decision Reason" max_length="4000" name="decision_reason" type="string"/>
+        <element label="Source Warehouse" max_length="32" name="source_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Shortage Quantity" max_length="15" name="shortage_quantity" type="decimal"/>
         <element label="Expected Fulfillment Date" max_length="40" name="expected_fulfillment_date" type="glide_date_time"/>
+        <element label="Reallocation Quantity" max_length="15" name="reallocation_quantity" type="decimal"/>
+        <element label="Original Production Deadline" max_length="40" name="original_production_deadline" type="glide_date_time"/>
         <element label="Supplier Lead Time Source" max_length="40" name="supplier_lead_time_source" type="string"/>
+        <element label="Available Quantity" max_length="15" name="available_quantity" type="decimal"/>
+        <element label="Supplier Lead Time Days" max_length="15" name="supplier_lead_time_days" type="decimal"/>
+        <element label="Transfer Lead Time Days" max_length="15" name="transfer_lead_time_days" type="decimal"/>
+        <element label="Required Quantity" mandatory="true" max_length="15" name="required_quantity" type="decimal"/>
+        <element default="pending" label="Status" mandatory="true" max_length="40" name="status" type="string"/>
+        <element label="Incoming Quantity" max_length="15" name="incoming_quantity" type="decimal"/>
+        <element label="Assigned Warehouse" mandatory="true" max_length="32" name="assigned_warehouse" reference="x_2056099_indust_0_inv_loc" type="reference"/>
+        <element label="Safety Stock Consumed" max_length="15" name="safety_stock_consumed" type="decimal"/>
+        <element default="true" label="Active" mandatory="true" max_length="40" name="active" type="boolean"/>
+        <element label="Customer Required Date" max_length="40" name="customer_required_date" type="glide_date_time"/>
+        <element label="Production Order" max_length="32" name="production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
+        <element label="Material Product" mandatory="true" max_length="32" name="material_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="Supplier" max_length="32" name="supplier" reference="core_company" type="reference"/>
+        <element label="Replenishment Date" max_length="40" name="replenishment_date" type="glide_date_time"/>
+        <element label="Urgency" max_length="40" name="urgency" type="string"/>
+        <element label="Decision Type" mandatory="true" max_length="40" name="decision_type" type="string"/>
+        <element label="Affected Production Order" max_length="32" name="affected_production_order" reference="x_2056099_indust_0_production_order" type="reference"/>
         <index name="index">
             <element name="affected_production_order"/>
         </index>

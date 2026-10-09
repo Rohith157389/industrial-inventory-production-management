@@ -45,7 +45,7 @@
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_hub_flow_182c8f1c812847d5bb86f582cf1a5acc</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-09 03:25:28</sys_updated_on>
+        <sys_updated_on>2026-10-09 17:44:41</sys_updated_on>
         <type>flow</type>
         <updation_source/>
         <version>2</version>
@@ -635,29 +635,7 @@
     </sys_hub_flow_logic_instance_v2>
     <sys_hub_pill_compound action="delete_multiple" query="attached_to=182c8f1c812847d5bb86f582cf1a5acc"/>
     <sys_hub_flow_variable action="delete_multiple" query="model=182c8f1c812847d5bb86f582cf1a5acc"/>
-    <sys_documentation action="INSERT_OR_UPDATE">
-        <element>current</element>
-        <help/>
-        <hint/>
-        <label>Record</label>
-        <language>en</language>
-        <name>var__m_sys_hub_flow_input_182c8f1c812847d5bb86f582cf1a5acc</name>
-        <plural/>
-        <sys_class_name>sys_documentation</sys_class_name>
-        <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-02 10:43:00</sys_created_on>
-        <sys_id>4a3f8a75513703107f44d784e78d361d</sys_id>
-        <sys_mod_count>0</sys_mod_count>
-        <sys_name>Record</sys_name>
-        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-        <sys_policy/>
-        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_182c8f1c812847d5bb86f582cf1a5acc_current_en</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-02 10:43:00</sys_updated_on>
-        <url/>
-        <url_target/>
-    </sys_documentation>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_182c8f1c812847d5bb86f582cf1a5acc"/>
     <sys_documentation action="INSERT_OR_UPDATE">
         <element>changed_fields</element>
         <help/>
@@ -669,7 +647,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-02 10:43:01</sys_created_on>
-        <sys_id>8e3f8a75513703107f44d784e78d3618</sys_id>
+        <sys_id>2687f6c2937fc310e61e3b277bba1018</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Changed Fields</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -692,13 +670,36 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-02 10:43:00</sys_created_on>
-        <sys_id>c23f8a75513703107f44d784e78d3660</sys_id>
+        <sys_id>6e87f6c2937fc310e61e3b277bba107b</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Table Name</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_182c8f1c812847d5bb86f582cf1a5acc_table_name_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-02 10:43:00</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>current</element>
+        <help/>
+        <hint/>
+        <label>Record</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_input_182c8f1c812847d5bb86f582cf1a5acc</name>
+        <plural/>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-02 10:43:00</sys_created_on>
+        <sys_id>ea87f6c2937fc310e61e3b277bba1075</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Record</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_182c8f1c812847d5bb86f582cf1a5acc_current_en</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-02 10:43:00</sys_updated_on>
         <url/>
@@ -1303,24 +1304,25 @@
     </sys_hub_flow_logic_instance_v2>
     <sys_hub_pill_compound action="delete_multiple" query="attached_to=138511f7532bc31045b132a0a0490e9e"/>
     <sys_hub_flow_variable action="delete_multiple" query="model=138511f7532bc31045b132a0a0490e9e"/>
+    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_138511f7532bc31045b132a0a0490e9e"/>
     <sys_documentation action="INSERT_OR_UPDATE">
-        <element>current</element>
+        <element>table_name</element>
         <help/>
         <hint/>
-        <label>Record</label>
+        <label>Table Name</label>
         <language>en</language>
         <name>var__m_sys_hub_flow_input_138511f7532bc31045b132a0a0490e9e</name>
         <plural/>
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-02 10:43:03</sys_created_on>
-        <sys_id>053f0a75513703107f44d784e78d36c1</sys_id>
+        <sys_id>1287b6c2937fc310e61e3b277bba1064</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name>Record</sys_name>
+        <sys_name>Table Name</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_138511f7532bc31045b132a0a0490e9e_current_en</sys_update_name>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_138511f7532bc31045b132a0a0490e9e_table_name_en</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-02 10:43:03</sys_updated_on>
         <url/>
@@ -1337,7 +1339,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-02 10:43:03</sys_created_on>
-        <sys_id>493f0a75513703107f44d784e78d36bc</sys_id>
+        <sys_id>5287b6c2937fc310e61e3b277bba104b</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Changed Fields</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -1350,23 +1352,23 @@
         <url_target/>
     </sys_documentation>
     <sys_documentation action="INSERT_OR_UPDATE">
-        <element>table_name</element>
+        <element>current</element>
         <help/>
         <hint/>
-        <label>Table Name</label>
+        <label>Record</label>
         <language>en</language>
         <name>var__m_sys_hub_flow_input_138511f7532bc31045b132a0a0490e9e</name>
         <plural/>
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-02 10:43:03</sys_created_on>
-        <sys_id>d53f0a75513703107f44d784e78d36f7</sys_id>
+        <sys_id>d687b6c2937fc310e61e3b277bba1051</sys_id>
         <sys_mod_count>0</sys_mod_count>
-        <sys_name>Table Name</sys_name>
+        <sys_name>Record</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_138511f7532bc31045b132a0a0490e9e_table_name_en</sys_update_name>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_input_138511f7532bc31045b132a0a0490e9e_current_en</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-02 10:43:03</sys_updated_on>
         <url/>
