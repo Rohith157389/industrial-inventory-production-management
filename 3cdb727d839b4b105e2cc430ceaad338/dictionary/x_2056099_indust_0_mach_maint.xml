@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="31030dff33324e4d8b00ac2b062b6251" label="Machine Maintenance" name="x_2056099_indust_0_mach_maint" type="collection">
-        <element label="Maintenance Manager" max_length="32" name="maintenance_manager" reference="sys_user" type="reference"/>
-        <element label="Failure Reason" max_length="4000" name="failure_reason" type="string"/>
-        <element default="draft" label="Status" mandatory="true" max_length="40" name="status" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Awaiting Return" sequence="6" value="awaiting_return"/>
-                <element inactive_on_update="false" label="Requested" sequence="2" value="requested"/>
-                <element inactive_on_update="false" label="Cancelled" sequence="10" value="cancelled"/>
-                <element inactive_on_update="false" label="Closed" sequence="9" value="closed"/>
-                <element inactive_on_update="false" label="Awaiting Parts" sequence="5" value="awaiting_parts"/>
-                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
-                <element inactive_on_update="false" label="In Progress" sequence="4" value="in_progress"/>
-                <element inactive_on_update="false" label="Verified" sequence="8" value="verified"/>
-                <element inactive_on_update="false" label="Completed" sequence="7" value="completed"/>
-                <element inactive_on_update="false" label="Approved" sequence="3" value="approved"/>
-            </choice>
-        </element>
-        <element label="Expected Completion" max_length="40" name="expected_completion" type="glide_date_time"/>
-        <element label="Related Production Order" max_length="32" name="related_prod_order" reference="x_2056099_indust_0_production_order" type="reference"/>
-        <element label="Machine" mandatory="true" max_length="32" name="machine" reference="x_2056099_indust_0_machine" type="reference"/>
-        <element label="Verified By" max_length="32" name="verified_by" reference="sys_user" type="reference"/>
-        <element label="Actual Completion" max_length="40" name="actual_completion" type="glide_date_time"/>
-        <element label="Maintenance Type" mandatory="true" max_length="40" name="maintenance_type" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Overhaul" sequence="5" value="overhaul"/>
-                <element inactive_on_update="false" label="Emergency" sequence="4" value="emergency"/>
-                <element inactive_on_update="false" label="Preventive" sequence="1" value="preventive"/>
-                <element inactive_on_update="false" label="Predictive" sequence="3" value="predictive"/>
-                <element inactive_on_update="false" label="Corrective" sequence="2" value="corrective"/>
-            </choice>
-        </element>
-        <element label="Technician Notes" max_length="4000" name="technician_notes" type="string"/>
-        <element default="pending" label="Verification Status" max_length="40" name="verification_status" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Rejected" sequence="3" value="rejected"/>
-                <element inactive_on_update="false" label="Verified" sequence="2" value="verified"/>
-                <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
-            </choice>
-        </element>
         <element label="Machine Type" max_length="32" name="machine_type" reference="x_2056099_indust_0_mach_type" type="reference"/>
-        <element label="Priority" max_length="40" name="priority" type="choice">
+        <element label="Actual Completion" max_length="40" name="actual_completion" type="glide_date_time"/>
+        <element label="Expected Completion" max_length="40" name="expected_completion" type="glide_date_time"/>
+        <element label="Severity" max_length="40" name="severity" type="choice">
             <choice>
-                <element inactive_on_update="false" label="1 - Critical" sequence="1" value="critical"/>
-                <element inactive_on_update="false" label="4 - Low" sequence="4" value="low"/>
-                <element inactive_on_update="false" label="3 - Medium" sequence="3" value="medium"/>
-                <element inactive_on_update="false" label="2 - High" sequence="2" value="high"/>
+                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
+                <element inactive_on_update="false" label="Major" sequence="2" value="major"/>
+                <element inactive_on_update="false" label="Minor" sequence="3" value="minor"/>
+                <element inactive_on_update="false" label="Cosmetic" sequence="4" value="cosmetic"/>
             </choice>
         </element>
         <element label="Assigned Technician" max_length="32" name="assigned_technician" reference="sys_user" type="reference"/>
-        <element display="true" label="Maintenance ID" mandatory="true" max_length="40" name="number" type="string"/>
-        <element label="Resolution" max_length="4000" name="resolution" type="string"/>
-        <element label="Estimated Cost" max_length="15" name="estimated_cost" type="decimal"/>
-        <element label="Severity" max_length="40" name="severity" type="choice">
+        <element label="Machine Returned to Service" max_length="40" name="machine_returned" type="boolean"/>
+        <element label="Root Cause" max_length="4000" name="root_cause" type="string"/>
+        <element default="pending" label="Verification Status" max_length="40" name="verification_status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Cosmetic" sequence="4" value="cosmetic"/>
-                <element inactive_on_update="false" label="Minor" sequence="3" value="minor"/>
-                <element inactive_on_update="false" label="Major" sequence="2" value="major"/>
-                <element inactive_on_update="false" label="Critical" sequence="1" value="critical"/>
+                <element inactive_on_update="false" label="Pending" sequence="1" value="pending"/>
+                <element inactive_on_update="false" label="Verified" sequence="2" value="verified"/>
+                <element inactive_on_update="false" label="Rejected" sequence="3" value="rejected"/>
             </choice>
         </element>
-        <element label="Start Date" max_length="40" name="start_date" type="glide_date_time"/>
+        <element label="Verified By" max_length="32" name="verified_by" reference="sys_user" type="reference"/>
+        <element default="draft" label="Status" mandatory="true" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Draft" sequence="1" value="draft"/>
+                <element inactive_on_update="false" label="Requested" sequence="2" value="requested"/>
+                <element inactive_on_update="false" label="Approved" sequence="3" value="approved"/>
+                <element inactive_on_update="false" label="In Progress" sequence="4" value="in_progress"/>
+                <element inactive_on_update="false" label="Awaiting Parts" sequence="5" value="awaiting_parts"/>
+                <element inactive_on_update="false" label="Awaiting Return" sequence="6" value="awaiting_return"/>
+                <element inactive_on_update="false" label="Completed" sequence="7" value="completed"/>
+                <element inactive_on_update="false" label="Verified" sequence="8" value="verified"/>
+                <element inactive_on_update="false" label="Closed" sequence="9" value="closed"/>
+                <element inactive_on_update="false" label="Cancelled" sequence="10" value="cancelled"/>
+            </choice>
+        </element>
+        <element label="Estimated Cost" max_length="15" name="estimated_cost" type="decimal"/>
+        <element label="Priority" max_length="40" name="priority" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="1 - Critical" sequence="1" value="critical"/>
+                <element inactive_on_update="false" label="2 - High" sequence="2" value="high"/>
+                <element inactive_on_update="false" label="3 - Medium" sequence="3" value="medium"/>
+                <element inactive_on_update="false" label="4 - Low" sequence="4" value="low"/>
+            </choice>
+        </element>
         <element label="Actual Cost" max_length="15" name="actual_cost" type="decimal"/>
-        <element label="Machine Returned to Service" max_length="40" name="machine_returned" type="boolean"/>
-        <element label="Replacement Required" max_length="40" name="replacement_required" type="boolean"/>
-        <element label="Assignment Group" max_length="32" name="assignment_group" reference="sys_user_group" type="reference"/>
-        <element label="Related Downtime" max_length="32" name="related_downtime" reference="x_2056099_indust_0_mach_down" type="reference"/>
-        <element label="Root Cause" max_length="4000" name="root_cause" type="string"/>
         <element label="Notes" max_length="4000" name="notes" type="string"/>
+        <element label="Related Downtime" max_length="32" name="related_downtime" reference="x_2056099_indust_0_mach_down" type="reference"/>
+        <element label="Technician Notes" max_length="4000" name="technician_notes" type="string"/>
+        <element label="Machine" mandatory="true" max_length="32" name="machine" reference="x_2056099_indust_0_machine" type="reference"/>
+        <element label="Failure Reason" max_length="4000" name="failure_reason" type="string"/>
+        <element label="Resolution" max_length="4000" name="resolution" type="string"/>
+        <element label="Start Date" max_length="40" name="start_date" type="glide_date_time"/>
+        <element label="Assignment Group" max_length="32" name="assignment_group" reference="sys_user_group" type="reference"/>
+        <element label="Maintenance Type" mandatory="true" max_length="40" name="maintenance_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Preventive" sequence="1" value="preventive"/>
+                <element inactive_on_update="false" label="Corrective" sequence="2" value="corrective"/>
+                <element inactive_on_update="false" label="Predictive" sequence="3" value="predictive"/>
+                <element inactive_on_update="false" label="Emergency" sequence="4" value="emergency"/>
+                <element inactive_on_update="false" label="Overhaul" sequence="5" value="overhaul"/>
+            </choice>
+        </element>
+        <element label="Related Production Order" max_length="32" name="related_prod_order" reference="x_2056099_indust_0_production_order" type="reference"/>
+        <element label="Maintenance Manager" max_length="32" name="maintenance_manager" reference="sys_user" type="reference"/>
+        <element display="true" label="Maintenance ID" mandatory="true" max_length="40" name="number" type="string"/>
+        <element label="Replacement Required" max_length="40" name="replacement_required" type="boolean"/>
         <index name="index">
             <element name="assigned_technician"/>
         </index>

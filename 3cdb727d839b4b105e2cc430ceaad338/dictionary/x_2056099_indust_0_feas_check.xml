@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="ddfa4afb4cbc4b1f921a39935892f131" label="Feasibility Check" name="x_2056099_indust_0_feas_check" type="collection">
-        <element label="Feasibility Status" max_length="40" name="status" type="string"/>
-        <element label="Bottleneck Resource" max_length="100" name="bottleneck_resource" type="string"/>
-        <element label="Location Name" max_length="100" name="location_name" type="string"/>
         <element label="Delivery Status" max_length="500" name="delivery_status" type="string"/>
-        <element label="Component Count" name="component_count" type="integer"/>
-        <element default="javascript:getNextObjNumberPadded();" display="true" label="Number" name="number" type="string"/>
-        <element label="Quantity" name="quantity" type="integer"/>
-        <element label="BOM" max_length="200" name="bom_name" type="string"/>
-        <element label="Product Name" max_length="200" name="product_name" type="string"/>
-        <element label="Requested Delivery Date" name="requested_date" type="glide_date"/>
-        <element label="Location ID" max_length="20" name="location_id" type="string"/>
-        <element label="Material Status" max_length="100" name="material_status" type="string"/>
-        <element label="Effective Capacity/Day" name="effective_capacity" type="decimal"/>
-        <element label="Product ID" max_length="40" name="product_id" type="string"/>
+        <element label="Bottleneck Resource" max_length="100" name="bottleneck_resource" type="string"/>
         <element label="Earliest Completion" max_length="60" name="earliest_completion" type="string"/>
-        <element label="Production Days" name="production_days" type="integer"/>
-        <element label="Reason/Summary" max_length="4000" name="reason" type="multi_two_lines"/>
-        <element label="Finished Product" name="finished_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element label="BOM" max_length="200" name="bom_name" type="string"/>
+        <element label="Location ID" max_length="20" name="location_id" type="string"/>
+        <element label="Feasibility Status" max_length="40" name="status" type="string"/>
+        <element label="Product ID" max_length="40" name="product_id" type="string"/>
         <element label="BOM Number" max_length="40" name="bom_number" type="string"/>
+        <element label="Quantity" max_length="40" name="quantity" type="integer"/>
+        <element label="Requested Delivery Date" max_length="40" name="requested_date" type="glide_date"/>
+        <element label="Effective Capacity/Day" max_length="15" name="effective_capacity" type="decimal"/>
+        <element label="Finished Product" max_length="32" name="finished_product" reference="x_2056099_indust_0_mat_master" type="reference"/>
+        <element default="javascript:getNextObjNumberPadded();" display="true" label="Number" max_length="40" name="number" type="string"/>
+        <element label="Component Count" max_length="40" name="component_count" type="integer"/>
+        <element label="Location Name" max_length="100" name="location_name" type="string"/>
+        <element label="Product Name" max_length="200" name="product_name" type="string"/>
+        <element label="Material Status" max_length="100" name="material_status" type="string"/>
+        <element label="Reason/Summary" max_length="4000" name="reason" type="multi_two_lines"/>
+        <element label="Production Days" max_length="40" name="production_days" type="integer"/>
         <index name="index">
             <element name="finished_product"/>
         </index>

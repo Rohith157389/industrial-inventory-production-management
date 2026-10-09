@@ -45,7 +45,7 @@
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_hub_flow_288c65d4528f49d68ca9a4771195f61e</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-08 07:56:47</sys_updated_on>
+        <sys_updated_on>2026-10-09 03:25:31</sys_updated_on>
         <type>subflow</type>
         <updation_source/>
         <version>2</version>
@@ -574,7 +574,6 @@
     </sys_hub_flow_logic_instance_v2>
     <sys_hub_pill_compound action="delete_multiple" query="attached_to=288c65d4528f49d68ca9a4771195f61e"/>
     <sys_hub_flow_variable action="delete_multiple" query="model=288c65d4528f49d68ca9a4771195f61e"/>
-    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_288c65d4528f49d68ca9a4771195f61e"/>
     <sys_documentation action="INSERT_OR_UPDATE">
         <element>simulationSysId</element>
         <help/>
@@ -586,7 +585,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 07:26:28</sys_created_on>
-        <sys_id>83d623e183ff4310dd8c9610feaad32f</sys_id>
+        <sys_id>363fca75513703107f44d784e78d36f8</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Simulation Record sys_id</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -600,29 +599,6 @@
     </sys_documentation>
     <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_288c65d4528f49d68ca9a4771195f61e"/>
     <sys_documentation action="INSERT_OR_UPDATE">
-        <element>bestStrategy</element>
-        <help/>
-        <hint/>
-        <label>Best Strategy</label>
-        <language>en</language>
-        <name>var__m_sys_hub_flow_output_288c65d4528f49d68ca9a4771195f61e</name>
-        <plural>Best Strategys</plural>
-        <sys_class_name>sys_documentation</sys_class_name>
-        <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-01 07:26:29</sys_created_on>
-        <sys_id>5cf6efe183ff4310dd8c9610feaad38e</sys_id>
-        <sys_mod_count>0</sys_mod_count>
-        <sys_name>Best Strategy</sys_name>
-        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-        <sys_policy/>
-        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_output_288c65d4528f49d68ca9a4771195f61e_bestStrategy_en</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 07:26:29</sys_updated_on>
-        <url/>
-        <url_target/>
-    </sys_documentation>
-    <sys_documentation action="INSERT_OR_UPDATE">
         <element>success</element>
         <help/>
         <hint/>
@@ -633,7 +609,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 07:26:28</sys_created_on>
-        <sys_id>d0f6efe183ff4310dd8c9610feaad395</sys_id>
+        <sys_id>0a5fcab5513703107f44d784e78d3697</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Success</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -642,6 +618,29 @@
         <sys_update_name>sys_documentation_var__m_sys_hub_flow_output_288c65d4528f49d68ca9a4771195f61e_success_en</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-01 07:26:28</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>bestStrategy</element>
+        <help/>
+        <hint/>
+        <label>Best Strategy</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_output_288c65d4528f49d68ca9a4771195f61e</name>
+        <plural>Best Strategys</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 07:26:29</sys_created_on>
+        <sys_id>4e5fcab5513703107f44d784e78d3692</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Best Strategy</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_output_288c65d4528f49d68ca9a4771195f61e_bestStrategy_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 07:26:29</sys_updated_on>
         <url/>
         <url_target/>
     </sys_documentation>
@@ -1225,7 +1224,6 @@
     </sys_hub_flow_logic_instance_v2>
     <sys_hub_pill_compound action="delete_multiple" query="attached_to=8b2fdb1b93e38310e61e3b277bba1006"/>
     <sys_hub_flow_variable action="delete_multiple" query="model=8b2fdb1b93e38310e61e3b277bba1006"/>
-    <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_variable_8b2fdb1b93e38310e61e3b277bba1006"/>
     <sys_documentation action="INSERT_OR_UPDATE">
         <element>simulationSysId</element>
         <help/>
@@ -1237,7 +1235,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 07:27:24</sys_created_on>
-        <sys_id>0de667e183ff4310dd8c9610feaad35b</sys_id>
+        <sys_id>214f42b5513703107f44d784e78d3679</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Simulation Record sys_id</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -1251,29 +1249,6 @@
     </sys_documentation>
     <sys_choice action="delete_multiple" query="name=var__m_sys_hub_flow_input_8b2fdb1b93e38310e61e3b277bba1006"/>
     <sys_documentation action="INSERT_OR_UPDATE">
-        <element>bestStrategy</element>
-        <help/>
-        <hint/>
-        <label>Best Strategy</label>
-        <language>en</language>
-        <name>var__m_sys_hub_flow_output_8b2fdb1b93e38310e61e3b277bba1006</name>
-        <plural>Best Strategys</plural>
-        <sys_class_name>sys_documentation</sys_class_name>
-        <sys_created_by>admin</sys_created_by>
-        <sys_created_on>2026-10-01 07:27:27</sys_created_on>
-        <sys_id>6cf6232583ff4310dd8c9610feaad393</sys_id>
-        <sys_mod_count>0</sys_mod_count>
-        <sys_name>Best Strategy</sys_name>
-        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
-        <sys_policy/>
-        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
-        <sys_update_name>sys_documentation_var__m_sys_hub_flow_output_8b2fdb1b93e38310e61e3b277bba1006_bestStrategy_en</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-01 07:27:27</sys_updated_on>
-        <url/>
-        <url_target/>
-    </sys_documentation>
-    <sys_documentation action="INSERT_OR_UPDATE">
         <element>success</element>
         <help/>
         <hint/>
@@ -1284,7 +1259,7 @@
         <sys_class_name>sys_documentation</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-01 07:27:26</sys_created_on>
-        <sys_id>e0f6232583ff4310dd8c9610feaad39a</sys_id>
+        <sys_id>a25f0eb5513703107f44d784e78d36cf</sys_id>
         <sys_mod_count>0</sys_mod_count>
         <sys_name>Success</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
@@ -1293,6 +1268,29 @@
         <sys_update_name>sys_documentation_var__m_sys_hub_flow_output_8b2fdb1b93e38310e61e3b277bba1006_success_en</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
         <sys_updated_on>2026-10-01 07:27:26</sys_updated_on>
+        <url/>
+        <url_target/>
+    </sys_documentation>
+    <sys_documentation action="INSERT_OR_UPDATE">
+        <element>bestStrategy</element>
+        <help/>
+        <hint/>
+        <label>Best Strategy</label>
+        <language>en</language>
+        <name>var__m_sys_hub_flow_output_8b2fdb1b93e38310e61e3b277bba1006</name>
+        <plural>Best Strategys</plural>
+        <sys_class_name>sys_documentation</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-10-01 07:27:27</sys_created_on>
+        <sys_id>e65f0eb5513703107f44d784e78d36ca</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Best Strategy</sys_name>
+        <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
+        <sys_update_name>sys_documentation_var__m_sys_hub_flow_output_8b2fdb1b93e38310e61e3b277bba1006_bestStrategy_en</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-10-01 07:27:27</sys_updated_on>
         <url/>
         <url_target/>
     </sys_documentation>
