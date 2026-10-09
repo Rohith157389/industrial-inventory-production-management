@@ -206,6 +206,8 @@
         if (tabKey === 'digital-twin') {
           if (typeof renderMachines === 'function') renderMachines();
           if (typeof updateDigitalTwinMetrics === 'function') updateDigitalTwinMetrics();
+          if (typeof renderOrders === 'function') renderOrders();
+          if (typeof renderStrategyMatrix === 'function') renderStrategyMatrix();
         }
       }
     }
@@ -419,7 +421,7 @@
         body += '<div class="kpis">' +
             '<div class="card kpi"><div class="l">Forecast demand, next ' + d.run.horizon + ' mo</div><div class="v">' + fmt0(k.fcTotal) + '</div><div class="d">' + (delta === null ? '' : (delta >= 0 ? '+' : '') + delta + '% vs prior ' + d.run.horizon + ' mo (' + fmt0(k.prevTotal) + ')') + '</div></div>' +
             '<div class="card kpi"><div class="l">Materials at risk</div><div class="v">' + atRisk + '</div><div class="d">' + (k.risks.Critical || 0) + ' critical \u00b7 ' + (k.risks.High || 0) + ' high</div></div>' +
-            '<div class="card kpi"><div class="l">Recommended order value</div><div class="v">&#8377;' + fmt0(k.totalCost) + '</div><div class="d">' + k.recs + ' recommendations</div></div>' +
+            '<div class="card kpi"><div class="l">Recommended order value</div><div class="v">$' + fmt0(Math.round((k.totalCost || 0) / 83)) + '</div><div class="d">' + k.recs + ' recommendations</div></div>' +
             '<div class="card kpi"><div class="l">Backtest error (WAPE)</div><div class="v">' + (k.wape === null ? 'n/a' : Math.round(k.wape * 100) + '%') + '</div><div class="d">Multi-model rolling origin</div></div>' +
             '<div class="card kpi"><div class="l">Materials in scope</div><div class="v">' + k.materials + '</div><div class="d">' + k.forecasted + ' forecasted across 3 hubs</div></div></div>';
 
@@ -689,7 +691,7 @@
                 '<td class="num"><b>' + fmt0(x.qty) + '</b></td>' +
                 '<td>' + esc(x.by) + '</td>' +
                 '<td>' + (x.conf ? esc(x.conf) : '&#8211;') + '</td>' +
-                '<td class="num">&#8377;' + fmt0(x.cost) + '</td>' +
+                '<td class="num">$' + fmt0(Math.round((x.cost || 0) / 83)) + '</td>' +
                 '<td class="act">' + (x.state === 'approved' ? '<span class="pill" style="background:#16a34a">Approved</span> <button data-rid="' + x.rid + '" data-s="new">Reopen</button>' :
                                       x.state === 'dismissed' ? '<span class="st">Dismissed</span> <button data-rid="' + x.rid + '" data-s="new">Reopen</button>' :
                                       '<button class="ok" data-rid="' + x.rid + '" data-s="approved">Approve &amp; Requisition</button><button data-rid="' + x.rid + '" data-s="dismissed">Dismiss</button>') + '</td></tr>';
@@ -817,9 +819,9 @@
         }
         load();
     }
+    window.dfcInit = init;
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
-})();
-      window.dfcInit = init;
+  })();
     })();
 
     // DIGITAL TWIN CLIENT ENGINE
@@ -2282,7 +2284,842 @@
 
     window.addEventListener('DOMContentLoaded', function() {
       closeDetailModal();
-    });]]></client_script>
+    });
+
+    /* [digital twin live sync 2026-10-09]
+       Runs the Digital Twin tab on its ServiceNow tables. Nothing outside the Digital Twin is touched.
+         reads : dt_work_center (work centers), sim_scenario + sim_schedule_run (scenarios, impacted orders),
+                 customer_bom + customer_bom_line + inv_stock (pipeline products, components, live stock),
+                 prod_res (bottleneck capacity), transfer_lead_time (rebalancing), cust_order (orders for a new scenario)
+         writes: sim_scenario, sim_schedule_run, inv_req, incident
+       One model drives every figure on the tab, and blocks that repeated another sub-tab are hidden.
+       If a read fails the bundled figures stay on screen. */
+    (function () {
+      var API = '/api/now/table/';
+      var TBL = 'x_2056099_indust_0_';
+      var PLANT = { HYD: 'Hyderabad', MAA: 'Chennai', CHN: 'Chennai', BLR: 'Bengaluru' };
+      var WH_OF = { Hyderabad: 'WH-HYD', Chennai: 'WH-MAA', Bengaluru: 'WH-BLR' };
+      var CITY_OF = { 'WH-HYD': 'Hyderabad', 'WH-MAA': 'Chennai', 'WH-BLR': 'Bengaluru' };
+      var CATEGORY = { utility_failure: 'multi_factor_complex', rush_order: 'urgent_order_ingestion', crew_absenteeism: 'workforce_constraint' };
+      var CATEGORY_LABEL = { machine_breakdown: 'Machine breakdown', material_shortage: 'Material shortage', urgent_order_ingestion: 'Urgent order', quality_disruption: 'Quality disruption',
+        workforce_constraint: 'Workforce constraint', supplier_delay: 'Supplier delay', multi_factor_complex: 'Multi-factor disruption' };
+      var OTD_STATUS = ['on_time_guaranteed', 'minor_delay_mitigated', 'on_time_buffer_used', 'delayed', 'critical_late'];
+      // the three mitigation options keep the cost and recovery proportions they were designed with
+      var STRATEGY = { A: { cost: 1, rec: 1 }, B: { cost: 85 / 42, rec: 23.2 / 21 }, C: { cost: 0, rec: 15 / 21 } };
+      var PENALTY_PER_HOUR = 10875;   // model constant from the simulator, unchanged
+      var warehouses = {};            // 'WH-HYD' and 'Hyderabad' -> inv_loc sys_id
+      var live = { centers: 0, scenarios: 0, runs: 0, products: 0 };
+      var D = { suppLead: {}, throughput: 0, products: {}, productKeys: [], stock: {}, lead: {}, bottleneck: null, orders: [], comps: [], product: null, cardTemplate: null };
+
+      /* ── helpers ── */
+      function headers(withBody) {
+        var h = { 'Accept': 'application/json' };
+        if (withBody) h['Content-Type'] = 'application/json';
+        if (window.g_ck) h['X-UserToken'] = window.g_ck;
+        return h;
+      }
+      function getRows(table, query, fields) {
+        return fetch(API + table + '?sysparm_display_value=all&sysparm_limit=1000' + (query ? '&sysparm_query=' + encodeURIComponent(query) : '') + (fields ? '&sysparm_fields=' + fields : ''),
+          { headers: headers(false), credentials: 'same-origin' })
+          .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+          .then(function (d) { return (d && d.result) || []; });
+      }
+      function send(method, url, body) {
+        return fetch(url, { method: method, headers: headers(true), credentials: 'same-origin', body: JSON.stringify(body) })
+          .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (d) {
+              if (!res.ok) throw new Error((d && d.error && d.error.message) || ('HTTP ' + res.status));
+              return d;
+            });
+          });
+      }
+      function val(row, f) { return row[f] ? (row[f].value || '') : ''; }
+      function disp(row, f) { return row[f] ? (row[f].display_value || row[f].value || '') : ''; }
+      function num(v) { var n = parseFloat(String(v).replace(/,/g, '')); return isNaN(n) ? 0 : n; }
+      function byId(id) { return document.getElementById(id); }
+      function setText(id, t) { var e = byId(id); if (e) e.innerText = t; }
+      function setHtml(id, t) { var e = byId(id); if (e) e.innerHTML = t; }
+      function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+      function plain(html) { var d = document.createElement('div'); d.innerHTML = String(html || ''); return (d.textContent || '').replace(/\s+/g, ' ').trim(); }
+      function rupees(n) { return '&#8377;' + Math.round(n).toLocaleString('en-IN'); }
+      function plantOf(code) { var m = String(code || '').match(/-(HYD|MAA|CHN|BLR)-/); return m ? PLANT[m[1]] : ''; }
+      function addDays(isoDate, days) {
+        var m = String(isoDate || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (!m) return '';
+        return new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]) + Math.ceil(days) * 864e5).toISOString().slice(0, 10);
+      }
+      function retext(el, pattern, text) {
+        [].forEach.call(el.childNodes, function (n) { if (n.nodeType === 3 && pattern.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(pattern, text); });
+      }
+      function quietly(fn) {
+        var t = showToast; showToast = function () {};
+        try { fn(); } finally { showToast = t; }
+      }
+      function machine(code) { return machines.filter(function (m) { return m.code === code; })[0]; }
+
+      /* ── the two pop-up windows were switched on without their visible state, so the screen dimmed and nothing appeared ── */
+      function showModal(backdropId, containerId) {
+        var bd = byId(backdropId), c = byId(containerId);
+        if (bd) bd.classList.remove('open');                 // the container carries its own dimmed background
+        if (c) { c.style.display = 'flex'; c.classList.add('open'); }
+      }
+      function hideModal(backdropId, containerId) {
+        var bd = byId(backdropId), c = byId(containerId);
+        if (bd) bd.classList.remove('open');
+        if (c) { c.classList.remove('open'); c.style.display = 'none'; }
+      }
+      closeStockRebalanceModal = function () { hideModal('stockRebalanceBackdrop', 'stockRebalanceContainer'); };
+      closeMaintenanceModal = function () { hideModal('maintenanceModalBackdrop', 'maintenanceModalContainer'); };
+
+      /* ── remove what was shown twice ── */
+      function hideDuplicates() {
+        if (byId('dt-sync-style')) return;
+        var st = document.createElement('style');
+        st.id = 'dt-sync-style';
+        st.textContent =
+          '#view-overview .content-header .plant-segmented-group,#view-machines .content-header .plant-segmented-group{display:none!important}' +   // the tab already has one plant filter
+          '#view-overview .two-col-grid{display:none!important}' +                                   // simulator and work centers have their own sub-tabs
+          '#view-digital-twin .page-view [onclick^="exportExecutiveReport"]{display:none!important}' + // one export button in the tab header
+          '.dt-dup{display:none!important}';
+        document.head.appendChild(st);
+        function section(el) { while (el && !(el.classList && el.classList.contains('dashboard-section'))) el = el.parentNode; return el; }
+        var s;
+        s = section(byId('orderTableBodyOverview')); if (s) s.classList.add('dt-dup');          // same table as Schedule Recovery
+        s = section(byId('strategyMatrixGridAnalytics')); if (s) s.classList.add('dt-dup');     // same matrix as the simulator
+        var strip = document.querySelector('#view-overview [onclick^="openStockRebalanceModal"]');
+        if (strip && strip.parentNode) strip.parentNode.classList.add('dt-dup');                // rebalancing is opened from the pipeline
+        var rep = byId('executivePrintReport');
+        if (rep) [].forEach.call(rep.querySelectorAll('div'), function (e) { retext(e, /INSTANCE:.*/, 'INSTANCE: ' + location.hostname); });
+        var reset = document.querySelector('[onclick^="resetBOMParams"]'); if (reset) reset.innerText = 'Reset to Live Stock';
+      }
+
+      /* ── READ: work centers ── */
+      function applyWorkCenters(rows) {
+        if (!rows.length) return;
+        var dispatched = {};
+        machines.forEach(function (m) { if (m.dispatched) dispatched[m.code] = m.incidentRef; });
+        var next = rows.map(function (r) {
+          var code = val(r, 'work_center_code'), name = val(r, 'work_center_name');
+          var category = /assembl/i.test(name) ? 'Assembly' : /test/i.test(name) ? 'Testing' : /rework|lapping/i.test(name) ? 'Rework' : 'Machining';
+          var crew = val(r, 'assigned_shift_crew') || 'Crew Unassigned';
+          if (crew.split(' ').length < 2) crew = 'Crew ' + crew;
+          return {
+            code: code, name: name, facility: plantOf(code) || disp(r, 'facility_location'), category: category,
+            process: disp(r, 'process_type'), load: num(val(r, 'current_loading_pct')), health: num(val(r, 'health_index_pct')),
+            hours: num(val(r, 'daily_capacity_hours')) || 16, temp: num(val(r, 'operating_temp_c')), vib: num(val(r, 'vibration_mms')), status: val(r, 'operational_status') || 'optimal', crew: crew,
+            imgType: category === 'Assembly' ? 'ASSEMBLY' : category === 'Testing' ? 'TEST_RIG' : category === 'Rework' ? 'REWORK' : 'CNC_MILL',
+            dispatched: !!dispatched[code], incidentRef: dispatched[code] || null
+          };
+        }).sort(function (a, b) { return a.code < b.code ? -1 : 1; });
+        machines.length = 0;
+        next.forEach(function (m) { machines.push(m); });
+        live.centers = machines.length;
+
+        var avg = machines.reduce(function (s, m) { return s + m.health; }, 0) / machines.length;
+        setText('kpiFleetHealth', avg.toFixed(1) + '%');
+        document.querySelectorAll('.dt-subnav-btn').forEach(function (b) { retext(b, /Work Centers \(\d+\)/, 'Work Centers (' + machines.length + ')'); });
+        document.querySelectorAll('#view-digital-twin .plant-btn').forEach(function (b) {
+          var f = b.getAttribute('data-facility');
+          var n = f === 'ALL' ? machines.length : machines.filter(function (m) { return m.facility === f; }).length;
+          retext(b, /\(\d+\)/, '(' + n + ')');
+        });
+        document.querySelectorAll('#view-machines p, #view-machines div, #view-machines span').forEach(function (e) { retext(e, /all \d+ machines/, 'all ' + machines.length + ' machines'); });
+      }
+
+      /* ── READ: scenarios and their impacted orders ── */
+      function applyScenarios(scenarios, runs) {
+        var byScenario = {}, inTable = {};
+        runs.forEach(function (r) { var k = val(r, 'scenario'); (byScenario[k] = byScenario[k] || []).push(r); });
+        scenarios.forEach(function (r) {
+          var key = val(r, 'scenario_id');
+          if (!key) return;
+          inTable[key] = true;
+          var sc = scenariosData[key] || { orders: [] };
+          var base = num(val(r, 'baseline_otd')), sim = num(val(r, 'simulated_otd_unmitigated')), opt = num(val(r, 'optimized_otd'));
+          var name = val(r, 'scenario_name') || key;
+          sc.sysId = val(r, 'sys_id');
+          sc.title = name; sc.modelName = name;
+          sc.cat = val(r, 'disruption_category') || 'machine_breakdown';
+          sc.parameter = val(r, 'disruption_parameter');
+          sc.baseline = base; sc.simulated = sim; sc.optimized = opt;
+          sc.strategy = val(r, 'recommended_strategy') || '';
+          sc.storedStrategy = sc.strategy;
+          sc.asset = val(r, 'target_entity'); sc.downMachine = sc.asset;
+          sc.facility = plantOf(sc.asset) || sc.facility || 'Hyderabad';
+          var p = sc.parameter.match(/Duration:\s*(\d+)h.*?Capacity Lost:\s*(\d+)%/i);
+          sc.duration = p ? +p[1] : 48; sc.cap = p ? +p[2] : 100;
+          // the stored result is the reference point the sliders scale from
+          sc.ref = { duration: sc.duration, cap: sc.cap, drop: Math.max(base - sim, 0), rec: Math.max(opt - sim, 0), cost: num(val(r, 'cost_delta')) };
+          sc.orders = (byScenario[sc.sysId] || []).map(function (o) {
+            var baseDate = val(o, 'baseline_planned_finish');
+            var delay = num(val(o, 'delay_unmitigated')), recovered = num(val(o, 'net_delay_recovered'));
+            var left = Math.max(delay - recovered, 0);
+            var simDate = val(o, 'simulated_finish') || (delay ? addDays(baseDate, delay) + ' (+' + delay + 'd)' : '—');
+            var optDate = val(o, 'adapted_finish') || (delay ? addDays(baseDate, left) + (left > 0 ? ' (+' + left + 'd)' : ' (On-Time)') : '—');
+            var saved = val(o, 'net_delay_recovered');
+            return {
+              runId: val(o, 'sys_id'), ref: val(o, 'customer_order_ref'), cust: val(o, 'customer_name'), prod: val(o, 'product_bom'),
+              fac: disp(o, 'target_facility') || '—', facId: /^[0-9a-f]{32}$/.test(val(o, 'target_facility')) ? val(o, 'target_facility') : '',
+              qty: val(o, 'order_qty'), base: baseDate, sim: simDate, opt: optDate,
+              saved: /^[\d.]+$/.test(saved) ? saved + ' Days Saved' : (saved || '—'),
+              cell: val(o, 'assigned_machine') || '—', otd: disp(o, 'final_otd_status') || '—'
+            };
+          });
+          scenariosData[key] = sc;
+        });
+        // the pickers list exactly what is stored, plus scenarios created in this session
+        Object.keys(scenariosData).forEach(function (k) { if (!inTable[k] && !scenariosData[k].session) delete scenariosData[k]; });
+        ['scenarioSelector', 'simViewScenarioSelect'].forEach(function (id) {
+          var sel = byId(id);
+          if (!sel) return;
+          sel.innerHTML = '';
+          Object.keys(scenariosData).sort().forEach(function (k) {
+            var o = document.createElement('option'); o.value = k; o.innerText = k + ': ' + plain(scenariosData[k].modelName); sel.appendChild(o);
+          });
+        });
+        if (!scenariosData[currentScenarioKey]) currentScenarioKey = Object.keys(scenariosData).sort()[0] || currentScenarioKey;
+        live.scenarios = scenarios.length; live.runs = runs.length;
+      }
+
+      /* ── READ: products, components, stock, lead times, capacity ── */
+      function applySupply(bomLines, stock, leads, resources, orders) {
+        D.products = {}; D.stock = {}; D.lead = {};
+        bomLines.forEach(function (l) {
+          if (val(l, 'customer_bom.status') !== 'active') return;
+          var key = val(l, 'customer_bom.number');
+          var p = D.products[key] = D.products[key] || { key: key, code: val(l, 'customer_bom.finished_product.material_product_id'), name: disp(l, 'customer_bom.finished_product'), lines: [] };
+          p.lines.push({ sysId: val(l, 'material_product'), id: val(l, 'material_product.material_product_id'), name: val(l, 'material_product.name'),
+            perUnit: num(val(l, 'quantity_required')) * (1 + num(val(l, 'scrap_percentage')) / 100), cost: num(val(l, 'material_product.standard_cost')) });
+        });
+        D.productKeys = Object.keys(D.products).sort(function (a, b) { return D.products[a].name < D.products[b].name ? -1 : 1; });
+        stock.forEach(function (s) {
+          var m = val(s, 'material_product'), w = val(s, 'location.location_id');
+          var e = (D.stock[m] = D.stock[m] || {})[w] = D.stock[m][w] || { avail: 0, safety: 0 };
+          e.avail += num(val(s, 'available_quantity')); e.safety += num(val(s, 'safety_stock'));
+        });
+        leads.forEach(function (l) {
+          var k = val(l, 'source_warehouse.location_id') + '>' + val(l, 'destination_warehouse.location_id'), d = num(val(l, 'lead_time_days'));
+          if (D.lead[k] === undefined || d < D.lead[k]) D.lead[k] = d;
+        });
+        D.bottleneck = null;
+        resources.forEach(function (r) {
+          var cap = num(val(r, 'capacity_per_day')) * (num(val(r, 'efficiency_percentage')) || 100) / 100;
+          if (cap > 0 && (!D.bottleneck || cap < D.bottleneck.cap)) D.bottleneck = { name: val(r, 'resource_name'), cap: Math.round(cap) };
+        });
+        D.orders = orders.map(function (o) {
+          return { ref: val(o, 'number'), cust: disp(o, 'customer'), city: val(o, 'delivery_location'), qty: num(val(o, 'total_order_quantity')), base: val(o, 'requested_delivery_date').slice(0, 10) };
+        }).filter(function (o) { return o.ref && o.base; });
+        live.products = D.productKeys.length;
+
+        var sel = byId('pipelineProductSelect');
+        if (sel && D.productKeys.length) {
+          var keep = D.products[sel.value] ? sel.value : D.productKeys[0];
+          sel.innerHTML = '';
+          D.productKeys.forEach(function (k) { var o = document.createElement('option'); o.value = k; o.innerText = D.products[k].name + ' (' + D.products[k].code + ')'; sel.appendChild(o); });
+          sel.value = keep;
+          if (D.bottleneck) { pipelineParams.feed_rate = D.bottleneck.cap; setText('val_feed_rate', D.bottleneck.cap + ' U/d'); }
+          quietly(function () { switchPipelineProduct(keep); });
+        }
+      }
+      function networkStock(sysId) {
+        var s = D.stock[sysId] || {}, out = { avail: 0, safety: 0 };
+        Object.keys(s).forEach(function (w) { out.avail += s[w].avail; out.safety += s[w].safety; });
+        return out;
+      }
+
+      /* ── PIPELINE: components of the selected product, with live stock ── */
+      function bufferStatus(c, qty) {
+        if (qty < c.safety) return ['BELOW SAFETY STOCK', 'var(--status-alert)'];
+        if (qty < c.safety * 1.5) return ['Low Buffer', 'var(--status-amber)'];
+        return ['Safe Reserve', 'var(--status-normal)'];
+      }
+      function paintComponent(c) {
+        var qty = bomParams[c.key];
+        setText('val_bom_' + c.key, qty.toLocaleString('en-IN') + ' U');
+        var st = byId('bom_status_' + c.key), s = bufferStatus(c, qty);
+        if (st) { st.innerText = s[0]; st.style.color = s[1]; }
+      }
+      switchPipelineProduct = function (key) {
+        var p = D.products[key];
+        if (!p) return;
+        D.product = p;
+        setText('productSkuBadge', 'SKU: ' + p.code + ' • ' + p.key);
+        var grid = document.querySelector('#view-pipeline .bom-component-grid');
+        if (grid) {
+          if (!D.cardTemplate) D.cardTemplate = grid.querySelector('.bom-component-card').cloneNode(true);
+          grid.innerHTML = '';
+          bomParams = { takt: bomParams.takt || 18 };
+          D.comps = p.lines.map(function (l, i) {
+            var n = networkStock(l.sysId);
+            var c = { key: 'c' + i, sysId: l.sysId, id: l.id, name: l.name, perUnit: l.perUnit, cost: l.cost, safety: n.safety, live: n.avail };
+            bomParams[c.key] = c.live;
+            var card = D.cardTemplate.cloneNode(true);
+            var nameEl = card.querySelector('.bom-item-name'), skuEl = card.querySelector('.tag-cell'), top = card.querySelector('.bom-card-top');
+            nameEl.removeAttribute('id'); skuEl.removeAttribute('id');
+            nameEl.innerText = c.name; skuEl.innerText = c.id;
+            if (top && top.nextElementSibling) top.nextElementSibling.innerText = c.perUnit + ' per valve • safety stock ' + c.safety.toLocaleString('en-IN');
+            var status = card.querySelector('strong[id^="bom_status_"]') || card.querySelector('strong');
+            if (status) status.id = 'bom_status_' + c.key;
+            var readout = card.querySelector('.step-val-readout'); if (readout) readout.id = 'val_bom_' + c.key;
+            var step = Math.max(10, Math.round(c.perUnit * 10));
+            var btns = card.querySelectorAll('.btn-step');
+            if (btns[0]) btns[0].setAttribute('onclick', "adjustBOMParam('" + c.key + "', -" + step + ", ' U')");
+            if (btns[1]) btns[1].setAttribute('onclick', "adjustBOMParam('" + c.key + "', " + step + ", ' U')");
+            grid.appendChild(card);
+            return c;
+          });
+          D.comps.forEach(paintComponent);
+        }
+        updateDigitalTwinMetrics();
+        showToast('Active Production Stream: ' + p.name + ' (' + p.code + ') — ' + p.lines.length + ' components, live stock loaded');
+      };
+      adjustBOMParam = function (key, delta) {
+        var c = D.comps.filter(function (x) { return x.key === key; })[0];
+        if (!c) return;
+        bomParams[key] = Math.max(0, bomParams[key] + delta);
+        paintComponent(c);
+        updateDigitalTwinMetrics();
+        showToast('✔ What-if stock for ' + c.name + ': ' + bomParams[key].toLocaleString('en-IN') + ' U (live: ' + c.live.toLocaleString('en-IN') + ' U)');
+      };
+      resetBOMParams = function () {
+        D.comps.forEach(function (c) { bomParams[c.key] = c.live; paintComponent(c); });
+        updateDigitalTwinMetrics();
+        showToast('✔ Component stock reset to the live ServiceNow quantities');
+      };
+      var pipelineMetrics = function () {
+        var feed = pipelineParams.feed_rate || 120, speed = pipelineParams.cnc_speed || 92, torque = pipelineParams.torque || 185, takt = bomParams.takt || 18;
+        var baseFeed = D.bottleneck ? D.bottleneck.cap : 120;
+        var throughput = Math.max(1, Math.round(feed * (speed / 92.0) * (18.0 / takt)));
+        var shiftCost = Math.max(40000, Math.round(88400 + (speed - 92) * 520 + (torque - 185) * 140 + (feed - baseFeed) * 180));
+
+        D.throughput = throughput;
+        setText('dtThroughput', throughput + ' Valves / Day');
+        var bTp = byId('badgeThroughputDelta');
+        if (bTp) { var diff = throughput - baseFeed; bTp.innerText = (diff >= 0 ? '+' : '') + diff + ' vs Baseline'; bTp.style.color = diff >= 0 ? 'var(--status-normal)' : 'var(--status-alert)'; }
+        setHtml('dtShiftCost', rupees(shiftCost) + ' / Shift');
+        var bSc = byId('badgeCostDelta');
+        if (bSc) { var cd = shiftCost - 88400; bSc.innerHTML = (cd >= 0 ? '+' : '−') + rupees(Math.abs(cd)); bSc.style.color = cd <= 0 ? 'var(--status-normal)' : 'var(--status-amber)'; }
+        setHtml('pipelineFlowRatePill', '&#10004; Flow Rate: ' + throughput + ' U/day &#8226; ' + (D.bottleneck ? 'Bottleneck: ' + esc(D.bottleneck.name) : 'Steady'));
+
+        [].forEach.call(document.querySelectorAll('#view-pipeline .node-meta-grid span'), function (sp) {
+          if (/^Inflow:/.test(sp.innerText) && sp.nextElementSibling) sp.nextElementSibling.innerText = feed + ' U/d';
+        });
+
+        if (!D.comps.length) return;
+        var value = 0, limit = null;
+        D.comps.forEach(function (c) {
+          var qty = bomParams[c.key];
+          value += qty * c.cost;
+          var valves = c.perUnit > 0 ? qty / c.perUnit : Infinity;
+          if (!limit || valves < limit.valves) limit = { valves: valves, comp: c, qty: qty };
+        });
+        var days = limit.valves / throughput;
+        setText('dtInventoryValue', '$' + (value >= 1e6 ? (value / 1e6).toFixed(2) + 'M' : Math.round(value).toLocaleString('en-US')));
+        setText('dtInventoryBreakdown', D.comps.length + ' components of ' + D.product.code + ' at standard cost');
+        setText('dtRunoutHorizon', (days >= 100 ? Math.round(days) : days.toFixed(1)) + ' Days Buffer');
+        setText('dtBottleneckItem', 'Bottleneck: ' + limit.comp.name + ' (' + limit.qty.toLocaleString('en-IN') + ' U)');
+        var bHz = byId('badgeHorizonDelta');
+        if (bHz) {
+          var below = D.comps.some(function (c) { return bomParams[c.key] < c.safety; });
+          bHz.innerText = days < 3 || below ? 'CRITICAL DEFICIT' : days < 7 ? 'Tight Reserve' : 'Optimal Horizon';
+          bHz.style.color = days < 3 || below ? 'var(--status-alert)' : days < 7 ? 'var(--status-amber)' : 'var(--status-normal)';
+        }
+      };
+
+      updateDigitalTwinMetrics = function () {
+        pipelineMetrics();
+        var sc = scenariosData[currentScenarioKey];
+        if (sc && sc.ref && sc.orders) paint();
+      };
+
+      /* ── WHAT-IF context shared by the rebalancing window and the trade-off matrix ── */
+      function whatIf() {
+        var sc = scenariosData[currentScenarioKey] || {}, s = sliders(), fac = byId('simViewFacility');
+        var plant = (fac && fac.value) || sc.facility || 'Hyderabad';
+        return { key: currentScenarioKey, sc: sc, duration: s.duration, cap: s.cap, days: s.duration / 24, delayDays: s.duration / 24 * s.cap / 100,
+          throughput: D.throughput || (D.bottleneck ? D.bottleneck.cap : 120), plant: plant, wh: WH_OF[plant] || 'WH-HYD' };
+      }
+
+      /* ── PIPELINE: buffer rebalancing for the current what-if ──
+         Need per component = quantity per valve x pipeline output per day x outage days x capacity lost.
+         Stock = live stock at the scenario plant's warehouse, plus any change made with the component steppers. */
+      function rebalancePlan() {
+        var w = whatIf(), rows = [];
+        (D.comps || []).forEach(function (c) {
+          var s = D.stock[c.sysId] || {}, e = s[w.wh] || { avail: 0, safety: 0 };
+          var delta = (bomParams[c.key] === undefined ? c.live : bomParams[c.key]) - c.live;
+          var avail = Math.max(e.avail + delta, 0);
+          var need = Math.ceil(c.perUnit * w.throughput * w.delayDays);
+          var gap = Math.max(need + e.safety - avail, 0), left = gap;
+          var sources = gap <= 0 ? [] : Object.keys(CITY_OF).filter(function (x) { return x !== w.wh; }).map(function (x) {
+            var o = s[x] || { avail: 0, safety: 0 }, lead = D.lead[x + '>' + w.wh];
+            return { wh: x, surplus: Math.max(o.avail - o.safety, 0), days: lead === undefined ? null : Math.max(1, Math.ceil(lead)) };
+          }).filter(function (x) { return x.surplus > 0; }).sort(function (a, b) { return (a.days || 99) - (b.days || 99) || b.surplus - a.surplus; });
+          sources.forEach(function (x) { x.qty = Math.min(x.surplus, left); left -= x.qty; });
+          sources = sources.filter(function (x) { return x.qty > 0; });
+          rows.push({ comp: c, live: e.avail, delta: delta, avail: avail, safety: e.safety, need: need, gap: gap, sources: sources,
+            covered: gap > 0 ? (gap - left) / gap : 1, leadDays: sources.reduce(function (m, x) { return Math.max(m, x.days || 0); }, 0) });
+        });
+        var short = rows.filter(function (r) { return r.gap > 0; });
+        return { ctx: w, rows: rows, short: short, coverage: short.length ? Math.min.apply(null, short.map(function (r) { return r.covered; })) : 1,
+          leadDays: short.reduce(function (m, r) { return Math.max(m, r.leadDays); }, 0) };
+      }
+      openStockRebalanceModal = function () {
+        var body = document.querySelector('#stockRebalanceModal .modal-body');
+        if (body) {
+          var n = function (v) { return Number(v).toLocaleString('en-IN'); };
+          if (!D.product) {
+            body.innerHTML = '<div style="padding:8px 0;font-size:13px;">Stock data has not loaded from ServiceNow yet. Use Refresh All and try again.</div>';
+            D.plan = null;
+          } else {
+            var plan = D.plan = rebalancePlan(), w = plan.ctx, td = 'padding:6px 10px;border-bottom:1px solid #e2e8f0;';
+            var html = '<div style="background:#f0f7ff;border:1px solid #bfdbfe;padding:12px 16px;border-radius:6px;margin-bottom:14px;font-size:12.5px;line-height:1.55;">' +
+              '<div style="font-weight:700;color:var(--brand-navy);">What-if basis</div>' +
+              'Scenario <strong>' + esc(w.key) + '</strong> &#8226; outage <strong>' + w.duration + 'h</strong> at <strong>' + w.cap + '%</strong> capacity lost &#8226; plant <strong>' + w.plant + ' (' + w.wh + ')</strong><br/>' +
+              'Product <strong>' + esc(D.product.name) + ' (' + esc(D.product.code) + ')</strong> &#8226; pipeline output <strong>' + w.throughput + ' valves/day</strong> &#8226; valves at risk <strong>' + n(Math.ceil(w.throughput * w.delayDays)) + '</strong></div>' +
+              '<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;"><thead><tr style="text-align:left;color:var(--text-muted);">' +
+              '<th style="' + td + '">Component</th><th style="' + td + '">Needed</th><th style="' + td + '">Stock at ' + w.wh + '</th><th style="' + td + '">Safety stock</th><th style="' + td + '">Shortfall</th></tr></thead><tbody>';
+            plan.rows.forEach(function (r) {
+              html += '<tr><td style="' + td + '"><strong>' + esc(r.comp.name) + '</strong> <span class="tag-cell">' + esc(r.comp.id) + '</span></td><td style="' + td + '">' + n(r.need) + '</td><td style="' + td + '">' + n(r.avail) +
+                (r.delta ? ' <span style="color:var(--text-muted);">(live ' + n(r.live) + ', what-if ' + (r.delta > 0 ? '+' : '') + n(r.delta) + ')</span>' : '') + '</td><td style="' + td + '">' + n(r.safety) + '</td><td style="' + td +
+                'font-weight:700;color:' + (r.gap > 0 ? 'var(--status-alert)' : 'var(--status-normal)') + ';">' + (r.gap > 0 ? n(r.gap) : 'Covered') + '</td></tr>';
+            });
+            html += '</tbody></table>';
+            if (!plan.short.length) {
+              html += '<div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:12px 16px;border-radius:6px;font-size:13px;color:#166534;"><strong>No transfer needed for this what-if.</strong> Stock at ' + w.wh +
+                ' covers the outage and stays above safety stock. Lengthen the outage, raise the pipeline output or reduce a component with its stepper to test a harder case.</div>';
+            } else {
+              html += '<div style="font-size:12.5px;font-weight:700;margin-bottom:10px;">TRANSFERS THAT CLOSE THE SHORTFALL (LIVE SURPLUS IN OTHER WAREHOUSES)</div>';
+              plan.rows.forEach(function (r, i) {
+                if (r.gap <= 0) return;
+                if (!r.sources.length) { html += '<div style="border:1px solid #fecaca;background:#fef2f2;border-radius:6px;padding:10px 14px;margin-bottom:10px;font-size:12.5px;"><strong>' + esc(r.comp.name) + ':</strong> no other warehouse has stock above its own safety level. Procurement is required.</div>'; return; }
+                r.sources.forEach(function (x, k) {
+                  html += '<div style="border:' + (k === 0 ? '2px solid var(--brand-blue);background:#f0f7ff' : '1px solid #e2e8f0') + ';border-radius:6px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px;"><div style="font-size:12.5px;">' +
+                    '<div><strong>' + esc(r.comp.name) + '</strong>: ' + n(x.qty) + ' units from <strong>' + x.wh + ' (' + CITY_OF[x.wh] + ')</strong></div>' +
+                    '<div style="color:var(--text-muted);margin-top:2px;">Surplus there ' + n(x.surplus) + ' &#8226; transit ' + (x.days === null ? 'no lead-time record' : x.days + ' day' + (x.days === 1 ? '' : 's')) + '</div></div>' +
+                    '<button class="' + (k === 0 ? 'btn-solid-blue' : 'btn-outline-green') + '" onclick="executeStockTransfer(' + i + ', \'' + x.wh + '\')">Create Transfer Request &#8594;</button></div>';
+                });
+                if (r.covered < 1) html += '<div style="font-size:12px;color:var(--status-alert);margin:-4px 0 10px;">Transfers cover ' + Math.round(r.covered * 100) + '% of the ' + esc(r.comp.name) + ' shortfall; the rest needs procurement.</div>';
+              });
+            }
+            body.innerHTML = html;
+          }
+        }
+        showModal('stockRebalanceBackdrop', 'stockRebalanceContainer');
+      };
+      executeStockTransfer = function (rowIndex, sourceWh) {
+        var plan = D.plan, row = plan && plan.rows[rowIndex];
+        var src = row && row.sources.filter(function (x) { return x.wh === sourceWh; })[0];
+        if (!src || !warehouses[sourceWh] || !warehouses[plan.ctx.wh]) { showToast('✖ Transfer not created: reopen the rebalancing window to recalculate the plan.'); return; }
+        var w = plan.ctx;
+        var payload = {
+          request_type: 'inventory_transfer', inventory_type: 'raw_materials', priority: 'high', status: 'submitted',
+          material_product: row.comp.sysId, source_location: warehouses[sourceWh], destination_location: warehouses[w.wh], quantity_requested: src.qty,
+          reason: 'Digital Twin what-if ' + w.key + ' (' + w.duration + 'h outage, ' + w.cap + '% capacity lost, ' + w.plant + '): ' + row.comp.name + ' (' + row.comp.id + ') needs ' + row.need + ', stock ' + row.avail +
+            ', safety ' + row.safety + ', shortfall ' + row.gap + '. Transfer ' + src.qty + ' from ' + sourceWh + (src.days ? ', transit ' + src.days + ' day(s)' : '') + '. Product ' + D.product.code + '.'
+        };
+        send('POST', API + TBL + 'inv_req', payload).then(function (saved) {
+          src.surplus -= src.qty; row.sources = row.sources.filter(function (x) { return x !== src; });
+          closeStockRebalanceModal();
+          showToast('✔ Transfer Request ' + saved.result.number + ' submitted: ' + src.qty + ' x ' + row.comp.name + ', ' + sourceWh + ' to ' + w.wh);
+        }).catch(function (e) { showToast('✖ Transfer request was NOT created in ServiceNow: ' + e.message); });
+      };
+
+      /* ── PIPELINE: the downtime banner shows the latest Machine Downtime record and its maintenance order ── */
+      function applyDowntime(rows) {
+        var box = document.querySelector('#view-pipeline .bypass-junction-container');
+        if (!box) return;
+        if (!rows.length) { box.style.display = 'none'; return; }
+        var r = rows[0], open = !/closed|resolved|completed/i.test(val(r, 'status'));
+        var blocks = [].filter.call(box.children, function (c) { return !c.classList.contains('bypass-link-arrow'); });
+        function fill(block, title, chip, chipOk, detail) {
+          if (!block) return;
+          var strong = block.querySelector('strong'), pill = block.querySelector('.stage-status-chip');
+          if (strong) strong.innerText = title;
+          if (pill) { pill.innerText = chip; pill.className = 'stage-status-chip ' + (chipOk ? 'chip-ok' : 'chip-bottleneck'); }
+          var line = strong && strong.parentNode ? strong.parentNode.nextElementSibling : null;
+          if (line) line.innerText = detail;
+        }
+        fill(blocks[0], (val(r, 'machine.number') ? val(r, 'machine.number') + ' (' + val(r, 'machine.name') + ')' : disp(r, 'machine')),
+          (open ? 'DOWNTIME' : 'DOWNTIME CLOSED') + ' (' + val(r, 'number') + ')', !open,
+          (val(r, 'reason') || 'No reason recorded') + ' • started ' + val(r, 'start_time').slice(0, 16) + ' • impact ' + (disp(r, 'production_impact') || 'not recorded'));
+        var mnt = val(r, 'related_maintenance.number'), mst = disp(r, 'related_maintenance.status');
+        fill(blocks[1], mnt ? mnt + ' (' + (disp(r, 'related_maintenance.maintenance_type') || 'maintenance') + ' work order)' : 'No maintenance order linked',
+          mnt ? String(mst || 'status not set').toUpperCase().replace(/_/g, ' ') : 'NONE', /complete|closed/i.test(mst),
+          mnt ? 'Expected completion ' + (val(r, 'related_maintenance.expected_completion').slice(0, 16) || 'not set') + ' • estimated cost ' + (disp(r, 'related_maintenance.estimated_cost') || 'not set') : 'Raise a work order from the Work Centers tab.');
+        var mid = box.querySelector('.bypass-link-arrow span:nth-child(2)'); if (mid) mid.innerText = 'MAINTENANCE ORDER';
+      }
+
+      /* ── SIMULATOR: one model for every figure ── */
+      function sliders() {
+        var d = byId('simViewDurationSlider') || byId('durationSlider'), c = byId('simViewCapacitySlider') || byId('capacitySlider');
+        return { duration: d ? parseInt(d.value, 10) : 48, cap: c ? parseInt(c.value, 10) : 100 };
+      }
+      /* ── the three mitigation options are calculated from the current what-if ──
+         capacity scenarios : A reroute to the least-loaded matching work center plus a 4-hour overtime shift, B external vendor after a 24-hour hand-over
+         supply scenarios   : A inter-warehouse transfer (surplus and transit time), B expedited procurement (fastest supplier lead time)
+         every scenario     : C keep the larger half of the impacted orders on time
+         Each option recovers its coverage share of the simulated drop. Cost starts from the scenario's stored mitigation cost. */
+      function options() {
+        var w = whatIf(), sc = w.sc, asset = selectedAsset(), down = machine(asset), alt = rerouteTarget(asset);
+        var clamp = function (v) { return Math.min(Math.max(v, 0), 1); }, pc = function (v) { return Math.round(v * 100) + '%'; };
+        var supply = /material_shortage|supplier_delay/.test(sc.cat), o = {};
+        if (supply) {
+          var plan = rebalancePlan(), late = w.days > 0 ? Math.min(plan.leadDays / w.days, 1) : 1;
+          var names = plan.short.map(function (r) { return r.comp.name; }).join(', ');
+          o.A = { name: 'Option A: Inter-Warehouse Transfer', badge: 'STOCK TRANSFER', cov: plan.short.length ? clamp(plan.coverage * (1 - late)) : 1,
+            desc: plan.short.length ? 'Move surplus ' + names + ' into ' + w.wh + ' from the other warehouses.' : 'Buffer stock at ' + w.wh + ' already covers this outage.',
+            basis: plan.short.length ? 'Surplus elsewhere covers ' + pc(plan.coverage) + ' of the shortfall; transit ' + plan.leadDays + ' day(s) of a ' + w.days.toFixed(1) + '-day outage.' : 'No component of ' + (D.product ? D.product.code : 'the product') + ' falls short at ' + w.wh + '.' };
+          var lead = null;
+          plan.short.forEach(function (r) { var l = D.suppLead[r.comp.sysId]; if (l !== undefined) lead = Math.max(lead || 0, l); });
+          var unknown = plan.short.some(function (r) { return D.suppLead[r.comp.sysId] === undefined; });
+          o.B = { name: 'Option B: Expedited Procurement', badge: 'PROCUREMENT', cov: !plan.short.length ? 1 : unknown ? 0 : clamp(1 - lead / (w.days || 1)),
+            desc: 'Raise an expedited purchase order with the fastest supplier of the short component.',
+            basis: !plan.short.length ? 'Not needed: stock covers the outage.' : unknown ? 'No supplier lead-time record for a short component.' : 'Fastest supplier lead time ' + lead + ' day(s) against a ' + w.days.toFixed(1) + '-day outage.' };
+        } else {
+          var spare = alt ? Math.max(100 - alt.load, 0) : 0, hours = alt ? (alt.hours || 16) : 16, overtime = alt ? Math.round(4 / hours * 100) : 0;
+          o.A = { name: 'Option A: Reroute and Overtime Shift', badge: 'INTERNAL OVERTIME', cov: w.cap > 0 ? clamp((spare + overtime) / w.cap) : 1,
+            desc: alt && down ? 'Reroute operations from ' + down.code + ' to ' + alt.code + ' (' + alt.name + ') and add a 4-hour overtime shift.' : 'Reroute operations to the least-loaded work center and add an overtime shift.',
+            basis: alt ? alt.code + ' has ' + spare + '% spare capacity plus 4h overtime (' + overtime + '% of its ' + hours + 'h day) against ' + w.cap + '% capacity lost.' : 'No alternative work center of this type is available.' };
+          o.B = { name: 'Option B: External Machining Subcontractor', badge: 'EXTERNAL SUBCONTRACTOR', cov: clamp(1 - 24 / w.duration),
+            desc: 'Outsource the affected operation to an approved external vendor with express logistics.',
+            basis: 'Vendor takes over after a 24-hour hand-over and covers ' + Math.max(w.duration - 24, 0) + ' of the ' + w.duration + ' outage hours.' };
+        }
+        var orders = (sc.orders || []).slice().sort(function (a, b) { return num(b.qty) - num(a.qty); });
+        var keep = Math.ceil(orders.length / 2), total = orders.reduce(function (t, x) { return t + num(x.qty); }, 0);
+        var kept = orders.slice(0, keep).reduce(function (t, x) { return t + num(x.qty); }, 0);
+        o.C = { name: 'Option C: Protect Priority Orders', badge: 'SELECTIVE DE-PRIORITIZATION', cov: total ? kept / total : 0,
+          desc: orders.length ? 'Keep the ' + keep + ' largest of the ' + orders.length + ' impacted orders on time and accept the delay on the rest.' : 'No impacted orders are stored for this scenario.',
+          basis: total ? 'Protected orders carry ' + pc(kept / total) + ' of the impacted quantity (' + kept + ' of ' + total + ' units).' : 'Nothing to protect until orders are linked.' };
+        var baseCost = sc.ref.cost * (w.duration / sc.ref.duration);
+        o.A.cost = o.A.cov > 0 ? baseCost : 0; o.B.cost = o.B.cov > 0 ? baseCost * STRATEGY.B.cost : 0; o.C.cost = baseCost * STRATEGY.C.cost;
+        o.ctx = w;
+        return o;
+      }
+      function model(strategyKey, opts) {
+        var sc = scenariosData[currentScenarioKey], ref = sc.ref;
+        opts = opts || options();
+        var w = opts.ctx, opt = opts[strategyKey || currentStrategyKey] || opts.A;
+        var scale = (w.duration / ref.duration) * (w.cap / ref.cap);
+        var drop = Math.min(Math.max(ref.drop * scale, 0), Math.max(sc.baseline - 5, 0));
+        var rec = drop * opt.cov, penalty = w.duration * (w.cap / 100) * PENALTY_PER_HOUR, avoided = penalty * opt.cov;
+        return { duration: w.duration, cap: w.cap, baseline: sc.baseline, drop: drop, sim: sc.baseline - drop, rec: rec, opt: sc.baseline - drop + rec, cov: opt.cov,
+          delta: opt.cost, penalty: penalty, net: Math.max(avoided - opt.cost, 0), roi: opt.cost > 0 ? (avoided / opt.cost).toFixed(1) + 'x' : 'No added cost' };
+      }
+      function selectedAsset() {
+        var el = byId('simViewAsset') || byId('targetAsset');
+        return (el && el.value) || '';
+      }
+      function rerouteTarget(code) {
+        var m = machine(code);
+        if (!m) return null;
+        function pick(list) { return list.filter(function (x) { return x.code !== code && x.status !== 'repair'; }).sort(function (a, b) { return a.load - b.load; })[0]; }
+        return pick(machines.filter(function (x) { return x.category === m.category && x.facility === m.facility; })) ||
+          pick(machines.filter(function (x) { return x.category === m.category; })) || pick(machines.filter(function (x) { return x.facility === m.facility; }));
+      }
+      function paint() {
+        var sc = scenariosData[currentScenarioKey];
+        if (!sc || !sc.ref) return;
+        var opts = options(), r = model(currentStrategyKey, opts), asset = selectedAsset(), down = machine(asset), alt = rerouteTarget(asset);
+        var pct = function (n) { return (Math.round(n * 10) / 10) + '%'; };
+        var routeText = sc.cat === 'machine_breakdown' && down
+          ? 'Model disruption on <strong>' + esc(down.code) + '</strong> (' + esc(down.name) + ', ' + down.facility + ').' +
+            (alt ? ' Re-route to <strong>' + esc(alt.code) + '</strong> (' + esc(alt.name) + ', ' + alt.facility + ', currently ' + alt.load + '% loaded).' : ' No alternative work center is available.')
+          : '<strong>' + (CATEGORY_LABEL[sc.cat] || 'Disruption') + '</strong>' + (sc.parameter && !/^Duration:/.test(sc.parameter) ? ': ' + esc(sc.parameter) + '.' : '.');
+        if (sc.storedStrategy) routeText += ' Stored strategy: <strong>' + esc(plain(sc.storedStrategy).replace(/[.\s]+$/, '')) + '</strong>.';
+
+        // the trade-off matrix shows the three options calculated for this what-if
+        ['A', 'B', 'C'].forEach(function (k) {
+          var m = model(k, opts), cfg = strategiesConfig[k], o = opts[k];
+          cfg.name = o.name; cfg.badge = o.badge; cfg.desc = o.desc; cfg.tradeoff = o.basis;
+          cfg.cost = rupees(m.delta); cfg.costNum = Math.round(m.delta); cfg.otd = pct(m.opt); cfg.otdNum = m.opt; cfg.recovery = '+' + pct(m.rec);
+          cfg.speed = (opts.ctx.delayDays * o.cov).toFixed(1) + ' of ' + opts.ctx.delayDays.toFixed(1) + ' days';
+        });
+
+        // simulator
+        setHtml('simViewStrategyText', routeText);
+        setHtml('simPenaltyCost', rupees(r.penalty)); setHtml('simDeltaCost', rupees(r.delta)); setHtml('simNetSavings', rupees(r.net));
+        setText('simRoiMultiplier', r.roi + (r.delta > 0 ? ' Simulation ROI' : ''));
+        setText('simMitigatedOTD', pct(r.opt)); setText('simRecoveryDelta', '+' + pct(r.rec) + ' Recovery');
+        var e;
+        e = byId('simBarDrop'); if (e) e.style.width = r.sim + '%';
+        setText('simBarDropText', pct(r.sim) + ' (-' + pct(r.drop) + ' Drop)');
+        e = byId('simBarAdapted'); if (e) e.style.width = r.opt + '%';
+        setText('simBarAdaptedText', pct(r.opt) + ' (+' + pct(r.rec) + ' Recovered)');
+        setText('simViewStatusBadge', '✔ ' + sc.orders.length + ' impacted order' + (sc.orders.length === 1 ? '' : 's') + ' in this scenario');
+        // analytics and overview
+        setHtml('analyticsDeltaCost', rupees(r.delta)); setHtml('analyticsPenaltyCost', rupees(r.penalty)); setHtml('analyticsNetValue', rupees(r.net));
+        ['kpiBaseline', 'kpiBaselineOverview'].forEach(function (id) { setText(id, pct(r.baseline)); });
+        ['kpiSimulated', 'kpiSimulatedOverview'].forEach(function (id) { setText(id, pct(r.sim) + ' (-' + pct(r.drop) + ' Drop)'); });
+        ['kpiOptimized', 'kpiOptimizedOverview'].forEach(function (id) { setText(id, pct(r.opt) + ' (+' + pct(r.rec) + ' Delay Recovered)'); });
+        [['barBaseline', r.baseline], ['barBaselineOverview', r.baseline], ['barSimulated', r.sim], ['barSimulatedOverview', r.sim], ['barOptimized', r.opt], ['barOptimizedOverview', r.opt]]
+          .forEach(function (b) { var el = byId(b[0]); if (el) el.style.width = b[1] + '%'; });
+        setText('kpiUnmitigatedDrop', '-' + pct(r.drop)); setText('kpiAdaptedOTD', pct(r.opt));
+        setHtml('stratCost', rupees(r.delta)); setText('stratRecovery', '+' + pct(r.rec));
+        setText('kpiActiveOrders', sc.orders.length);
+        var subs = document.querySelectorAll('#view-overview .kpi-row-grid .kpi-sub-context');
+        var customers = sc.orders.map(function (o) { return o.cust; }).filter(function (c, i, a) { return c && a.indexOf(c) === i; });
+        var running = machines.filter(function (m) { return m.status !== 'repair' && m.status !== 'alert'; }).length;
+        if (subs[0]) subs[0].innerText = customers.length ? customers.slice(0, 3).join(' • ') + (customers.length > 3 ? ' +' + (customers.length - 3) : '') : 'No impacted orders stored';
+        if (subs[1]) subs[1].innerText = running + ' / ' + machines.length + ' Centers Operational';
+        if (subs[2]) subs[2].innerText = '+' + pct(r.rec) + ' Recovery vs Disruption';
+        if (subs[3]) subs[3].innerHTML = rupees(r.net) + ' SLA Penalty Avoided';
+        var label = document.querySelector('#view-overview .kpi-row-grid .kpi-label-text'); if (label) label.innerText = 'Impacted Orders Protected';
+        e = document.querySelector('#view-overview .tag-machine-down'); if (e) e.innerText = down ? down.code + ' (' + down.name + ')' : (CATEGORY_LABEL[sc.cat] || 'Disruption');
+        e = document.querySelector('#view-overview .tag-machine-target'); if (e) e.innerText = alt ? alt.code + ' (' + alt.load + '% loaded)' : 'No alternative center';
+        e = document.querySelector('#view-overview .reroute-left-info > span'); if (e) e.innerText = 'Scenario ' + currentScenarioKey + ' reroute:';
+        e = document.querySelector('#view-overview .reroute-banner-box .safe-badge-pill'); if (e) e.innerText = '✔ ' + sc.orders.length + ' Orders Protected';
+        [].forEach.call(document.querySelectorAll('#view-overview .safe-badge-pill, #view-analytics .safe-badge-pill'), function (b) {
+          if (/Net SLA Penalties Avoided/.test(b.innerText)) b.innerHTML = 'Net SLA Penalties Avoided: ' + rupees(r.net);
+          else if (/Delay Recovered/.test(b.innerText)) b.innerText = '+' + pct(r.rec) + ' Delay Recovered';
+        });
+        [].forEach.call(document.querySelectorAll('#view-analytics div'), function (d) { retext(d, /[\d.]+x ROI on Digital Twin simulation/, r.roi + ' return on the mitigation spend'); retext(d, /4-hour overtime wages on Line 2/, 'Cost of the selected mitigation option'); });
+        [].forEach.call(document.querySelectorAll('#view-orders .section-desc, #view-orders .page-subtitle'), function (d) { retext(d, /across BHEL, Thermax, and Tata Steel customer delivery contracts/, 'for the orders stored against this scenario'); });
+
+        // keep the scenario object current for saving and for the printed brief
+        sc.duration = r.duration; sc.cap = r.cap; sc.simulated = +r.sim.toFixed(1); sc.optimized = +r.opt.toFixed(1);
+        sc.drop = pct(r.drop); sc.recovery = '+' + pct(r.rec); sc.cost = rupees(r.delta);
+        if (asset) { sc.asset = asset; sc.downMachine = asset; }
+        sc.rerouteMachine = alt ? alt.code : '';
+        sc.strategy = strategiesConfig[currentStrategyKey].name + ' — ' + strategiesConfig[currentStrategyKey].desc;
+        setHtml('strategyText', esc(sc.strategy));
+        var grid = byId('strategyMatrixGrid'), sec = grid;
+        while (sec && !(sec.classList && sec.classList.contains('dashboard-section'))) sec = sec.parentNode;
+        var dsc = sec && sec.querySelector('.section-desc');
+        if (dsc) dsc.innerText = 'Calculated from this what-if: outage ' + r.duration + 'h, ' + r.cap + '% capacity lost, ' + (down ? down.code : opts.ctx.plant) + ', live work-center load, stock and the impacted orders.';
+        if (grid) renderStrategyMatrix();
+      }
+      recalculateLiveImpact = paint;
+      applyStrategy = function (key) {
+        if (!strategiesConfig[key]) return;
+        currentStrategyKey = key;
+        paint(); renderStrategyMatrix();
+        showToast('✔ Strategy ' + key + ' applied: ' + strategiesConfig[key].name.split(':')[0] + ' (' + strategiesConfig[key].otd + ' OTD, ' + plain(strategiesConfig[key].cost) + ')');
+      };
+
+      /* ── asset pickers follow the live work centers ── */
+      function fillAssets(selectId, facility, wanted) {
+        var el = byId(selectId);
+        if (!el) return;
+        var list = machines.filter(function (m) { return m.facility === facility; });
+        if (!list.length) list = machines.slice();
+        var keep = wanted || el.value;
+        el.innerHTML = '';
+        list.forEach(function (m) { var o = document.createElement('option'); o.value = m.code; o.innerText = m.code + ' (' + m.name + ')'; el.appendChild(o); });
+        el.value = list.some(function (m) { return m.code === keep; }) ? keep : (list[0] ? list[0].code : '');
+      }
+      updateAssetOptions = function () {
+        var fac = byId('targetFacility');
+        fillAssets('targetAsset', fac ? fac.value : '');
+        fillAssets('simViewAsset', fac ? fac.value : '');
+      };
+      onSimViewFacilityChange = function (v) {
+        var tf = byId('targetFacility'); if (tf) tf.value = v;
+        updateAssetOptions(); paint();
+      };
+      onManualParamChange = function () {
+        var a = byId('simViewAsset'), t = byId('targetAsset');
+        if (a && t) t.value = a.value;
+        paint();
+      };
+      onCustomDrawerFacilityChange = function (fac) { fillAssets('customScenAsset', fac); };
+
+      var bundledLoadScenario = loadScenario;
+      loadScenario = function (scId) {
+        var sc = scenariosData[scId];
+        if (!sc) return;
+        bundledLoadScenario(scId);
+        var fac = sc.facility || 'Hyderabad';
+        ['targetFacility', 'simViewFacility'].forEach(function (id) { var el = byId(id); if (el) el.value = fac; });
+        fillAssets('targetAsset', fac, sc.asset); fillAssets('simViewAsset', fac, sc.asset);
+        paint(); renderStrategyMatrix(); renderOrders();
+      };
+
+      /* ── a new scenario is built from live work centers and real open orders ── */
+      saveCustomScenario = function () {
+        var name = (byId('customScenName') && byId('customScenName').value.trim()) || 'Custom Disruption';
+        var fac = byId('customScenFacility').value, asset = byId('customScenAsset').value;
+        var dur = parseInt(byId('customDurationSlider').value || 36, 10), cap = parseInt(byId('customCapacitySlider').value || 100, 10);
+        var cat = byId('customScenCategory').value, strat = byId('customScenStrategy').value || 'Reroute operations and schedule an overtime shift.';
+        var key = 'SIM-CUSTOM-' + Math.floor(Math.random() * 899 + 100);
+        var stored = Object.keys(scenariosData).map(function (k) { return scenariosData[k]; }).filter(function (s) { return s.sysId; });
+        var baseline = stored.length ? +(stored.reduce(function (s, x) { return s + x.baseline; }, 0) / stored.length).toFixed(1) : 96.5;
+        var drop = Math.min(Math.max((dur / 48.0) * (cap / 100.0) * 22.5, 5), Math.min(38, baseline - 5));
+        var delayDays = Math.max(1, Math.ceil(dur / 24 * cap / 100)), left = Math.max(delayDays - Math.max(1, Math.floor(delayDays * 0.9)), 0);
+        var alt = rerouteTarget(asset);
+        var local = D.orders.filter(function (o) { return o.city === fac; });
+        var orders = (local.length ? local : D.orders).slice(0, 3).map(function (o) {
+          return { ref: o.ref, cust: o.cust, prod: 'Customer order total', fac: CITY_OF[WH_OF[o.city]] ? o.city : fac, facId: warehouses[o.city] || warehouses[fac] || '', qty: o.qty, base: o.base,
+            sim: addDays(o.base, delayDays) + ' (+' + delayDays + 'd)', opt: addDays(o.base, left) + (left ? ' (+' + left + 'd)' : ' (On-Time)'),
+            saved: (delayDays - left) + ' Days Saved', cell: alt ? alt.code : asset, otd: left ? 'Minor Delay Mitigated' : 'On-Time Guaranteed' };
+        });
+        scenariosData[key] = { session: true, title: name, modelName: name, facility: fac, asset: asset, downMachine: asset, duration: dur, cap: cap, cat: cat, parameter: '',
+          baseline: baseline, simulated: baseline - drop, optimized: baseline - drop + drop * 0.93, strategy: strat, storedStrategy: strat, orders: orders,
+          ref: { duration: dur, cap: cap, drop: drop, rec: drop * 0.93, cost: dur * 875 } };
+        ['scenarioSelector', 'simViewScenarioSelect'].forEach(function (id) {
+          var sel = byId(id); if (!sel) return;
+          var o = document.createElement('option'); o.value = key; o.innerText = key + ': ' + name; sel.appendChild(o); sel.value = key;
+        });
+        currentStrategyKey = 'A';
+        loadScenario(key);
+        closeCustomScenarioDrawer();
+        uploadScenarioToServiceNow('evaluated', function () { showToast('✔ Scenario ' + key + ' saved to ServiceNow with ' + orders.length + ' real open orders'); });
+      };
+
+      /* ── WRITE: scenario ── */
+      uploadScenarioToServiceNow = function (status, onSuccess) {
+        var key = currentScenarioKey, sc = scenariosData[key];
+        if (!sc) return;
+        paint();
+        var payload = {
+          scenario_id: key, scenario_name: plain(sc.modelName || sc.title),
+          disruption_category: CATEGORY[sc.cat] || sc.cat || 'machine_breakdown',
+          target_entity: sc.asset || '',
+          disruption_parameter: 'Duration: ' + sc.duration + 'h, Capacity Lost: ' + sc.cap + '%',
+          baseline_otd: num(sc.baseline), simulated_otd_unmitigated: num(sc.simulated), optimized_otd: num(sc.optimized),
+          recommended_strategy: plain(sc.strategy), cost_delta: num(plain(sc.cost).replace(/[^\d.]/g, '')),
+          impacted_order_count: sc.orders ? sc.orders.length : 0, simulation_status: status || 'evaluated'
+        };
+        getRows(TBL + 'sim_scenario', 'scenario_id=' + key, 'sys_id')
+          .then(function (rows) {
+            return rows.length ? send('PATCH', API + TBL + 'sim_scenario/' + val(rows[0], 'sys_id'), payload) : send('POST', API + TBL + 'sim_scenario', payload);
+          })
+          .then(function (saved) {
+            if (saved && saved.result) {
+              sc.sysId = saved.result.sys_id; sc.session = false; sc.storedStrategy = payload.recommended_strategy; sc.parameter = payload.disruption_parameter;
+              var r = model('A');   // what was just saved becomes the new reference point
+              sc.ref = { duration: sc.duration, cap: sc.cap, drop: r.drop, cost: sc.ref.cost * (sc.duration / sc.ref.duration) };
+            }
+            if (onSuccess) onSuccess(saved);
+          })
+          .catch(function (e) {
+            if (window.console) console.warn('[Digital Twin] scenario save failed:', e);
+            setTimeout(function () { showToast('✖ Scenario ' + key + ' was NOT saved to ServiceNow: ' + e.message); }, 50);
+          });
+      };
+
+      /* ── WRITE: impacted orders (updates the existing run for the same order instead of adding a duplicate) ── */
+      uploadOrdersToServiceNow = function (parentSysId, callback) {
+        var sc = scenariosData[currentScenarioKey];
+        parentSysId = parentSysId || (sc && sc.sysId);
+        if (!sc || !sc.orders || !sc.orders.length || !parentSysId) { if (callback) callback(); return; }
+        var failed = 0;
+        var jobs = sc.orders.map(function (o) {
+          var otd = String(o.otd || '').toLowerCase().replace(/[^a-z]+/g, '_').replace(/^_|_$/g, '');
+          var row = {
+            scenario: parentSysId, customer_order_ref: o.ref, customer_name: o.cust, product_bom: o.prod,
+            order_qty: parseInt(o.qty, 10) || 0, baseline_planned_finish: o.base,
+            simulated_finish: (String(o.sim || '').match(/\d{4}-\d{2}-\d{2}/) || [''])[0],
+            adapted_finish: (String(o.opt || '').match(/\d{4}-\d{2}-\d{2}/) || [''])[0],
+            assigned_machine: o.cell
+          };
+          var facility = o.facId || warehouses[o.fac];
+          if (facility) row.target_facility = facility;
+          if (!o.runId) row.net_delay_recovered = o.saved;
+          if (OTD_STATUS.indexOf(otd) !== -1) row.final_otd_status = otd;
+          var find = o.runId ? Promise.resolve([{ sys_id: { value: o.runId } }])
+            : getRows(TBL + 'sim_schedule_run', 'scenario=' + parentSysId + '^customer_order_ref=' + o.ref, 'sys_id');
+          return find.then(function (rows) {
+            return rows.length ? send('PATCH', API + TBL + 'sim_schedule_run/' + val(rows[0], 'sys_id'), row) : send('POST', API + TBL + 'sim_schedule_run', row);
+          }).then(function (saved) { if (saved && saved.result) o.runId = saved.result.sys_id; })
+            .catch(function (e) { failed++; if (window.console) console.warn('[Digital Twin] order run save failed:', o.ref, e); });
+        });
+        Promise.all(jobs).then(function () {
+          if (failed) { showToast('✖ ' + failed + ' of ' + sc.orders.length + ' order runs were NOT saved to ServiceNow'); return; }
+          if (callback) callback();
+        });
+      };
+
+      /* ── WRITE: maintenance incident (a failed save is reported, never shown as dispatched) ── */
+      confirmMaintenanceDispatch = function () {
+        var m = currentDispatchMachine || machines[0];
+        if (!m) return;
+        var descEl = byId('maintShortDesc');
+        var payload = {
+          short_description: descEl ? descEl.value : ('Emergency Dispatch: ' + m.code),
+          description: 'Telemetry alert from the Digital Twin:\n- Asset: ' + m.code + ' (' + m.name + ')\n- Plant: ' + m.facility + '\n- Temperature: ' + m.temp + ' C\n- Vibration: ' + m.vib +
+            ' mm/s\n- Load: ' + m.load + '%\n- Health index: ' + m.health + '%\n- Assigned crew: ' + m.crew,
+          urgency: '1', impact: '1', comments: 'Dispatched from the Digital Twin work-center view'
+        };
+        send('POST', API + 'incident', payload).then(function (saved) {
+          m.dispatched = true; m.incidentRef = saved.result.number;
+          renderMachines(); closeMaintenanceModal();
+          showToast('✔ Work Order ' + saved.result.number + ' dispatched to ' + m.crew);
+        }).catch(function (e) { showToast('✖ Work order was NOT created in ServiceNow: ' + e.message); });
+      };
+      var bundledOpenMaintenance = openMaintenanceModal;
+      openMaintenanceModal = function (code) {
+        if (!machine(code)) return;
+        bundledOpenMaintenance(code);
+        showModal('maintenanceModalBackdrop', 'maintenanceModalContainer');
+      };
+
+      /* ── READ everything ── */
+      function refreshFromServiceNow(announce) {
+        hideDuplicates();
+        return Promise.all([
+          getRows(TBL + 'dt_work_center', 'ORDERBYwork_center_code'),
+          getRows(TBL + 'sim_scenario', 'ORDERBYscenario_id'),
+          getRows(TBL + 'sim_schedule_run', 'ORDERBYcustomer_order_ref'),
+          getRows(TBL + 'inv_loc', 'location_idSTARTSWITHWH-', 'sys_id,location_id,city'),
+          getRows(TBL + 'customer_bom_line', 'customer_bom.status=active', 'customer_bom.number,customer_bom.status,customer_bom.finished_product,customer_bom.finished_product.material_product_id,material_product,material_product.material_product_id,material_product.name,material_product.standard_cost,quantity_required,scrap_percentage'),
+          getRows(TBL + 'inv_stock', 'active=true^status=available^location.location_idSTARTSWITHWH-', 'material_product,location.location_id,available_quantity,safety_stock'),
+          getRows(TBL + 'transfer_lead_time', 'active=true', 'source_warehouse.location_id,destination_warehouse.location_id,lead_time_days'),
+          getRows(TBL + 'prod_res', 'active=true', 'resource_name,capacity_per_day,efficiency_percentage'),
+          getRows(TBL + 'cust_order', 'statusINapproved,in_production^ORDERBYrequested_delivery_date', 'number,customer,delivery_location,total_order_quantity,requested_delivery_date'),
+          getRows(TBL + 'mach_down', 'ORDERBYDESCstart_time', 'number,status,reason,start_time,production_impact,machine,machine.number,machine.name,related_maintenance.number,related_maintenance.status,related_maintenance.maintenance_type,related_maintenance.expected_completion,related_maintenance.estimated_cost').catch(function () { return []; }),
+          getRows(TBL + 'supp_lead_time', 'active=true', 'material_product,lead_time_days').catch(function () { return []; }),
+          getRows(TBL + 'supp_mat', 'active=true', 'material_product,lead_time_days').catch(function () { return []; })
+        ]).then(function (r) {
+          r[3].forEach(function (w) { warehouses[val(w, 'location_id')] = val(w, 'sys_id'); if (val(w, 'city')) warehouses[val(w, 'city')] = val(w, 'sys_id'); });
+          applyWorkCenters(r[0]);
+          applyScenarios(r[1], r[2]);
+          applySupply(r[4], r[5], r[6], r[7], r[8]);
+          applyDowntime(r[9]);
+          D.suppLead = {};
+          r[10].concat(r[11]).forEach(function (l) { var m = val(l, 'material_product'), d = num(val(l, 'lead_time_days')); if (m && d > 0 && (D.suppLead[m] === undefined || d < D.suppLead[m])) D.suppLead[m] = d; });
+          quietly(function () { if (scenariosData[currentScenarioKey]) loadScenario(currentScenarioKey); });
+          var lbl = byId('telemetryLabel');
+          if (lbl && isLiveStreaming) lbl.innerText = 'Live • ServiceNow (15s)';
+          if (announce) showToast('✔ Digital Twin synced with ServiceNow: ' + live.centers + ' work centers, ' + live.scenarios + ' scenarios, ' + live.runs + ' order runs, ' + live.products + ' products');
+        }).catch(function (e) {
+          if (window.console) console.warn('[Digital Twin] live sync failed, bundled data kept:', e);
+          if (announce) showToast('⚠ Could not read ServiceNow (' + e.message + '). Showing bundled data.');
+        });
+      }
+
+      /* ── live telemetry replaces the random jitter ── */
+      startTelemetry = function () {
+        clearInterval(liveTimer);
+        liveTimer = setInterval(function () {
+          if (!isLiveStreaming) return;
+          var view = byId('view-digital-twin');
+          if (!view || !view.classList.contains('active')) return;
+          getRows(TBL + 'dt_work_center', 'ORDERBYwork_center_code').then(function (rows) {
+            applyWorkCenters(rows);
+            if (!document.querySelector('#maintenanceModalContainer.open')) renderMachines();
+          }).catch(function () {});
+        }, 15000);
+      };
+
+      /* ── when to sync ── */
+      var bundledSwitchTab = switchTab;
+      switchTab = function (tabKey) {
+        bundledSwitchTab(tabKey);
+        if (tabKey === 'digital-twin') refreshFromServiceNow(true);
+      };
+      var bundledRefresh = refreshData;
+      refreshData = function () {
+        bundledRefresh();
+        var view = byId('view-digital-twin');
+        if (view && view.classList.contains('active')) refreshFromServiceNow(true);
+      };
+      window.refreshDigitalTwinFromServiceNow = refreshFromServiceNow;
+      setTimeout(function () { if (isLiveStreaming) startTelemetry(); }, 0);
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { refreshFromServiceNow(false); });
+      else setTimeout(function () { refreshFromServiceNow(false); }, 0);
+    })();
+]]></client_script>
         <description>Antigravity UI Page Update Test</description>
         <direct>false</direct>
         <endpoint>x_2056099_indust_0_dashboard.do</endpoint>
@@ -4747,7 +5584,6 @@
 
     &lt;div class="sidebar-footer"&gt;
       &lt;span&gt;Industrial Ops v2.0&lt;/span&gt;
-      &lt;span class="instance-badge"&gt;dev449829&lt;/span&gt;
     &lt;/div&gt;
   &lt;/aside&gt;
 
@@ -8582,13 +9418,13 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-09-19 05:55:11</sys_created_on>
         <sys_id>3fa6e2419f1b49eaa5fe5530954b1fbc</sys_id>
-        <sys_mod_count>45</sys_mod_count>
+        <sys_mod_count>58</sys_mod_count>
         <sys_name>dashboard</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ui_page_3fa6e2419f1b49eaa5fe5530954b1fbc</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-08 18:41:56</sys_updated_on>
+        <sys_updated_on>2026-10-09 10:34:22</sys_updated_on>
     </sys_ui_page>
 </record_update>

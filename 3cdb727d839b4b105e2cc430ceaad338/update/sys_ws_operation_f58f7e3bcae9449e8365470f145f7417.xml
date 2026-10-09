@@ -52,6 +52,8 @@
       lt.addQuery("source_warehouse", srcId);
       lt.addQuery("destination_warehouse", dstId);
       lt.addQuery("active", true);
+      // [feasibility fix 2026-10-09] several transport modes exist per route: always use the fastest one, so the same request gives the same answer
+      lt.orderBy("lead_time_days");
       lt.setLimit(1);
       lt.query();
       if (lt.next()) return parseFloat(lt.getValue("lead_time_days"))||0;
@@ -61,7 +63,26 @@
     // === STEP 1: BOM RESOLUTION ===
     var resolver = new x_2056099_indust_0.BomResolver();
     var bomR = resolver.resolveByProduct(fpId);
-    if (!bomR.success) { var _wh=null;var _wg=new GlideRecord(P+"inv_loc");_wg.addQuery("location_type","inventory_warehouse");_wg.addQuery("location_id","STARTSWITH","WH-");if(locParam)_wg.addQuery("location_id",locParam);_wg.setLimit(1);_wg.query();if(_wg.next())_wh={id:_wg.getValue("location_id"),city:_wg.getValue("city")||_wg.getValue("location_name")};var _reason=bomR.message||"No valid BOM found for this product.";response.setBody({status:"NOT_FEASIBLE",product:prodName,product_id:prodId,requested_quantity:qty,requested_delivery_date:reqDateStr,selected_location:_wh?_wh.city:"",selected_location_id:_wh?_wh.id:"",earliest_completion_date:"",proposed_delivery_date:"",delivery_status:_reason,reasons:[_reason],bom:{name:"",number:"",component_count:0},material_feasibility:{all_materials_feasible:false,summary:_reason,components:[]},capacity:{resource:"",effective_capacity_per_day:0,production_days:0}}); return; }
+    if (!bomR.success) { var _wh=null;var _wg=new GlideRecord(P+"inv_loc");_wg.addQuery("location_type","inventory_warehouse");_wg.addQuery("location_id","STARTSWITH","WH-");if(locParam)_wg.addQuery("location_id",locParam);_wg.setLimit(1);_wg.query();if(_wg.next())_wh={id:_wg.getValue("location_id"),city:_wg.getValue("city")||_wg.getValue("location_name")};var _reason=bomR.message||"No valid BOM found for this product.";
+      // persist the check even when the product has no usable BOM, so the history is complete
+      var _noBomNumber = "", _noBomError = "";
+      try {
+        var nb = new GlideRecord("x_2056099_indust_0_feas_check");
+        nb.newRecord();
+        if (!nb.getValue("number")) {
+          var nbLast = new GlideRecord("x_2056099_indust_0_feas_check");
+          nbLast.addQuery("number", "STARTSWITH", "FEAS"); nbLast.orderByDesc("number"); nbLast.setLimit(1); nbLast.query();
+          var nbNo = nbLast.next() ? (parseInt((nbLast.getValue("number") + "").replace(/[^0-9]/g, ""), 10) || 1000) : 1000;
+          nb.setValue("number", "FEAS" + ("0000000" + (nbNo + 1)).slice(-7));
+        }
+        nb.setValue("finished_product", fpId); nb.setValue("product_id", prodId); nb.setValue("product_name", prodName); nb.setValue("quantity", qty);
+        nb.setValue("location_id", _wh ? _wh.id : ""); nb.setValue("location_name", _wh ? _wh.city : ""); nb.setValue("requested_date", reqDateStr);
+        nb.setValue("status", "not_feasible"); nb.setValue("component_count", 0);
+        nb.setValue("material_status", "No valid BOM - material requirements cannot be calculated"); nb.setValue("reason", _reason); nb.setValue("delivery_status", _reason);
+        if (!nb.insert()) throw new Error("Feasibility Check record was not saved");
+        _noBomNumber = nb.getValue("number") || "";
+      } catch (nbErr) { _noBomError = String((nbErr && nbErr.message) || nbErr); gs.error("Customer Feasibility API: no-BOM result not saved - " + _noBomError); }
+response.setBody({status:"NOT_FEASIBLE",product:prodName,product_id:prodId,requested_quantity:qty,requested_delivery_date:reqDateStr,selected_location:_wh?_wh.city:"",selected_location_id:_wh?_wh.id:"",earliest_completion_date:"",proposed_delivery_date:"",delivery_status:_reason,reasons:[_reason],bom:{name:"",number:"",component_count:0},material_feasibility:{all_materials_feasible:false,summary:_reason,components:[]},capacity:{resource:"",effective_capacity_per_day:0,production_days:0},feasibility_check_number:_noBomNumber||undefined,persistence_error:_noBomError||undefined}); return; }
 
     // === STEP 2: RESOLVE WAREHOUSES ===
     var allWh = [];
@@ -208,7 +229,8 @@
         smGr.query();
         if (smGr.next()) {
           procDays = parseInt(smGr.getValue("lead_time_days"))||14;
-          procSupplier = smGr.getDisplayValue("supplier");
+          // [feasibility fix 2026-10-09] a supplier-material profile is a procurement option even when the supplier name is not linked
+          procSupplier = smGr.getDisplayValue("supplier") || ("Supplier profile " + (smGr.getValue("supplier_material_code") || "")).replace(/\s+$/, "");
         }
         if (!procSupplier) {
           var slt = new GlideRecord(P+"supp_lead_time");
@@ -219,7 +241,7 @@
           slt.query();
           if (slt.next()) {
             procDays = parseInt(slt.getValue("lead_time_days"))||14;
-            procSupplier = slt.getDisplayValue("supplier");
+            procSupplier = slt.getDisplayValue("supplier") || "Supplier lead-time record";
           }
         }
         if (procSupplier) {
@@ -248,7 +270,7 @@
       for (var t=0; t<transfers.length; t++) {
         if (transfers[t].lead_time_days > 0) {
           var transReady = new GlideDateTime(now);
-          transReady.addDaysLocalTime(transfers[t].lead_time_days);
+          transReady.addDaysLocalTime(Math.ceil(transfers[t].lead_time_days)); // a part-day transfer still takes a calendar day
           if (transReady.compareTo(matReadyDate) > 0) matReadyDate = new GlideDateTime(transReady);
         }
       }
@@ -359,9 +381,21 @@
 
     // === PERSIST FEASIBILITY RESULTS ===
     var checkNumber = "";
+    var persistError = "";
     try {
       var chk = new GlideRecord("x_2056099_indust_0_feas_check");
-      chk.initialize();
+      // [feasibility fix 2026-10-09] newRecord() applies the FEAS number default; initialize() left the number empty
+      chk.newRecord();
+      if (!chk.getValue("number")) {
+        // the field default (getNextObjNumberPadded) is not evaluated for scoped scripts, so number the check here
+        var lastChk = new GlideRecord("x_2056099_indust_0_feas_check");
+        lastChk.addQuery("number", "STARTSWITH", "FEAS");
+        lastChk.orderByDesc("number");
+        lastChk.setLimit(1);
+        lastChk.query();
+        var lastNo = lastChk.next() ? (parseInt((lastChk.getValue("number") + "").replace(/\D/g, ""), 10) || 1000) : 1000;
+        chk.setValue("number", "FEAS" + ("0000000" + (lastNo + 1)).slice(-7));
+      }
       chk.setValue("finished_product", fpId);
       chk.setValue("product_id", prodId);
       chk.setValue("product_name", prodName);
@@ -381,6 +415,7 @@
       chk.setValue("reason", (finalStatus !== "FEASIBLE" && matReasons.length > 0) ? matReasons.join("\n") : "");
       chk.setValue("delivery_status", deliveryStatus);
       var checkSysId = chk.insert();
+      if (!checkSysId) throw new Error("Feasibility Check record was not saved");
       checkNumber = chk.getValue("number") || "";
 
       for (var ci = 0; ci < components.length; ci++) {
@@ -417,11 +452,12 @@
         cg.setValue("component_status", comp.decision_type || "");
         cg.setValue("fulfillment_method", comp.decision_type || "");
         cg.setValue("earliest_date", comp.earliest_material_date || "");
-        cg.insert();
+        if (!cg.insert()) throw new Error("Feasibility Component record was not saved for " + (comp.material || comp.material_id));
       }
     } catch (persistErr) {
-      // Persistence failure must not break the API response
-      checkNumber = "";
+      // A persistence failure never changes the calculated result; it is reported as it is.
+      persistError = String((persistErr && persistErr.message) || persistErr);
+      gs.error("Customer Feasibility API: result calculated but not fully saved - " + persistError);
     }
 
     response.setBody({
@@ -455,7 +491,8 @@
         earliest_production_end: earliestProdEnd
       },
       reasons: finalStatus!=="FEASIBLE" ? matReasons.concat(finalStatus==="FEASIBLE_WITH_ALTERNATE_DATE"?["Delivery delayed by "+additionalDays+" day(s)"]:[deliveryStatus]) : undefined,
-      feasibility_check_number: checkNumber || undefined
+      feasibility_check_number: checkNumber || undefined,
+      persistence_error: persistError || undefined
     });
   } catch(e) {
     response.setStatus(500);
@@ -477,14 +514,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2026-10-07 16:40:40</sys_created_on>
         <sys_id>f58f7e3bcae9449e8365470f145f7417</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>7</sys_mod_count>
         <sys_name>Check Feasibility</sys_name>
         <sys_package display_value="Industrial Inventory and Production Management" source="x_2056099_indust_0">3cdb727d839b4b105e2cc430ceaad338</sys_package>
         <sys_policy/>
         <sys_scope display_value="Industrial Inventory and Production Management">3cdb727d839b4b105e2cc430ceaad338</sys_scope>
         <sys_update_name>sys_ws_operation_f58f7e3bcae9449e8365470f145f7417</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2026-10-08 05:42:15</sys_updated_on>
+        <sys_updated_on>2026-10-09 05:12:48</sys_updated_on>
         <web_service_definition display_value="Customer Feasibility API">70009bd287eb43bdbca85d00460c6e60</web_service_definition>
         <web_service_version/>
     </sys_ws_operation>
